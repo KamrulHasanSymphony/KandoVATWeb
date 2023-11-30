@@ -1,0 +1,130 @@
+﻿@using UIHelper.MVC
+
+<div class="headrow">
+    <button type="button" title="Add New Pre-Employement Information" data-url="/Common/PreEmployementInformation/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+    <button type="button" title="Delete Pre-Employement Information" data-url="/Common/PreEmployementInformation/Delete" onclick="deletedData(this, 'myDataTable');" id="" class="sym-btn-remove">&nbsp;Delete</button>
+    <button type="button" title="Report Pre-Employement Information" data-url="/Common/PreEmployementInformation/ReportView" onclick="ReportData(this, 'myDataTable');" id="" class="sym-btn-report">&nbsp;Report</button>
+    <label class="pull-right">Pre-Employement Information </label>
+</div>
+<div class="thinbox">
+    <div class="th_thinbox">
+        <p>Pre-Employement Information List</p>
+    </div>
+
+    <div class="row">
+        <div class="col-md-2">
+            <div class="editor-label">
+                <label>Letter Name</label>
+            </div>
+            <div class="editor-field">
+                @Html.SimpleDropDown("LetterName", "/Config/DropDown/DropDownReport?ReportType=PreEmployLetter", new { @class = "required form-control " })
+            </div>
+        </div>
+    </div>
+    <br />
+    <table id="myDataTable" class="display">
+        <thead>
+            <tr>
+                <th class="center">
+                    <input type="checkbox" class="chkAll" />Select All</th>
+                <th>Reference Number</th>
+                <th>Issue Date</th>
+                <th>Employee Name</th>
+                <th>Designation</th>
+                <th>@Session["DepartmentLabel"]</th>
+                <th>Basic Salary   </th>
+                <th>Gross Salary  </th>
+
+
+
+
+                @*  
+ReferenceNumber
+IssueDate
+EmployeeName
+Designation
+Department
+BasicSalary
+GrossSalary
+*@
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <br />
+</div>
+<div class="headrow">
+    <button type="button" title="Add New Pre-Employement Information" data-url="/Common/PreEmployementInformation/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+    <button type="button" title="Delete Pre-Employement Information" data-url="/Common/PreEmployementInformation/Delete" onclick="deletedData(this, 'myDataTable');" id="" class="sym-btn-remove">&nbsp;Delete</button>
+    <button type="button" title="Report Pre-Employement Information" data-url="/Common/PreEmployementInformation/ReportView" onclick="ReportData(this, 'myDataTable');" id="" class="sym-btn-report">&nbsp;Report</button>
+</div>
+<script language="javascript" type="text/javascript">
+    $(document).ready(function () {
+        SelectAllForDelete();
+        $.datepicker.regional[""].dateFormat = 'dd/M/y';
+        $.datepicker.setDefaults($.datepicker.regional['']);
+        var oTable = $('#myDataTable').dataTable({
+            "bServerSide": true,
+            "sAjaxSource": "/Common/PreEmployementInformation/_index",
+            "bProcessing": true,
+            "aLengthMenu": tablelength(),
+            "bJqueryUI": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+                            {
+                                "sName": "Id",
+                                "bSearchable": false,
+                                "bSortable": false,
+                                "sWidth": "12%",
+                                "sClass": "center",
+                                "fnRender": function (oObj) {
+                                    return ' <input onclick="CheckAll(this)" type="checkbox" data-Id="' + oObj.aData[0] + '">'
+                                        + '&nbsp; <a id="lnkEdit1"  title="Click on for Edit" style="text-decoration:none;"    href=\"/Common/PreEmployementInformation/Edit/' + oObj.aData[0] + '\" class=" innerListLink sym-btn-edit-row"></a>'
+                                        + '&nbsp; <a title="Click on for Delete" style="text-decoration:none;" data-url="/Common/PreEmployementInformation/Delete" onclick="deletedData(this, myDataTable,\'' + oObj.aData[0] + '\');"  class="sym-btn-remove-row"></a>'
+                                        + '&nbsp; <a title="Click on for Report" style="text-decoration:none;" data-url="/Common/PreEmployementInformation/ReportView" onclick="ReportData(this, myDataTable,\'' + oObj.aData[0] + '\');"  class="sym-btn-report-row"></a>'
+                                    ; 
+                                }
+                            }
+                            , { "sName": "ReferenceNumber", "sWidth": "10%" }
+                            , { "sName": "IssueDate", "sWidth": "10%" }
+                            , { "sName": "EmployeeName", "sWidth": "10%" }
+                            , { "sName": "Designation", "sWidth": "10%" }
+                            , { "sName": "Department", "sWidth": "10%" }
+                            , { "sName": "BasicSalary", "sWidth": "10%" }
+                            , { "sName": "GrossSalary", "sWidth": "10%" }
+
+            ]
+        });
+    });
+</script>
+
+<script>
+    function ReportData(sender, checkboxId, id) {
+        var ids = "";
+        if (typeof id === 'undefined') {
+            var length = $("#" + checkboxId + " tbody input:checkbox").length;
+            for (var i = 0; i < length; i++) {
+                if ($($("#" + checkboxId + " tbody input:checkbox")[i]).is(":checked")) {
+                    ids += $($("#" + checkboxId + " tbody input:checkbox")[i]).attr("data-Id") + "~";
+                }
+            }
+        }
+        else {
+            ids = id + "~";
+        }
+        var letterName = $("#LetterName").val();
+        if (letterName == "") {
+            ShowResult("Fail", "Select First to Letter Name!");
+            return;
+        }
+
+        var url = $(sender).attr("data-url") + "?ids=" + ids + "&letterName=" + letterName;
+        if (ids == "") {
+            ShowResult("Fail", "Select First to Report!");
+            return;
+        }
+        var win = window.open(url, '_blank');
+    }
+
+</script>

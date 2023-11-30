@@ -1,0 +1,119 @@
+﻿
+@model VATViewModel.DTOs.ProductTypeViewModel
+@using UIHelper.MVC
+@using (Html.BeginForm("CreateEdit", "ProductType", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmProductType" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.TypeID)
+    @Html.HiddenFor(model => model.Operation)
+
+    <div class="headrow">
+        @if (Model.Operation == "add")
+        {
+            <button type="button" name="btnName" value="Save" title="Save Data" onclick="pageSubmit('frmProductType')" class="sym-btn-save">&nbsp;Save</button>
+            <label class="pull-right">Product Type > Create</label>
+        }
+        else
+        {
+            <button type="button" name="btnName" value="Update" title="Update Data" onclick="pageSubmit('frmProductType')" class="sym-btn-update">&nbsp;Update</button>
+            <label class="pull-right">Product Type > Edit</label>
+        }
+        <button type="button" title="Go To Index" data-url="/VMS/ProductType" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New ProductType" data-url="/VMS/ProductType/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+
+    </div>
+    <div class="thinbox  animated zoomIn faster">
+        <div class="th_thinbox">
+            <p>Product Type</p>
+        </div>
+        <div class="ProductType">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.ProductType)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.ProductType, new { @placeholder = "Name", @class = " required form-control" })
+                        @Html.ValidationMessageFor(model => model.ProductType)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.TypeID1)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.TypeID1, new { @placeholder = "Type ID1", @class = " form-control" })
+                        @Html.ValidationMessageFor(model => model.TypeID1)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.TypeID12)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.TypeID12, new { @placeholder = "Type ID12", @class = "   form-control" })
+                        @Html.ValidationMessageFor(model => model.TypeID12)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.TypeID123)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.TypeID123, new { @placeholder = "Type ID123", @class = "   form-control" })
+                        @Html.ValidationMessageFor(model => model.TypeID123)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.BOMId)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.BOMId, new { @placeholder = "BOM Id", @class = "   form-control" })
+                        @Html.ValidationMessageFor(model => model.BOMId)
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-7">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.Description)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextAreaFor(model => model.Description, new { @placeholder = "Description", @class = "  form-control" })
+                        @Html.ValidationMessageFor(model => model.Description)
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.Comments)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextAreaFor(model => model.Comments, new { @placeholder = "Comments", @class = "  form-control" })
+                        @Html.ValidationMessageFor(model => model.Comments)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="headrow">
+        @if (Model.Operation == "add")
+        {
+            <button type="button" name="btnName" value="Save" title="Save Data" onclick="pageSubmit('frmProductType')" class="sym-btn-save">&nbsp;Save</button>
+        }
+        else
+        {
+            <button type="button" name="btnName" value="Update" title="Update Data" onclick="pageSubmit('frmProductType')" class="sym-btn-update">&nbsp;Update</button>
+        }
+        <button type="button" title="Go To Index" data-url="/VMS/ProductType" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New ProductType" data-url="/VMS/ProductType/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+
+    </div>
+}
+<script>
+    $(function () {
+        valiDation("frmProductType");
+    });
+
+</script>

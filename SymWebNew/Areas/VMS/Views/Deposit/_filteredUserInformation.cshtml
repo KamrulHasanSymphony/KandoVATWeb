@@ -1,0 +1,23 @@
+﻿@model IEnumerable<VATViewModel.DTOs.UserInformationVM>
+@using UIHelper.MVC
+@{
+    Layout = null;
+    var sl = 1;
+}
+@foreach (var UserInformation in Model)
+{
+    <tr class="trSelectPopUpProduct">
+        <td>@sl</td>
+        <td class="popUpUserID">@UserInformation.UserID</td>
+        <td class="popUpUserName">@UserInformation.UserName</td>
+        <td class="popUpFullName" title="@UserInformation.FullName">@UserInformation.FullName</td>
+        <td class="popUpDesignation">@UserInformation.Designation</td>
+        <td class="popUpMobile">@UserInformation.Mobile</td>
+        <td class="popUpAddress">@UserInformation.Address</td>
+        <td>@UserInformation.ActiveStatus.ToString()</td>
+     
+        @{
+            sl++;
+        }
+    </tr>
+}

@@ -1,0 +1,166 @@
+﻿@model VATViewModel.DTOs.Toll6_3InvoiceVM
+@using UIHelper.MVC
+
+
+<div class="headrow">
+    <button type="button" title="Add New" data-url="/VMS/Toll6_3Invoice/Create?TransactionType=@Model.TransactionType" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+    @*<button type="button" title="Delete" data-url="/VMS/Toll6_3Invoice/Delete" onclick="deletedData(this, 'myDataTable');" id="" class="sym-btn-remove">&nbsp;Delete</button>*@
+    <label class="pull-right">Toll Invoice</label>
+</div>
+<div class="thinbox animated slideInDown faster">
+    <div class="th_thinbox">
+        <p>Toll Invoice List</p>
+    </div>
+    
+    <div class="dtSearch formDesign">
+        <div class="row">
+            <div class="trk1_5">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.TollNo)
+                </div>
+                <div class="editor-field">
+                    
+                    @Html.TextBoxFor(model => model.TollNo, new { @class = "  form-control" })
+                </div>
+            </div>
+            <div class="trk1_5">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.CustomerName)
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.CustomerName, new { @class = "  form-control" })
+                </div>
+            </div>          
+            
+            <div class="trk_5">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.Post)
+                </div>
+                <div class="editor-field">
+                    <select id="Post" class="form-control">
+                        <option value=""></option>
+                        <option value="Y">Y</option>
+                        <option value="N">N</option>
+                    </select>
+                </div>
+            </div>
+            <div class="trk1_5">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.TollDateFrom)
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.TollDateFrom, new { @placeholder = "Date From", @class = "customDatePicker defaultDate form-control" })
+                </div>
+            </div>
+            <div class="trk1_5">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.TollDateTo)
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.TollDateTo, new { @placeholder = "Date To", @class = "customDatePicker defaultDate form-control" })
+                </div>
+            </div>
+            <div class="trk1_5">
+                <div class="editor-label">
+                    <label>Branch Name</label>
+                </div>
+                <div class="editor-field">
+                    @Html.SimpleDropDownFor(model => model.BranchId, "/Config/DropDown/BranchProfile", new { @class = " cBranchId form-control" })
+                </div>
+            </div>
+        </div>
+        
+
+        <div class="row">
+                <div class="col-md-8">
+                <div class="editor-label">
+                    <label>&nbsp;</label>
+                </div>
+                <div class="editor-field">
+                    <button type="button" title="Click to Search" id="btnSearch" class="sym-btn-search">Search</button>
+                    @*<button type="button" title="Clear Data" id="Clear" class=" sym-btn-clear">&nbsp;Clear</button>*@
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <p>&nbsp;</p>   
+    
+    <table id="myDataTable" class="display">
+        <thead>
+            <tr>
+                <th class="center">
+                    <input type="checkbox" class="chkAll" />Select All
+                </th>
+                <th>Toll No</th>
+                <th>Customer</th>
+                <th>Address</th>
+                <th>Toll Date</th>
+                <th>Post</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <br />
+</div>
+<div class="headrow">
+    <button type="button" title="Add New" data-url="/VMS/Toll6_3Invoice/Create?TransactionType=@Model.TransactionType" onclick=" goto(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+    @*<button type="button" title="Delete" data-url="/VMS/Toll6_3Invoice/Delete" onclick="deletedData(this, 'myDataTable');" id="" class="sym-btn-remove">&nbsp;Delete</button>*@
+</div>
+
+<script language="javascript" type="text/javascript">
+    $(document).ready(function () {
+        SelectAllForDelete();
+        $.datepicker.regional[""].dateFormat = 'dd/M/y';
+        $.datepicker.setDefaults($.datepicker.regional['']);
+        var oTable = $('#myDataTable').dataTable({
+            "bServerSide": true,
+            "sAjaxSource": "/VMS/Toll6_3Invoice/_index",
+            "bProcessing": true,
+            "aLengthMenu": tablelength(),
+            "bJqueryUI": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+                            {
+                                "sName": "Id",
+                                "bSearchable": false,
+                                "bSortable": false,
+                                "sWidth": "6%",
+                                "sClass": "center",
+                                "fnRender": function (oObj) {
+                                    return ' '
+                                        + '&nbsp; <a id=""  title="Click on for Edit"  style="text-decoration:none;"   href=\"/VMS/Toll6_3Invoice/Edit?invNumber=' + oObj.aData[1] + '\" class=" innerListLink sym-btn-edit-row"></a>'
+                                    //<input onclick="CheckAll(this)" type="checkbox" data-Id="' + oObj.aData[0] + '">
+                                    //+ '&nbsp; <a title="Click on for Delete"  data-url="/VMS/Toll6_3Invoice/Delete" onclick="deletedData(this, myDataTable,\'' + oObj.aData[0] + '\');"  class="sym-btn-remove-row"></a>'
+                                    ;
+                                }
+                             }
+                            , { "sName": "Toll No", "sWidth": "8%" }
+                            , { "sName": "Customer", "sWidth": "12%" }
+                            , { "sName": "Address", "sWidth": "12%" }
+                            , { "sName": "Toll Date", "sWidth": "8%" }
+                            , { "sName": "Post", "sWidth": "5%" }
+
+
+            ]
+        });
+    });
+</script>
+
+<script>
+    $('#btnSearch').click(function () {
+        alert("Searching");
+        var model = $('.dtSearch :input').serialize();
+        $.ajax({
+            url: "/VMS/Toll6_3Invoice/Index",
+            cache: false,
+            data: model,
+            success: function (html) {
+                oTable.fnDraw();
+            }
+        });
+    });
+
+
+   
+</script>

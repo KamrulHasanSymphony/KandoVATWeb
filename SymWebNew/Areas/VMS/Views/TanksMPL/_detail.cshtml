@@ -1,0 +1,60 @@
+﻿@model VATViewModel.DTOs.SalesInvoiceMPLDetailVM
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+<tr class="tablerow ">
+    @using (Html.BeginCollectionItem("SalesInvoiceMPLDetailVMs"))
+    {
+
+        <td>
+            <a id="" title="Click to Remove" onclick="RemoveItem(this);" class="sym-btn-remove-row "></a>
+            <a id="" title="Click to Edit" onclick="EditItem(this);" class="sym-btn-edit-row btnSize"></a>
+            @if (Model.TransactionType.ToLower() == "ServiceNS".ToLower() && Convert.ToString(Session["CompanyCode"]).ToLower() == "Telnet".ToLower())
+            {
+                <a id="idBillingPeriodPopUp" title="Click to Billing Period Data" onclick="BillingPeriodPopUp(this);" class="sym-btn-search btnStyle btnSize"></a>
+            }
+            
+            @if (Model.TransactionType.ToLower() == "Export".ToLower())
+             {
+                <a id="idPreviousSalesPopUp" title="Click to update CPC Data" onclick="CPCNameUpdateSalesPopUp(this);" class="sym-btn-search btnStyle btnSize"></a>
+             }
+            </td>
+            <td>
+                @Html.TextBoxFor(model => model.ItemNo, new { @class = "  dItemNo   form-control", @readonly = "readonly" })
+            </td>
+           
+            <td>
+                @Html.TextBoxFor(model => model.ProductName, new { @class = "  dItemName   form-control", @readonly = "readonly" })
+            </td>
+        <td>
+            @Html.TextBoxFor(model => model.UOMn, new { @class = "  dUOMn   form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.UOM, new { @class = "  dUOM   form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.NBRPrice, new { @class = "  dNBRPrice right  form-control", @readonly = "readonly" })
+        </td>
+            <td>
+                @Html.TextBoxFor(model => model.Quantity, new { @class = "  dSaleQuantity NumberCheck  right form-control", @readonly = "readonly" })
+            </td>
+        <td>
+            @Html.TextBoxFor(model => model.VATAmount, new { @class = "  dVATAmount NumberCheck   right form-control", @readonly = "readonly" })
+        </td>
+
+            @Html.HiddenFor(m => m.ItemNo, new { @class = "dItem_No" })
+        @Html.HiddenFor(m => m.CConversionDate, new { @class = "dCConversionDate" })
+            @Html.HiddenFor(m => m.SaleType, new { @class = "dSaleTypeD" })
+            @Html.HiddenFor(m => m.SalesInvoiceMPLHeaderId, new { @class = "dInvoiceLineNo" })
+            @Html.HiddenFor(m => m.Quantity, new { @class = "dQuantity" })
+        @Html.HiddenFor(m => m.TransactionType, new { @class = "dTransactionType" })
+            
+    }
+</tr>
+
+<style>
+    .btnSize {
+        font-size: 1em !important;
+    }
+</style>

@@ -1,0 +1,97 @@
+﻿@model SymViewModel.Leave.EmployeeLeaveVM
+@using UIHelper.MVC
+ <div class="headrow">
+        <label class="pull-right">Leave Migration > Opening Balance (Single) </label>
+    </div>
+    <div class="thinbox">
+        <div class="row">
+            <div class="col-md-2">
+                <label>Employee Code</label>
+                @Html.TextBox("empcode",null, new {@placeholder="Employee Code", @class = "form-control" })
+            </div>
+            <div class="col-md-2">
+                <label>Year</label>
+              @Html.SimpleDropDown("vyear","/Config/DropDown/Year", new { @class = "required form-control" })
+            </div>
+   @*         <div class="col-md-2">
+                <label>&nbsp;</label>
+                 <button type="button" title="Search Data"  id="btnSearch" class="sym-btn-search"> Search</button>
+            </div>*@
+        </div>
+    </div>
+
+<div id="detailsDiv">
+</div>
+
+<script>
+
+    @*    $('#btnSearch').click(function () {
+        var path = window.location.href; 
+        var tt = window.location.href;
+        var empcode = $('#empcode').val();
+        var vyear = $('#vyear').val();
+        if (vyear == "") {
+            ShowResult('Fail', "Please Select Leave year");
+        }
+        else if (empcode == "") {
+            ShowResult('Fail', "Please input Employee Id");
+        }
+        else {
+            window.location='@Url.Action("OpeningBalanceSingle", "LeaveMigration")' + '?empcode=' + empcode + "&vyear=" + vyear
+        }
+    });*@
+
+    $(function () {
+        
+        //$('#vyear').val('@Model.LeaveYear');
+        $('#empcode').autocomplete({ source: '@Url.Action("EmployeeCode", "Autocomplete", new { area = "Config" })', minLength: 2 }
+            );
+        //myFunction();
+        //var myVar;
+
+        //function myFunction() {
+        //    myVar = setTimeout(alertFunc, 3000);
+        //}
+
+        //function alertFunc() {
+        //    alert("Hello!");
+        //}
+
+        //setTimeout(
+        //empleavest();
+ //, 5000);
+       
+        function empleavest() {
+                var empcode = $("#empcode").val();
+                var vyear = $("#vyear").val();
+
+            //var vyear = '@Model.LeaveYear';
+            if (empcode != '' && vyear != '') {
+                //alert(vyear);
+                url = "/Common/LeaveMigration/OpeningBalanceSingle?empcode=" + empcode + '&vyear=' + vyear;
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    beforeSend: function () { $(".loading").show(); },
+                    complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                    success: function (data) {
+                        $('#detailsDiv').html(data);
+                    },
+                });
+            }
+            }
+ 
+
+    $("#empcode").change(function () {
+        empleavest();
+    });
+
+    $("#vyear").change(function () {
+        empleavest();
+    });
+
+    });
+
+
+
+</script>

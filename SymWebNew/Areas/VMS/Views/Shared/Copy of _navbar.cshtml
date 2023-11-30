@@ -1,0 +1,201 @@
+﻿@using SymOrdinary
+@using System.Threading;
+@{ 
+    
+    //////ShampanIdentity identity = null;
+    //////try
+    //////{
+    //////    identity = (ShampanIdentity)Thread.CurrentPrincipal.Identity;
+    //////}
+    //////catch (Exception)
+    //////{
+    //////    Response.Redirect("/Sage/Home/Login");
+    //////    return;
+    //////}
+}
+<div class="content white menuheight">
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="navbar-header">
+            <ul class="nav col-xs-4 visible-xs">
+                <li class="dropdown1" style="padding-top: 4px">
+                    <a href="#" class=" btn btn-warning">Payroll </a>
+                </li>
+            </ul>
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <!--/.navbar-header-->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li class="dropdown  "><a href="/Sage/Home" class="">Home</a></li>
+                    <li class="dropdown Setup">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Configuration<b class="caret"></b></a>
+                        <ul class="dropdown-menu multi-column columns-1">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <ul class="multi-column-dropdown">
+                                        <li class="dropdown  "><a href="/Sage/User" class="btn btn-info">User</a></li>
+                                        <li class="dropdown  "><a href="/Sage/Branch" class="btn btn-info">Branch</a></li>
+                                        @*<li class="dropdown  "><a href="/Sage/EnumBusinessNature" class="btn btn-info">Business Nature</a></li>*@
+                                        <li class="dropdown  "><a href="/Sage/EnumDesignation" class="btn btn-info">Designation</a></li>
+                                        <li class="dropdown  "><a href="/Sage/EnumDepartment" class="btn btn-info">Department</a></li>
+                                        <li class="dropdown  "><a href="/Sage/FiscalYear" class="btn btn-info">Fiscal Year</a></li>
+                                        <li class="dropdown  "><a href="/Sage/Account" class="btn btn-info">Account</a></li>
+                                        <li class="dropdown  "><a href="/Sage/Employee" class="btn btn-info">Employee</a></li>
+                                        <li class="dropdown  "><a href="/Sage/Customer" class="btn btn-info">Customer</a></li>
+                                        <li class="dropdown  "><a href="/Sage/Ceiling" class="btn btn-info">Ceiling</a></li>
+                                        <li class="dropdown  "><a href="/Sage/DocumentNo" class="btn btn-info">Document No</a></li>
+                                        <li class="dropdown  "><a href="/Sage/MRNo" class="btn btn-info">MR No</a></li>
+                                        <li class="dropdown  "><a href="/Sage/Setting" class="btn btn-info">Settings</a></li>
+                                        <li class="dropdown  "><a href="/Sage/DBUpdate/DBUpdate" class="btn btn-info">DB Update</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </ul>
+                    </li> 
+                <li class="dropdown Structure">
+                    @*<a href="#" class="dropdown-toggle" data-toggle="dropdown">Petty Cash Requisition<b class="caret"></b></a>*@
+                    <a href="/Sage/PettyCashRequisition/Menu" class="" data-toggle="">Petty Cash Requisition <b class=" caret"></b></a>
+                    <ul class="dropdown-menu multi-column columns-1">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <ul class="multi-column-dropdown">
+                                        <li class="dropdown  "><a href="/Sage/PettyCashRequisition" class="btn btn-info">Myself</a></li>
+                                        <li class="dropdown  "><a href="/Sage/FundReceivedPettyCashRequisition" class="btn btn-info">Fund Received</a></li>
+                                    <li class="dropdown  "><a href="/Sage/PettyCashRequisition/PostedIndex" class="btn btn-info">Status</a></li>
+                                        <li class="dropdown  "><a href="/Sage/PettyCashRequisition/SelfApproveIndex" class="btn btn-info">Self Approve</a></li>
+                                        <li class="dropdown  "><a href="/Sage/PettyCashRequisition/AuditIndex" class="btn btn-info">Audit</a></li>
+                                    <li class="dropdown dropdown-submenu"><a href="#" class="dropdown-toggle btn btn-info" data-toggle="dropdown">Report </a>
+                                        <ul class="dropdown-menu">
+                                            <li class="dropdown "><a href="/Sage/PettyCashRequisition/PCRExpense" class="btn btn-info">Expense</a>  </li>
+                                            <li class="dropdown "><a href="/Sage/PettyCashRequisition/PCRBankCharge" class="btn btn-info">Bank Charge</a>  </li>
+                                            <li class="dropdown "><a href="/Sage/PettyCashRequisition/PCRContingency" class="btn btn-info">Contingency</a>  </li>
+                                            <li class="dropdown "><a href="/Sage/PettyCashRequisition/AgentCommissionExpense" class="btn btn-info">Agent Commission Expense</a>  </li>
+                                        </ul>
+                                    </li>
+
+                                </ul>
+                            </div>
+                        </div>
+                    </ul>
+                </li>
+
+                <li class="dropdown Structure">
+                    <a href="/Sage/FinancialTransaction/Menu" class="" data-toggle="">Petty Cash Entry <b class=" caret"></b></a>
+                    <ul class="dropdown-menu multi-column columns-1">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <ul class="multi-column-dropdown">
+                                        <li class="dropdown dropdown-submenu"><a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown">Myself</a>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown btn btn-info" href="/Sage/FinancialTransaction?tType=Other">Petty Cash</a>  </li>
+                                                <li><a class="dropdown btn btn-info" href="/Sage/FinancialTransaction?tType=AgentCommission">Agent Commission</a>  </li>
+                                            </ul>
+                                        </li>
+                                    <li class="dropdown  "><a href="/Sage/FinancialTransaction/PostedIndex" class="btn btn-info">Status</a></li>
+                                        <li class="dropdown  "><a href="/Sage/FinancialTransaction/SelfApproveIndex" class="btn btn-info">Self Approve</a></li>
+                                        <li class="dropdown  "><a href="/Sage/FinancialTransaction/AuditIndex" class="btn btn-info">Audit</a></li>
+                                    <li class="dropdown dropdown-submenu"><a href="#" class="dropdown-toggle btn btn-info" data-toggle="dropdown">Report </a>
+                                        <ul class="dropdown-menu">
+                                            <li class="dropdown  "><a href="/Sage/FinancialTransaction/PCDetail" class="btn btn-info">Petty Cash Detail Report</a></li>
+                                        </ul>
+                                    </li>
+
+                                </ul>
+                            </div>
+                        </div>
+                    </ul>
+                </li>
+
+                    <li class="dropdown Structure">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Journal <b class="caret"></b></a>
+                        <ul class="dropdown-menu columns-1">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <ul class="multi-column-dropdown">
+                                                <li><a class="dropdown btn btn-info" href="/Sage/JournalEntry/PCJournalIndex?tType=Other">Petty Cash</a>  </li>
+                                                <li><a class="dropdown btn btn-info" href="/Sage/JournalEntry/PCJournalIndex?tType=AgentCommission">Agent Commission</a>  </li>
+                                                <li><a class="dropdown btn btn-info" href="/Sage/JournalEntry/PCRequisitionJournalIndex?tType=PRJ">Petty Cash Requisition</a>  </li>
+
+                                    </ul>
+
+                                </div>
+                            </div>
+                        </ul>
+                    </li>
+                <li class="dropdown Reports">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Reports <b class="caret"></b></a>
+                    <ul class="dropdown-menu columns-1">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <ul class="multi-column-dropdown">
+                                    <li class="dropdown"><a href="/Sage/Report" class="btn btn-info">Reports</a></li>
+                                    @*                                    <li class="dropdown"><a href="/Sage/FinancialTransaction/PCStatement" class="btn btn-info">PC Statement</a></li>
+                                    <li class="dropdown"><a href="/Sage/FinancialTransaction/PCExpenseStatement" class="btn btn-info">PC Expense Statement</a></li>
+                                    <li class="dropdown"><a href="/Sage/FinancialTransaction/YearBranchExpenseStatement" class="btn btn-info">Year Wise Branch Expense Statement</a></li>
+                                    <li class="dropdown dropdown-submenu"><a href="#" class="dropdown-toggle btn btn-info" data-toggle="dropdown">BDE Requisition </a>
+                                        <ul class="dropdown-menu  columns-1">
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <ul class="multi-column-dropdown">
+                                                        <li class="dropdown"><a href="/Sage/BDERequisition/BDEmployeeStatement" class="btn btn-info">Business Development Employee Statement</a></li>
+                                                        <li class="dropdown"><a href="/Sage/BDERequisition/YearAgentCEStatement" class="btn btn-info">Year Wise Agent Commission Expense Statement</a></li>
+                                                        <li class="dropdown"><a href="/Sage/BDERequisition/YearBDEExpenseStatement" class="btn btn-info">Year Wise BDE Statement</a></li>
+                                                        <li class="dropdown"><a href="/Sage/BDERequisition/MonthTotalExpensetatement" class="btn btn-info">Month Wise Total Expense Statement</a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </ul>
+                                    </li>*@
+
+
+                                </ul>
+                            </div>
+                        </div>
+                    </ul>
+                </li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right" style="border-left: 5px solid #fff">
+                <li class="dropdown1">
+                    <a href="#" class="dropdown-toggle sym-btn-back" title="Go Back" onclick="goBack()" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">&nbsp;Back</a>
+                </li>
+                <li class="dropdown1">
+                    <a href="#" class="dropdown-toggle btn btn-warning" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Payroll </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>
+<style>
+    .navbar-default .navbar-nav > li.dropdown:hover > a,
+    .navbar-default .navbar-nav > li.dropdown:hover > a:hover,
+    .navbar-default .navbar-nav > li.dropdown:hover > a:focus {
+        /*background-color: rgb(231, 231, 231);*/
+        color: rgb(85, 85, 85);
+    }
+
+    li.dropdown:hover > .dropdown-menu {
+        display: block;
+    }
+</style>
+
+<style>
+    /*.navbar-default .navbar-nav > li.dropdown:active > a,
+    .navbar-default .navbar-nav > li.dropdown:hover > a:hover,
+    .navbar-default .navbar-nav > li.dropdown:hover > a:focus 
+    {
+        background-color: rgb(252, 255, 0);
+    }
+
+    .navbar-default .navbar-nav > li.dropdown:visited > a
+    .navbar-default .navbar-nav > li.dropdown:hover > a:visited,
+    .navbar-default .navbar-nav > li.dropdown:visited > a:visited 
+    {
+        background-color: rgb(0, 154, 255);
+    }*/
+</style>

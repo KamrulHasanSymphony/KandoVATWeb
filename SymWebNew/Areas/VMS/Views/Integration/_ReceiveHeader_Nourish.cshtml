@@ -1,0 +1,481 @@
+﻿@using UIHelper.MVC
+@{
+    Layout = "~/Areas/VMS/Views/Shared/_ModalLayout.cshtml";
+}
+<style>
+    .trkMT10 {
+        margin-top: 10px;
+    }
+
+    .sortableHeader {
+        cursor: pointer;
+    }
+
+    table.trkFixTable tr.trSelectPopUpProduct td {
+        overflow-x: hidden;
+    }
+</style>
+
+
+<div class="row">
+
+    @*<div class="col-md-1">
+        <div class="editor-label">
+            <label for="Processed">Processed</label>
+        </div>
+        <div class="editor-field">
+            <select class="form-control" id="Processed" name="Processed">
+                <option>ALL</option>
+                <option>Y</option>
+                <option selected>N</option>
+            </select>
+        </div>
+    </div>*@
+
+    <div class="col-md-1">
+        <div class="editor-label">
+            <label for="DataSourceType">Data Source</label>
+        </div>
+        <div class="editor-field">
+            <select class="form-control" id="DataSourceType" name="DataSourceType">
+                <option selected>Database</option>
+                <option>Excel</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="col-md-1">
+        <div class="editor-label">
+            <label for="SearchFieldType">SearchField</label>
+        </div>
+        <div class="editor-field">
+            <select class="form-control" id="SearchFieldType" name="SearchFieldType">
+                <option>ID</option>
+                @*<option>ProductCode</option>*@
+               
+            </select>
+        </div>
+    </div>
+
+    <div class="searchText">
+        <div class="col-md-2">
+            <label>Search Value</label>
+            @Html.TextBox("SearchValue", "", new { @class = " form-control" })
+        </div>
+        <div class="col-md-2">
+            <div class="editor-label">
+                <label for="FromDate">From Date</label>
+            </div>
+            <div class="editor-field">
+                @Html.TextBox("FromDate", "", new { @placeholder = "From Date", @class = "  customDatePicker  form-control" })
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="editor-label">
+                <label for="ToDate">To Date</label>
+            </div>
+            <div class="editor-field">
+                @Html.TextBox("ToDate", "", new { @placeholder = "To Date", @class = "  customDatePicker  form-control" })
+            </div>
+        </div>
+    </div>
+    <div class="col-md-1">
+        <label>&nbsp;</label>
+        <button type="button" title="Click to Search" id="searchBtn" class="sym-btn-search btnSaleSearch" style="width:100%">&nbsp;Search</button>
+    </div>
+    <div class="col-md-1">
+        <label>&nbsp;</label>
+        <button type="button" title="Click to Clear" id="clearBtn" class="sym-btn-clear btnClear" style="width:100%">&nbsp;Clear</button>
+    </div>
+</div>
+<div class="row">
+   
+    <div class="col-md-1">
+        <label>&nbsp;</label>
+        <button type="button" title="Click to Save" id="btnSaveSale" class="sym-btn-save btnSaveSale" style="width:100%">&nbsp;Save</button>
+    </div>
+    @*<div class="col-md-1" style="display: none">
+        <label>&nbsp;</label>
+        <button type="button" title="Post Data" onclick="IntegrationPostData()" class="sym-btn-post" style="width:100%">&nbsp;Post</button>
+    </div>*@
+   
+</div>
+<div class="row">
+    <div class="fixedParent">
+        <table class="trkFixTable" id="productPopUpTable">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" class="chkAll" />Select  </th>
+                    <th>Action                  </th>
+                    <th>ID                      </th>
+                    <th>Receive Date Time       </th>
+                    <th>Branch Code             </th>     
+                    @*<th>Branch Name             </th>*@     
+                    @*<th>Quantity                </th>*@
+                </tr>
+            </thead>
+            <tbody id="popUpTbody"></tbody>
+        </table>
+    </div>
+</div>
+<form id="ReportForm" method="post" target="_blank"></form>
+<div id="myHigherModal" class="HigherModal"></div>
+
+
+@*--------------------------------------------------Search/Save/Clear--------------------------------------------------*@
+
+<script>
+    $(function () {
+
+        $("#Integration #searchBtn").on("click", function () {
+
+            IntegrationSearch();
+        });
+
+        $("#Integration #btnSaveSale").on("click", function () {
+            var questionMSG = "Are you sure to Save Data!";
+            Ask(questionMSG, function () {
+
+                IntegrationSave();
+
+            });
+
+        });
+
+        $("#Integration #clearBtn").on("click", function () {
+            IntegrationClear();
+        });
+
+    });
+
+    function IntegrationSearch(IDs,SearchField) {
+
+        var model = {
+            refNo: $("#Integration #SearchValue").val()
+            , FromDate: $("#Integration #FromDate").val()
+            , ToDate: $("#Integration #ToDate").val()
+            , DataSourceType: $("#Integration #DataSourceType").val()
+            , TransactionType: $("#transactionType").val()
+            , SearchField: $("#Integration #SearchFieldType").val()
+            , Processed: $("#Processed").val()
+            
+            , IDs: IDs
+
+
+        }
+
+        //if (model.refNo != null && model.refNo != "") {
+
+        //    model.FromDate = null;
+        //    model.ToDate = null;
+        //}
+     
+        $.ajax({
+            data: model
+            , url: "/Vms/Integration/GetReceiveData_Nourish"
+            , cache: false
+             , traditional: true
+            , type: "POST"
+            , beforeSend: function () { $(".loading").show(); }
+            , success: function (html) {
+                console.log(html)
+
+                $("#Integration #popUpTbody").html("");
+                $("#Integration #popUpTbody").html(html);
+                callingFixedPopUpTable();
+
+                var SelectedItem = $("#Integration  .trSelectPopUpProduct");
+                if (SelectedItem.length <= 0) {
+                    ShowResult("Fail", "This Transaction Already Integrated or Not Exist in Source!");
+                    return;
+                }
+
+            }
+            , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+        });
+    }
+               
+             
+    function IntegrationSave() {
+
+        var IDs = [];
+        var $Items = $("#Integration  .dSelected:input:checkbox:checked");
+
+        if ($Items == null || $Items.length == 0) {
+            ShowResult("Fail", "You are requested to Select before Save!");
+            return;
+        }
+
+        $Items.each(function () {
+
+            var ID = $(this).closest('tr').find('.dID').text();
+
+            //var InvoiceNo = $(this).closest('tr').find('.dInvoiceNo').text();
+            //if (InvoiceNo != null && InvoiceNo != "") {
+            //    return;
+            //}
+
+            IDs.push(ID);
+        });
+
+
+
+        if (IDs == null || IDs.length == 0) {
+            ShowResult("Fail", "No Data to Integrate!");
+            return;
+        }
+
+        var TransactionType = $("#transactionType").val();
+
+        var model = {
+            RefNo: $("#Integration #SearchValue").val()
+            , FromDate: $("#Integration #FromDate").val()
+            , ToDate: $("#Integration #ToDate").val()
+            , TransactionType: $("#transactionType").val()
+            , DataSourceType: $("#Integration #DataSourceType").val()
+            , IDs: IDs
+        }
+
+
+        //if (model.refNo != null && model.refNo != "") {
+
+        //    model.FromDate = null;
+        //    model.ToDate = null;
+        //}
+
+
+        $.ajax({
+            data: model
+            , url: "/VMS/Integration/SaveReceive_Nourish"
+            , cache: false
+            , traditional: true
+            , type: "POST"
+            , timeout: 500000
+            , beforeSend: function () { $(".loading").show(); }
+            , success: function (rVM) {
+                if (rVM.Status == "Success") {
+
+                    ShowResult(rVM.Status, rVM.Message);
+                }
+                else {
+
+                    ShowResult(rVM.Status, rVM.Message);
+                }
+            }
+            , error: function () {
+                ShowResult("fail", "Something gone wrong");
+            }
+            , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+        });
+
+    }
+
+    function IntegrationClear() {
+        //$("#Integration .searchText :input").val('');
+
+        $("#Integration .searchText :input").val("");
+    }
+</script>
+
+
+@*--------------------------------------------------Preview/Post--------------------------------------------------*@
+
+<script>
+    function GoToPage() {
+        var SalesInvoiceNo = $("#Integration #SalesInvoiceNo").val();
+        if (SalesInvoiceNo == null || SalesInvoiceNo == "") {
+            ShowResult("Fail", "No Data Available!");
+            $("#Integration #SalesInvoiceNo").focus();
+            return;
+        }
+
+        var url = "/VMS/SaleInvoice/GetSaleMaster" + "?" + "SaleNo=" + SalesInvoiceNo;
+        $.getJSON(url, function (vm) {
+
+            var Id = vm.Id;
+
+            window.location = "/VMS/SaleInvoice/Edit/" + Id;
+
+        });
+
+
+    }
+
+   
+
+    function IntegrationPostData() {
+
+
+        var IDs = [];
+        var clietnIDs = [];
+
+
+        var $Items = $("#Integration .dSelected:input:checkbox:checked");
+
+        if ($Items == null || $Items.length == 0) {
+            ShowResult("Fail", "You are requested to Select before Post!");
+            return;
+        }
+
+
+        var questionMSG = "Are you sure to Post Data!";
+
+        Ask(questionMSG, function () {
+
+            $Items.each(function () {
+
+                var ID = $(this).closest('tr').find('.dInvoiceNo').text();
+                var Post = $(this).closest('tr').find('.dPost').text();
+                var clietnID = $(this).closest('tr').find('.dID').text();
+
+
+                if (ID == null || ID == "" || Post == "Y") {
+                    return;
+                }
+                IDs.push(ID);
+                clietnIDs.push(clietnID);
+
+            });
+
+
+            if (IDs == null || IDs.length == 0) {
+                ShowResult("Fail", "No Invoice is ready to Post or Already Posted!");
+                return;
+            }
+
+            var model = {
+                DataSourceType: $("#Integration #DataSourceType").val()
+                , IDs: IDs
+            }
+
+            var url = '/VMS/Integration/SalePost_ACI';
+
+
+            $.ajax({
+                url: url
+                , data: model
+                , type: 'Post'
+                , traditional: true
+                , beforeSend: function () { $(".loading").show(); }
+                , success: function (rVM) {
+                    ShowResult(rVM.Status, rVM.Message);
+
+                    if (rVM.Status == "Success") {
+                        $("#Integration #Processed").val('Y');
+                        $("#Integration #PostStatus").val('Y');
+                        IntegrationSearch(clietnIDs);
+                    }
+                }
+                , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+
+            });
+        });
+
+    }
+
+
+</script>
+
+
+@*--------------------------------------------------Print--------------------------------------------------*@
+
+
+
+
+
+
+
+
+@*--------------------------------------------------Detail--------------------------------------------------*@
+<script>
+    ////$(function () {
+    function closeModal() {
+        var modal = $('#Integration #myHigherModal');
+
+        modal.html("");
+        modal.css("display", "none");
+    }
+
+    function IntegrationShowDetail(sender) {
+
+
+
+        var url = "/VMS/Integration/GetReceiveData_Detail_Nourish";
+
+        var IDs = [];
+        var ID = $(sender).closest('tr').find('.dID').text();
+        IDs.push(ID);
+
+        var model = {
+              DataSourceType: $("#Integration #DataSourceType").val()
+            , TransactionType: $("#transactionType").val()
+            , IDs: IDs
+            
+        }
+
+
+        var modal = document.getElementById('myHigherModal');
+        $.ajax({
+            url: url,
+            data: model,
+            traditional: true,
+            cache: false,
+            beforeSend: function () { $(".loading").show(); },
+            success: function (html) {
+                modal.style.display = "block";
+                $("#myHigherModal").html(html);
+            }
+            , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+        });
+
+    }
+    ////});
+
+</script>
+
+
+
+@*--------------------------------------------------MISC--------------------------------------------------*@
+
+
+<script>
+    $("#Integration .chkAll").click(function () {
+        $('#Integration  .dSelected:input:checkbox').not(this).prop('checked', this.checked);
+    });
+
+</script>
+
+<script language="javascript" type="text/javascript">
+
+    function callingFixedPopUpTable() {
+
+        var args = [100, 100, 200, 200, 150, 100, 150, 150, 100, 150, 150, 200, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100];
+        trkFixedPopUpTable("productPopUpTable", 3, args);
+    }
+
+
+    $(function () {
+        callingFixedPopUpTable();
+    })
+</script>
+
+@*--------------------------------------------------unused--------------------------------------------------*@
+
+<script>
+
+    $(function () {
+
+        $(document).on('click', '#Integration .trSelectPopUpProduct', function () {
+            var activeEl = $('#Integration tr.active');
+            activeEl.removeClass("#Integration active");
+            $(this).addClass(" active");
+        });
+
+    });
+
+
+</script>
+
+
+
+

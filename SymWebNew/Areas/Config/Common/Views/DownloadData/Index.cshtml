@@ -1,0 +1,62 @@
+﻿<div class="headrow">
+        <button type="button" title="Add New Download Data" data-url="/Common/DownloadData/Create" onclick="GoTo(this)" id="" class="sym-btn-add">&nbsp;New</button>
+        <button type="button" title="Delete Download Data" data-url="/Common/DownloadData/Delete" onclick="deletedData(this, 'myDataTable');" id="" class="sym-btn-remove">&nbsp;Delete</button>
+ <label class="pull-right"> Download Data</label>
+</div>
+ <div class="thinbox">
+        <div class="th_thinbox">
+        <p>Download Data List</p>   
+        </div>
+<table id="myDataTable" class="display">
+    <thead>
+        <tr>
+            <th class="center"><input type="checkbox" class="chkAll" />Select All</th>
+            <th>Punch Data</th>
+            <th>Proxy ID</th>
+            <th>Punch Date</th>
+            <th>Punch Time</th>
+            <th>Node ID</th>
+            <th>Migrate</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+        <br />
+        </div>
+<div class="headrow">
+        <button type="button" title="Add New Download Data" data-url="/Common/DownloadData/Create" onclick="GoTo(this)" id="" class="sym-btn-add">&nbsp;New</button>
+        <button type="button" title="Delete Download Data" data-url="/Common/DownloadData/Delete" onclick="deletedData(this, 'myDataTable');" id="" class="sym-btn-remove">&nbsp;Delete</button>
+</div>
+<script>
+    $(document).ready(function () {
+        var oTable = $('#myDataTable').dataTable({
+            "bServerSide": true,
+            "sAjaxSource": "/Common/DownloadData/_index",
+            "bProcessing": true,
+            "aLengthMenu": tablelength(),
+            "bJqueryUI": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+                            {
+                                "sName": "Id",
+                                "bSearchable": false,
+                                "bSortable": false,
+                                "sWidth": "12%",
+                                "sClass": "center",
+                                "fnRender": function (oObj) {
+                                    return ' <input onclick="CheckAll(this)" type="checkbox" data-Id="' + oObj.aData[0] + '">&nbsp; <a id=""  title="Click on for Edit" style="text-decoration:none;"   href=\"/Common/DownloadData/Edit/' + oObj.aData[0] + '\" class=" innerListLink sym-btn-edit-row "></a>' +
+                                      '&nbsp; <a title="Click on for Delete" style="text-decoration:none;" data-url="/Common/DownloadData/Delete" onclick="deletedData(this, myDataTable,' + oObj.aData[0] + ');" class="sym-btn-remove-row"></a>';
+                                }
+                            }
+                            , { "sName": "PunchData" }
+                            , { "sName": "ProxyID" }
+                            , { "sName": "PunchDate" }
+                            , { "sName": "PunchTime" }
+                            , { "sName": "NodeID" }
+                            , { "sName": "IsMigrate" }
+        ]
+        });
+        SelectAllForDelete();
+    });
+</script>

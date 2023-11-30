@@ -1,0 +1,59 @@
+﻿@model VATViewModel.DTOs.BOMNBRVM
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+<tr class="tablerow">
+    @using (Html.BeginCollectionItem("NbrVMs"))
+    {
+    <td>
+        <a id="" title="Click to Edit" onclick="EditItem(this);" class="sym-btn-edit-row"></a>
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.FinishItemName, new { @class = "  dItemName   form-control", @readonly = "readonly" })
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.FinishItemCode, new { @class = "  dItemCode   form-control", @readonly = "readonly" })
+        @Html.HiddenFor(m => m.ItemNo, new { @class="dItemNo"})
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.UOM, new { @class = "  dUOM   form-control", @readonly = "readonly" })
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.PNBRPrice, new { @class = "  dUnitPrice right priceLen  form-control", @readonly = "readonly" })
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.Other, new { @class = "  dOther right priceLen  form-control", @readonly = "readonly"})
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.OtherAmount, new { @class = "  dOtherAmount right priceLen  form-control", @readonly = "readonly"})
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.SDRate, new { @class = "  dSDRate right priceLen  form-control", @readonly = "readonly" })
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.SDAmount, new { @class = "  dSDAmount right priceLen  form-control", @readonly = "readonly" })
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.VATRate, new { @class = "  dVATRate right priceLen  form-control", @readonly = "readonly" })
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.VatAmount, new { @class = "  dVatAmount right priceLen  form-control", @readonly = "readonly" })
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.WholeSalePrice, new { @class = "  dWholeSalePrice right priceLen  form-control", @readonly = "readonly" })
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.Comments, new { @class = "  dComments  form-control", @readonly = "readonly" })
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.EffectDate, new { @class = "  dEffectDate  form-control", @readonly = "readonly" })
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.BOMId, new { @class = "  dBOMId form-control", @readonly = "readonly" })
+        @Html.HiddenFor(m => m.NBRWithSDAmount)
+    </td>
+    }
+</tr>
+
+

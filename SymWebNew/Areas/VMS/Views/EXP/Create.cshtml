@@ -1,0 +1,147 @@
+﻿@{
+    ViewBag.Title = "Create";
+}
+
+@model VATViewModel.DTOs.SalesInvoiceExpVM
+@using UIHelper.MVC
+@using (Html.BeginForm("CreateEdit", "EXP", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmTDSMy" }))
+{ 
+     @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.ID)
+    @Html.HiddenFor(model => model.Operation)
+
+    <div class="headrow">
+        @if (Model.Operation == "add")
+        {
+            <button type="button" name="btnName" value="Save" title="Save Data" onclick="pageSubmit('frmTDSMy')" class="sym-btn-save">&nbsp;Save</button>
+            <label class="pull-right">EXP > Create</label>
+        }
+        else
+        {
+            <button type="button" name="btnName" value="Update" title="Update Data" onclick="pageSubmit('frmTDSMy')" class="sym-btn-update">&nbsp;Update</button>
+            <label class="pull-right">EXP > Edit</label>
+        }
+        <button type="button" title="Go To Index" data-url="/VMS/EXP" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New TDS" data-url="/VMS/EXP/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+    </div>
+    
+    <div class="col-md-12 trkPX-0">
+        
+        <div class="thinbox animated zoomIn faster">
+            <div class="th_thinbox">
+                <p>EXP</p>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label for="ID" class="col-md-2 control-label text-right trkLabelMargin">ID</label>
+                    <div class="col-md-4">
+                        @Html.TextBoxFor(model => model.ID, new { @placeholder = "ID", @class = " form-control", @readonly = "readonly" })
+                        @Html.ValidationMessageFor(model => model.ID)
+                    </div>
+                </div>
+                <div class="form-group">              
+                    <label for="LCBank" class="col-md-2 control-label text-right trkLabelMargin">LC Bank</label>
+                    <div class="col-md-4">
+                        @Html.TextBoxFor(model => model.LCBank, new { @placeholder = "LC Bank", @class = "required form-control" })
+                        @Html.ValidationMessageFor(model => model.LCBank)
+                    </div>
+                    <label for="LCNumber" class="col-md-2 control-label text-right trkLabelMargin">LCNo</label>
+
+                    <div class="col-md-4">
+                        @Html.TextBoxFor(model => model.LCNumber, new { @placeholder = "LCNo", @class = "   required form-control" })
+                        @Html.ValidationMessageFor(model => model.LCNumber)
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="LCDate" class="col-md-2 control-label text-right trkLabelMargin">LC Date</label>
+                    <div class="col-md-4">
+                        @Html.TextBoxFor(model => model.LCDate, new { @placeholder = "LC Date", @class = " customDatePicker defaultDate form-control" })
+                        @Html.ValidationMessageFor(model => model.LCDate)
+                    </div>
+                    <label for="PINo" class="col-md-2 control-label text-right trkLabelMargin">PI No</label>
+                    <div class="col-md-4">
+                        @Html.TextBoxFor(model => model.PINo, new { @placeholder = "PI No", @class = " form-control" })
+                        
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="PIDate" class="col-md-2 control-label text-right trkLabelMargin">PI Date</label>
+                    <div class="col-md-4">
+                        @Html.TextBoxFor(model => model.PIDate, new { @placeholder = "PI Date", @class = "  customDatePicker defaultDate form-control" })
+                       
+                    </div>
+                    <label for="EXPNo" class="col-md-2 control-label text-right trkLabelMargin">EXPNo</label>
+                    <div class="col-md-4">
+                        @Html.TextBoxFor(model => model.EXPNo, new { @placeholder = "EXP No", @class = " required form-control" })
+                       
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="EXPDate" class="col-md-2 control-label text-right trkLabelMargin">EXP Date</label>
+                    <div class="col-md-4">
+                        @Html.TextBoxFor(model => model.EXPDate, new { @placeholder = "EXP Date", @class = "  customDatePicker defaultDate form-control" })
+
+                    </div>
+                    <label for="PortFrom" class="col-md-2 control-label text-right trkLabelMargin">Port From</label>
+                    <div class="col-md-4">
+                        @Html.TextBoxFor(model => model.PortFrom, new { @placeholder = "Port From", @class = "  form-control" })
+
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="PortTo" class="col-md-2 control-label text-right trkLabelMargin">Port To</label>
+                    <div class="col-md-4">
+                        @Html.TextBoxFor(model => model.PortTo, new { @placeholder = "Port To", @class = " form-control" })
+
+                    </div>
+                    <label for="Remarks" class="col-md-2 control-label text-right trkLabelMargin">Remarks</label>
+                    <div class="col-md-4">
+                        @Html.TextBoxFor(model => model.Remarks, new { @placeholder = "Remarks", @class = " form-control" })
+                        @Html.ValidationMessageFor(model => model.Remarks)
+
+                    </div>
+                </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    
+    
+    
+    <div class="headrow">
+        @if (Model.Operation == "add")
+        {
+            <button type="button" name="btnName" value="Save" title="Save Data" onclick="pageSubmit('frmTDSMy')" class="sym-btn-save">&nbsp;Save</button>
+            <label class="pull-right">EXP > Create</label>
+        }
+        else
+        {
+            <button type="button" name="btnName" value="Update" title="Update Data" onclick="pageSubmit('frmTDSMy')" class="sym-btn-update">&nbsp;Update</button>
+            <label class="pull-right">EXP > Edit</label>
+        }
+        <button type="button" title="Go To Index" data-url="/VMS/EXP" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New TDS" data-url="/VMS/EXP/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+    </div>
+    
+    
+    
+    
+}
+
+<script>
+    $(function () {
+        valiDation("frmTDSMy");
+    });
+
+
+    var MinValue = parseFloat($('.trValue').val().replace(/\,/g, ''));
+
+    $('.trValue').val(MinValue);
+
+</script>

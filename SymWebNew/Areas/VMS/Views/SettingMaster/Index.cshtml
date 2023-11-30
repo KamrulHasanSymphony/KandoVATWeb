@@ -1,0 +1,81 @@
+﻿@model IEnumerable<VATViewModel.DTOs.SettingsVM>
+@using UIHelper.MVC
+<div class="row">
+    <div class="col-md-4">
+        @using (Html.BeginForm("YearSelector", "Home"))
+        {
+
+            @Html.SimpleDropDown("Group", "/Config/DropDown/SettingGroupMaster", new { @class = " form-control trkMT-0", @Id = "GroupSel" })
+        }
+    </div>
+</div>
+<div class="thinbox">
+    <div class="th_thinbox">
+        <p>Settings</p>
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            <div class="editor-label">
+                <label>Setting Group</label>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="editor-label">
+                <label>Setting Name</label>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="editor-label">
+                <label>Setting Value</label>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="editor-label">
+                <label>Setting Type</label>
+            </div>
+        </div>
+    </div>
+    @foreach (var item in Model)
+    {
+        @Html.Partial("_SettingMaster", item);
+    }
+</div>
+<script>
+    $(document).ready(function () {
+        var interval = setInterval(function () {
+            if (document.querySelectorAll('#GroupSel option').length > 0) {
+                $('#GroupSel').val('@ViewBag.groupName');
+                clearInterval(interval);
+            }
+        }, 200);
+
+        $(".typeCheck").change(function () {
+            var $elem = $(this).closest('div.row').find('.expectedType');
+            var value = $elem.val().toLowerCase();
+            var val = $(this).val().trim().toLowerCase();
+            if (value == "bool") {
+                if (val != "y" && val != "n") {
+                    $(this).val('N');
+                    ShowResult("Fail", "Only (Y/N) is allowed for boolean!");
+                }
+            }
+            else if (value == "int" || value == "decimal") {
+                if (isNaN(val)) {
+                    $(this).val(0);
+                    ShowResult("Fail", "Only numeric allowed!");
+                }
+                if (value == "int") {
+                    if (Math.floor(val) != val) {
+                        $(this).val(0);
+                        ShowResult("Fail", "No decimal allowed for integer!");
+                    }
+                }
+            }
+        });
+    });
+    $("#GroupSel").change(function () {
+        var group = $('#GroupSel').val()
+        console.log(group);
+        window.location.href = "/VMS/SettingMaster/Index?group=" + group;
+    });
+</script>

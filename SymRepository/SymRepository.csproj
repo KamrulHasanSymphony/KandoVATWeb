@@ -1,0 +1,175 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{F6A7A269-8DCF-4FE3-83DA-DB8B0E389EE0}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SymRepository</RootNamespace>
+    <AssemblyName>SymRepository</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="VATServer.Interface">
+      <HintPath>..\..\VATDesktop\VATServer.Interface\bin\Debug\VATServer.Interface.dll</HintPath>
+    </Reference>
+    <Reference Include="VATServer.Library">
+      <HintPath>..\..\VATDesktop\VATLibrary\VATServer.Library\bin\Debug\VATServer.Library.dll</HintPath>
+    </Reference>
+    <Reference Include="VATServer.Ordinary">
+      <HintPath>..\..\VATDesktop\VATServer.Ordinary\bin\Debug\VATServer.Ordinary.dll</HintPath>
+    </Reference>
+    <Reference Include="VATViewModel">
+      <HintPath>..\..\VATDesktop\VATViewModel\bin\Debug\VATViewModel.dll</HintPath>
+    </Reference>
+    <Reference Include="VMSAPI">
+      <HintPath>..\..\VATDesktop\VMSAPI\bin\Debug\VMSAPI.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Enum\EnumRepo.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VMS\AdjustmentRepo.cs" />
+    <Compile Include="VMS\AuditRepo.cs" />
+    <Compile Include="VMS\MPLBankPaymentReceiveRepo.cs" />
+    <Compile Include="VMS\MPLZoneBranchMappingRepo.cs" />
+    <Compile Include="VMS\MPLZoneProfileRepo.cs" />
+    <Compile Include="VMS\MPLBDBankInformationRepo.cs" />
+    <Compile Include="VMS\MPLSelfBankInformationRepo.cs" />
+    <Compile Include="VMS\BankInformationRepo.cs" />
+    <Compile Include="VMS\BCLIntegrationRepo.cs" />
+    <Compile Include="VMS\BOMRepo.cs" />
+    <Compile Include="VMS\BranchProfileRepo.cs" />
+    <Compile Include="VMS\BranchRepo.cs" />
+    <Compile Include="VMS\BureauSaleRepo.cs" />
+    <Compile Include="VMS\ChartRepo.cs" />
+    <Compile Include="VMS\CommonRepo.cs" />
+    <Compile Include="VMS\CompanyProfileRepo.cs" />
+    <Compile Include="VMS\CPCDetailsRepo.cs" />
+    <Compile Include="VMS\CurrencyConversionRepo.cs" />
+    <Compile Include="VMS\CustomerItemRepo.cs" />
+    <Compile Include="VMS\CustomsHouseRepo.cs" />
+    <Compile Include="VMS\BillInvoiceRepo.cs" />
+    <Compile Include="VMS\DisposeRawRepo.cs" />
+    <Compile Include="VMS\ExcelPackage.cs" />
+    <Compile Include="VMS\HomeRepo.cs" />
+    <Compile Include="VMS\HSCodeRepo.cs" />
+    <Compile Include="VMS\ImportRepo.cs" />
+    <Compile Include="VMS\IntegrationRepo.cs" />
+    <Compile Include="VMS\DisposeFinishRepo.cs" />
+    <Compile Include="VMS\MISReportRepo.cs" />
+    <Compile Include="VMS\ProductTransferRepo.cs" />
+    <Compile Include="VMS\NBRReportRepo.cs" />
+    <Compile Include="VMS\TanksMPLRepo.cs" />
+    <Compile Include="VMS\MPLBankDepositSlipRepo.cs" />
+    <Compile Include="VMS\TransferReceiveMPLRepo.cs" />
+    <Compile Include="VMS\TransferIssueMPLRepo.cs" />
+    <Compile Include="VMS\SaleMPLInvoiceRepo.cs" />
+    <Compile Include="VMS\SettingMasterRepo.cs" />
+    <Compile Include="VMS\ShiftRepo.cs" />
+    <Compile Include="VMS\EXPRepo.cs" />
+    <Compile Include="VMS\TDSRepo.cs" />
+    <Compile Include="VMS\TenderRepo.cs" />
+    <Compile Include="VMS\Client6_3InvoiceRepo.cs" />
+    <Compile Include="VMS\Toll6_3InvoiceRepo.cs" />
+    <Compile Include="VMS\TransferIssueRepo.cs" />
+    <Compile Include="VMS\TransferRawRepo.cs" />
+    <Compile Include="VMS\CurrencyRepo.cs" />
+    <Compile Include="VMS\CustomerGroupRepo.cs" />
+    <Compile Include="VMS\CustomerRepo.cs" />
+    <Compile Include="VMS\DBConstantRepo.cs" />
+    <Compile Include="VMS\DepositRepo.cs" />
+    <Compile Include="VMS\FiscalYearRepo.cs" />
+    <Compile Include="VMS\IssueHeaderRepo.cs" />
+    <Compile Include="VMS\PrefixRepo.cs" />
+    <Compile Include="VMS\ProductCategoyRepo.cs" />
+    <Compile Include="VMS\TransferReceiveRepo.cs" />
+    <Compile Include="VMS\TransferRepo.cs" />
+    <Compile Include="VMS\UserBranchDetailRepo.cs" />
+    <Compile Include="VMS\VAT7Repo.cs" />
+    <Compile Include="VMS\ProductRepo.cs" />
+    <Compile Include="VMS\PurchaseRepo.cs" />
+    <Compile Include="VMS\ReceiveRepo.cs" />
+    <Compile Include="VMS\ReportDSRepo.cs" />
+    <Compile Include="VMS\AdjustmentHistoryRepo.cs" />
+    <Compile Include="VMS\SaleInvoiceRepo.cs" />
+    <Compile Include="VMS\SDDepositRepo.cs" />
+    <Compile Include="VMS\SettingRepo.cs" />
+    <Compile Include="VMS\SetupRepo.cs" />
+    <Compile Include="VMS\SymphonyVATSysCompanyInformationRepo.cs" />
+    <Compile Include="VMS\UOMNameRepo.cs" />
+    <Compile Include="VMS\UOMRepo.cs" />
+    <Compile Include="VMS\UserInformationRepo.cs" />
+    <Compile Include="VMS\VDSRepo.cs" />
+    <Compile Include="VMS\VehicleRepo.cs" />
+    <Compile Include="VMS\VendorGroupRepo.cs" />
+    <Compile Include="VMS\VendorRepo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SymOrdinary\SymOrdinary.csproj">
+      <Project>{83e8e9ad-89c0-4a1b-b554-c25c84d4db25}</Project>
+      <Name>SymOrdinary</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="Scripts\jquery-3.6.1.min.map" />
+    <None Include="Scripts\jquery-3.6.1.slim.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\jquery-3.6.1.intellisense.js" />
+    <Content Include="Scripts\jquery-3.6.1.js" />
+    <Content Include="Scripts\jquery-3.6.1.min.js" />
+    <Content Include="Scripts\jquery-3.6.1.slim.js" />
+    <Content Include="Scripts\jquery-3.6.1.slim.min.js" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

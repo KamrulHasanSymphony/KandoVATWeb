@@ -1,0 +1,156 @@
+﻿@model VATViewModel.DTOs.ReportParamVM
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+<link href="~/assets/newJqueryUI/jquery-ui.css" rel="stylesheet" />
+<style>
+    .trkmodal {
+        padding-top: 10%;
+    }
+
+    .trkmodal-content {
+        width: 50%;
+        padding-bottom: 10px;
+    }
+
+    .customDatePicker {
+        background: #fefede url(/Images/calendar.jpg) no-repeat 98% !important;
+    }
+    /*no padding with little margin bttom*/
+    div.trkmodal-body div.npForm {
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+        padding-bottom: 0px !important;
+        margin-bottom: 10px;
+    }
+
+        div.trkmodal-body div.npForm div.npForm {
+            margin-bottom: 0px !important;
+        }
+</style>
+@using (Html.BeginForm("Report_VAT6_3", "NBRReport", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmVAT6_3", @target = "_blank" }))
+{
+     @Html.HiddenFor(m => m.InvoiceNo)
+     @Html.HiddenFor(m => m.PreviewOnly)
+     @Html.HiddenFor(m => m.PrintCopy)
+     @Html.HiddenFor(m => m.TransactionType)
+    <div class="trkmodal-content">
+        <div class="trkmodal-header">
+            <span class=" close closeBtn">&times;</span>
+            @if (@Model.TransactionType == "TollIssue" || @Model.TransactionType == "TollFinishIssue")
+            {
+            <h2 class="text-center">Report(VAT 6.4) Challan</h2>
+                
+            }
+            else
+            {
+            <h2 class="text-center">Report(VAT 6.3) Sales Challan</h2>
+                
+            }
+        </div>
+        <div class="trkmodal-body">
+            @if (@Model.AlreadyPrintCopy > 0)
+            {
+            <div class="npForm col-md-12">
+                <center><label>You have already print  @Model.AlreadyPrintCopy  Copies </label></center>
+            </div>
+            }
+            <div class="form-group">
+                @*<div class="npForm col-md-12">
+                    <label>How many copies do you want to print?</label>
+                    @Html.TextBoxFor(m => m.PrintCopy, new { @placeholder = "Print Copy", @class = " form-control NumberCheck" })
+                </div>*@
+                <button type="button" class=" btn sym-btn-report" id="print"> Print</button>
+                <button type="button" class="sym-btn-close closeBtn pull-right"> Close</button>
+            </div>
+        </div>
+    </div>
+}
+
+<script src="~/assets/javascripts/custom.js"></script>
+
+
+
+<script>
+    $(document).ready(function () {
+
+
+        function closeModal() {
+            $("#myModal").html("");
+            trkmodal.style.display = "none";
+        }
+
+        var trkmodal = document.getElementById('myModal');
+
+        $('.closeBtn').click(function () {
+            closeModal();
+        });
+
+
+
+
+
+
+    });
+    $("#print").on("click", function (e) {
+
+
+        var questionMSG = "Do you want to Print!";
+        Ask(questionMSG, function () {
+
+            questionMSG = "Are you sure to Print!";
+            Ask(questionMSG, function () {
+
+                $("#PreviewOnly").val(false);
+                $("#PrintCopy").val(1);
+
+                $("#frmVAT6_3").submit();
+
+
+            });
+
+
+        });
+
+
+
+
+        //var frame = document.getElementById("reportPdf");
+        //var framedoc = frame.contentWindow;
+        //framedoc.focus();
+        //framedoc.print();
+
+
+
+        //////var loginInfo = $("#Json").val();
+        //////var SalesId = $("#SalesId").val();
+        //////var PrinterName = $("#PrinterName").val();
+        //////var SalesInvoiceNo = $("#SalesInvoiceNumber").val();
+
+        //////var printParam = {
+        //////    loginInfo: loginInfo,
+        //////    SalesInvoiceNo: SalesInvoiceNo,
+        //////    SalesId: SalesId,
+        //////    PrinterName: PrinterName,
+        //////}
+
+        //////$.ajax({
+
+        //////    url: "http://localhost:10000/api/printer/PrintChallan"
+        //////    , cache: false
+        //////    , type: "POST"
+        //////    , data: printParam
+        //////    , beforeSend: function () { $(".loading").show(); }
+        //////    , success: function (result) {
+        //////        ShowResult("Success","Successfully printed 1 Copy")
+        //////    }
+        //////    , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+        //////});
+
+
+
+    })
+
+
+</script>

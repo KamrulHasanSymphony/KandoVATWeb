@@ -1,0 +1,35 @@
+﻿@model IEnumerable<SymViewModel.Attendance.EmployeeMonthlyOvertimeVM>
+@using UIHelper.MVC
+@using (Html.BeginForm("Create", "EmployeeMonthlyOvertime", FormMethod.Post, new { @Id = "frmEmpMonthlyOvertime" }))
+{
+<div class="thinbox">
+    <div class="th_thinbox">
+        <p>
+            Employee List
+        </p>
+    </div>
+
+    <div id="container">
+        <table id="myDataTable" class="display">
+            <thead>
+                <tr>
+                    <th>Code</th>
+                    <th>Name</th>
+                    <th class="col-md-1">Overtime (Hrs)</th>
+                    <th class="col-md-1">Late In (Hrs)</th>
+                    <th class="col-md-1">Early Out (Hrs)</th>
+                    <th>Remark</th>
+                    <th>Designation</th>
+                    <th>@Session["DepartmentLabel"]</th>
+                    <th>@Session["ProjectLabel"]</th>
+                    <th>@Session["ProjectLabel"]</th>
+                </tr>
+            </thead>
+
+           <tbody>
+                 @Html.EditorForModel()
+            </tbody>
+        </table>
+    </div>
+</div>
+}

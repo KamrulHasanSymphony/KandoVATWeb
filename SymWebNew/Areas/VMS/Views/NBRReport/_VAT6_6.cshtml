@@ -1,0 +1,405 @@
+﻿@model VATViewModel.DTOs.PopUpViewModel
+@using UIHelper.MVC
+@{
+    Layout = "~/Areas/VMS/Views/Shared/_ModalLayout.cshtml";
+}
+<style>
+    .trkMT10 {
+        margin-top: 10px;
+    }
+
+    .sortableHeader {
+        cursor: pointer;
+    }
+
+    table.trkFixTable tr.trSelectPopUpProduct td {
+        overflow-x: hidden;
+    }
+</style>
+<div class="HigherModal-content">
+    <div class="HigherModal-header">
+        <span class="closeHigher">&times;</span>
+
+        <h2 class="text-center">VAT6.6 Search</h2>
+
+
+        @*@if (Model.TransactionType == "Credit")
+        {
+            <h2 class="text-center">VAT6.7 Search</h2>
+
+        }
+        else if (Model.TransactionType == "Debit")
+        {
+            <h2 class="text-center">VAT6.8 Search</h2>
+
+        }
+        else
+        {
+            <h2 class="text-center">VAT6.3 Search</h2>
+
+        }*@
+    </div>
+
+    @Html.HiddenFor(m => m.TransactionType);
+    @Html.HiddenFor(m => m.BranchId);
+
+    <div class="HigherModal-body formDesign">
+        <div class="row">
+
+            <div class="col-md-2">
+                <label>Search Value</label>
+                @Html.TextBox("SearchValue", "", new { @class = " form-control" })
+            </div>
+            <div class="col-md-2">
+                <label>Treasury No</label>
+                @Html.TextBoxFor(m => m.TreasuryNo, new { @placeholder = "Treasury No", @class = "cTreasuryNo  form-control defaultDate" })
+            </div>
+            <div class="col-md-1 ">
+                <label>Post</label>
+                <select id="activePopUp" class="form-control">
+                    <option value=""></option>
+                    <option value="Y">Y</option>
+                    <option value="N">N</option>
+                </select>
+            </div>
+
+            <div class="col-md-2">
+                <label>Cheque Date From</label>
+                @Html.TextBoxFor(m => m.CheckDate, new { @placeholder = "Start Date", @class = "cCheckDate customDatePicker form-control defaultDate" })
+            </div>
+            <div class="col-md-2">
+                <label>Cheque Date To</label>
+                @Html.TextBoxFor(m => m.CheckDateTo, new { @placeholder = "End Date", @class = "cCheckDateTo customDatePicker form-control defaultDate" })
+            </div>
+
+            <div class="col-md-2">
+                <label>Effected Date from </label>
+                @Html.TextBoxFor(m => m.IssueDateTimeFrom, new { @placeholder = "Start Date", @class = "cIssueDateTimeFrom customDatePicker form-control defaultDate" })
+            </div>
+            <div class="col-md-2">
+                <label>Effected Date To</label>
+                @Html.TextBoxFor(m => m.IssueDateTimeTo, new { @placeholder = "End Date", @class = "cIssueDateTimeTo customDatePicker form-control defaultDate" })
+            </div>
+
+            <div class="col-md-2">
+                <label>BankName</label>
+                @Html.TextBoxFor(m => m.BankName, new { @placeholder = "Bank Name", @class = "cBankName  form-control defaultDate" })
+            </div>
+
+            <div class="col-md-2">
+                <label>AccountNumber</label>
+                @Html.TextBoxFor(m => m.AccountNumber, new { @placeholder = "Account No", @class = "cAccountNumber  form-control defaultDate" })
+            </div>
+
+            <div class="col-md-2">
+                <label>Branch</label>
+                @Html.SimpleDropDownFor(m => m.BranchId, "/Config/DropDown/BranchProfile", new { @class = " form-control selectDropdown" })
+            </div>
+
+            <div class="col-md-1">
+                <div class="editor-field">
+                    <label>&nbsp;</label>
+                    <button type="button" title="Click to Search" id="searchBtn" class="sym-btn-search btnPopUpSearch">&nbsp;Search</button>
+                </div>
+            </div>
+            <div class="col-md-1">
+                <label>&nbsp;</label>
+                <button type="button" title="Clear Data" id="Clear" class=" sym-btn-clear">&nbsp;Clear</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="fixedParent">
+                <table class="trkFixTable" id="productPopUpTable">
+                    <thead>
+                        <tr>
+                            <th>SL</th>
+                            <th>Deposit Id</th>
+                            <th>Treasury No</th>
+                            <th>Deposit Date</th>
+                            <th>Deposit Amount</th>
+                            <th>BankDeposit Date</th>
+                            <th>Is Posted</th>
+                        </tr>
+                    </thead>
+                    <tbody id="popUpTbody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*product group loading code*@
+<script>
+    function LoadProductGroup(productType) {
+        $DropDownProductCategory = $("#popUpProductGroup");
+        var url = "/Config/DropDown/ProductCategory?IsRaw=" + productType;
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            success: function (data) {
+                $DropDownProductCategory.html("");
+                $DropDownProductCategory.append($("<option />").val("").text("Select"));
+                $.each(data, function (i, state) {
+                    $DropDownProductCategory.append($("<option />").val(state.Value).text(state.Text));
+                });
+            }
+        });
+    }
+    ////if product type is selected but product group is not selected
+    $(function () {
+        var productType = '@Model.ProductType';
+        if (productType != null && productType != "0" && productType != "") {
+            var productgroup = '@Model.ProductCategoryId';
+            if (productgroup == null || productgroup == "0" || productgroup == "") {
+                ////waiting for getting default product categories
+                var interval = setInterval(function () {
+                    if (document.querySelectorAll('#popUpProductGroup option').length > 0) {
+                        LoadProductGroup(productType);
+                        clearInterval(interval);
+                    }
+                }, 200);
+            }
+        }
+    });
+
+    $('#popUpProductType').change(function () {
+        var productType = $(this).val();
+        if (productType != null && productType != "0" && productType != "") {
+            LoadProductGroup(productType);
+        }
+    });
+</script>
+
+@*fixed table*@
+<script language="javascript" type="text/javascript">
+    function fixedScrollPopUpFixedTable(tableId, leftTotal) {
+        $('#' + tableId + ' tbody').scroll(function (e) {
+            var i;
+            for (i = 1; i <= leftTotal; i++) {
+                $('#' + tableId + ' thead th:nth-child(' + i + ')').css("left", $("#" + tableId + " tbody").scrollLeft());
+                $('#' + tableId + ' tbody td:nth-child(' + i + ')').css("z-index", "1");
+                $('#' + tableId + ' tbody td:nth-child(' + i + ')').css("left", $("#" + tableId + " tbody").scrollLeft());
+            }
+            $('#' + tableId + ' thead').css("left", -$("#" + tableId + " tbody").scrollLeft());
+
+        });
+    }
+    function settingPopUpFixedColumnWidth(tableId, widthArgs) {
+        if (widthArgs == null) {
+            return;
+        }
+        var i;
+        for (i = 1; i <= widthArgs.length; i++) {
+            $('#' + tableId + ' tr td:nth-child(' + i + ')').css("min-width", widthArgs[i - 1] + "px");
+            $('#' + tableId + ' tr td:nth-child(' + i + ')').css("overflow", "hidden");
+            $('#' + tableId + ' tr td:nth-child(' + i + ')').css("max-width", widthArgs[i - 1] + "px");
+
+            $('#' + tableId + ' tr th:nth-child(' + i + ')').css("min-width", widthArgs[i - 1] + "px");
+            $('#' + tableId + ' tr th:nth-child(' + i + ')').css("overflow", "hidden");
+            $('#' + tableId + ' tr th:nth-child(' + i + ')').css("max-width", widthArgs[i - 1] + "px");
+        }
+    }
+    function fixLeftPopUpColumns(tableId, leftTotal) {
+        var i;
+        for (i = 1; i <= leftTotal; i++) {
+            //fixed column header style
+            $('#' + tableId + ' thead th:nth-child(' + i + ')').css("height", "30px");
+            $('#' + tableId + ' thead th:nth-child(' + i + ')').css("position", "relative");
+            $('#' + tableId + ' thead th:nth-child(' + i + ')').css("z-index", "2");
+            //fixed column rows style
+            $('#' + tableId + ' tbody tr td:nth-child(' + i + ')').css("height", "30px");
+            $('#' + tableId + ' tbody tr td:nth-child(' + i + ')').css("position", "relative");
+        }
+    }
+    function settingFixedPopUpWidth(tableId) {
+        //var parentWidth = $('.fixedParent').width();
+        var parentWidth = $('#' + tableId).closest('.fixedParent').width();
+        $('#' + tableId + ' thead').width(parentWidth);
+        $('#' + tableId + ' tbody').width(parentWidth);
+    }
+    function trkFixedPopUpTable(tableId, leftTotal, args) {
+        settingFixedPopUpWidth(tableId);
+        fixLeftPopUpColumns(tableId, leftTotal);
+        fixedScrollPopUpFixedTable(tableId, leftTotal);
+        settingPopUpFixedColumnWidth(tableId, args);
+    }
+    function callingFixedPopUpTable() {
+        var args = [50,200, 100, 200, 200, 200, 100, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200];
+        trkFixedPopUpTable("productPopUpTable", 3, args);
+    }
+    $(function () {
+        callingFixedPopUpTable();
+    })
+</script>
+
+<script>
+    ////closing higher modal
+    function closeHigherModal() {
+        $("#myHigherModal").html("");
+        trkmodal.style.display = "none";
+    }
+    var span = document.getElementsByClassName("closeHigher")[0];
+    var trkmodal = document.getElementById('myHigherModal');
+    //When the user clicks on <span> (x), close the trkmodal
+    span.onclick = function () {
+        closeHigherModal();
+    }
+
+    $(function () {
+        $('#productPopUpTable').unbind().on('dblclick', '.trSelectPopUpProduct', function () {
+            var itemName = $(this).children('td.popUpItemName').text();
+            selectPopUpProduct(itemName, this);
+        });
+        function selectPopUpProduct(itemName, sender) {
+            var target = '@Model.TargetId';
+            $('#' + target).val(itemName);
+            callbackFromProductModal(sender, target);
+            closeHigherModal();
+        }
+        $(document).on('click', '.trSelectPopUpProduct', function () {
+            var activeEl = $('tr.active');
+            activeEl.removeClass("active");
+            $(this).addClass(" active");
+        });
+    })
+</script>
+
+<script>
+    function ShowSelectedProduct() {
+        var productCode = '@Model.ProductCode';
+        if (productCode == "" || productCode == "0") {
+            return;
+        }
+        var interval = setInterval(function () {
+            if (document.querySelectorAll('#SearchField option').length > 0) {
+                $('#SearchField').val("ProductCode");
+                $('#SearchValue').val(productCode);
+                SearchVDS();
+                clearInterval(interval);
+            }
+        }, 200);
+    }
+    function SearchVDS() {
+
+
+        var SearchValue = $('#SearchValue').val();
+        var TransactionType = '@Model.TransactionType';
+        var BranchID = '@Model.BranchId';
+        var Post = $('#activePopUp').val();
+        var ChequeDate = $('.cCheckDate').val();
+        var CheckDateTo = $('.cCheckDateTo').val();
+        var IssueDateTimeFrom = $('.cIssueDateTimeFrom').val();
+        var IssueDateTimeTo = $('.cIssueDateTimeTo').val();
+        var TreasuryNo = $('.cTreasuryNo').val();
+        var BankName = $('.cBankName').val();
+        var AccountNumber = $('.cAccountNumber').val();
+
+
+        var model = {
+            //SearchField: SearchField,
+            SearchValue: SearchValue,
+            BranchId: BranchID,
+            Post: Post,
+            ChequeDate: ChequeDate,
+            CheckDateTo: CheckDateTo,
+            IssueDateTimeFrom: IssueDateTimeFrom,
+            IssueDateTimeTo: IssueDateTimeTo,
+            TreasuryNo: TreasuryNo,
+            BankName: BankName,
+            AccountNumber: AccountNumber
+
+
+        }
+        $.ajax({
+
+            data: model
+            //, url: "/Vms/Product/GetFilteredProducts"
+            , url: "/Vms/NBRReport/GetFilteredVAT6_6?TransactionType=" + TransactionType
+            , cache: false
+            , beforeSend: function () { $(".loading").show(); }
+            , success: function (html) {
+
+                $("#popUpTbody").html("");
+
+                $("#popUpTbody").html(html);
+                callingFixedPopUpTable();
+            }
+            , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+        });
+
+    }
+    $(function () {
+        ShowSelectedProduct();
+        $('.btnPopUpSearch').click(function () {
+            SearchVDS();
+            //SearchProducts();
+        });
+        $("#Clear").on('click', function () {
+            $(".HigherModal-body .Dropdown").select2("val", "");
+            $(".HigherModal-body .form-control").val("");
+        });
+    });
+</script>
+
+@*for sorting column*@
+<script>
+    function sortTable(n) {
+        var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+        table = document.getElementById("productPopUpTable");
+        switching = true;
+        //Set the sorting direction to ascending:
+        dir = "asc";
+        /*Make a loop that will continue until
+        no switching has been done:*/
+        while (switching) {
+            //start by saying: no switching is done:
+            switching = false;
+            rows = table.rows;
+            if (rows.length > 150) {
+                ShowResult("Fail", "There is too much data to sort");
+                return;
+            }
+            /*Loop through all table rows (except the
+            first, which contains table headers):*/
+            for (i = 1; i < (rows.length - 1) ; i++) {
+                //start by saying there should be no switching:
+                shouldSwitch = false;
+                /*Get the two elements you want to compare,
+                one from current row and one from the next:*/
+                x = rows[i].getElementsByTagName("TD")[n];
+                y = rows[i + 1].getElementsByTagName("TD")[n];
+                /*check if the two rows should switch place,
+                based on the direction, asc or desc:*/
+                if (dir == "asc") {
+                    if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                        //if so, mark as a switch and break the loop:
+                        shouldSwitch = true;
+                        break;
+                    }
+                } else if (dir == "desc") {
+                    if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                        //if so, mark as a switch and break the loop:
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+            }
+            if (shouldSwitch) {
+                /*If a switch has been marked, make the switch
+                and mark that a switch has been done:*/
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+                //Each time a switch is done, increase this count by 1:
+                switchcount++;
+            } else {
+                /*If no switching has been done AND the direction is "asc",
+                set the direction to "desc" and run the while loop again.*/
+                if (switchcount == 0 && dir == "asc") {
+                    dir = "desc";
+                    switching = true;
+                }
+            }
+        }
+    }
+</script>

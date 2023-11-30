@@ -1,0 +1,81 @@
+﻿@model SymViewModel.Attendance.HoliDayVM
+@using UIHelper.MVC
+
+@using (Html.BeginForm("Edit", "HoliDay", FormMethod.Post, new { @Id = "frmHoliDay" }))
+{
+    @Html.ValidationSummary(true)
+
+    <div class="headrow">
+        <button type="button" title="Update Data" onclick="pageSubmit('frmHoliDay')" class="sym-btn-update">&nbsp;Update</button>
+ <label class="pull-right"> Holiday > Edit</label>
+    </div>
+
+    <div class="thinbox">
+        <div class="th_thinbox">
+        <p>Holiday</p>   
+                    @Html.HiddenFor(model => model.Id)
+        </div>
+        <div class="timePolicy">
+        <div class="row">
+           @* <div class="col-md-2">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.Name)
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.Name, new { @placeholder = "Name", @class = " required form-control" })
+                </div>
+            </div>*@
+            <div class="col-md-2">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.HoliDay)
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.HoliDay, new { @placeholder = "Holiday", @class = "customDatePicker required form-control" })
+                    @*@Html.ValidationMessageFor(model => model.HoliDay)*@
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.HoliDayType)
+                </div>
+                <div class="editor-field">
+                    @Html.SimpleDropDownFor(model => model.HoliDayType,  "/Config/DropDown/HoliDayTypeName", new { @class = " required form-control" })
+                    @*@Html.TextBoxFor(model => model.HoliDayType, new { @placeholder = "HoliDay Type", @class = " required form-control" })*@
+                    @*@Html.ValidationMessageFor(model => model.HoliDayType)*@
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            
+            <div class="col-md-10">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.Remarks)
+                </div>
+                <div class="editor-field">
+                    @Html.TextAreaFor(model => model.Remarks, new { @placeholder = "Remarks", @class = "form-control" })
+                    @*@Html.ValidationMessageFor(model => model.Remarks)*@
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+    
+    @*<p>
+        <input type="submit" value="Save"  class="btn btn-info"/>
+        <input type="button" class="btn btn-info" data-url="/Common/HoliDay" onclick="BackToList(this)" value="Back" />
+    </p>*@
+    
+        
+    <div class="headrow">
+        <button type="button" title="Update Data" onclick="pageSubmit('frmHoliDay')" class="sym-btn-update">&nbsp;Update</button>
+    </div>
+    
+}
+<script>
+    $(function () {
+        InitDatePickers();
+        fromWriteColor("frmHoliDay");
+        valiDation("frmHoliDay");
+
+    });
+</script>

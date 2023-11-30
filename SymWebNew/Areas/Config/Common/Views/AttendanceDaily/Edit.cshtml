@@ -1,0 +1,438 @@
+﻿@model SymViewModel.Attendance.AttendanceDailyVM
+
+@{
+    ViewBag.Title = "Edit";
+}
+@using (Html.BeginForm("Edit", "AttendanceDaily", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmAttendanceDaily" }))
+{
+    @Html.ValidationSummary(true)
+
+    @Html.HiddenFor(model => model.Id)
+
+        
+    <div class="headrow">
+    <button type="button" title="Update Data" onclick="pageSubmit('frmAttendanceDaily')" class="sym-btn-update" >&nbsp;Update</button>
+ <label class="pull-right"> Attendance Daily > Edit</label>
+</div>
+    
+    <div class="thinbox">
+        <div class="th_thinbox">
+        <p>Attendance Daily</p>   
+        </div>
+        <div class="AttendanceDaily">
+             <div class="row">
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.DailyDate)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.DailyDate, new { @placeholder = "Daily Date", @class = "customDatePicker required form-control" })
+                        @Html.ValidationMessageFor(model => model.DailyDate)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.PunchInTime)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.PunchInTime, new { @onchange = "policyTimeCheck(this)", @class = "customTimePicker required form-control" })
+                        @Html.ValidationMessageFor(model => model.PunchInTime)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.PunchOutTime)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.PunchOutTime, new { @onchange = "policyTimeCheck(this)", @class = "customTimePicker required form-control" })
+                        @Html.ValidationMessageFor(model => model.PunchOutTime)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.PunchOutTimeNextday)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.PunchOutTimeNextday, new { @onchange = "policyTimeCheck(this)", @class = " customTimePicker required form-control" })
+                        @Html.ValidationMessageFor(model => model.PunchOutTimeNextday)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.PunchNextDay)
+                    </div>
+                    <div class="editor-field">
+                        @Html.CheckBoxFor(model => model.PunchNextDay, new { @class = " required form-control" })
+                        @Html.ValidationMessageFor(model => model.PunchNextDay)
+                    </div>
+
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.IsManual)
+                    </div>
+                    <div class="editor-field">
+                        @Html.CheckBoxFor(model => model.IsManual, new { @class = " required form-control" })
+                        @Html.ValidationMessageFor(model => model.IsManual)
+                    </div>
+                </div>
+            </div>
+             <div class="row">
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.AttendanceStructureId)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.AttendanceStructureId, new {@class = "required form-control" })
+                        @Html.ValidationMessageFor(model => model.AttendanceStructureId)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.GroupId)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.GroupId, new { @class = "  required form-control" })
+                        @Html.ValidationMessageFor(model => model.GroupId)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.EmployeeId)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.EmployeeId, new { @class = " required form-control" })
+                        @Html.ValidationMessageFor(model => model.EmployeeId)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.ProxyID)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.ProxyID, new { @class = "  required form-control" })
+                        @Html.ValidationMessageFor(model => model.ProxyID)
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.InTime)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.InTime, new { @onchange = "policyTimeCheck(this)", @class = "customTimePicker required form-control" })
+                        @Html.ValidationMessageFor(model => model.InTime)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.InTimeBy)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.InTimeBy, new { @class = "  required form-control" })
+                        @Html.ValidationMessageFor(model => model.InTimeBy)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.OutTime)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.OutTime, new { @onchange = "policyTimeCheck(this)", @class = "customTimePicker required form-control" })
+                        @Html.ValidationMessageFor(model => model.OutTime)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.OutTimeBy)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.OutTimeBy, new { @class = "  required form-control" })
+                        @Html.ValidationMessageFor(model => model.OutTimeBy)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.LateMin)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.LateMin, new { @onchange = "NumberCheck(this)", @class = "right  required  form-control" })
+                        @Html.ValidationMessageFor(model => model.LateMin)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.WorkingHrs)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.WorkingHrs, new { @onchange = "NumberCheck(this)", @class = "right   required form-control" })
+                        @Html.ValidationMessageFor(model => model.WorkingHrs)
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.WorkingHrsBy)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.WorkingHrsBy, new { @class = "   required form-control" })
+                        @Html.ValidationMessageFor(model => model.WorkingHrsBy)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.WorkingHrsRest)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.WorkingHrsRest, new { @onchange = "NumberCheck(this)", @class = "right required form-control" })
+                        @Html.ValidationMessageFor(model => model.WorkingHrsRest)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.TotalOT)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.TotalOT, new { @onchange = "NumberCheck(this)", @class = "right  required form-control" })
+                        @Html.ValidationMessageFor(model => model.TotalOT)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.TotalOTBy)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.TotalOTBy, new { @class = " required form-control" })
+                        @Html.ValidationMessageFor(model => model.TotalOTBy)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-labe2">
+                        @Html.LabelFor(model => model.ExtraOT)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.ExtraOT, new { @onchange = "NumberCheck(this)", @class = " right  required form-control" })
+                        @Html.ValidationMessageFor(model => model.ExtraOT)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.OTRest)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.OTRest, new { @class = "required form-control" })
+                        @Html.ValidationMessageFor(model => model.OTRest)
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.BonusMinit)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.BonusMinit, new { @onchange = "NumberCheck(this)", @class = " right  required form-control" })
+                        @Html.ValidationMessageFor(model => model.BonusMinit)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.LunchOutDeduct)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.LunchOutDeduct, new { @onchange = "NumberCheck(this)", @class = " right required form-control" })
+                        @Html.ValidationMessageFor(model => model.LunchOutDeduct)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.AttnStatus)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.AttnStatus, new { @class = " required form-control" })
+                        @Html.ValidationMessageFor(model => model.AttnStatus)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.DayStatus)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.DayStatus, new { @class = " required form-control" })
+                        @Html.ValidationMessageFor(model => model.DayStatus)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.EarlyDeduct)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.EarlyDeduct, new { @onchange = "NumberCheck(this)", @class = " right required form-control" })
+                        @Html.ValidationMessageFor(model => model.EarlyDeduct)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.LateDeduct)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.LateDeduct, new { @onchange = "NumberCheck(this)", @class = " right required form-control" })
+                        @Html.ValidationMessageFor(model => model.LateDeduct)
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.TiffinAllow)
+                    </div>
+                    <div class="editor-field">
+                        @Html.CheckBoxFor(model => model.TiffinAllow, new { @class = " required form-control" })
+                        @Html.ValidationMessageFor(model => model.TiffinAllow)
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.DinnerAllow)
+                    </div>
+                    <div class="editor-field">
+                        @Html.CheckBoxFor(model => model.DinnerAllow, new { @class = " required form-control" })
+                        @Html.ValidationMessageFor(model => model.DinnerAllow)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.IfterAllow)
+                    </div>
+                    <div class="editor-field">
+                        @Html.CheckBoxFor(model => model.IfterAllow, new { @class = " required form-control" })
+                        @Html.ValidationMessageFor(model => model.IfterAllow)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.GrossAmnt)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.GrossAmnt, new {  @onchange = "NumberCheck(this)", @class = "right  required  required form-control" })
+                        @Html.ValidationMessageFor(model => model.GrossAmnt)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.BasicAmnt)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.BasicAmnt, new { @onchange = "NumberCheck(this)", @class = "right  required  required form-control" })
+                        @Html.ValidationMessageFor(model => model.BasicAmnt)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.TiffinAmnt)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.TiffinAmnt, new { @onchange = "NumberCheck(this)", @class = "right  required form-control" })
+                        @Html.ValidationMessageFor(model => model.TiffinAmnt)
+                    </div>
+                </div>
+               
+            </div>
+            <div class="row">
+                 <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.IfterAmnt)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.IfterAmnt, new { @onchange = "NumberCheck(this)", @class = "right  required form-control" })
+                        @Html.ValidationMessageFor(model => model.IfterAmnt)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.DinnerAmnt)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.DinnerAmnt, new { @onchange = "NumberCheck(this)", @class = "right  required form-control" })
+                        @Html.ValidationMessageFor(model => model.DinnerAmnt)
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-10">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.Remarks)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextAreaFor(model => model.Remarks, new { @placeholder = "Remarks", @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Remarks)
+                    </div>
+                </div>
+            </div>        
+
+          
+
+        </div>
+    </div>
+    @*
+    <p>
+        <input type="submit" value="Save"  class="btn btn-info"/>
+        <input type="button" class="btn btn-info" data-url="/Common/AttendanceDaily" onclick="BackToList(this)" value="Back" />
+    </p>*@
+    
+    <div class="headrow">
+    <button type="button" title="Update Data" onclick="pageSubmit('frmAttendanceDaily')" class="sym-btn-update" >&nbsp;Update</button>
+    @*<button type="button" title="Back to Index" data-url="/Common/AttendanceDaily" onclick="BackToList(this)" class="sym-btn-back">&nbsp;Back</button>*@
+</div>
+}
+
+
+<script>
+    $(function () {
+        valiDation("frmAttendanceDaily");
+        $('.customTimePicker').ptTimeSelect();
+        fromWriteColor("AttendanceDaily");
+    });
+
+    function policyTimeCheck(sender) {
+        var InTime = ParseDate($("#InTime").val());
+        var OutTime = ParseDate($("#OutTime").val());
+        var InTimeStart = ParseDate($("#InTimeStart").val());
+        var InTimeEnd = ParseDate($("#InTimeEnd").val());
+        var LunchTime = ParseDate($("#LunchTime").val());
+
+        if (InTime > OutTime) {
+            $(sender).val("");
+            ShowResult("Fail", "Out Time can't greater than In Time!");
+        }
+        else if (InTime > InTimeStart) {
+            $(sender).val("");
+            ShowResult("Fail", "In Time can't greater than In Start Time!");
+        }
+        else if (InTime > InTimeEnd) {
+            $(sender).val("");
+            ShowResult("Fail", "In Time can't greater than In End Time!");
+        }
+        else if (InTime > LunchTime) {
+            $(sender).val("");
+            ShowResult("Fail", "In Time can't greater than Lunch Time!");
+        }
+        else if (InTimeStart > OutTime) {
+            $(sender).val("");
+            ShowResult("Fail", "In Start Time can't greater than Out Time!");
+        }
+        else if (InTimeEnd > OutTime) {
+            $(sender).val("");
+            ShowResult("Fail", "In End Time can't greater than Out Time!");
+        }
+        else if (LunchTime > OutTime) {
+            $(sender).val("");
+            ShowResult("Fail", "Lunch Time can't greater than Out Time!");
+        }
+    }
+</script>

@@ -1,0 +1,127 @@
+﻿@model VATViewModel.DTOs.DepositMISViewModel
+@using UIHelper.MVC
+@{
+    Layout = "~/Areas/VMS/Views/Shared/_ModalLayout.cshtml";
+}
+<div class="trkmodal-content">
+    <div class="trkmodal-header">
+        <span class="close">&times;</span>
+        <h2 class="text-center">Report(VAT 18)</h2>
+    </div>
+    <div class="trkmodal-body">
+        @using (Html.BeginForm("ReportCurrentAccount", "MISReport", FormMethod.Post, new { enctype = "multipart/form-data", @target = "_blank", @Id = "frmPopUpDeposit" }))
+        {
+            
+
+            <div class="npForm col-md-6">
+                <label>Deposit Date From</label>
+                @Html.TextBoxFor(m => m.DepositDateFrom, new { @placeholder = "Start Date", @class = "cDepositDateFrom customDatePicker form-control" })
+            </div>
+
+            <div class="npForm col-md-6">
+                <label>Deposit Date To</label>
+                @Html.TextBoxFor(m => m.DepositDateTo, new { @placeholder = "End Date", @class = "cDepositDateTo customDatePicker form-control" })
+            </div>
+            <div class="npForm col-md-2">
+        @Html.SimpleDropDownFor(m => m.FontSize, "/Config/DropDown/Font", new { @class = " form-control DRselectDropdown" })
+    </div>
+            @Html.HiddenFor(m => m.PreviewOnly, new { @class = " PreviewOnly" })
+            
+            
+            <button type="button" class=" btn sym-btn-report cPrev"> VAT 18 </button>
+            <button type="button" class=" btn sym-btn-report trPreview"> Preview</button>
+            <button type="button" class="sym-btn-close closeBtn pull-right"> Close</button>
+        }
+    </div>
+</div>
+<div id="myHigherModal" class="HigherModal"></div>
+<script>
+    $(document).ready(function () {
+        ////boolean checkbox
+        CheckBoxDesign();
+        MyCheckBox('@Model.Post', 'input-1', 'Post');
+        ///check validation
+        function checkValidation() {
+            var startDate = $('.cDepositDateFrom').val();
+            if (startDate == "") {
+                ShowResult("Fail", "Select start date!");
+                return false;
+            }
+            var endDate = $('.cDepositDateTo').val();
+            if (endDate == "") {
+                ShowResult("Fail", "Select end date!");
+                return false;
+            }
+            return true;
+        }
+        //clicking preview button
+        $('.trPreview').click(function () {
+
+           
+
+            var isValid = checkValidation();
+            if (isValid == false) {
+                return;
+            }
+            $("#PreviewOnly").val(true);
+            
+            $('#frmPopUpDeposit').submit();
+
+        });
+
+        $('.cPrev').click(function () {
+
+
+            var isValid = checkValidation();
+            if (isValid == false) {
+                return;
+            }
+            $("#PreviewOnly").val(false);
+
+            $('#frmPopUpDeposit').submit();
+
+        });
+
+        $('.depositBtn').click(function () {
+            var url = "/Vms/Deposit/GetDepositPopUp?targetId=DepositNo";
+            modalInitHigher(url);
+        });
+
+        function closeModal() {
+            $("#myModal").html("");
+            trkmodal.style.display = "none";
+        }
+
+        var span = document.getElementsByClassName("close")[0];
+        var trkmodal = document.getElementById('myModal');
+        //When the user clicks on <span> (x), close the trkmodal
+        span.onclick = function () {
+            closeModal();
+        }
+
+        $('.closeBtn').click(function () {
+            closeModal();
+        });
+
+        function modalInitHigher(url) {
+            var modal = document.getElementById('myHigherModal');
+            $.ajax({
+                url: url,
+                cache: false,
+                beforeSend: function () { $(".loading").show(); },
+                complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                success: function (html) {
+                    modal.style.display = "block";
+                    $("#myHigherModal").html(html);
+                }
+            });
+        }
+
+    });
+</script>
+@*callback from higher modal*@
+<script>
+    function callbackFromDepositModal(sender) {
+        ////issue logic here
+    }
+</script>

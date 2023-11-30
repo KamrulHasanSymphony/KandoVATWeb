@@ -1,0 +1,225 @@
+﻿@model VATViewModel.DTOs.VAT19header
+@using UIHelper.MVC
+@{
+    ViewBag.Title = "PrintVAT19";
+}
+
+<style>
+    /*font-face { font-family: Delicious; src: url('~/fonts/SutonnyOMJ.ttf'); }*/ 
+
+    .trkReportSection{
+        background-color:#ffd800;
+    }
+    label{
+        min-height:23px;
+    }
+</style>
+<div class="thinbox animated zoomIn faster">
+    <div class="th_thinbox trkformDesign">
+        <p>VAT 9.1</p>
+    </div>
+    @using (Html.BeginForm("ReportVAT19", "NBRReport", FormMethod.Post, new { enctype = "multipart/form-data", @target = "_blank", @Id = "frmVAT19" }))
+{
+    <div class="row dtSearch">
+        <div class="col-md-2">
+            @*<label class="right">মাস- বৎসর</label>*@
+            <label class="right" style="margin-top: 5px;">Month - Year</label>
+        </div>
+        <div class="col-md-3">
+            @Html.TextBoxFor(m => m.MonthYear, new { @class = "customDatePicker form-control defaultDate" })
+        </div>
+        <div class="col-md-2">
+            <label class="right" style="margin-top: 5px;">Branch</label>
+        </div>
+        <div class="col-md-3">
+            @Html.SimpleDropDownFor(m => m.Branch, "/Config/DropDown/BranchProfile", new { @class = " form-control selectDropdown" })
+
+        </div>
+        @*<div class="col-md-1">
+                <button type="button" class="sym-btn-refresh loadVat19"> Load</button>
+            </div>*@
+        <div class="col-md-1">
+            <button type="button" class=" sym-btn-refresh rLoad"> Load</button>
+        </div>
+        <div class="col-md-1">
+            <button type="button" class=" sym-btn-report trPrint"> Print</button>
+        </div>
+        
+
+
+
+
+        @*<div class="col-md-2">
+                <div class="editor-label">
+                    @Html.HiddenFor(m=>m.BreakDown)
+                       <input type="hidden" id="BreakDown" value="False">
+                </div>
+                <div class="editor-field">
+                    <button type="button" class="btn trkbtn BreakDown">Break Down</button>
+                </div>
+            </div>*@
+        @*<div class="col-md-2">
+                <div class="editor-label">
+                    @Html.HiddenFor(m=>m.NewFormat)
+                    <input type="hidden" id="NewFormat" value="False">
+                </div>
+                <div class="editor-field">
+                    <button type="button" class="btn trkbtn NewFormat ">New Format</button>
+                </div>
+            </div>*@
+
+
+    </div>
+            <p>&nbsp;</p>
+        @*<table id="myDataTable" class="display">
+        <thead>
+            <tr>
+                <th class="center">Action</th>
+                <th>SubFormName</th>
+                <th>NoteDescription</th>
+                <th>NoteNo</th>
+                <th>LineA</th>
+                <th>LineB</th>
+                <th>LineC</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>*@
+        
+        
+        
+}
+    <br />
+    <div id="vat19container">
+    </div>
+</div>
+
+<style>
+
+
+    table {
+        border-collapse: collapse;
+    }
+
+    table, th, td {
+        border: 1px solid black;
+    }
+
+
+</style>
+
+
+<script>
+    $(function () {
+        MyToggleBox('BreakDown', 'Break Down', 'Break Down');
+        MyToggleBox('NewFormat', 'New Format', 'New Format');
+
+
+        $('.rLoad').click(function () {
+            var monthYear = $('#MonthYear').val();
+            if (monthYear == "") {
+                ShowResult("Fail", "Select a month year first!");
+                return;
+            }
+            var branch = $('#Branch').val();
+
+            //var model = {
+            //    VAT19Date: monthYear,
+            //    Branch: branch
+            //}
+
+            var url = "/Vms/NBRReport/VAT9_1Load?VAT19Date=" + monthYear + "&Branch=" + branch;
+            $.ajax({
+                //data: model,
+                url: url,
+                cache: false,
+                success: function (partialHtml) {
+                    $("#vat19container").html(partialHtml);
+                }
+            });
+        });
+
+
+        $('.loadVat19').click(function () {
+            var monthYear = $('#MonthYear').val();
+
+            //if (monthYear == "") {
+            //    ShowResult("Fail", "Select a month year first!");
+            //    return;
+            //}
+
+            //var model = {
+            //    VAT19Date: monthYear
+            //}
+
+            var url = "/Vms/NBRReport/VAT19Load";
+            $.ajax({
+                data: model,
+                url: url,
+                cache: false,
+                success: function (partialHtml) {
+                    $("#vat19container").html(partialHtml);
+                }
+            });
+        });
+
+
+        $('.trPrint').click(function () {
+            var monthYear = $('#MonthYear').val();
+            if (monthYear == "") {
+                ShowResult("Fail", "Select a month year first!");
+                return;
+            }
+            pageSubmit('frmVAT19');
+        });
+
+        //$('.rLoad').click(function () {
+        //    var url = "/Vms/NBRReport/PrintVAT19";
+        //    window.location = url;
+        //});
+
+       
+
+    })
+</script>
+
+@*<script>
+
+
+    $(function () {
+
+
+        $('.btnSubForm').click(function () {
+
+            var $closestRow = $(this).closest('.tablerow');
+
+            var SubFormName = $closestRow.find('.cSubFormName').text();
+            alert(SubFormName);
+            if (SubFormName.trim() == "-") {
+                return;
+            }
+
+            var NoteNo = $closestRow.find('.cNoteNo').text();
+
+            var monthYear = $('#MonthYear').val();
+            var branch = $('#Branch').val();
+
+
+            var url = "/Vms/NBRReport/PrintVAT9_1?Note=" + NoteNo + "&VAT19Date=" + monthYear + "&Branch=" + branch;
+
+            var win = window.open(url, '_blank');
+
+        });
+
+
+
+    })
+
+
+
+</script>*@
+
+
+
+
+

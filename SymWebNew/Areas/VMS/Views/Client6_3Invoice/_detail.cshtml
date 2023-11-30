@@ -1,0 +1,58 @@
+﻿@model IEnumerable<VATViewModel.DTOs.Client6_3DetailVM>
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+
+
+@foreach (var item in Model)
+{
+    <tr class="tablerow ">
+        @using (Html.BeginCollectionItem("Details"))
+        {
+            <td>
+                <a id="" title="Click to Remove" onclick="RemoveItem(this);" class="sym-btn-remove-row "></a>
+                <a id="" title="Click to Edit" onclick="EditItem(this);" class="sym-btn-edit-row"></a>
+            </td>
+            <td>
+                @Html.TextBox("ReceiveNo",item.ReceiveNo, new { @class = "  dReceiveNo   form-control", @readonly = "readonly" })
+            </td>
+            <td>
+                @Html.TextBox("ProductName", item.ProductName, new { @class = "  dItemName   form-control", @readonly = "readonly" })
+            </td>
+            <td>
+                @Html.TextBox("ItemNo", item.ItemNo, new { @class = "  dItemNo   form-control", @readonly = "readonly" })
+            </td>
+            <td>
+                @Html.TextBox("UOM", item.UOM, new { @class = "  dUOM   form-control", @readonly = "readonly" })
+            </td>
+            <td>
+                @Html.TextBox("Quantity", item.Quantity, new { @class = "  dQuantity right priceLen  form-control", @readonly = "readonly" })
+            </td>
+            <td>
+                @Html.TextBox("UnitPrice", item.UnitPrice, new { @class = "  dSalesPrice right priceLen form-control", @readonly = "readonly" })
+            </td>
+            <td>
+                @Html.TextBox("SDRate", item.SDRate, new { @class = "  dSD right priceLen  form-control", @readonly = "readonly" })
+            </td>
+            <td>
+                @Html.TextBox("VATRate", item.VATRate, new { @class = "  dVATRate right priceLen  form-control", @readonly = "readonly" })
+            </td>
+            <td>
+                @Html.TextBox("Subtotal", item.Subtotal, new { @class = "  dSubTotal right priceLen form-control", @readonly = "readonly" })
+            </td>
+            <td>
+                @Html.TextBox("SDAmount", item.SDAmount, new { @class = "  dSDAmount right priceLen  form-control", @readonly = "readonly" })
+            </td>
+
+            <td>
+                @Html.TextBox("VATAmount", item.VATAmount, new { @class = "  dVATAmount right priceLen  form-control", @readonly = "readonly" })
+            </td>
+
+            <td>
+                @Html.TextBox("LineTotalAmount", item.LineTotalAmount, new { @class = "  dTotal right priceLen  form-control", @readonly = "readonly" })
+            </td>
+
+        }
+    </tr>
+}

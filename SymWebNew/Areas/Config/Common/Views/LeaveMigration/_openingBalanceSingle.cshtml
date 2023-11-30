@@ -1,0 +1,84 @@
+﻿@model SymViewModel.Leave.EmployeeLeaveStructureVM
+@using UIHelper.MVC
+@using (Html.BeginForm("OpeningBalanceStructureSingle", "LeaveMigration", FormMethod.Post, new { @Id = "frmOpeningBalance" }))
+{
+    @Html.HiddenFor(model => model.Id)
+    <div class="row col-sm-12">
+        <div class="col-sm-1">
+            <div class="editor-field">
+                @*@Html.TextBoxFor(model => model.Id, null, new { @readonly = "readonly",@placeholder = "Code", @class ="form-control" })*@
+                @Html.TextBoxFor(model => model.EmpCode, null, new { @readonly = "readonly", @placeholder = "Employee Code", @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.EmpName, null, new { @readonly = "readonly", @placeholder = "Employee Name", @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-sm-1">
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.LeaveYear, null, new { @readonly = "readonly", @placeholder = "Leave Year", @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="editor-field">
+                  @Html.SimpleDropDownFor(model => model.LeaveType_E,"/Config/DropDown/LeaveType", new { @placeholder = "Leave Type", @class = "required form-control"})
+                @*@Html.TextBoxFor(model => model.LeaveType_E, null, new { @readonly = "readonly", @placeholder = "Leave Type", @class = "form-control" })*@
+            </div>
+        </div>
+        <div class="col-sm-1">
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.OpeningDays, null, new { @placeholder = "Opening Days", @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-sm-1">
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.LeaveDays, null, new { @placeholder = "Leave Days", @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-sm-1">
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.MaxBalance, null, new { @placeholder = "Maximum Balance", @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-sm-1">
+            <div class="editor-field">
+                @Html.CheckBoxFor(model => model.IsEarned, new {  @placeholder = "Is it Earned?", @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-sm-1">
+            <div class="editor-field">
+                @Html.CheckBoxFor(model => model.IsCompensation,  new { @placeholder = "Is it Compensation?", @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-sm-1">
+            <div class="editor-field">
+                 <button type="submit" title="Update Data" id=""  class="sym-btn-update" > &nbsp;Update</button>
+                 @*<button type="submit" title="Update Data" class="sym-btn-update" data-url="/Common/LeaveMigration/OpeningBalanceSingle?Id=@Model.Id" onclick="GoTo(this)" id="" > &nbsp;Update</button>*@
+            </div>
+        </div>
+    </div>
+}
+<script>
+    $(function () {
+        InitDropDowns();
+
+        $('#SaveJason').click(function () {
+            //var a = pageSubmitJSON('frmOpeningBalance');
+            //alert(a);
+
+            //if (a != 0) {
+            //    return;
+            //}
+            
+            //if (pageSubmitJSON('frmOpeningBalance') == 0) {
+                var myData = $('#frmOpeningBalance').serialize();
+                var url = "/Common/LeaveMigration/OpeningBalanceStructureSingle";
+                submit(url, myData);
+            //}
+        });
+    });
+</script>
+
+
+

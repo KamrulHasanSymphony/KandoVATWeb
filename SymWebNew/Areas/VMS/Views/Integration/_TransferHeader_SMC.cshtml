@@ -1,0 +1,254 @@
+﻿@using UIHelper.MVC
+@{
+    Layout = "~/Areas/VMS/Views/Shared/_ModalLayout.cshtml";
+}
+<style>
+    .trkMT10 {
+        margin-top: 10px;
+    }
+
+    .sortableHeader {
+        cursor: pointer;
+    }
+
+    table.trkFixTable tr.trSelectPopUpProduct td {
+        overflow-x: hidden;
+    }
+</style>
+
+
+<div class="row">
+    <div class="col-md-1">
+        <div class="editor-label">
+            <label for="DataSourceType">Data Source</label>
+        </div>
+        <div class="editor-field">
+            <select class="form-control" id="DataSourceType" name="DataSourceType">
+                <option selected>Consumer</option>
+                <option>Pharma</option>
+            </select>
+        </div>
+    </div>
+    <div class="searchText">
+        <div class="col-md-2">
+            <label>Search Value</label>
+            @Html.TextBox("SearchValue", "", new { @class = " form-control" })
+        </div>
+        <div class="col-md-2">
+            <div class="editor-label">
+                <label for="FromDate">From Date</label>
+            </div>
+            <div class="editor-field">
+                @Html.TextBox("FromDate", "", new { @placeholder = "From Date", @class = "  customDatePicker  form-control" })
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="editor-label">
+                <label for="ToDate">To Date</label>
+            </div>
+            <div class="editor-field">
+                @Html.TextBox("ToDate", "", new { @placeholder = "To Date", @class = "  customDatePicker  form-control" })
+            </div>
+        </div>
+
+
+    </div>
+    <div class="col-md-1">
+        <label>&nbsp;</label>
+        <button type="button" title="Click to Search" id="btnSaveSale" class="sym-btn-search " style="width:100%">&nbsp;Save</button>
+    </div>
+    <div class="col-md-1">
+        <label>&nbsp;</label>
+        <button type="button" title="Click to Clear" id="clearBtn" class="sym-btn-clear btnClear" style="width:100%">&nbsp;Clear</button>
+    </div>
+</div>
+
+
+    <form id="ReportForm" method="post" target="_blank"></form>
+    <div id="myHigherModal" class="HigherModal"></div>
+
+
+
+    @*--------------------------------------------------Search/Save/Clear--------------------------------------------------*@
+
+    <script>
+
+        $(function () {
+
+            $("#btnSaveSale").on("click", function () {
+
+                IntegrationSave();
+
+            });
+
+            $("#Integration #clearBtn").on("click", function () {
+                IntegrationClear();
+            });
+
+        });
+
+
+
+        function IntegrationSave() {
+
+            var model = {
+                RefNo: $("#Integration #SearchValue").val()
+                , FromDate: $("#Integration #FromDate").val()
+                , ToDate: $("#Integration #ToDate").val()
+                , DataSourceType: $("#DataSourceType").val()
+
+            }
+
+
+            if (model.refNo != null && model.refNo != "") {
+
+                model.FromDate = null;
+                model.ToDate = null;
+            }
+
+
+            $.ajax({
+                data: model
+                , url: "/VMS/Integration/SaveTransfer_SMC"
+                , cache: false
+                , traditional: true
+                , type: "POST"
+                , timeout: 3600000
+                , beforeSend: function () { $(".loading").show(); }
+                , success: function (rVM) {
+                    ////ShowResult(rVM.Status, rVM.Message);
+                    MsgAskOk(rVM.Message, rVM.Status);
+
+                }
+                , error: function () {
+                    ////ShowResult("fail", "Something gone wrong");
+                    MsgAskOk("Something gone wrong", "fail");
+
+                }
+                , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+            });
+
+        }
+
+        function IntegrationClear() {
+            //$("#Integration .searchText :input").val('');
+            $("#Integration .searchText :input").val("");
+            $("#Integration .cCustomer").val("");
+            $("#Integration #CustomerCode").val("");
+            $("#Integration #IsMultiple").attr("checked", false);
+            $('.lblCustomer').hide();
+            $('.cCustomer').hide();          
+        }
+
+    </script>
+
+
+    @*--------------------------------------------------Preview/Post--------------------------------------------------*@
+
+    <script>
+        function GoToPage() {
+            var SalesInvoiceNo = $("#Integration #SalesInvoiceNo").val();
+            if (SalesInvoiceNo == null || SalesInvoiceNo == "") {
+                ShowResult("Fail", "No Data Available!");
+                $("#Integration #SalesInvoiceNo").focus();
+                return;
+            }
+
+            var url = "/VMS/SaleInvoice/GetSaleMaster" + "?" + "SaleNo=" + SalesInvoiceNo;
+            $.getJSON(url, function (vm) {
+                var Id = vm.Id;
+                window.location = "/VMS/SaleInvoice/Edit/" + Id;
+            });
+
+
+        }
+
+
+
+
+    </script>
+
+
+    @*--------------------------------------------------Print--------------------------------------------------*@
+
+    <script>
+
+
+        function modalInit(url) {
+            var modal = $('#Integration #myHigherModal');
+            $.ajax({
+                url: url,
+                cache: false,
+                beforeSend: function () { $(".loading").show(); },
+                success: function (html) {
+                    modal.css("display", "block");
+                    ////modal.style.display = "block";
+                    $("#Integration #myHigherModal").html(html);
+
+                    GetPrinters();
+                },
+                complete: function () { $(".loading").fadeOut(200).hide("slow") }
+
+            });
+        }
+
+
+
+
+    </script>
+
+
+    
+
+
+
+    @*--------------------------------------------------Detail--------------------------------------------------*@
+
+
+
+
+    @*--------------------------------------------------MISC--------------------------------------------------*@
+
+
+
+    <script>
+        $("#Integration .chkAll").click(function () {
+            $('#Integration  .dSelected:input:checkbox').not(this).prop('checked', this.checked);
+        });
+
+    </script>
+
+    <script language="javascript" type="text/javascript">
+
+        function callingFixedPopUpTable() {
+
+            var args = [100, 100, 50, 50, 150, 150, 150, 150, 100, 150, 150, 200, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100];
+            trkFixedPopUpTable("productPopUpTable", 3, args);
+        }
+
+
+        $(function () {
+            callingFixedPopUpTable();
+        })
+    </script>
+
+    @*--------------------------------------------------unused--------------------------------------------------*@
+
+    <script>
+
+        $(function () {
+
+            $(document).on('click', '#Integration .trSelectPopUpProduct', function () {
+                var activeEl = $('#Integration tr.active');
+                activeEl.removeClass("#Integration active");
+                $(this).addClass(" active");
+            });
+
+        });
+
+
+    </script>
+
+
+
+

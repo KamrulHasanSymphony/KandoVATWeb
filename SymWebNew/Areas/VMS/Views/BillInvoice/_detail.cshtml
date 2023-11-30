@@ -1,0 +1,39 @@
+﻿@*@model VATViewModel.DTOs.VDSMasterVM*@
+@model IEnumerable<VATViewModel.DTOs.BillInvoiceDetailVM>
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+@foreach (var item in Model)
+{
+    <tr class="tablerow ">
+        @using (Html.BeginCollectionItem("Details"))
+        {
+            
+
+            <td>
+                @Html.TextBox("Quantity", item.Quantity, new { @class = "  dQuantity  form-control", @readonly = "readonly" })
+            </td>
+            <td>
+                @Html.TextBox("SubTotal", item.SubTotal, new { @class = "  dSubTotal   form-control", @readonly = "readonly" })
+            </td>
+            <td>
+                @Html.TextBox("VATAmount", item.VATAmount, new { @class = "  dVATAmount pricelen right   form-control", @readonly = "readonly" })
+            </td>
+            @*<td>
+                @Html.TextBox("BillAmount", item.BillAmount, new { @class = "  dBillAmount pricelen right   form-control", @readonly = "readonly" })
+            </td>*@
+            <td>
+                @Html.TextBox("VATRate", item.VATRate, new { @class = "  dVATRate pricelen right   form-control", @readonly = "readonly" })
+            </td>
+            @*<td>
+                @Html.TextBox("Post", item.Post, new { @class = "  dPost pricelen right   form-control", @readonly = "readonly" })
+            </td>*@
+            
+                  @*@Html.HiddenFor(m => item.ItemNo, new { @class = "dItem_No" })*@
+                  @Html.Hidden("ItemNo", item.ItemNo, new { @class = "dItem_No" })
+                  @Html.Hidden("NBRPrice", item.NBRPrice, new { @class = "dNBRPrice" })
+          
+        }
+    </tr>
+}

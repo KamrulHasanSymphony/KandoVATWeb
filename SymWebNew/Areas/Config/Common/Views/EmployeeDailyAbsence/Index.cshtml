@@ -1,0 +1,139 @@
+﻿@model SymViewModel.Attendance.EmployeeDailyAbsenceVM
+@{
+    ViewBag.Title = "Index";
+}
+@using UIHelper.MVC
+<div class="thinbox">
+    <div class="th_thinbox">
+        <p>Employee Daily @Model.TransactionType</p>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="editor-label">
+                <label>@Session["DepartmentLabel"]</label>
+            </div>
+            <div class="editor-field">
+                @Html.SimpleDropDown("DepartmentId", "/Config/DropDown/Department", new { @class = "departmentsCom form-control selectDropdown" })
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="editor-label">
+                <label>@Session["SectionLabel"]</label>
+            </div>
+            <div class="editor-field">
+                @Html.SimpleDropDown("SectionId", "/Config/DropDown/Section", new { @class = "sectionsCom form-control selectDropdown" })
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="editor-label">
+                <label>@Session["ProjectLabel"]</label>
+            </div>
+            <div class="editor-field">
+                @Html.SimpleDropDown("ProjectId", "/Config/DropDown/Project", new { @class = "projectsCom form-control selectDropdown" })
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="editor-label">
+                @Html.Label("", "AbsentDate")
+            </div>
+            <div class="editor-field">
+                @Html.TextBox("AbsentDate", null, new { @placeholder = "Absent Date", @class = "required customDatePicker form-control" })
+            </div>
+        </div>
+    </div>
+</div>
+<div class="headrow">
+
+    <button title="Click to Show Employee List" id="Searchbtn" class="btn sym-btn-search">&nbsp;Search</button>
+    &nbsp;
+    <button type="button" title="Save Data" id="" class="saveJSON sym-btn-save" hidden="hidden">&nbsp;Save</button>
+    <button title="Clear the Entries" id="Clear" class="sym-btn-clear">&nbsp;Clear</button>
+</div>
+
+<div id="detailsDiv">
+</div>
+<div class="headrow" hidden="hidden">
+    <button type="button" title="Save Data" id="" class="saveJSON sym-btn-save">&nbsp;Save</button>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+
+        $('.saveJSON').click(function () {
+            var AbsentDate = $("#AbsentDate").val();
+            if (AbsentDate == "") {
+                ShowResult("Fail", "Please Select Absent Date First!");
+                return;
+            }
+            if (pageSubmitJSON('frmEmpDailyAbsence') == 0) {
+                var myData = $('#frmEmpDailyAbsence').serialize();
+                var url = "/Common/EmployeeDailyAbsence/Create?AbsentDate=" + AbsentDate;
+
+                //if (submit(url, myData) == true) {
+                //}
+
+
+
+                $.ajax({
+                    type: 'POST',
+                    data: myData,
+                    url: url,
+                    beforeSend: function () { $(".loading").show(); },
+                    success: function (result) {
+                        var msg1 = result.split('~')[0];
+                        var msg2 = result.split('~')[1];
+                        ShowResult(msg1, msg2);
+
+                        $(".saveJSON").hide();
+                        Searching();
+
+                    },
+                    complete: function () { $(".loading").fadeOut(200).hide("slow") }
+
+                });
+            }
+        });
+        $('#Clear').click(function () {
+            location.reload()
+        });
+        $(function () {
+            InitDatePickers();
+            InitDropdownsCommon();
+        });
+
+        $("#Searchbtn").click(function () {
+            var AbsentDate = $("#AbsentDate").val();
+            if (AbsentDate == "") {
+                ShowResult("Fail", "Please Select Absent Date First!");
+                return;
+            }
+            Searching();
+        });
+        function Searching() {
+
+            var ProjectId = $("#ProjectId").val();
+            var DepartmentId = $("#DepartmentId").val();
+            var SectionId = $("#SectionId").val();
+            var date = $("#AbsentDate").val();
+
+            var url = '/Common/EmployeeDailyAbsence/_IndexPartial?ProjectId=' + ProjectId
+              + '&DepartmentId=' + DepartmentId
+              + '&SectionId=' + SectionId
+              + '&date=' + date
+              + '&tType=' + '@Model.TransactionType'
+
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                beforeSend: function () { $(".loading").show(); },
+                complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                success: function (data) {
+                    $(' #detailsDiv').html(data);
+                    $(".saveJSON").show();
+                    $(".headrow").show();
+                },
+            });
+        }
+    </script>
+}

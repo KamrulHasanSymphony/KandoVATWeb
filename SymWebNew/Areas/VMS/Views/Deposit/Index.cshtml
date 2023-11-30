@@ -1,0 +1,434 @@
+﻿@model VATViewModel.DTOs.DepositMasterVM
+@using UIHelper.MVC
+@using SymOrdinary
+@using System.Threading;
+@{
+    ShampanIdentity identity = null;
+    try
+    {
+        identity = (ShampanIdentity)Thread.CurrentPrincipal.Identity;
+    }
+    catch (Exception)
+    {
+        Response.Redirect("/VMS/Home/Login");
+        return;
+    }
+    @Html.HiddenFor(model => model.TransactionType)
+}
+
+@{
+    ViewBag.Title = "Index";
+}
+<div class="headrow">
+    <div style="display: none" id="formAppend"></div>
+    <button type="button" title="Add New Deposit" data-url="/VMS/Deposit/Create?TransactionType=@Model.TransactionType" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+    <label class="pull-right">Deposit</label>
+</div>
+
+<div class=" tabMenu">
+    <ul style="font-size: 1.4em;" class="tabDesign nav nav-tabs">
+
+        @if (Model.TransactionType.ToLower() == "treasury" || (Model.TransactionType.ToLower() == "sd"))
+        {
+              <li class="tabDefault active"><a data-toggle="tab" href="#VDSIndex">Index</a></li>
+        }
+        else
+        {
+            
+        <li class="tabDefault active"><a data-toggle="tab" href="#VDSIndex">Index</a></li>
+
+        <li class="tabDefault"><a data-toggle="tab" href="#Excel" class="vdsInfoTab">Excel Upload</a></li>
+            
+        }
+
+    </ul>
+</div>
+
+
+<div class="tab-content">
+
+    <div id="VDSIndex" class="tab-pane fade  in active">
+
+        <div class="thinbox  animated zoomIn faster">
+            <div class="th_thinbox">
+                <p>@Model.TransactionType Deposits</p>
+            </div>
+
+            <div class="dtSearch formDesign">
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.DepositId)
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(model => model.DepositId, new { @placeholder = "Deposit Id", @class = "  form-control" })
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.TreasuryNo)
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(model => model.TreasuryNo, new { @placeholder = "Treasury No", @class = "  form-control" })
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.IssueDateTimeFrom)
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(model => model.IssueDateTimeFrom, new { @placeholder = "Depsit Date From", @class = "customDatePicker defaultDate  form-control" })
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.IssueDateTimeTo)
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(model => model.IssueDateTimeTo, new { @placeholder = "Depsit Date To", @class = "customDatePicker defaultDate  form-control" })
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.DepositType)
+                        </div>
+                        <div class="editor-field">
+                            <select id="DepositType" class="form-control">
+                                <option value=""></option>
+                                <option value="Cash">Cash</option>
+                                <option value="Cheque">Cheque</option>
+                                <option value="Opening">Opening</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.ChequeNo)
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(model => model.ChequeNo, new { @placeholder = "Cheque No", @class = "  form-control" })
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.CheckDateFrom)
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(model => model.CheckDateFrom, new { @placeholder = "Check Date From", @class = "customDatePicker  form-control" })
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.CheckDateTo)
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(model => model.CheckDateTo, new { @placeholder = "Check Date To", @class = "customDatePicker  form-control" })
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.BankName)
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(model => model.BankName, new { @placeholder = "Bank Name", @class = "  form-control" })
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.AccountNumber)
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(model => model.AccountNumber, new { @placeholder = "Account Number", @class = "  form-control" })
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.Post)
+                        </div>
+                        <div class="editor-field">
+                            <select id="Post" class="form-control">
+                                <option value=""></option>
+                                <option value="Y">Y</option>
+                                <option value="N">N</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-1">
+                        <div class="editor-label">
+                            <label>Select Top</label>
+                        </div>
+                        <div class="editor-field">
+                            @Html.SimpleDropDownFor(model => model.SelectTop, "/Config/DropDown/RecordSelectList", new { @class = " cSelectTop form-control" })
+                        </div>
+                    </div>
+                    <div class="trk1_5">
+                        <div class="editor-label">
+                            <label>Branch Name</label>
+                        </div>
+                        <div class="editor-field">
+                            @*@Html.SimpleDropDownFor(model => model.BranchId, "/Config/DropDown/BranchProfile", new { @class = " selectDropdown  form-control" })*@
+                            @*@Html.SimpleDropDownFor(model => model.BranchId, "/Config/DropDown/BranchProfile", new { @class = " form-control" })*@
+                            @Html.SimpleDropDownFor(model => model.BranchId, "/Config/DropDown/UserBranchProfile", new { @class = " form-control" })
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="editor-label">
+                            <label>&nbsp;</label>
+                        </div>
+                        <div class="editor-field">
+                            <button type="button" title="Click to Search" id="btnDialog" class="sym-btn-search">&nbsp;Search</button>
+                            <button type="button" title="Clear Data" id="Clear" class=" sym-btn-clear">&nbsp;Clear</button>
+                            <button type="button" title="Post Data" onclick="PostData()" class="sym-btn-post">&nbsp;Post</button>
+                            <button type="button" title="Export Data" onclick="ExportExcel()" class="sym-btn-Excel-Export">&nbsp;Export</button>
+
+
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <div class="editor-label">
+                            <label>Export All</label>
+                        </div>
+                        <div class="editor-field">
+                            @Html.CheckBox("ExportAll", new { id = "idExportAll", @class = "cExportAll form-control", @name = "att[]" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p>&nbsp;</p>
+            <table id="myDataTable" class="display">
+                <thead>
+                    <tr>
+                        <th class="center"><input type="checkbox" class="chkAll" />Action</th>
+                        <th>Deposit Id</th>
+                        <th>Treasury No</th>
+                        <th>Deposit Date</th>
+                        <th>Deposit Amount</th>
+                        <th>Deposit Person</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <br />
+        </div>
+
+        <div class="headrow">
+            <button type="button" title="Add New Deposit" data-url="/VMS/Deposit/Create?TransactionType=@Model.TransactionType" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+        </div>
+    </div>
+
+    <div id="Excel" class="tab-pane fade  in ">
+        <div class="thinbox row">
+            <div class="th_thinbox">
+                <p>Excel Import</p>
+            </div>
+            @using (Html.BeginForm("ImportExcel", "Deposit", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmDeposit" }))
+            {
+                @Html.HiddenFor(model => model.TransactionType, new { id = "vdsTransactionType" })
+
+                <div class="col-md-offset-6 col-md-6 verticalLine">
+                    <div class="col-md-6">
+                        <label>File</label>@*onclick="pageSubmit('frmSaleImport');"*@
+                        @Html.TextBoxFor(model => model.File, new { @type = "file", @accept = ".xlsx", @class = " form-control", id = "excelFile" })
+                    </div>
+                    <div class="col-md-6">
+                        <label>&nbsp;</label>
+                        @*<button type="button" class="sym-btn-file-upload" id="excelUpload">&nbsp;Upload</button>*@
+                        <button type="button" onclick="pageSubmit('frmDeposit');" class="sym-btn-file-upload">&nbsp;Upload</button>
+
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+</div>
+
+        <script>
+
+            function PostData() {
+
+                var questionMSG = "Are you sure to Post Data!";
+
+                Ask(questionMSG, function () {
+
+
+                    var IDs = [];
+                    var $Items = $(".dSelected:input:checkbox:checked");
+
+                    if ($Items == null || $Items.length == 0) {
+                        ShowResult("Fail", "You are requested to Select before Post!");
+                        return;
+                    }
+
+                    $Items.each(function () {
+                        var ID;
+                        ID = $(this).attr("data-Id");
+
+                        IDs.push(ID);
+                    });
+                    //alert(IDs);
+                    var model = {
+                        IDs: IDs
+                    }
+                    var url = '/VMS/Deposit/MultiplePost';
+
+                    $.ajax({
+                        url: url
+                        , data: model
+                        , type: 'Post'
+                        , traditional: true
+                        , beforeSend: function () { $(".loading").show(); }
+                        , success: function (rVM) {
+                            ShowResult(rVM.Status, rVM.Message);
+                        }
+                        , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+
+                    });
+                });
+
+            }
+
+            function ExportExcel() {
+
+                var questionMSG = "Are you sure to Export Excel!";
+
+                Ask(questionMSG, function () {
+
+                    var DepositId = $('#DepositId').val();
+                    var TreasuryNo = $('#TreasuryNo').val();
+                    var Post = $('#Post').val();
+                    var IssueDateTimeFrom = $('#IssueDateTimeFrom').val();
+                    var IssueDateTimeTo = $('#IssueDateTimeTo').val();
+                    var BranchId = $('#BranchId').val();
+                    var DepositType = $('#DepositType').val();
+                    var SelectTop = $('#SelectTop').val();
+                    var ExportAll = $('#idExportAll').is(":checked");
+                    var TransactionType = $('#TransactionType').val();
+                    // console.log(ExportAll);
+
+                    var IDs = [];
+                    var $Items = $(".dSelected:input:checkbox:checked");
+                    if (!ExportAll) {
+
+                        if ($Items == null || $Items.length == 0) {
+                            ShowResult("Fail", "You are requested to Select before Export!");
+                            return;
+                        }
+                    }
+
+                    $Items.each(function () {
+
+                        var ID = $(this).attr("data-Id");
+                        IDs.push(ID);
+                    });
+
+                    var model = {
+                        IDs: IDs,
+
+                    }
+
+                    var url = '/VMS/Deposit/ExportExcell';
+
+                    var form = $('<form action="' + url + '"></form>');
+
+                    IDs.forEach(function (item) {
+                        form.append($('<input  value="' + item + '" name="Ids" />'))
+
+                    })
+
+                    form.append($('<input  value="' + DepositId + '" name="DepositId" />'))
+                    form.append($('<input  value="' + TreasuryNo + '" name="TreasuryNo" />'))
+                    form.append($('<input  value="' + Post + '" name="Post" />'))
+                    form.append($('<input  value="' + IssueDateTimeFrom + '" name="IssueDateTimeFrom" />'))
+                    form.append($('<input  value="' + IssueDateTimeTo + '" name="IssueDateTimeTo" />'))
+                    form.append($('<input  value="' + BranchId + '" name="BranchId" />'))
+                    form.append($('<input  value="' + DepositType + '" name="DepositType" />'))
+                    form.append($('<input  value="' + SelectTop + '" name="SelectTop" />'))
+                    form.append($('<input  value="' + ExportAll + '" name="ExportAll" />'))
+                    form.append($('<input  value="' + TransactionType + '" name="TransactionType" />'))
+
+                    form.appendTo('#formAppend').submit()
+
+                    console.log(1);
+                });
+
+            }
+
+        </script>
+
+
+
+        <script language="javascript" type="text/javascript">
+
+            $(document).ready(function () {
+
+                SelectAllForDelete();
+                $.datepicker.regional[""].dateFormat = 'dd/M/y';
+                $.datepicker.setDefaults($.datepicker.regional['']);
+                var oTable = $('#myDataTable').dataTable({
+                    "bServerSide": true,
+                    "sAjaxSource": "/VMS/Deposit/_index?TransactionType=@Model.TransactionType",
+                    "bProcessing": true,
+                    "aLengthMenu": tablelength(),
+                    "bJqueryUI": true,
+                    "bAutoWidth": false,
+
+                    "fnServerData": function (sSource, aoData, fnCallback) {
+                        $('.dtSearch :input').each(function () {
+                            var Name = $(this).attr("Id")
+                            var Value = $(this).val()
+                            aoData.push({ "name": Name, "value": Value });
+                        });
+                        $.getJSON(sSource, aoData, function (json) {
+                            fnCallback(json);
+                        });
+                    },
+
+                    "aoColumns": [
+                                    {
+                                        "sName": "Id",
+                                        "bSearchable": false,
+                                        "bSortable": false,
+                                        "sWidth": "20%",
+                                        "sClass": "center",
+                                        "fnRender": function (oObj) {
+                                            return ' <input onclick="CheckAll(this)" class="dSelected" type="checkbox" data-Id="' + oObj.aData[1] + '">'
+                                            + '&nbsp; <a title="Click on for Edit" href=\"/VMS/Deposit/Edit/' + oObj.aData[0].split('~')[0] + '?TransactionType=' + oObj.aData[6] + '\" class="sym-btn-edit-row"></a>'
+                                                + '&nbsp; <a title="Click on for Post" data-url="/VMS/Deposit/Post"  onclick=btnPost(this); data-Id="' + oObj.aData[0] + '\" class="sym-btn-post-row"></a>'
+                                            ;
+                                        }
+                                    }
+                                    , { "sName": "DepositId", "sWidth": "5%" }
+                                    , { "sName": "TreasuryNo", "sWidth": "10%" }
+                                    , { "sName": "DepositDateTime", "sWidth": "15%" }
+                                    , { "sName": "DepositAmount", "sWidth": "10%" }
+                                    , { "sName": "DepositPerson", "sWidth": "15%" }
+                    ]
+                });
+
+                $('#btnDialog').click(function () {
+
+                    var model = $('.dtSearch :input').serialize();
+                    $.ajax({
+                        url: "/VMS/Deposit/Index",
+                        cache: false,
+                        data: model,
+                        success: function (html) {
+                            oTable.fnDraw();
+                        }
+                    });
+                });
+
+                ////clearing fields
+                $("#Clear").on('click', function () {
+                    $(".Dropdown").select2("val", "");
+                    $(".form-control").val("");
+                });
+
+            });
+        </script>
+

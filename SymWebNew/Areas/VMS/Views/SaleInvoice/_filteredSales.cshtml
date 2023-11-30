@@ -1,0 +1,39 @@
+﻿@model IEnumerable<VATViewModel.DTOs.SaleMasterVM>
+@using UIHelper.MVC
+@{
+    Layout = null;
+    var sl = 1;
+}
+    @foreach (var item in Model)
+    {
+        <tr class="trSelectPopUpIssue">
+            <td>@sl</td>
+            <td class="popUpItemNo">@item.SalesInvoiceNo</td>
+            <td>@item.CustomerName</td>
+            <td>@item.CustomerGroup</td>
+            <td>@item.DeliveryAddress1</td>
+            <td class="popUpPost">@item.Post</td>
+            <td>@item.VehicleType</td>
+            <td>@item.VehicleNo</td>
+            <td>@item.TotalAmount</td>
+            <td>@item.TotalVATAmount</td>
+            <td>@item.SerialNo</td>
+            <td class="popUpInvoiceDateTime">@item.InvoiceDateTime</td>
+            <td>@item.SaleType</td>
+            <td></td>
+            <td>@item.IsPrint</td>
+            <td>@item.DeliveryDate</td>
+            <td>@item.CurrencyID</td>
+            <td>@item.CurrencyRateFromBDT</td>
+            <td>@item.CurrencyCode</td>
+            <td>@item.DollerRate</td>
+            <td>@item.LCNumber</td>
+            <td></td>
+            <td>@item.LCDate</td>
+            <td>@item.LCBank</td>
+            @{
+        sl++;
+            }
+        </tr>
+    }
+

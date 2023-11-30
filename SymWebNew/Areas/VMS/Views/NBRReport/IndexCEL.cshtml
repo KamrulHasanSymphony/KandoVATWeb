@@ -1,0 +1,194 @@
+﻿@using SymOrdinary
+@using System.Threading;
+
+@{
+    ShampanIdentity identity = null;
+    try
+    {
+        identity = (ShampanIdentity)Thread.CurrentPrincipal.Identity;
+    }
+    catch (Exception)
+    {
+        Response.Redirect("/VMS/Home/Login");
+        return;
+    }
+}
+
+
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<style>
+    .cReport {
+        width: 100%;
+        font-weight: bold;
+    }
+</style>
+
+
+<div class="thinbox ">
+    <div class="th_thinbox">
+        <p class="text-center">NBR Reports</p>
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+
+            @if (identity.IsPermitted("180110110"))
+            {
+                <button type="button" class=" cReport sym-btn-report cVAT4_3Report"> VAT 4.3 </button>
+
+            }
+
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        @if (identity.IsPermitted("180120110"))
+        {
+            <div class="col-md-2"> <button type="button" class=" cReport sym-btn-report cVAT6_1Report"> VAT 6.1 </button> </div>
+
+        }
+        @if (identity.IsPermitted("180130110"))
+        {
+            <div class="col-md-2"> <button type="button" class=" cReport sym-btn-report cVAT6_2Report"> VAT 6.2 </button> </div>
+
+            <div class="col-md-2"> <button type="button" class=" cReport sym-btn-report cVAT6_2_1Report"> VAT 6.2.1 </button> </div>
+
+        }
+        @if (identity.IsPermitted("180170110"))
+        {
+            <div class="col-md-2"> <button type="button" class=" cReport sym-btn-report cVAT6_3Report"> VAT 6.3 </button> </div>
+
+        }
+       
+
+        <div class="col-md-2"> <button type="button" class=" cReport sym-btn-report cVAT6_6"> VAT 6.6 </button> </div>
+       
+
+
+    </div>
+    <br />
+    <div class="row">
+
+        <div class="col-md-2"> <button type="button" class=" cReport sym-btn-report cVAT6_7"> VAT 6.7 </button> </div>
+
+        <div class="col-md-2"> <button type="button" class=" cReport sym-btn-report cVAT6_8"> VAT 6.8 </button> </div>
+
+
+        @if (identity.IsPermitted("180150110"))
+        {
+            <div class="col-md-2"> <button type="button" class=" cReport sym-btn-report cVAT6_10"> VAT 6.10 </button> </div>
+
+        }
+
+
+    </div>
+    <br />
+    <div class="row">
+        @if (identity.IsPermitted("180140110"))
+        {
+            <div class="col-md-2"> <button type="button" class=" cReport sym-btn-report vat9_1Report"> VAT 9.1 </button> </div>
+        }
+    </div>
+    <br />
+
+</div>
+
+
+
+
+<div id="myModal" class="trkmodal"></div>
+<script>
+    $(function () {
+        function modalInit(url) {
+            var modal = document.getElementById('myModal');
+            $.ajax({
+                url: url,
+                cache: false,
+                beforeSend: function () { $(".loading").show(); },
+                complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                success: function (html) {
+                    modal.style.display = "block";
+                    $("#myModal").html(html);
+                }
+            });
+        }
+
+
+        $('.cVAT6_1Report').click(function () {
+            var url = "/Vms/NBRReport/PrintVAT16";
+            modalInit(url);
+        });
+
+        $('.cVAT6_2Report').click(function () {
+            var url = "/Vms/NBRReport/PrintVAT17";
+            modalInit(url);
+        });
+
+
+        $('.cVAT6_2_1Report').click(function () {
+            var url = "/Vms/NBRReport/PrintVAT6_2_1";
+            modalInit(url);
+        });
+
+        $('.cVAT4_3Report').click(function () {
+            var url = "/Vms/NBRReport/PrintVAT1";
+            modalInit(url);
+        });
+
+
+        $('.vatSDReport').click(function () {
+            var url = "/Vms/NBRReport/PrintVATSD";
+            modalInit(url);
+        });
+
+
+        $('.vat9_1Report').click(function () {
+            var url = "/Vms/NBRReport/ViewVAT9_1";
+            window.location = url;
+        });
+
+
+        $('.chakkha').click(function () {
+            var url = "/Vms/NBRReport/chakkha";
+            modalInit(url);
+        });
+
+        $('.chakka').click(function () {
+            var url = "/Vms/NBRReport/chakka";
+            modalInit(url);
+        });
+
+        $('.cVAT6_5').click(function () {
+            var url = "/Vms/NBRReport/transferIsuue";
+            modalInit(url);
+        });
+
+        $('.cVAT6_10').click(function () {
+            var url = "/Vms/NBRReport/VAT6_10Report";
+            modalInit(url);
+        });
+
+        $('.cVAT6_3Report').click(function () {
+            var url = "/Vms/NBRReport/PreviewVAT6_3?TransactionTypes=Other";
+            modalInit(url);
+        });
+
+        $('.cVAT6_6').click(function () {           
+            var url = "/Vms/NBRReport/PreviewVAT6_6";
+            modalInit(url);
+        });
+
+        $('.cVAT6_7').click(function () {
+            var url = "/Vms/NBRReport/PreviewVAT6_3?TransactionTypes=Credit";
+            modalInit(url);
+        });
+        $('.cVAT6_8').click(function () {
+            var url = "/Vms/NBRReport/PreviewVAT6_3?TransactionTypes=Debit";
+            modalInit(url);
+        });
+
+    });
+</script>

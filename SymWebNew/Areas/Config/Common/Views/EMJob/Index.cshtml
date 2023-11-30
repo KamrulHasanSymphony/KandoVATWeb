@@ -1,0 +1,117 @@
+﻿    <script type="text/javascript">
+        $(document).ready(function () {
+            SelectAllForDelete();
+            $.datepicker.regional[""].dateFormat = 'dd/M/y';
+            $.datepicker.setDefaults($.datepicker.regional['']);
+            var oTable = $('#myDataTable').dataTable({
+                "bServerSide": true,
+                "sAjaxSource": "/Common/EMJob/_index",
+                "bProcessing": true,
+                "aLengthMenu": tablelength(),
+                "bJqueryUI": true,
+                "bAutoWidth": false,
+                "sScrollX": '140%',
+                "aoColumns": [
+                                {
+                                    "sName": "Id",
+                                    "bSearchable": false,
+                                    "bSortable": false,
+                                    "sWidth": "8%",
+                                    "sClass":"center",
+                                    "fnRender": function (oObj) {
+                                        return '<a title="Click on for Details" style="text-decoration:none;"    href=\"/Common/EMJob/Edit?Id=' + oObj.aData[0] + '\"  class="sym-btn-edit-row"></a>';
+                                    }
+                                }
+                               , { "sName": "Designation", "sWidth": "9%" }             //01 
+                               , { "sName": "Department", "sWidth": "9%" }              //02 
+                               , { "sName": "Vacancy", "sWidth": "9%" }                 //03 
+                               , { "sName": "RequiruitmentDate", "sWidth": "14%" }       //04 
+                               , { "sName": "JobDescription", "sWidth": "10%" }          //05 
+                               , { "sName": "FullName", "sWidth": "10%" }                //06 
+                               , { "sName": "PresentDistrictId", "sWidth": "10%" }       //07 
+                               , { "sName": "JobCategoryId", "sWidth": "10%" }           //08 
+                               , { "sName": "Website", "sWidth": "10%" }                 //09 
+
+                ]
+            });
+            oTable.columnFilter({
+                sPlaceHolder: "head:after",
+                aoColumns: [{ type: "checkbox", "sClass": "chkAll" }              //00 
+                           , { type: "text" }                                     //01 
+                           , { type: "text" }                                     //02 
+                           , { type: "text" }                                     //03 
+                           , { type: "date-range" }                               //04 
+                           , { type: "text" }                                     //05 
+                           , { type: "text" }                                     //06 
+                           , { type: "text" }                                     //07 
+                           , { type: "text" }                                     //08 
+                           , { type: "text" }                                     //09 
+                ]
+            });
+        });
+    </script>
+@{
+    ViewBag.Title = "Index";
+    ViewBag.Location = "Common=>Info Job=>Index"; 
+}
+<div class="headrow">
+        <button type="button" title="Add New Job" data-url="/Common/EMJob/Create" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+     <label class="pull-right">Job Information</label>
+</div>
+    <div class="thinbox">
+        <div class="th_thinbox">
+        <p>Job List</p>   
+        </div>
+<p></p>
+        <div id="container">
+            <div id="demo">
+                <table id="myDataTable" class="display">
+                    <thead>
+                         <tr>
+                             <th  class="center" >&nbsp;</th>
+                            <th>Designation</th>                  <!--  //01    -->  
+                            <th>@Session["DepartmentLabel"]</th>                   <!--  //02    -->
+                            <th>Vacancy</th>                      <!--  //03    -->
+                            <th>Recruitment Date</th>             <!--  //04    -->
+                            <th>Job Description</th>              <!--  //05    -->
+                            <th>Full Name</th>                    <!--  //06    -->
+                            <th>Present District</th>             <!--  //07    -->
+                            <th>Job Category</th>                 <!--  //08    -->
+                            <th>Website</th>                      <!--  //09    -->
+                        </tr>                                             
+                        <tr>
+                            <th  class="center" >Actions</th>
+                            <th>Designation</th>                   <!--  //01    -->
+                            <th>@Session["DepartmentLabel"]</th>                    <!--  //02    -->
+                            <th>Vacancy</th>                       <!--  //03    -->
+                            <th>Recruitment Date</th>              <!--  //04    -->
+                            <th>Job Description</th>               <!--  //05    -->
+                            <th>Full Name</th>                     <!--  //06    -->
+                            <th>Present District</th>              <!--  //07    -->
+                            <th>Job Category</th>                  <!--  //08    -->
+                            <th>Website</th>                       <!--  //09    -->
+                        </tr>
+
+@*
+                        //00  //Id
+                        //01  //Designation
+                        //02  //Department
+                        //03  //Vacancy
+                        //04  //RequiruitmentDate
+                        //05  //JobDescription
+                        //06  //FullName
+                        //07  //PresentDistrictId
+                        //08  //JobCategoryId
+                        //09  //Website
+                        *@
+                    </thead>
+                    <tbody> 
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <br />
+        </div>
+<div class="headrow">
+        <button type="button" title="Add New Job" data-url="/Common/EMJob/Create" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+</div>

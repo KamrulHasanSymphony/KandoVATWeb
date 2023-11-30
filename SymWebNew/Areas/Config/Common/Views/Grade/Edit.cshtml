@@ -1,0 +1,109 @@
+﻿@model SymViewModel.Payroll.GradeVM
+@using UIHelper.MVC
+@{
+
+    ViewBag.Title = "Edit";
+    ViewBag.Location = "Edit"; 
+}
+
+@using (Html.BeginForm("Edit", "Grade", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmGrade" }))
+{
+    @Html.ValidationSummary(true)
+    <div class="thinbox">
+        <div class="Grade">
+            @Html.HiddenFor(model => model.Id)
+            @Html.HiddenFor(model => model.BranchId)
+            <div class="row">
+                <label class="col-sm-3">
+                    @Html.LabelFor(model => model.Code)
+                </label>
+                <div class="col-sm-9">
+                    @Html.TextBoxFor(model => model.Code, new { @placeholder = "Grade Code", @class = "required form-control" })
+                </div>
+            </div>
+            <div class="row">
+                <label class="col-sm-3">
+                    @Html.LabelFor(model => model.Name)
+                </label>
+                <div class="col-sm-9">
+                    @Html.TextBoxFor(model => model.Name, new { @placeholder = "Grade Name", @class = " required form-control" })
+                </div>
+            </div>
+
+            <div class="row">
+                <label class="col-sm-3">
+                    @Html.LabelFor(model => model.MinSalary)
+                </label>
+                <div class="col-sm-9">
+                    @Html.TextBoxFor(model => model.MinSalary, new { @placeholder = "Minimum Salary", @onchange="ValueCheck(this)", @class = " right required form-control" })
+                </div>
+            </div>
+            <div class="row">
+                <label class="col-sm-3">
+                    @Html.LabelFor(model => model.MaxSalary)
+                </label>
+                <div class="col-sm-9">
+                    @Html.TextBoxFor(model => model.MaxSalary, new { @placeholder = "Maximum Salary", @onchange="ValueCheck(this)", @class = " right required form-control" })
+                </div>
+            </div>
+
+            <div class="row">
+                <label class="col-sm-3">
+                    @Html.LabelFor(model => model.IsActive)
+                </label>
+                <div class="col-sm-1">
+                    @Html.CheckBoxFor(model => model.IsActive, new { @class = " form-control" })
+                </div>
+            </div>
+
+            <div class="row">
+                <label class="col-sm-3">
+                    @Html.LabelFor(model => model.Remarks)
+                </label>
+                <div class="col-sm-9">
+                    @Html.TextAreaFor(model => model.Remarks, new { @placeholder = "Remarks", @class = " form-control" })
+                    @Html.ValidationMessageFor(model => model.Remarks)
+                </div>
+            </div>
+
+            <div class="row">
+                <label class="col-sm-3">
+                    <button type="button" title="Edit Data" onclick="Edit();" class="Edit sym-btn-edit">&nbsp;Edit</button>
+                    <button type="button" title="Save Data" onclick="pageSubmit('frmGrade');" class="Save sym-btn-save">&nbsp;Save</button>
+                </label>
+                <label class="col-sm-4">
+                    <button type="button" title="Cancel Data" class=" btncancel sym-btn-cancel">&nbsp;Cancel</button>
+                </label>
+            </div>
+        </div>
+    </div>
+}
+    <script>
+        $(function () {
+            Edit();
+            valiDation("frmGrade");
+        });
+
+        function ValueCheck(sender) {
+            var maxSalary = parseFloat($('#MaxSalary').val());
+            var minSalary = parseFloat($('#MinSalary').val());
+            if (maxSalary != '') {
+                if (maxSalary < minSalary) {
+                    ShowResult("Fail", "Max Salary can't be less than Min Salary!");
+                    $(sender).val("");
+                }
+            }
+        }
+        function Edit() {
+            fnReadOnly("Grade");
+            if ($(".Grade").hasClass("readOnly")) {
+                $(".Save").hide();
+                $(".Edit").show();
+            }
+            else {
+                $(".Save").show();
+                $(".Edit").hide();
+            }
+        }
+
+    </script>

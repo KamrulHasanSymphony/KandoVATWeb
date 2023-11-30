@@ -1,0 +1,645 @@
+﻿@model VATViewModel.DTOs.VATReturnVM
+@using UIHelper.MVC
+@{
+    ViewBag.Title = "ChartBar";
+}
+
+<div class="thinbox animated zoomIn faster formDesign ">
+    <div class="th_thinbox ">
+        <p>VAT 9.1</p>
+    </div>
+    @using (Html.BeginForm("VAT9_1ChartPie", "Home", FormMethod.Post, new { enctype = "multipart/form-data", @target = "_blank", @Id = "frmChartBar" }))
+    {
+        <div class="row">
+            <div class="col-md-2">
+                <div class="editor-label">
+                    <label>Month - Year</label>
+                </div>
+                <div class="editor-field">
+
+                    @*@Html.TextBoxFor(m => m.PeriodName, new { @class = "cPeriodName customDatePicker form-control defaultDate" })*@
+                    @Html.SimpleDropDownFor(m => m.PeriodName, "//", new { @class = "cPeriodName form-control selectDropdown" })
+
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="editor-label">
+                    <label>Branch</label>
+                </div>
+                <div class="editor-field">
+                    @Html.SimpleDropDownFor(m => m.BranchId, "/Config/DropDown/BranchProfile", new { @class = " form-control selectDropdown" })
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="editor-label">
+                    <label>Parts</label>
+                </div>
+                <div class="editor-field">
+                    @Html.SimpleDropDown("Parts", "/Config/DropDown/VATReturnPartName", new { @class = "cParts form-control selectDropdown" })
+                    @*@Html.SimpleDropDown("Parts", "//", new { @class = "cParts form-control selectDropdown" })*@
+
+                </div>
+            </div>
+
+
+            <div class="col-md-2">
+                <div class="editor-label">
+                    <label>Particulars</label>
+                </div>
+                <div class="editor-field">
+                    @Html.SimpleDropDownFor(m => m.Section, "//", new { @class = "cSection form-control selectDropdown" })
+                </div>
+            </div>
+
+
+            <div class="col-md-3">
+                <div class="editor-label">
+                    <label>&nbsp;</label>
+                </div>
+                <div class="editor-field btnMargin">
+                    <button type="button" name="Load" class=" sym-btn-refresh btnLoad"> Load</button>
+                </div>
+            </div>
+
+        </div>
+
+    }
+</div>
+
+<div id="Chart_item">
+
+    <div class="row">
+        <div class="container col-md-4 ">
+            <h3 class="card-header ">
+                <label id="lblNamePie">VAT 9.1</label>
+            </h3>
+            <div class="card-block">
+                <canvas id="myChartPie" height="20" width="20"></canvas>
+            </div>
+        </div>
+
+        <div class="container col-md-4 ">
+            <h3 class="card-header ">
+                <label id="lblNamePie2">VAT 9.1</label>
+            </h3>
+            <div class="card-block">
+                <canvas id="myChartPie2" height="20" width="20"></canvas>
+            </div>
+        </div>
+
+        <div class="container col-md-4 ">
+            <h3 class="card-header ">
+                <label id="lblNamePie3">VAT 9.1</label>
+            </h3>
+            <div class="card-block">
+                <canvas id="myChartPie3" height="20" width="20"></canvas>
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="row">
+        <div class="container col-md-4 ">
+            <h3 class="card-header ">
+                <label id="lblNameBar">VAT 9.1</label>
+            </h3>
+            <div class="card-block">
+                <canvas id="myChartBar" height="20" width="20"></canvas>
+            </div>
+        </div>
+
+        <div class="container col-md-4 ">
+            <h3 class="card-header ">
+                <label id="lblNameBar2">VAT 9.1</label>
+            </h3>
+            <div class="card-block">
+                <canvas id="myChartBar2" height="20" width="20"></canvas>
+            </div>
+        </div>
+
+        <div class="container col-md-4 ">
+            <h3 class="card-header ">
+                <label id="lblNameBar3">VAT 9.1</label>
+            </h3>
+            <div class="card-block">
+                <canvas id="myChartBar3" height="20" width="20"></canvas>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+
+
+<script>
+
+        $(function () {
+            DropdownLoad($('#PeriodName'), "/Config/DropDown/FiscalPeriod", '@Model.PeriodName')
+            //DropdownLoad($('#Parts'), "/Config/DropDown/VATReturnPartName")
+        });
+
+
+
+        $(function () {
+            $("#Parts").change(function () {
+
+                var Part = $('#Parts').val();
+
+                DropdownLoad($('#Section'), "/Config/DropDown/VATReturnValue?PartName=" + Part)
+
+            });
+
+
+            $(".btnLoad").click(function () {
+
+                var PeriodName = $('#PeriodName').val();
+                var BranchId = $('#BranchId').val();
+                var Section = $('#Section').val();
+                var part = $('#Parts').val();
+
+                if (Section == null || Section == "") {
+                    ShowResult("Fail", "Select a Particulars first!");
+                    return;
+                }
+
+                let lbl = "";
+
+                if (part === "part3") {
+                    lbl = "Total Sales Value & Total Payable Taxes";
+                }
+                if (part === "part4") {
+                    lbl = "Total Input Tax Credit";
+                }
+                if (part === "part5") {
+                    lbl = "Total Increasing Adjustment";
+                }
+                if (part === "part6") {
+                    lbl = "Total Decreasing Adjustment";
+                }
+
+
+                //loadsChartPie(PeriodName, BranchId, Section,part);
+                //loadsChartBar(PeriodName, BranchId);
+
+                //var chartId = "";
+                var url = "/VMS/Chart/VAT9_1ChartPie";
+
+                var i;
+                for (i = 0; i < 3; i++) {
+
+                    if (i === 0) {
+
+                        loadsChartPie(url, PeriodName, BranchId, Section, part, lbl, i);
+                    }
+                    if (i === 1) {
+
+                        loadsChartPie2(url, PeriodName, BranchId, Section, part, lbl, i);
+                    }
+                    if (i === 2) {
+
+                        loadsChartPie3(url, PeriodName, BranchId, Section, part, lbl, i);
+                    }
+                }
+
+                //loadsMultiple();
+            });
+
+
+
+        });
+
+
+</script>
+
+
+<script>
+
+    function loadsChartPie(url,PeriodName, BranchId, Section, PartNo, lbl, previousmonth) {
+
+        $(function () {
+            var backgroundColor = [
+                               "#2ecc71",
+                               "#3498db",
+                               "#95a5a6",
+                               "#9b59b6",
+                               "#f1c40f",
+                               "#e74c3c",
+                               "#421e2e",
+                               "#302525",
+                               "#704704",
+                               "#0e5704",
+                               "#03574e",
+                               "#480366",
+                               "#34495e"
+            ];
+
+            setTimeout(function () { loadsPie() }, 0);
+            setTimeout(function () { loadsbar() }, 0);
+
+            //var url = "/VMS/Home/VAT9_1ChartPie";
+            url = url + "?" + "BranchId=" + BranchId + "&PeriodName=" + PeriodName + "&Section=" + Section + "&PartNo=" + PartNo + "&previousmonth=" + previousmonth;
+
+
+            function loadsPie() {
+                var labels = [];
+                var datas = [];
+
+
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    beforeSend: function () { $(".loading").show(); },
+                    complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                    success: function (data) {
+                        //data= JSON.stringify(data);
+                        //alert(JSON.stringify(data));
+                        //let pre;
+                        //console.log(data[1].PeriodName);
+
+                        document.getElementById('lblNamePie').innerHTML = lbl + ' (' + data[1].PeriodName + ')';
+
+                        $.each(data[0], function (index, value) {
+                            labels.push(value.Description);//+ '-' + value.Value
+                            datas.push(value.Value);
+                        });
+                        var ctx = document.getElementById("myChartPie").getContext('2d');
+                        var myChart = new Chart(ctx, {
+                            type: 'pie',
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    backgroundColor: backgroundColor,
+                                    data: datas
+                                }],
+                            }
+                        });
+                    },
+                });
+            }
+
+
+            function loadsbar() {
+                var labels = [];
+                var datas = [];
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    beforeSend: function () { $(".loading").show(); },
+                    complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                    success: function (data) {
+
+                        document.getElementById('lblNameBar').innerHTML = lbl + ' (' + data[1].PeriodName + ')';
+
+                        $.each(data[0], function (index, value) {
+                            labels.push(value.Description);//+ '-' + value.Value
+                            datas.push(value.Value);
+                        });
+                        var ctx = document.getElementById("myChartBar").getContext('2d');
+                        var myChart = new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: labels,
+
+                                datasets: [{
+                                    label: Section,
+                                    data: datas,
+                                    backgroundColor: backgroundColor
+                                }]
+                            }
+                        });
+                    },
+                });
+
+            }
+
+        });
+
+
+    }
+
+    function loadsChartPie2(url, PeriodName, BranchId, Section, PartNo, lbl, previousmonth) {
+
+        $(function () {
+            var backgroundColor = [
+                               "#2ecc71",
+                               "#3498db",
+                               "#95a5a6",
+                               "#9b59b6",
+                               "#f1c40f",
+                               "#e74c3c",
+                               "#421e2e",
+                               "#302525",
+                               "#704704",
+                               "#0e5704",
+                               "#03574e",
+                               "#480366",
+                               "#34495e"
+            ];
+
+            setTimeout(function () { loadsPie2() }, 0);
+            setTimeout(function () { loadsbar2() }, 0);
+
+
+            url = url + "?" + "BranchId=" + BranchId + "&PeriodName=" + PeriodName + "&Section=" + Section + "&PartNo=" + PartNo + "&previousmonth=" + previousmonth;
+
+
+            //let lbl = "";
+
+            //if (PartNo === "part3") {
+            //    lbl = "Total Sales Value & Total Payable Taxes";
+            //}
+            //if (PartNo === "part4") {
+            //    lbl = "Total Input Tax Credit";
+            //}
+            //if (PartNo === "part5") {
+            //    lbl = "Total Increasing Adjustment";
+            //}
+            //if (PartNo === "part6") {
+            //    lbl = "Total Decreasing Adjustment";
+            //}
+
+
+
+            function loadsPie2() {
+                var labels = [];
+                var datas = [];
+
+
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    beforeSend: function () { $(".loading").show(); },
+                    complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                    success: function (data) {
+                        //data= JSON.stringify(data);
+                        //alert(JSON.stringify(data));
+                        //let pre;
+                        //console.log(data[1].PeriodName);
+
+                        document.getElementById('lblNamePie2').innerHTML = lbl + ' (' + data[1].PeriodName + ')';
+
+                        $.each(data[0], function (index, value) {
+                            labels.push(value.Description);// + '-' + value.Value
+                            datas.push(value.Value);
+                        });
+                        var ctx = document.getElementById("myChartPie2").getContext('2d');
+                        var myChart = new Chart(ctx, {
+                            type: 'pie',
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    backgroundColor: backgroundColor,
+                                    data: datas
+                                }],
+                            }
+                        });
+                    },
+                });
+            }
+
+
+            function loadsbar2() {
+                var labels = [];
+                var datas = [];
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    beforeSend: function () { $(".loading").show(); },
+                    complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                    success: function (data) {
+
+                        document.getElementById('lblNameBar2').innerHTML = lbl + ' (' + data[1].PeriodName + ')';
+
+                        $.each(data[0], function (index, value) {
+                            labels.push(value.Description);//+ '-' + value.Value
+                            datas.push(value.Value);
+                        });
+                        var ctx = document.getElementById("myChartBar2").getContext('2d');
+                        var myChart = new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: labels,
+
+                                datasets: [{
+                                    label: Section,
+                                    data: datas,
+                                    backgroundColor: backgroundColor
+                                }]
+                            }
+                        });
+                    },
+                });
+
+            }
+
+        });
+
+
+    }
+
+    function loadsChartPie3(url, PeriodName, BranchId, Section, PartNo, lbl, previousmonth) {
+
+        $(function () {
+            var backgroundColor = [
+                               "#2ecc71",
+                               "#3498db",
+                               "#95a5a6",
+                               "#9b59b6",
+                               "#f1c40f",
+                               "#e74c3c",
+                               "#421e2e",
+                               "#302525",
+                               "#704704",
+                               "#0e5704",
+                               "#03574e",
+                               "#480366",
+                               "#34495e"
+            ];
+
+            setTimeout(function () { loadsPie3() }, 0);
+            setTimeout(function () { loadsbar3() }, 0);
+
+            //var url = "/VMS/Home/VAT9_1ChartPie";
+            url = url + "?" + "BranchId=" + BranchId + "&PeriodName=" + PeriodName + "&Section=" + Section + "&PartNo=" + PartNo + "&previousmonth=" + previousmonth;
+
+
+            //let lbl = "";
+
+            //if (PartNo === "part3") {
+            //    lbl = "Total Sales Value & Total Payable Taxes";
+            //}
+            //if (PartNo === "part4") {
+            //    lbl = "Total Input Tax Credit";
+            //}
+            //if (PartNo === "part5") {
+            //    lbl = "Total Increasing Adjustment";
+            //}
+            //if (PartNo === "part6") {
+            //    lbl = "Total Decreasing Adjustment";
+            //}
+
+
+
+            function loadsPie3() {
+                var labels = [];
+                var datas = [];
+
+
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    beforeSend: function () { $(".loading").show(); },
+                    complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                    success: function (data) {
+                        //data= JSON.stringify(data);
+                        //alert(JSON.stringify(data));
+                        //let pre;
+                        //console.log(data[1].PeriodName);
+
+                        document.getElementById('lblNamePie3').innerHTML = lbl + ' (' + data[1].PeriodName + ')';
+
+                        $.each(data[0], function (index, value) {
+                            labels.push(value.Description);//+ '-' + value.Value
+                            datas.push(value.Value);
+                        });
+                        var ctx = document.getElementById("myChartPie3").getContext('2d');
+                        var myChart = new Chart(ctx, {
+                            type: 'pie',
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    backgroundColor: backgroundColor,
+                                    data: datas
+                                }],
+                            }
+                        });
+                    },
+                });
+            }
+
+
+            function loadsbar3() {
+                var labels = [];
+                var datas = [];
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    beforeSend: function () { $(".loading").show(); },
+                    complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                    success: function (data) {
+
+                        document.getElementById('lblNameBar3').innerHTML = lbl + ' (' + data[1].PeriodName + ')';
+
+                        $.each(data[0], function (index, value) {
+                            labels.push(value.Description); //+ '-' + value.Value
+                            datas.push(value.Value);
+                        });
+                        var ctx = document.getElementById("myChartBar3").getContext('2d');
+                        var myChart = new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: labels,
+
+                                datasets: [{
+                                    label: Section,
+                                    data: datas,
+                                    backgroundColor: backgroundColor
+                                }]
+                            }
+                        });
+                    },
+                });
+
+            }
+
+        });
+
+
+    }
+
+
+</script>
+
+
+<script>
+        @*$(function () {
+            $("#submit").click(function () {
+                filterJoindate();
+            });
+
+            function filterJoindate() {
+                var FormDate = $("FormDate").val();
+                var ToDate = $("ToDate").val();
+                $.ajax({
+                    url: "@Url.Action("JoinDate","Home",  new { area="HRM"})" + "?FormDate=" + FormDate + "&ToDate=" + ToDate,
+                    type: 'GET',
+                beforeSend: function () { $(".loading").show(); },
+                complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                success: function (data) {
+                    $("#JoinDetail").html(data);
+                }
+            });
+        };
+    });*@
+</script>
+
+<style>
+    /*#header {
+                border-bottom: 5px solid #37474F;
+                color: #37474F;
+                margin-bottom: 1.5rem;
+                padding: 1rem 0;
+            }*/
+
+    #revenue-tag {
+        font-weight: inherit !important;
+        border-radius: 0px !important;
+    }
+
+    .card {
+        border: 0rem;
+        border-radius: 0rem;
+    }
+
+    .card-header {
+        background-color: #37474F;
+        border-radius: 0 !important;
+        color: white;
+        margin-bottom: 0;
+        padding: 1rem;
+    }
+
+    .card-block {
+        border: 1px solid #cccccc;
+        box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12), 0 3px 5px -1px rgba(0, 0, 0, 0.2);
+    }
+
+    .shadow {
+        box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12), 0 3px 5px -1px rgba(0, 0, 0, 0.2);
+    }
+
+    #revenue-column-chart, #products-revenue-pie-chart, #orders-spline-chart {
+        height: 300px;
+        width: 100%;
+    }
+</style>
+
+
+
+
+
+
+
+
+

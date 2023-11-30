@@ -1,0 +1,224 @@
+﻿@model VATViewModel.DTOs.VAT6_2ParamVM
+@using UIHelper.MVC
+@{
+    ViewBag.Title = "Process6_2Permanet";
+}
+
+@using (Html.BeginForm("_Process6_2BigDataProcess", "NBRReport", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmProcessdata" }))
+{
+    @Html.HiddenFor(model => model.Flag)
+
+    <div class="headrow">
+    </div>
+
+    <div class="col-md-12 trkPX-0">
+        <div class="thinbox animated zoomIn faster">
+            <div class="th_thinbox">
+                <p>6.2 Permanent Process</p>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <div class="row">
+                        <label for="" class="col-md-2 control-label text-right trkLabelMargin">Product Name</label>
+                        <div class="col-md-4">
+                            <div class="col-md-8 npForm">
+                                @Html.HiddenFor(m => m.ItemNo, new { @class = " popUpItemNo" })
+                                @Html.TextBoxFor(m => m.ProductName, new { @class = " form-control trProductName", @readonly = "readonly" })
+                            </div>
+                            <div class=" col-md-2 npForm">
+
+                                <button type="button" class=" sym-btn-search productBtn">Search</button>
+                            </div>
+                        </div>
+
+                        <label for="" class="col-md-2 control-label text-right trkLabelMargin">With Product</label>
+                        <div class="col-md-4">
+                            <div class="col-md-8 npForm">
+                                @Html.CheckBoxFor(m => m.IsChecked, new { id = "idIsChecked", @class = "cIsChecked form-control", @name = "att[]" })
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+                        <label for="Month" class="col-md-2 control-label text-right trkLabelMargin">Month</label>
+                        <div class="col-md-2">
+                            @*@Html.TextBoxFor(m => m.IsMonthly, new { @placeholder = "Start Date", @class = "customDatePicker form-control defaultDate" })*@
+                            @Html.SimpleDropDownFor(m => m.PeriodMonth, "/Config/DropDown/FiscalPeriod", new { @class = "cPeriodMonth form-control required" })
+                            @Html.ValidationMessageFor(model => model.PeriodMonth)
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+                        <label for="DateFrom" class="col-md-2 control-label text-right trkLabelMargin">Date From</label>
+                        <div class="col-md-2">
+                            @*<label>Date From</label>*@
+                            @Html.TextBoxFor(m => m.StartDate, new { @placeholder = "Start Date", @class = "customDatePicker form-control defaultDate" })
+                        </div>
+
+                        <label for="DateTo" class="col-md-2 control-label text-right trkLabelMargin">Date To</label>
+                        <div class="col-md-2">
+                            @*<label>Date To</label>*@
+                            @Html.TextBoxFor(m => m.EndDate, new { @placeholder = "End Date", @class = "customDatePicker form-control defaultDate" })
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="headrow">
+        <button type="button" title="Process" onclick="SaveData('Process')" class="sym-btn-save">&nbsp;Process</button>
+        <button type="button" title="Process" onclick="SaveData('DayProcess')" class="sym-btn-save">&nbsp;Day Process</button>
+        <button type="button" title="BranchProcess" onclick="SaveData('BranchProcess')" class="sym-btn-save">&nbsp;Branch Process</button>
+        <button type="button" title="Process" onclick="SaveData('BranchDayProcess')" class="sym-btn-save">&nbsp;BranchDay Process</button>
+        <button type="button" title="Delete_Process" onclick="SaveData('Delete_Process')" class="sym-btn-save">&nbsp;Delete-Process</button>
+        <button type="button" title="Re-Process" onclick="ExportExcel()" class=" sym-btn-save">&nbsp;Download Negative Data</button>
+    </div>
+
+    <div id="myHigherModal" class="HigherModal"></div>
+}
+
+
+<script>
+
+    $(document).ready(function () {
+        $("#idIsChecked").change(function () {
+
+            if (this.checked) {
+
+                $(".cPeriodMonth").attr('disabled', 'disabled');
+                $(".productBtn").removeAttr('disabled', 'disabled');
+                $("#StartDate").removeAttr('disabled', 'disabled');
+                $("#EndDate").removeAttr('disabled', 'disabled');
+                //$("#sr").attr('readonly', 'true');
+            }
+            else {
+
+                $(".cPeriodMonth").removeAttr('disabled');
+                $(".productBtn").attr('disabled', 'disabled');
+                $("#StartDate").attr('disabled', 'disabled');
+                $("#EndDate").attr('disabled', 'disabled');
+
+                //$(".productBtn").removeAttr('disabled');
+                //$("#sr").removeAttr('readonly');
+            }
+        });
+
+        $(".productBtn").attr('disabled', 'disabled');
+        $("#StartDate").attr('disabled', 'disabled');
+        $("#EndDate").attr('disabled', 'disabled');
+
+    });
+
+
+    function modalInitHigher(url) {
+        var modal = document.getElementById('myHigherModal');
+        $.ajax({
+            url: url,
+            cache: false,
+            beforeSend: function () { $(".loading").show(); },
+            complete: function () { $(".loading").fadeOut(200).hide("slow") },
+            success: function (html) {
+                modal.style.display = "block";
+                $("#myHigherModal").html(html);
+            }
+        });
+    }
+    function callbackFromProductModal(sender) {
+        var itemNo = $(sender).children('td.popUpItemNo').text();
+        $('#ItemNo').val(itemNo);
+    }
+    $(function () {
+        $('.productBtn').click(function () {
+            var url = "/Vms/Product/GetProductPopUp?targetId=ProductName";
+            modalInitHigher(url);
+        });
+    });
+</script>
+
+<script>
+    $(function () {
+        var date = $('.trVAT17Date').val();
+        if (date != null && date != "") {
+            $('#StartDate').val(date);
+            $('#EndDate').val(date);
+        }
+        var productName = $('tr.active .dItemName').val();
+        if (productName == null || productName == "") {
+            return;
+        }
+        $('.trProductName').val(productName);
+        var itemNo = $('tr.active .dItemNo').val();
+
+        $('.popUpItemNo').val(itemNo);
+
+    })
+</script>
+
+<script>
+
+    $(function () {
+        valiDation("frmProcessdata");
+
+    });
+
+    function SaveData(Flag) {
+
+        var questionMSG = "";
+
+        if (Flag == "Process") {
+            questionMSG = "Do you want to Process 6.2 Permanently?";
+
+        }
+
+        else if (Flag == "BranchProcess") {
+            questionMSG = "Do you want to BranchProcess 6.1 Permanently?";
+        }
+
+        else if (Flag == "DayProcess") {
+            questionMSG = "Do you want to ProcessDay 6.1 Permanently?";
+        }
+
+        else if (Flag == "BranchDayProcess") {
+            questionMSG = "Do you want to BranchDayProcess 6.1 Permanently?";
+        }
+        else {
+            questionMSG = "Do you want to delete 6.2 Permanent data?";
+        }
+
+        Ask(questionMSG, function () {
+
+            $('#Flag').val(Flag);
+
+            pageSubmit('frmProcessdata');
+
+        });
+    }
+
+    function ExportExcel() {
+
+        var questionMSG = "Are you sure to Export Excel!";
+
+        Ask(questionMSG, function () {
+            var url = '/VMS/NBRReport/ExportNegaiveData6_2';
+            var form = $('<form action="' + url + '"></form>');
+            form.appendTo('#frmProcessdata').submit()
+        });
+    }
+
+</script>
+
+
+
+

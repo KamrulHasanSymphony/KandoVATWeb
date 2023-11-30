@@ -1,0 +1,70 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+<div class="row">
+<h2>Attendance Migrate and Process</h2>
+
+             <div class="col-md-2">
+                 <label>Date From</label>
+                 @Html.TextBox("dateFrom", null, new { @onchange = "DateCheck(this);", @placeholder = " Date From", @class = "customDatePicker form-control" })
+             </div>
+             <div class="col-md-2">
+                 <label>Date To</label>
+                 @Html.TextBox("dateTo", null, new { @onchange = "DateCheck(this);", @placeholder = " Date To", @class = "customDatePicker form-control" })
+             </div>
+<button type="button" title="Save Data" id="saveJSON"  class=" sym-btn-save" >&nbsp;Process</button>
+    </div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+
+        $(function () {
+           
+        });
+        $('#saveJSON').click(function () {
+            var dateFrom = $("#dateFrom").val();
+
+            var dateTo = $("#dateTo").val();
+
+            var oParam = { "dateFrom": "", "dateTo": "" };
+            oParam.dateFrom = dateFrom;
+            oParam.dateTo = dateTo;
+
+                    var url = "/Common/AttendanceMigrateProcess/Process";
+
+                    $.ajax({
+                        type: 'GET',
+                        data: oParam, // #2
+                        url: url,
+                        success: function (result) {
+                            var msg1 = result.split('~')[0];
+                            var msg2 = result.split('~')[1];
+                            if (msg1 != "Fail") {
+                                ShowResult("Success", msg2);
+                                location.reload();
+
+                            }
+                            else {
+                                ShowResult("Fail", msg2);
+                            }
+                        }
+                    });
+                    
+               
+        });
+
+ 
+
+        function DateCheck(sender) {
+            var joinDateFrom = ParseDate($("#dateFrom").val());
+            var joinDateTo = ParseDate($("#dateTo").val());
+
+            if (joinDateFrom > joinDateTo) {
+                ShowResult("Fail", "Migrete From can't be prior to Migrete To!");
+                $(sender).val("");
+            }
+        }
+
+    </script>
+}

@@ -1,0 +1,57 @@
+﻿@model VATViewModel.DTOs.MPLBankDepositSlipDetailVM
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+<tr class="tablerow ">
+    @using (Html.BeginCollectionItem("MPLBankDepositSlipDetailVMs"))
+    {
+
+        <td>
+            <a id="" title="Click to Remove" onclick="RemoveItem(this);" class="sym-btn-remove-row "></a>
+            @*<a id="" title="Click to Edit" onclick="EditItem(this);" class="sym-btn-edit-row btnSize"></a>*@
+            
+        </td>
+       
+        <td>
+            @Html.TextBoxFor(model => model.SalesInvoiceNo, new { @class = "  dSalesInvoiceNo   form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.BankCode, new { @class = "  dBankCode   form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.BDBankName, new { @class = "  dBDBankName   form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.CustomerName, new { @class = "  dCustomerName   form-control", @readonly = "readonly" })
+        </td>
+            <td>
+                @Html.TextBoxFor(model => model.ModeOfPayment, new { @class = "  dModeOfPayment   form-control", @readonly = "readonly" })
+            </td>
+        <td>
+            @Html.TextBoxFor(model => model.InstrumentNo, new { @class = "  dInstrumentNo   form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.InstrumentDate, "{0:dd-MMM-yyyy}", new { @class = "  dInstrumentDate  form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.Amount, "{0:N2}", new { @class = "  dAmount right  form-control", @readonly = "readonly" })
+        </td>
+
+
+        @Html.HiddenFor(m => m.BankDepositSlipHeaderId, new { @class = "dBankDepositSlipHeaderId" })
+            @Html.HiddenFor(m => m.TType, new { @class = "dTType" })
+            @Html.HiddenFor(m => m.RefId, new { @class = "dRefId" })
+            @Html.HiddenFor(m => m.BDBankId, new { @class = "dBDBankId" })
+            @Html.HiddenFor(m => m.SalesInvoiceMPLHeaderId, new { @class = "dSalesInvoiceMPLHeaderId" })
+            @Html.HiddenFor(m => m.MPLBankPaymentReceivesId, new { @class = "dMPLBankPaymentReceivesId" })
+            @Html.HiddenFor(m => m.BranchId, new { @class = "dBranchId" })
+            
+    }
+</tr>
+
+<style>
+    .btnSize {
+        font-size: 1em !important;
+    }
+</style>

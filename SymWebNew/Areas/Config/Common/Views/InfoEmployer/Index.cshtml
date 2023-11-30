@@ -1,0 +1,112 @@
+﻿    <script type="text/javascript">
+        $(document).ready(function () {
+            SelectAllForDelete();
+            $.datepicker.regional[""].dateFormat = 'dd/M/y';
+            $.datepicker.setDefaults($.datepicker.regional['']);
+            var oTable = $('#myDataTable').dataTable({
+                "bServerSide": true,
+                "sAjaxSource": "/Common/InfoEmployer/_index",
+                "bProcessing": true,
+                "aLengthMenu": tablelength(),
+                "bJqueryUI": true,
+                "bAutoWidth": false,
+                "sScrollX": '160%',
+                "aoColumns": [
+                                {
+                                    "sName": "Id",
+                                    "bSearchable": false,
+                                    "bSortable": false,
+                                    "sWidth": "9%",
+                                    "sClass":"center",
+                                    "fnRender": function (oObj) {
+                                        return '<a title="Click on for Details" style="text-decoration:none;"    href=\"/Common/InfoEmployer/Edit?Id=' + oObj.aData[0] + '\"  class="sym-btn-edit-row"></a>';
+                                    }
+                                }
+                               , { "sName": "FullName", "sWidth": "10%" }
+                               , { "sName": "PresentDistrictId", "sWidth": "10%" }
+                               , { "sName": "JobCategoryId", "sWidth": "10%" }
+                               , { "sName": "ContactPersonName", "sWidth": "10%" }
+                               , { "sName": "ContactPersonDesignation", "sWidth": "10%" }
+                               , { "sName": "ContactPersonMobile", "sWidth": "10%" }
+                               , { "sName": "ContactPersonEmail", "sWidth": "10%" }
+                               , { "sName": "Website", "sWidth": "10%" }
+                ]
+            });
+                        
+            oTable.columnFilter({
+                sPlaceHolder: "head:after",
+                aoColumns: [{ type: "checkbox", "sClass": "chkAll" } 
+                           , { type: "text" }                        
+                           , { type: "text" }                        
+                           , { type: "text" }                        
+                           , { type: "text" }                        
+                           , { type: "text" }                        
+                           , { type: "text" }                        
+                           , { type: "text" }                        
+                           , { type: "text" }
+                ]
+            });
+        });
+    </script>
+@{
+    ViewBag.Title = "Index";
+    ViewBag.Location = "Common=>Info Employer=>Index"; 
+}
+<div class="headrow">
+        <button type="button" title="Add New Employer" data-url="/Common/InfoEmployer/Create" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+     <label class="pull-right">Employer Information</label>
+</div>
+    <div class="thinbox">
+        <div class="th_thinbox">
+        <p>Employer List</p>   
+        </div>
+<p></p>
+        <div id="container">
+            <div id="demo">
+                <table id="myDataTable" class="display">
+                    <thead>
+                         <tr>
+                             <th  class="center" >&nbsp;</th>
+                            <th>Full Name                </th>
+                            <th>Present District</th>
+                            <th>Job Category    </th>
+                            <th>Contact Person Name       </th>
+                            <th>Contact Person Designation</th>
+                            <th>Contact Person Mobile     </th>
+                            <th>Contact Person Email      </th>
+                            <th>Website                 </th>
+                        </tr>
+                        <tr>
+                            <th  class="center" >Actions</th>
+                            <th>Full Name                </th>
+                            <th>Present District</th>
+                            <th>Job Category    </th>
+                            <th>Contact Person Name       </th>
+                            <th>Contact Person Designation</th>
+                            <th>Contact Person Mobile     </th>
+                            <th>Contact Person Email      </th>
+                            <th>Website                 </th>
+                        </tr>
+
+@*
+                        //Id
+                        //FullName                    
+                        //PresentDistrictId
+                        //JobCategoryId    
+                        //ContactPersonName           
+                        //ContactPersonDesignation    
+                        //ContactPersonMobile         
+                        //ContactPersonEmail          
+                        //Website                     
+                        *@
+                    </thead>
+                    <tbody> 
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <br />
+        </div>
+<div class="headrow">
+        <button type="button" title="Add New Employer" data-url="/Common/InfoEmployer/Create" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+</div>

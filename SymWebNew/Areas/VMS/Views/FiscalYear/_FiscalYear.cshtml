@@ -1,0 +1,43 @@
+﻿@model VATViewModel.DTOs.FiscalYearVM
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+<div class="row">
+    @using (Html.BeginCollectionItem("VMs"))
+    {
+        @Html.HiddenFor(model => model.PeriodID)
+        @Html.HiddenFor(model => model.GLLock)
+        @Html.HiddenFor(model => model.CurrentYear)
+        @Html.HiddenFor(model => model.FiscalYearName)
+        @Html.HiddenFor(model => model.CreatedBy)
+        @Html.HiddenFor(model => model.CreatedOn)
+        
+        <div class="col-md-2 col-md-offset-2">
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.PeriodName, new { @class = " form-control", @readonly = "readonly" })
+                @Html.ValidationMessageFor(model => model.PeriodName)
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.PeriodStart, new { @class = " form-control customDatePicker", @readonly = "readonly" })
+                @Html.ValidationMessageFor(model => model.PeriodStart)
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.PeriodEnd, new { @class = " form-control customDatePicker", @readonly = "readonly" })
+                @Html.ValidationMessageFor(model => model.PeriodEnd)
+
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="editor-field">
+                @Html.SimpleDropDownFor(m => m.PeriodLock, "/Config/DropDown/DecisionList", new { @class = " trNavigateMenu form-control required" })
+                        @*@Html.CheckBoxFor(model => model.PeriodLock,new {data_Id=Model.PeriodID })<strong>Locked</strong>*@
+            </div>
+        </div>
+    }
+</div>
+

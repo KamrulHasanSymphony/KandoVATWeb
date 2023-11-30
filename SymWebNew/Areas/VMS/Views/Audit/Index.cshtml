@@ -1,0 +1,213 @@
+﻿@model VATViewModel.DTOs.AuditVM
+@using UIHelper.MVC
+@using SymOrdinary
+@using System.Threading;
+@using VATServer.Ordinary
+
+@{
+    ShampanIdentity identity = null;
+    try
+    {
+        identity = (ShampanIdentity)Thread.CurrentPrincipal.Identity;
+    }
+    catch (Exception)
+    {
+        Response.Redirect("/VMS/Home/Login");
+        return;
+    }
+}
+
+@{
+    ViewBag.Title = "Index";
+}
+
+@*@Html.HiddenFor(model => model.TransactionType, new { @class = " cTransactionType" })*@
+
+<div class="headrow">
+    <div style="display: none" id="formAppend"></div>
+    @*<button type="button" title="Add New Puchase" data-url="/VMS/Audit/Create" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>*@
+
+    <label class="pull-right">Audit</label>
+
+</div>
+
+<div class=" tabMenu">
+    <ul style="font-size: 1.4em;" class="tabDesign nav nav-tabs">
+
+        <li class="tabDefault active"><a data-toggle="tab" href="#PurchaseIndex">Index</a></li>
+
+        <li class="tabDefault"><a data-toggle="tab" href="#Excel" class="vdsInfoTab">Upload</a></li>
+
+    </ul>
+</div>
+
+<div class="tab-content">
+
+    <div id="PurchaseIndex" class="tab-pane fade  in active">
+
+        <div class="thinbox  animated zoomIn faster">
+            
+            <p>&nbsp;</p>
+            <table id="myDataTable" class="display">
+                <thead>
+                    <tr>
+                        @*<input type="checkbox" class="chkAll" />*@
+                        <th class="center">Action</th>
+                        <th>FiscalYear</th>
+                        <th>File Name</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <br />
+        </div>
+
+        @*<div class="headrow">
+            <button type="button" title="Add New Audit" data-url="/VMS/Audit/Create" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+        </div>*@
+
+        <div id="myModal" class="trkmodal"></div>
+    </div>
+
+    <div id="Excel" class="tab-pane fade  in ">
+
+        <div class="thinbox row">
+            <div class="th_thinbox">
+                <p>File Import</p>
+            </div>
+            @using (Ajax.BeginForm("ImportAudit", "Audit", null, new AjaxOptions { }, new { enctype = "multipart/form-data", @Id = "frmAuditImport" }))
+            {
+                @*@Html.HiddenFor(model => model.TransactionType)*@
+                <div class="npForm col-md-3">
+                <label> First Year</label>
+                    @Html.SimpleDropDownFor(model => model.FiscalYear, "/Config/DropDown/FiscalYear", new { @class = " selectDropdown form-control" })
+
+            </div>
+                
+                <div class="col-md-offset-6 col-md-6 verticalLine">
+                    <div class="col-md-6">
+                        <label>File</label>
+                        @Html.TextBoxFor(model => model.Attachment, new { @type = "file", @accept = ".pdf", @class = " form-control" })
+                    </div>
+                    <div class="col-md-6">
+                        <label>&nbsp;</label>
+                        <button type="button" onclick="pageSubmit('frmAuditImport');" class="sym-btn-file-upload ">&nbsp;Upload</button>
+                    </div>
+                </div>
+            }
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    $("#PurchaseIndex .chkAll").click(function () {
+        $('#PurchaseIndex  .dSelected:input:checkbox').not(this).prop('checked', this.checked);
+    });
+
+</script>
+
+
+
+<script language="javascript" type="text/javascript">
+    function btnMIS(sender) {
+        var purchaseId = $(sender).attr('data-Id');
+        var url = $(sender).attr('data-url');
+        url = url + "?purNo=" + purchaseId;
+        $.ajax({
+            url: url,
+            cache: false,
+            beforeSend: function () { $(".loading").show(); },
+            complete: function () { $(".loading").fadeOut(200).hide("slow") },
+            success: function (html) {
+                var modal = document.getElementById('myModal');
+                modal.style.display = "block";
+                $("#myModal").html(html);
+            }
+        });
+    }
+
+    $(document).ready(function () {
+     
+
+        //SelectAllForDelete();
+        $.datepicker.regional[""].dateFormat = 'dd/M/y';
+        $.datepicker.setDefaults($.datepicker.regional['']);
+        var oTable = $('#myDataTable').dataTable({
+            "bServerSide": true,
+            "sAjaxSource": "/VMS/Audit/_index",
+            "bProcessing": true,
+            "aLengthMenu": tablelength(),
+            "bJqueryUI": true,
+            "bAutoWidth": false,
+
+            "fnServerData": function (sSource, aoData, fnCallback) {
+                $('.dtSearch :input').each(function () {
+                    var Name = $(this).attr("Id")
+                    var Value = $(this).val()
+                    aoData.push({ "name": Name, "value": Value });
+                });
+                $.getJSON(sSource, aoData, function (json) {
+                    fnCallback(json);
+                });
+            },
+
+            "aoColumns": [
+                            {
+
+
+                                "sName": "Id",
+                                "bSearchable": false,
+                                "bSortable": false,
+                                "sWidth": "5%",
+                                "sClass": "center",
+                                "fnRender": function (oObj) {
+                                    return '  <a title="Click on for download" href=\"/VMS/Audit/Edit/' + oObj.aData[0].split('~')[0] + '\" class="sym-btn-download-row"></a>'
+
+                                    ;
+                                }
+                            }
+                            //<input onclick="CheckAll(this)" class="dSelected" type="checkbox" data-Id="' + oObj.aData[0] + '">'
+                            //        + '&nbsp;
+
+                            , { "sName": "FiscalYear", "sWidth": "12%" }
+                            , { "sName": "FileName", "sWidth": "15%" }
+
+            ]
+        });
+
+        $('#btnDialog').click(function () {
+            var model = $('.dtSearch :input').serialize();
+            $.ajax({
+                url: "/VMS/Purchase/Index",
+                cache: false,
+                data: model,
+                success: function (html) {
+                    oTable.fnDraw();
+                }
+            });
+        });
+        ////clearing fields
+        $("#Clear").on('click', function () {
+            $(".Dropdown").select2("val", "");
+            $(".form-control").val("");
+        });
+    });
+
+    function checkValidBranch(element, branchId) {
+        if ('@Session["BranchId"]' != branchId) {
+            ShowResult("Fail", "This Information not for this Branch!");
+            return;
+        }
+
+        btnPost(element);
+    }
+</script>
+
+<style>
+    .cExportAll {
+        margin-left: 20px !important;
+    }
+</style>
+

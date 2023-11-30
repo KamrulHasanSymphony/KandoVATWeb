@@ -1,0 +1,198 @@
+﻿@{
+    ViewBag.Title = "Report";
+}
+
+@using UIHelper.MVC
+<div class="thinbox">
+    <div class="th_thinbox">
+        <p>Pre-Employement Information</p>
+    </div>
+    <div class="PreEmployementInformation">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="editor-label">
+                    @Html.Label("ReferenceNumber")
+                </div>
+                <div class="editor-field">
+                    @*@Html.TextBox("ReferenceNumber", "BESL-HR_", new { @placeholder = "Reference Number", @class = "  form-control" })*@
+                    @Html.SimpleDropDown("ReferenceNumber", "/Config/DropDown/DropDownPreEmpRef", new { @class = "referenceNumber  form-control selectDropdown" })
+                </div>
+                @*DropDownPreEmpRef*@
+            </div>
+
+
+            <div class="col-md-3">
+                <div class="editor-label">
+                    @Html.Label("IssueDate")
+                </div>
+                <div class="editor-field">
+                    @Html.TextBox("IssueDate", "", new { @placeholder = "Issue Date", @class = " customDatePicker form-control" })
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="editor-label">
+                    @Html.Label("EmployeeName")
+                </div>
+                <div class="editor-field">
+                    @Html.TextBox("EmployeeName", "", new { @placeholder = "Employee Name", @class = " required form-control" })
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="editor-label">
+                    @Html.Label("ShortName")
+                </div>
+                <div class="editor-field">
+                    @Html.TextBox("ShortName", "", new { @placeholder = "Short Name", @class = "  form-control" })
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-3">
+                <div class="editor-label">
+                    @Html.Label("Designation")
+                </div>
+                <div class="editor-field">
+                    @Html.SimpleDropDown("Designation", "/Config/DropDown/DesignationName", new { @class = "  form-control" })
+                </div>
+            </div>
+
+
+            <div class="col-md-3">
+                <div class="editor-label">
+                    @Html.Label("Department")
+                </div>
+                <div class="editor-field">
+                    @Html.SimpleDropDown("Department", "/Config/DropDown/DepartmentName", new { @class = "  form-control" })
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="editor-label">
+                    @Html.Label("JobGrade")
+                </div>
+                <div class="editor-field">
+                    @Html.SimpleDropDown("JobGrade", "/Config/DropDown/GradeName", new { @class = " form-control" })
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="editor-label">
+                    @Html.Label("JobGradeDesignation")
+                </div>
+                <div class="editor-field">
+                    @Html.SimpleDropDown("JobGradeDesignation", "/Config/DropDown/OtherInfo?infoType=Other1", new { @class = "  form-control" })
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+
+            <div class="col-md-2">
+                <div class="editor-label">
+                    <label>Letter Name</label>
+                </div>
+                <div class="editor-field">
+                    @Html.SimpleDropDown("LetterName", "/Config/DropDown/DropDownReport?ReportType=PreEmployLetter", new { @class = "required form-control " })
+                </div>
+            </div>
+        </div>
+
+
+
+
+    </div>
+</div>
+<div class="headrow">
+    <button type="button" title="Click for Report" data-url="/Common/PreEmployementInformation/ReportView" onclick="reportData(this);" id="" class="sym-btn-report">&nbsp;Report</button>
+    &nbsp;
+    <button title="Clear the Entries" id="Clear" onclick="window.location.reload()" class="sym-btn-clear">&nbsp;Clear</button>
+</div>
+
+<script>
+    $(function () {
+        InitDropdownsCommon();
+    });
+    function reportData(sender) {
+        var url = $(sender).attr("data-url");
+
+        var referenceNumber = $('.referenceNumber :selected').val();
+        var issueDate = $("#IssueDate").val();
+        var employeeName = $("#EmployeeName").val();
+        var shortName = $("#ShortName").val();
+        var designation = $("#Designation").val();
+        var department = $("#Department").val();
+        var jobGrade = $("#JobGrade").val();
+        var jobGradeDesignation = $("#JobGradeDesignation").val();
+        var letterName = $("#LetterName").val();
+
+        if (letterName == "") {
+            ShowResult('Fail', "Please Select The Letter Name");
+            return false;
+        }
+
+        rptObj = new Object();
+        rptObj.referenceNumber = referenceNumber;
+        rptObj.issueDate = issueDate;
+        rptObj.employeeName = employeeName;
+        rptObj.shortName = shortName;
+        rptObj.designation = designation;
+        rptObj.department = department;
+        rptObj.jobGrade = jobGrade;
+        rptObj.jobGradeDesignation = jobGradeDesignation;
+        rptObj.letterName = letterName;
+
+
+
+        var rptParam = $.param(rptObj);
+        url = url + "?" + rptParam;
+        var win = window.open(url, '_blank');
+    }
+
+    @*  
+ReferenceNumber
+IssueDate
+EmployeeName
+ShortName
+Designation
+Department
+JobGrade
+JobGradeDesignation
+
+*@     
+</script>
+<script>
+    $(function () {
+        $('.referenceNumber').change(function () {
+            LoadEmployeeDetails();
+        });
+    });
+
+    var LoadEmployeeDetails = function () {
+
+        var refNo = $('.referenceNumber :selected').val();
+        var url = "/Common/PreEmployementInformation/SelectEmployeeDetails?refNo=" + refNo;
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            beforeSend: function () { $(".loading").show(); },
+            complete: function () { $(".loading").fadeOut(200).hide("slow") },
+            success: function (data) {
+                $('#IssueDate').val(data.IssueDate);
+                $('#EmployeeName').val(data.EmployeeName);
+                $('#ShortName').val(data.ShortName);
+                $('#Designation').val(data.Designation);
+                $('#Department').val(data.Department);
+                $('#JobGrade').val(data.JobGrade);
+                $('#JobGradeDesignation').val(data.JobGradeDesignation);
+            },
+        });
+
+    }
+
+
+</script>

@@ -1,0 +1,118 @@
+﻿@model VATViewModel.DTOs.TankMPLsVM
+@using UIHelper.MVC
+@{
+    Layout = "~/Areas/VMS/Views/Shared/_ModalLayout.cshtml";
+}
+
+@Html.HiddenFor(model => model.SalesInvoiceDetailsRefId)
+
+<div class="col-md-6 col-md-offset-3">
+    <div class="HigherModal-content">
+        <div class="HigherModal-header">
+            <span class="closeHigher">&times;</span>
+            <h2 class="text-center"> Tank Information</h2>
+        </div>
+        <div class="HigherModal-body formDesign">
+
+            <div class="thinbox animated zoomIn faster">
+                <div class="row">
+                    <div class="form-group">
+                        <label class="col-md-3 control-label text-right trkLabelMargin">Tank Name</label>
+                        <div class="form-group">
+                            <div class="col-md-7" style="margin-top: 6px;">
+                                @Html.SimpleDropDownFor(m => m.TankId, "/Config/DropDown/TanksList?ItemNo=" + Model.ItemNo, new { @class = "detailsTankId required form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="animated zoomIn faster">
+                    <div class="row">
+                        <div class="form-group">
+                            <button type="button" name="btnName" value="Update" title="Update Data" class="btnSave sym-btn-update pull-right">&nbsp;Update</button>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('.btnSave').click(function () {
+            debugger;
+            var model = {};
+            var id = $('#SalesInvoiceDetailsRefId').val() || 0;
+            var tankId = $('.detailsTankId').val() || 0;
+
+            if (tankId == "0" || tankId == "" || tankId == undefined) {
+                ShowResult("Fail", "Tank Name Required.");
+                return;
+            }
+
+            model =
+               {
+                   Id : id,
+                   TankId : tankId
+               }
+
+            $.ajax({
+                type: "POST",
+                url: "/Vms/SaleMPLInvoice/UpdateSalesDetailsTankInfo",
+                data: model,
+                success: function (res) {
+                    debugger;
+                    if (res[0] == "Success") {
+                        ShowResult("Success", res[1]);
+                    }
+                    else if (res[0] == "Fail") {
+                        ShowResult("Fail", res[1]);
+                    }
+                    else {
+                        ShowResult("Fail", res);
+                    }
+                },
+                error: function (res) {
+                    ShowResult("Fail", res);
+                }
+            });
+
+        });
+    });
+
+
+</script>
+
+
+<script>
+    function closeHigherModal() {
+        $("#myHigherModal").html("");
+        trkmodal.style.display = "none";
+    }
+    var span = document.getElementsByClassName("closeHigher")[0];
+    var trkmodal = document.getElementById('myHigherModal');
+    span.onclick = function () {
+        closeHigherModal();
+    }
+
+    $(function () {
+        $('#customerPopUpTable').unbind().on('dblclick', '.trSelectPopUpCustomer', function () {
+            var itemName = $(this).children('td.popUpItemName').text();
+            selectPopUpProduct(itemName, this);
+        });
+        function selectPopUpProduct(itemName, sender) {
+            callbackFromCustomerModal(sender);
+            closeHigherModal();
+        }
+        $(document).on('click', '.trSelectPopUpCustomer', function () {
+            var activeEl = $('tr.active');
+            activeEl.removeClass("active");
+            $(this).addClass(" active");
+        });
+    })
+</script>
+

@@ -1,0 +1,70 @@
+﻿@model SymViewModel.Attendance.AttendanceRosterAllVM
+@using UIHelper.MVC
+@{
+    ViewBag.Title = "Add";
+}
+@using (Html.BeginForm("CreateDetail", "AttendanceRosterAll", FormMethod.Post, new { @Id = "frmatten" }))
+{
+    @Html.ValidationSummary(true)
+     @Html.HiddenFor(model => model.AttendanceStructureId)
+     @Html.HiddenFor(model => model.AttendanceGroupId)
+    <div class="thinbox">
+         <div class="row">
+            <div class="col-md-4">
+                @Html.LabelFor(model => model.FromDate)
+            </div>
+            <div class="col-md-8">
+              @Html.TextBoxFor(model => model.FromDate, new { @placeholder = "FromDate",@class = "customDatePicker required form-control" })
+            </div>
+        </div>
+          <div class="row">
+            <div class="col-md-4">
+                @Html.LabelFor(model => model.ToDate)
+            </div>
+            <div class="col-md-8">
+               @Html.TextBoxFor(model => model.ToDate, new {@placeholder = "ToDate", @class ="customDatePicker required form-control" })
+            </div>
+        </div>
+          <div class="row">
+            <div class="col-md-4">
+                @Html.LabelFor(model => model.AttendanceGroupId)
+            </div>
+            <div class="col-md-8">
+                @Html.SimpleDropDownFor(model => model.AttendanceGroupId, "/Config/DropDown/GroupList", new {@class = "required form-control" })
+            </div>
+        </div>
+          <div class="row">
+            <div class="col-md-4">
+                @Html.LabelFor(model => model.AttendanceStructureId)
+            </div>
+            <div class="col-md-8">
+                @Html.SimpleDropDownFor(model => model.AttendanceStructureId, "/Config/DropDown/AttendanceStructure", new {@class = "required form-control" })
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                @Html.LabelFor(model => model.Remarks)
+            </div>
+            <div class="col-md-8">
+                @Html.TextBoxFor(model => model.Remarks, new { @class = " form-control" })
+            </div>
+        </div>
+        <div class="row">
+            <label class="col-sm-5">
+            </label>
+            <div class="col-sm-5">
+                   <button type="button" title="Save Data" onclick="pageSubmit('frmatten');" class="sym-btn-save">&nbsp;Save</button>
+                 <button type="button" title="Cancel Data" class=" btncancel sym-btn-cancel">&nbsp;Cancel</button>
+            </div>
+        </div>
+          </div>
+}
+<script>
+    $(function () {
+        InitDropDowns();
+        InitDatePickers();
+        InitDateTimePickers();
+        fromWriteColor("frmatten");
+        valiDation("frmatten");
+    });
+</script>

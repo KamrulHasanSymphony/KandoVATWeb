@@ -1,0 +1,49 @@
+﻿@{
+    ViewBag.Title = "NewTable";
+    Layout = "~/Areas/VMS/Views/Shared/_TryLayout.cshtml";
+}
+<style>
+    /*th, td { white-space: nowrap; }*/
+</style>
+<h2 class="text-center text-warning" style="padding-bottom:10px;">New Data Table</h2>
+<table id="myDataTable" class="display" style="width:100%">
+        <thead>
+            <tr>
+                <th class="center"><input type="checkbox" id="chkAllBox"/>Select All</th>
+                <th>CustomerName</th>
+                <th>Address1</th>
+                <th>TelephoneNo</th>
+                <th>Email</th>
+                <th>VDSPercent</th>
+                <th>CustomerName</th>
+                <th>CustomerName</th>
+                <th>CustomerName</th>
+                <th>CustomerName</th>
+            </tr>
+        </thead>
+    </table>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#chkAllBox").live("click", function () {
+            $('input:checkbox').not(this).prop('checked', this.checked);
+        });
+
+        $('#myDataTable').DataTable({
+            ajax: "/VMS/Customer/_index",
+            scrollY: "280px",
+            scrollX: true,
+            scrollCollapse: true,
+            columnDefs: [{
+                "targets": 0, "orderable": false,
+                "render": function (Data) {
+                    return ' <input onclick="CheckAll(this)" type="checkbox" data-Id="' + Data + '">'
+                        + '&nbsp; <a id=""  title="Click on for Edit"  style="text-decoration:none;"   href=\"/VMS/Customer/Edit/' + Data + '\" class=" innerListLink sym-btn-edit-row"></a>'
+                        + '&nbsp; <a title="Click on for Delete"  data-url="/VMS/Customer/Delete" onclick="deletedData(this, myDataTable,\'' + Data + '\');"  class="sym-btn-remove-row"></a>'
+                    ;
+                }
+            }],
+            fixedColumns: {leftColumns: 2}
+        });
+    });
+    
+</script>

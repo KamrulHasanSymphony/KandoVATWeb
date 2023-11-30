@@ -1,0 +1,860 @@
+﻿@model VATViewModel.DTOs.TransferRawMasterVM
+@using UIHelper.MVC
+@using (Html.BeginForm("CreateEdit", "TransferRaw", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmTransferRaw" }))
+{   
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.Post)
+    @Html.HiddenFor(model => model.Operation)
+    @Html.HiddenFor(model => model.TransactionType)
+
+    <input id="ConvFactor" type="hidden"/>
+    
+    <div class="headrow">
+        @if (Model.Operation == "update")
+        {
+            <button type="button" title="Update Data" onclick="SaveData()" class="sym-btn-update">&nbsp;Update</button>
+            if (Model.Post == "N") 
+            {
+                <button type="button" title="Post Data" onclick="PostData(this)" class="sym-btn-post">&nbsp;Post</button>
+            }
+            <label class="pull-right">Issue > Edit (@Model.TransactionType)</label>
+        }
+        else if (Model.Operation == "add")
+        {
+            <button type="button" title="Save Data" onclick="SaveData()" class="sym-btn-save">&nbsp;Save</button>
+            <label class="pull-right">Issue  > Create (@Model.TransactionType)</label>
+        }
+        <button type="button" title="Go To Index" data-url="/VMS/TransferRaw?tType=@Model.TransactionType" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New Issue" data-url="/VMS/TransferRaw/Create?tType=@Model.TransactionType" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+    </div>
+    if (Model.Operation == "update") {
+    <div class="col-sm-12 col-md-12">
+        <div class="input-group   col-lg-8  col-md-8  col-sm-8 col-xs-12 text-color col-md-offset-2" style="">
+            <a class="input-group-addon btn btn-primary hidden-xs changePage" data-pager-action='first' id="first"><i class="fa fa-angle-double-left"></i>First</a>
+            <a class="input-group-addon btn btn-primary hidden-xs changePage" data-pager-action='previous' id="precode"><i class="fa fa-angle-left"></i>Previous</a>
+            @Html.SimpleDropDown("", "/Config/DropDown/IdNameDropdown?tableName=TransferRawHeaders&Id=Id&Name=TransferId&AllData=yes&code=TransFromItemNo", new { @class = " trNavigateMenu form-control selectDropdown " })
+            <a class="input-group-addon btn btn-primary changePage" data-pager-action='current' id="current"><i class="fa fa-search"></i></a>
+            <a class="input-group-addon btn btn-primary hidden-xs changePage" data-pager-action='next' id="nextcode">Next <i class="fa  fa-angle-right"></i></a>
+            <a class="input-group-addon btn btn-primary hidden-xs changePage" data-pager-action='last' id="last">Last <i class="fa  fa-angle-double-right"></i></a>
+        </div>
+    </div>
+    }
+    <button type="button" class="accordion">Transfer From</button>
+    <div class="panel">
+    <div class="thinbox formDesign" style="margin-top:0px;margin-bottom:0px;">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="editor-label">
+                    <label for="IssueNo">Transfer ID</label>
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.TransferId, new { @placeholder = "New", @class = " form-control", @readonly = "readonly" })
+                    @Html.ValidationMessageFor(model => model.TransferId)
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="editor-label">
+                    <label for="TransferDateTime">Transfer Date</label>
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.TransferDateTime, new { @placeholder = "Transaction Date", @class = " trDate customDatePickerChangeable required form-control" })
+                    @Html.ValidationMessageFor(model => model.TransferDateTime)
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="editor-label">
+                    <label for="GroupFrom">Group</label>
+                </div>
+                <div class="editor-field">
+                    @Html.SimpleDropDownFor(m=>m.CategoryId, "/Config/DropDown/ProductCategory", new { @class = " form-control trFromGroup" })
+                </div>
+            </div>
+
+            <div class="col-md-5">
+                <div class="editor-label">
+                    <label for="ItemFromCode">Product</label>
+                </div>
+                <div class="editor-field">
+                    @Html.HiddenFor(m=>m.TransFromItemNo)
+                    @Html.SimpleDropDown("ItemFromCode", "//", new { @class = " trItemFromCode  form-control  selectDropdown" })
+                </div>
+            </div>
+        </div>
+
+        <div class="row trkMT8">
+            <div class="col-md-2">
+                <div class="editor-label">
+                    <label for="FromQuantity">Quantity</label>
+                </div>
+                <div class="editor-field">
+                    @Html.TextBox("FromQuantity", null, new { @class = " trFromQuantity NumberCheckAddDetail right   form-control", @readonly = "readonly" })
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="editor-label">
+                    <label for="FromCostPrice">Cost Price</label>
+                </div>
+                <div class="editor-field input-group">
+                    <span class="input-group-addon">&#2547</span>
+                    @Html.TextBox("FromCostPrice", null, new { @class = " trFromCostPrice NumberCheckAddDetail right   form-control", @readonly = "readonly" })
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="editor-label">
+                    <label for="FromUOM">UOM</label>
+                </div>
+                <div class="editor-field input-group">
+                    @Html.TextBox("FromUOM", null, new { @class = " trFromUOM  form-control", @readonly = "readonly" })
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="editor-label">
+                    <label for="FromPackSize">Pack Size</label>
+                </div>
+                <div class="editor-field input-group">
+                    @Html.TextBox("FromPackSize", null, new { @class = " trFromPackSize  form-control", @readonly = "readonly" })
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="editor-label">
+                    <label for="FromHSCode">HS Code</label>
+                </div>
+                <div class="editor-field">
+                    @Html.TextBox("FromHSCode", null, new { @placeholder = "HS Code", @class = " trFromHSCode   form-control", @readonly = "readonly" })
+                </div>
+            </div>
+
+        </div>
+        </div>
+    </div>
+    
+    <button type="button" class="accordion">Transfer To</button>
+    <div class="panel">
+        <div class="thinbox formDesign" style="margin-top:0px;margin-bottom:0px;">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="editor-label">
+                        <label for="GroupTo">Group</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.SimpleDropDown("GroupTo", "/Config/DropDown/ProductCategory", new { @class = " form-control trToGroup" })
+                    </div>
+                </div>
+
+                <div class="col-md-5">
+                    <div class="editor-label">
+                        <label for="ItemToCode">Product</label>
+                    </div>
+                    <div class="editor-field">
+                        <input id="trItemNoTo" type="hidden" />
+                        <input id="trItemNameTo" type="hidden" />
+                        @Html.SimpleDropDown("ItemToCode", "//", new { @class = " trItemToCode  form-control  selectDropdown" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="row trkMT8">
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        <label for="ToQuantity">Quantity</label>
+                    </div>
+                    <div class="editor-field">
+                        <input id="trToStock" type="hidden" />
+                        @Html.TextBox("ToQuantity", null, new { @class = " trToQuantity NumberCheckAddDetail right   form-control" })
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        <label for="ToCostPrice">Cost Price</label>
+                    </div>
+                    <div class="editor-field input-group">
+                        <span class="input-group-addon">&#2547</span>
+                        @Html.TextBox("ToCostPrice", null, new { @class = " trToCostPrice NumberCheckAddDetail right   form-control", @readonly = "readonly" })
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        <label for="ToUOM">UOM</label>
+                    </div>
+                    <div class="editor-field input-group">
+                        @Html.TextBox("ToUOM", null, new { @class = " trToUOM  form-control", @readonly = "readonly" })
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        <label for="PackSize">Pack Size</label>
+                    </div>
+                    <div class="editor-field">
+                        <select class="Dropdown form-control DropdownInited trPackSize" id="PackSize" style="margin-top:0px;min-width:195px;"></select>
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        <label for="ToHSCode">HS Code</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBox("ToHSCode", null, new { @placeholder = "HS Code", @class = " trToHSCode   form-control", @readonly = "readonly" })
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        <label>&nbsp;</label>
+                    </div>
+                    <div class="editor-field">
+                        <div title="Add Detail" data-url="/Vms/TransferRaw/BlankItem" class="sym-btn-add-row AddRow" data-container="editorItemRows">&nbsp;Add</div>
+                    </div>
+                </div>
+            </div>
+
+            <hr />
+            <div>
+                <div class="fixedParent">
+                    @if (Model.Details != null)
+                    {
+                        <table class="trkFixTable" id="itemTable">
+                            <thead>
+                                <tr>
+                                    <th>Action</th>
+                                    <th>Product Name</th>
+                                    <th>Code</th>
+                                    <th>UOM</th>
+                                    <th>Quantity</th>
+                                    <th>Unit Price</th>
+                                    <th>SubTotal</th>
+                                    <th>Convt. Factor</th>
+                                    <th>Base U Qty</th>
+                                    <th>Base Price</th>
+                                    <th>Base UOM</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="editorItemRows">
+                                @foreach (var item in Model.Details)
+                                {
+                                    Html.RenderPartial("_detail", item);
+                                }
+                            </tbody>
+                        </table>
+                    }
+                </div>
+
+                <hr />
+                <div class="row trkBelowDiv">
+                    <div class="col-md-2 col-md-offset-8 trkLabelTopRight">
+                        <label>Total Amount</label>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="editor-field input-group">
+                            <span class="input-group-addon">&#2547</span>
+                            <strong>@Html.TextBoxFor(model => model.TransferedAmt, null, new { @class = "totalAmount NumberCheck right form-control", @readonly = "readonly" })</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="headrow">
+        @if (Model.Operation == "update")
+        {
+            <button type="button" title="Update Data" onclick="SaveData()" class="sym-btn-update">&nbsp;Update</button>
+            if (Model.Post == "N") 
+            {
+                <button type="button" title="Post Data" onclick="PostData(this)" class="sym-btn-post">&nbsp;Post</button>                
+            }
+        }
+        else if (Model.Operation == "add")
+        {
+            <button type="button" title="Save Data" onclick="SaveData()" class="sym-btn-save">&nbsp;Save</button>
+        }
+        <button type="button" title="Go To Index" data-url="/VMS/TransferRaw?tType=@Model.TransactionType" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New Petty Cash" data-url="/VMS/TransferRaw/Create?tType=@Model.TransactionType" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+    </div>
+}
+<div id="myModal" class="trkmodal"></div>
+<div id="productDetails" class="trkmodal">
+    <div class="trkmodal-content">
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    @*SubTotal*@
+    <script>
+        function SubTotal() {
+            var trSubtotal = 0;
+            var TotalAmount = 0;
+
+            $(".tablerow").each(function () {
+                trSubtotal = parseFloat($(this).find(".dSubTotal").val().replace(/\,/g, ''));
+                TotalAmount += trSubtotal;
+            });
+            $(".totalAmount").val(TotalAmount);
+        }
+    </script>
+
+    @*For accordion toggle*@
+    <script>
+        $(function () {
+            ////expanding basic panel on load
+            var acc = document.getElementsByClassName("accordion");
+            togglePanel(acc[0]);
+            togglePanel(acc[1]);
+
+            ////clicking on basic or product
+            $('.accordion').click(function () {
+                togglePanel(this);
+            });
+            /////panel expand or shrink
+            function togglePanel(sender) {
+                sender.classList.toggle("active");
+                var panel = sender.nextElementSibling;
+                if (panel.style.maxHeight) {
+                    panel.style.maxHeight = null;
+                } else {
+                    var maxHeight = parseFloat(panel.scrollHeight)+20;
+                    panel.style.maxHeight = maxHeight + "px";
+                }
+            }
+
+            /////adding the height of added row in the products section
+            function addingHeightRow() {
+                var acc = document.getElementsByClassName("accordion");
+                var panel = acc[1].nextElementSibling;
+                var maxHeight = parseFloat(panel.scrollHeight) + 10;
+                panel.style.maxHeight = maxHeight + "px";
+            }
+        });
+    </script>
+
+    @*For From Transfer Items*@
+    <script>
+        //product category change method
+        function ProductGroupChange() {
+            $('.trItemFromCode').select2("val", "");
+            var value = $('.trFromGroup').val();
+            var productNames = "";
+            var url = "/Config/DropDown/DropDownProductByCategory/?id=" + value;
+            productNames += "<option value=0>Select</option>";
+            $.getJSON(url, function (data) {
+                $.each(data, function (i, state) {
+                    productNames += "<option value='" + state.Value + "'>" + state.Text + "</option>";
+                });
+                $('.trItemFromCode').html(productNames);
+            });
+        }
+
+        ////product change method
+        function ProductNameChange(productCode) {
+            if (productCode == null || productCode=="") {
+                $('.trFromQuantity').val("0");
+                $('.trFromCostPrice').val("0");
+                $('.trFromUOM').val("");
+                $('.trFromHSCode').val("");
+                $('.trFromPackSize').val("");
+                return;
+            }
+            var issueDate = $(".trDate").val();
+            var url = "/Vms/TransferRaw/SelectProductDetails?productCode=" + productCode + "&IssueDate=" + issueDate;
+            $.getJSON(url, function (data) {
+                var code = data.split('~')[0];
+                var uom = data.split('~')[1];
+                var hscode = data.split('~')[2];
+                var costPrice = data.split('~')[3];
+                var stock = data.split('~')[4];
+                var name = data.split('~')[5];
+                var itemNo = data.split('~')[6];
+
+                $('#TransFromItemNo').val(itemNo);
+                $('.trFromQuantity').val(stock);
+                $('.trFromCostPrice').val(costPrice);
+                $('.trFromUOM').val(uom);
+                $('.trFromHSCode').val(hscode);
+                $('.trFromPackSize').val(uom);
+
+            });
+        }
+
+        $(function () {
+            ////changing product category
+            $('.trFromGroup').change(function () {
+                ProductGroupChange();
+                ProductNameChange();
+            });
+            
+            ////changing product category
+            $('.trItemFromCode').change(function () {
+                var productCode = $(this).val();
+                ProductNameChange(productCode);
+            });
+        })
+    </script>
+
+    @*For To Transfer Items*@
+    <script>
+    ////product change method
+        function ToNameChange(productCode) {
+            if (productCode == null) {
+                $('#trItemNoTo').val("");
+                $('#trItemNameTo').val("");
+                $('#trToStock').val("0");
+                $('.trToCostPrice').val("0");
+                $('.trToUOM').val("");
+                $('.trToHSCode').val("");
+                var html = "<option value=''>Select</option>";
+                $('#PackSize').html(html);
+                return;
+            }
+        var issueDate = $(".trDate").val();
+        var url = "/Vms/TransferRaw/SelectProductDetails?productCode=" + productCode + "&IssueDate=" + issueDate;
+        $.getJSON(url, function (data) {
+            var code = data.split('~')[0];
+            var uom = data.split('~')[1];
+            var hscode = data.split('~')[2];
+            var costPrice = data.split('~')[3];
+            var stock = data.split('~')[4];
+            var name = data.split('~')[5];
+            var itemNo = data.split('~')[6];
+
+            $('#trItemNoTo').val(itemNo);
+            $('#trItemNameTo').val(name);
+            $('#trToStock').val(stock);
+            $('.trToCostPrice').val(costPrice);
+            $('.trToUOM').val(uom);
+            $('.trToHSCode').val(hscode);
+
+            var html = "<option value=" + uom + ">" + uom + "</option>";
+            $('#PackSize').html(html);
+        });
+    }
+
+    //product category change method
+    function ToGroupChange() {
+        $('.trItemToCode').select2("val", "");
+        var value = $('.trToGroup').val();
+        var productNames = "";
+        var url = "/Config/DropDown/DropDownProductByCategory/?id=" + value;
+        productNames += "<option value=0>Select</option>";
+        $.getJSON(url, function (data) {
+            $.each(data, function (i, state) {
+                productNames += "<option value='" + state.Value + "'>" + state.Text + "</option>";
+            });
+            $('.trItemToCode').html(productNames);
+        });
+        ToNameChange();
+    }
+
+        $(function () {
+            ////uom conversion method
+            function GetConvFactor() {
+                var uomFrom = $('.trToUOM').val();
+                var uomTo = $('.trPackSize').val();
+                if (uomFrom == uomTo) {
+                    return;
+                }
+                var actionUrl = "/Vms/TransferRaw/GetConvFactor?uomFrom=" + uomFrom + "&UomTo=" + uomTo;
+                $.getJSON(actionUrl, function (data) {
+                    uomConv = parseFloat(data);
+                    $('#ConvFactor').val(uomConv);
+                });
+            }
+
+            ////uom option method
+            function UomOptions() {
+                var uom = $('.trToUOM').val();
+                var url = "/Vms/TransferRaw/GetUomOption?uomFrom=" + uom;
+                $.ajax({
+                    url: url,
+                    cache: false,
+                    success: function (html) {
+                        $('#PackSize').append(html);
+                    }
+                });
+            }
+            ////changing product category
+            $('.trToGroup').change(function () {
+                ToGroupChange();
+            });
+
+            ////changing product category
+            $('.trItemToCode').change(function () {
+                var productCode = $(this).val();
+                ToNameChange(productCode);
+                ///getting uom options
+                $(function () {
+                    var interval = setInterval(function () {
+                        if ($('.trToUOM').val() != "") {
+                            UomOptions();
+                            clearInterval(interval);
+                        }
+                    }, 200);
+                });
+            });
+
+            ////changing uom to/packet size
+            $('.trPackSize').change(function () {
+                GetConvFactor();
+            });
+        })
+    </script>
+
+    @*For fixed table*@
+    <script>
+        function fixedScrolltrkFixedTable(tableId, leftTotal) {
+            $('#' + tableId + ' tbody').scroll(function (e) {
+                var i;
+                var j = 2;
+                for (i = 1; i <= leftTotal; i++) {
+                    $('#' + tableId + ' tbody td:nth-child(' + i + ')').css("z-index", "1");
+                    $('#' + tableId + ' thead th:nth-child(' + i + ')').css("left", $("#" + tableId + " tbody").scrollLeft());
+
+                    $('#' + tableId + ' tbody td:nth-child(' + j + ')').css("z-index", "1");
+                    $('#' + tableId + ' tbody td:nth-child(' + j + ')').css("left", $("#" + tableId + " tbody").scrollLeft());
+                    $('#' + tableId + ' tbody td:nth-child(' + j + ')').css("left", $("#" + tableId + " tbody").scrollLeft());
+                    j++;
+                }
+                $('#' + tableId + ' thead').css("left", -$("#" + tableId + " tbody").scrollLeft());
+                //$('#' + tableId + ' thead th:nth-child(2)').css("left", $("#" + tableId + " tbody").scrollLeft());
+
+            });
+        }
+        function settingtrkFixedColumnWidth(tableId, widthArgs) {
+            if (widthArgs == null) {
+                return;
+            }
+            var i;
+            var j = 2;
+            for (i = 1; i <= widthArgs.length; i++) {
+                $('#' + tableId + ' tr td:nth-child(' + j + ')').css("min-width", widthArgs[i - 1] + "px");
+                $('#' + tableId + ' tr th:nth-child(' + i + ')').css("min-width", widthArgs[i - 1] + "px");
+                j++;
+            }
+        }
+        function fixLeftColumns(tableId, leftTotal) {
+            var i;
+            var j = 2;
+            for (i = 1; i <= leftTotal; i++) {
+                //fixed column header style
+                $('#' + tableId + ' thead th:nth-child(' + i + ')').css("height", "50px");
+                $('#' + tableId + ' thead th:nth-child(' + i + ')').css("position", "relative");
+                $('#' + tableId + ' thead th:nth-child(' + i + ')').css("z-index", "2");
+                //fixed column rows style
+                $('#' + tableId + ' tbody tr td:nth-child(' + j + ')').css("height", "40px");
+                $('#' + tableId + ' tbody tr td:nth-child(' + j + ')').css("position", "relative");
+                j++;
+            }
+        }
+        function settingWidth(tableId) {
+            //var parentWidth = $('.fixedParent').width();
+            var parentWidth = $('#' + tableId).closest('.fixedParent').width();
+            $('#' + tableId + ' thead').width(parentWidth);
+            $('#' + tableId + ' tbody').width(parentWidth);
+        }
+        function trkFixedTable(tableId, leftTotal, args) {
+            settingWidth(tableId);
+            fixLeftColumns(tableId, leftTotal);
+            fixedScrolltrkFixedTable(tableId, leftTotal);
+            settingtrkFixedColumnWidth(tableId, args);
+        }
+        function callingFixedTable() {
+            var args = [100, 200, 100, 100, 100, 100, 100, 100, 100, 100, 100];
+            trkFixedTable("itemTable", 2, args);
+        }
+        $(function () {
+            callingFixedTable();
+        })
+    </script>
+
+    @*For Adding/Editing Detail table*@
+    <script>
+        ////edit a row
+        function EditItem(sender) {
+            var itemCode = $(sender).closest('.tablerow').find('.dItemCode').val();
+            var groupId = $(sender).closest('.tablerow').find('.dGroupId').val();
+            $('.trToGroup').val(groupId);
+            ToGroupChange();
+
+            var interval = setInterval(function () {
+                if (document.querySelectorAll('.trItemToCode option').length > 0) {
+                    $('.trItemToCode').select2("val", itemCode);
+                    ToNameChange(itemCode);
+                    clearInterval(interval);
+                }
+            }, 200);
+
+            var quantity = $(sender).closest('.tablerow').find('.dQuantity').val();
+            $(".trToQuantity").val(quantity);
+
+            $(sender).parents("tr:first").remove();
+            SubTotal();
+
+            //$(function () {
+            //    var interval = setInterval(function () {
+            //        if ($('.trUOM').val() != "") {
+            //            UomOptions();
+            //            GetConvFactor();
+            //            clearInterval(interval);
+            //        }
+            //    }, 200);
+            //});
+        }
+
+        ////removing a row
+        function RemoveItem(sender) {
+            Ask("Are you sure to Delete the item!", function () {
+                $(sender).parents("tr:first").remove();
+                SubTotal();
+            });
+        }
+        $(function () {
+            ////Getting uom conversion 
+            function GetConvFact() {
+                var uomConv = 1;
+                var uomFrom = $('.trUOM').val();
+                var uomTo = $('.trPackSize').val();
+                if (uomFrom != uomTo) {
+                    uomConv = $('#ConvFactor').val();
+                }
+                return uomConv;
+            }
+            ////clicking add button
+            $('.AddRow').on("click", function () {
+
+                var product = $('.trItemToCode').val();
+                if (product == "0" || product == ""||product==null) {
+                    ShowResult("Fail", "Select a product first!");
+                    return;
+                }
+
+                var quantity = parseFloat($('.trToQuantity').val().replace(/\,/g, ''));
+                if (isNaN(quantity) || quantity <= 0) {
+                    ShowResult("Fail", "Quantity can not be zero");
+                    $('.trToQuantity').css('background-color', 'yellow');
+                    return;
+                }
+
+                var costPrice = parseFloat($('.trToCostPrice').val().replace(/\,/g, ''));
+                if (costPrice <= 0) {
+                    ShowResult("Fail", "Price can not be negative or zero!");
+                    $('.trCostPrice').css('background-color', 'yellow');
+
+                    return;
+                }
+
+                var convFact = GetConvFact();
+                var stock = parseFloat($('.trToStock').val());
+                if (quantity * convFact > stock) {
+                    ShowResult("Fail", "Stock is not available!");
+                    return;
+                }
+
+                var itemCode = $('.trProductCode').val();
+                var count = 0;
+
+                $('.dItemCode').each(function () {
+                    var existing = $(this).val();
+                    if (itemCode == existing) {
+                        count++;
+                    }
+                });
+
+                if (count > 0) {
+                    ShowResult("Fail", "Item already exists!");
+                    return;
+                }
+
+                var container = $(this).attr('data-container');
+                var url = $(this).attr('data-url');
+                AddRow(container, url)
+                return false;
+            });
+
+            /////adding the height of added row in the products section
+            function addingHeightRow() {
+                var acc = document.getElementsByClassName("accordion");
+                var panel = acc[1].nextElementSibling;
+                panel.style.maxHeight = panel.scrollHeight + "px";
+            }
+
+            ////add row method
+            function AddRow(container, url) {
+                var uomConv = 1;//unit conversion initial value
+
+                //form fields
+                var itemName = $('#trItemNameTo').val();
+                var productCode = $('.trItemToCode').val();
+                var itemNo = $('#trItemNoTo').val();
+                var quantity = parseFloat($('.trToQuantity').val().replace(/\,/g, ''));
+                var stock = parseFloat($('#trToStock').val());
+                var uomPrice = parseFloat($('.trToCostPrice').val().replace(/\,/g, ''));
+                var uomFrom = $('.trToUOM').val();
+                var uomTo = $('.trPackSize').val();
+                var hsCode = $('.trToHSCode').val();
+                var group = $('.trToGroup').val();
+
+                //getting conversion factor
+                if (uomFrom != uomTo) {
+                    uomConv = $('#ConvFactor').val();
+                }
+                var costPrice = uomPrice * uomConv;
+
+                var model = {
+                    ItemNo: itemNo,
+                    ItemName: itemName,
+                    ItemCode:productCode,
+                    Quantity: quantity,
+                    CostPrice: costPrice,
+                    UOM: uomTo,
+                    SubTotal: quantity * costPrice,
+                    UOMQty: uomConv * quantity,
+                    UOMc: uomConv,
+                    UOMPrice: uomPrice,
+                    UOMn: uomFrom,
+                    groupId: group
+                }
+                $.ajax({
+                    data: model,
+                    url: url,
+                    cache: false,
+                    success: function (html) {
+                        $("#" + container).append(html);
+                        callingFixedTable();
+                        addingHeightRow();
+                        SubTotal();
+                    }
+                });
+                $('#trItemNameTo').val("");
+                $('.trItemToCode').select2("val", "");
+                $('.trItemToCode').html("");
+                $('.trToGroup').val("");
+                $('#trItemNoTo').val("");
+                $('.trToQuantity').val("0");
+                $('#trToStock').val("0");
+                $('.trToCostPrice').val("0");
+                $('.trToUOM').val("");
+                $('.trPackSize').html("");
+                $('.trToHSCode').val("");
+
+            }
+
+            
+
+        });
+    </script>
+
+    @*For Saving Data*@
+    <script>
+        ////form posting method
+        function SaveData() {
+            var trDate = $(".trDate").val();
+            if (trDate == "") {
+                ShowResult("Fail", "Please Select Transfer Date!");
+                return;
+            }
+
+            var fromTransfer = $('.trItemFromCode :selected').val();
+            if (fromTransfer == "" || fromTransfer == null || fromTransfer=="0") {
+                alert(fromTransfer);
+                ShowResult("Fail", "Please Select Transfer From Product!");
+                return;
+            }
+
+            var items = $(".dItemName").length;
+            if (items == 0) {
+                ShowResult("Fail", "Please Add Product Details!");
+                return;
+            }
+            pageSubmit('frmTransferRaw');
+        }
+    </script>
+
+    @*For Updating Transfer Items*@
+    <script>
+        $(function () {
+            var operation = '@Model.Operation';
+            if (operation == "update") {
+                navigatePage();
+                var productCode = '@Model.RawCode';
+
+                var interval = setInterval(function () {
+                    if (document.querySelectorAll('.trFromGroup option').length > 0) {
+                        ProductGroupChange();
+                        if (document.querySelectorAll('.trItemFromCode option').length > 0) {
+                            setTimeout(function () {
+                                $('.trItemFromCode').select2("val", productCode);
+                            }, 100);
+                            ProductNameChange(productCode);
+                            clearInterval(interval);
+                        }
+                    }
+                }, 200);
+            }
+        })
+    </script>
+
+    @*For Navigation*@
+    <script>
+        ////navigating page
+        function navigatePage() {
+            var interval = setInterval(function () {
+                if (document.querySelectorAll('.trNavigateMenu option').length > 0) {
+                    var id = '@Model.Id';
+                    $('.trNavigateMenu').select2("val", id);
+                    clearInterval(interval);
+                }
+            }, 200);
+            ////navigating previous-next
+            $('.changePage').click(function () {
+                var id = '@Model.Id';
+                var btn = $(this).attr("data-pager-action");
+                if (btn.toLocaleLowerCase() == "current") {
+                    var targetId = $('.trNavigateMenu').val();
+                    if (id == targetId) {
+                        return;
+                    }
+                    id = targetId;
+                }
+                window.location = "/VMS/TransferRaw/Navigate?id=" + id + "&btn=" + btn;
+            });
+        }
+    </script>
+
+    @*For showing Product deatails*@
+    <script>
+        /////showing product details on pop up view
+        function showProductDetail() {
+            var productDetail = document.getElementById('productDetails');
+            $(document).on("dblclick", '.tablerow', function () {
+                var code = $(this).find('input.dItemCode').val();
+                var url = "/Vms/Product/ShowProduct?code=" + code;
+                $.ajax({
+                    url: url,
+                    cache: false,
+                    beforeSend: function () { $(".loading").show(); },
+                    complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                    success: function (html) {
+                        productDetail.style.display = "block";
+                        $(".trkmodal-content").html(html);
+                    }
+                });
+            });
+        }
+        $(function () {
+            showProductDetail();
+        });
+    </script>
+
+    
+}

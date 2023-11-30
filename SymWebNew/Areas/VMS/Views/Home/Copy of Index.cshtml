@@ -1,0 +1,146 @@
+﻿@{
+    ViewBag.Title = "DashBoard";
+}
+
+<h2>Dash Board</h2>
+
+<script>
+    $(function () {
+        var fydid = 16;
+        var PeriodName = "";
+        var url = "/Sage/FiscalYear/SelectPeriodName?fydid=" + fydid;
+        $.getJSON(url, function (data) {
+            PeriodName = data;
+        });
+
+        var backgroundColor = [
+                           "#2ecc71",
+                           "#3498db",
+                           "#95a5a6",
+                           "#9b59b6",
+                           "#f1c40f",
+                           "#e74c3c",
+                           "#34495e"
+        ];
+
+        setTimeout(function () { loadsPie() }, 0);
+        setTimeout(function () { loadsbar() }, 0);
+
+        function loadsPie() {
+            var labels = [];
+            var datas = [];
+            $.ajax({
+                url: "/Sage/FinancialTransaction/TotalPettyCash?GLFiscalYearDetailId=" + fydid,
+                type: 'GET',
+                beforeSend: function () { $(".loading").show(); },
+                complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                success: function (data) {
+                    $.each(data, function (index, value) {
+                        labels.push(value.AccountName + '-' + value.TransactionAmount);
+                        datas.push(value.TransactionAmount);
+                    });
+                    var ctx = document.getElementById("myChartPie").getContext('2d');
+                    var myChart = new Chart(ctx, {
+                        type: 'pie',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                backgroundColor: backgroundColor,
+                                data: datas
+                            }],
+                        }
+                    });
+                },
+            });
+        }
+
+        function loadsbar() {
+
+            var labels = [];
+            var datas = [];
+            $.ajax({
+                url: "/Sage/FinancialTransaction/TotalPettyCash?GLFiscalYearDetailId=" + fydid,
+                type: 'GET',
+                beforeSend: function () { $(".loading").show(); },
+                complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                success: function (data) {
+                    $.each(data, function (index, value) {
+                        labels.push(value.AccountName + '-' + value.TransactionAmount);
+                        datas.push(value.TransactionAmount);
+                    });
+
+
+
+                    var ctx = document.getElementById("myChartBar").getContext('2d');
+                    var myChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'Account ' + PeriodName,
+                                data: datas,
+                                backgroundColor: backgroundColor
+                            }]
+                        }
+                    });
+                },
+            });
+
+        }
+
+    });
+</script>
+
+<div class="container col-md-4 ">
+    <h2 class="card-header ">Petty Cash Details</h2>
+    <div class="card-block">
+        <canvas id="myChartPie" height="20" width="20"></canvas>
+    </div>
+</div>
+<div class="container col-md-4 ">
+    <h2 class="card-header ">Petty Cash Details</h2>
+    <div class="card-block">
+        <canvas id="myChartBar" height="20" width="20"></canvas>
+    </div>
+</div>
+
+<style>
+    /*#header {
+				border-bottom: 5px solid #37474F;
+				color: #37474F;
+				margin-bottom: 1.5rem;
+				padding: 1rem 0;
+			}*/
+
+    #revenue-tag {
+        font-weight: inherit !important;
+        border-radius: 0px !important;
+    }
+
+    .card {
+        border: 0rem;
+        border-radius: 0rem;
+    }
+
+    .card-header {
+        background-color: #37474F;
+        border-radius: 0 !important;
+        color: white;
+        margin-bottom: 0;
+        padding: 1rem;
+    }
+
+    .card-block {
+        border: 1px solid #cccccc;
+        box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12), 0 3px 5px -1px rgba(0, 0, 0, 0.2);
+    }
+
+    .shadow {
+        box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12), 0 3px 5px -1px rgba(0, 0, 0, 0.2);
+    }
+
+    #revenue-column-chart, #products-revenue-pie-chart, #orders-spline-chart {
+        height: 300px;
+        width: 100%;
+    }
+</style>

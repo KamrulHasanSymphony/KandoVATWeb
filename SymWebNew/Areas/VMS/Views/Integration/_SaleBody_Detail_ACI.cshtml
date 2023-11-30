@@ -1,0 +1,129 @@
+﻿@model System.Data.DataTable
+@using UIHelper.MVC
+@*@{
+        Layout = null;
+    }*@
+
+@{
+    Layout = "~/Areas/VMS/Views/Shared/_ModalLayout.cshtml";
+}
+@*<style>
+    .trkMT10 {
+        margin-top: 10px;
+    }
+
+    .sortableHeader {
+        cursor: pointer;
+    }
+
+    table.trkFixTable tr.trSelectPopUpProduct td {
+        overflow-x: hidden;
+    }
+</style>*@
+
+<div class="HigherModal-content">
+    <div class="HigherModal-header">
+        <span class="closeHigher" onclick="closeModal()">&times;</span>
+        <h2 class="text-center">Details</h2>
+    </div>
+    <div class="HigherModal-body formDesign">
+        <div class="row">
+            <div class="fixedParent">
+                <table class="trkFixTable" id="productPopUpTable_Detail">
+                    <thead>
+                        <tr>
+                            <th>Action              </th>
+                            <th>ID              </th>
+                            <th>Item Code       </th>
+                            <th>Item Name       </th>
+                            <th>UOM             </th>
+                            <th>Quantity        </th>
+                            <th>NBR Price       </th>
+                            <th>VAT Rate        </th>
+                            @*<th>VAT Amount      </th>*@
+                            <th>SD Rate         </th>
+                        </tr>
+                    </thead>
+                    <tbody id="popUpTbody_Detail">
+                        @foreach (System.Data.DataRow dr in Model.Rows)
+                        {
+                            <tr>
+                                <td>
+                                    &nbsp; <button title="Click on for Detail" onclick="IntegrationShowEngineChassis(this)" class="sym-btn-detail-row"></button>
+
+                                </td>
+
+                                <td class="vID">@dr["ID"]</td>
+                                <td class="vItem_Code">@dr["Item_Code"]</td>
+                                <td>@dr["Item_Name"]</td>
+                                <td>@dr["UOM"]</td>
+                                <td>@dr["Quantity"]</td>
+                                <td>@dr["NBR_Price"]</td>
+                                <td>@dr["VAT_Rate"]</td>
+                                @*<td>@dr["VAT_Amount"]</td*@>
+                                <td>@dr["SD_Rate"]</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="EngineModal" class="HigherModal"></div>
+
+
+<script language="javascript" type="text/javascript">
+
+    function callingFixedPopUpTable_Detail() {
+
+        var args = [200, 200, 200, 150, 100, 150, 100, 150, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100];
+        trkFixedPopUpTable("productPopUpTable_Detail", 3, args);
+    }
+
+
+    $(function () {
+        callingFixedPopUpTable_Detail();
+    })
+</script>
+
+<script>
+    ////$(function () {
+
+    function IntegrationShowEngineChassis(sender) {
+
+
+
+        var url = "/VMS/Integration/GetSaleEngineChassisData_ACI";
+
+        //var IDs = [];
+        var ID = $(sender).closest('tr').find('.vID').text();
+        var Item_Code = $(sender).closest('tr').find('.vItem_Code').text();
+        //IDs.push(ID);
+
+        var model = {
+            Processed: 'ALL'
+            , ID: ID
+            , ItemCode: Item_Code
+        }
+
+
+        var modal = document.getElementById('EngineModal');
+        $.ajax({
+            url: url,
+            data: model,
+            traditional: true,
+            cache: false,
+            beforeSend: function () { $(".loading").show(); },
+            success: function (html) {
+                modal.style.display = "block";
+                $("#EngineModal").html(html);
+            }
+            , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+        });
+
+    }
+    ////});
+
+</script>
+

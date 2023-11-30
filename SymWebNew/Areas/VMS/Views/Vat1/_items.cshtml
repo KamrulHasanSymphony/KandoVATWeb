@@ -1,0 +1,58 @@
+﻿@model VATViewModel.DTOs.BOMItemVM
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+
+<tr class="tablerow ">
+@using (Html.BeginCollectionItem("Items"))
+{
+    <td>
+        <a id="" title="Click to Remove" onclick="RemoveItem(this);" class="sym-btn-remove-row "></a>
+        <a id="" title="Click to Edit" onclick="EditItem(this);" class="sym-btn-edit-row"></a>
+    </td>
+    <td>@Html.TextBoxFor(model => model.RawItemName, new { @class = "  dItemName   form-control", @readonly = "readonly" })</td>
+    <td>@Html.TextBoxFor(model => model.RawItemCode, new { @class = "  dItemCode   form-control", @readonly = "readonly" })</td>
+    <td>@Html.TextBoxFor(model => model.UOM, new { @class = "  dUOM   form-control", @readonly = "readonly" })</td>
+    <td>@Html.TextBoxFor(model => model.UnitCost, new { @class = "  dUnitCost right priceLen  form-control", @readonly = "readonly"})</td>
+    <td>@Html.TextBoxFor(model => model.UseQuantity, new { @class = "  dUseQuantity right priceLen form-control", @readonly = "readonly" })</td>
+    <td>@Html.TextBoxFor(model => model.WastageQuantity, new { @class = "  dWastageQuantity right priceLen form-control", @readonly = "readonly" })</td>
+    <td>@Html.TextBoxFor(model => model.TotalQuantity, new { @class = "  dTotalQuantity right priceLen form-control", @readonly = "readonly" })</td>
+    <td>@Html.TextBoxFor(model => model.RebateRate, new { @class = "  dRebateRate right priceLen form-control", @readonly = "readonly" })</td>
+    <td>@Html.TextBoxFor(model => model.Cost, new { @class = "  dSubTotal right priceLen  form-control", @readonly = "readonly"})</td>  
+    <td>@Html.TextBoxFor(model => model.UOMc, new { @class = "  dUOMc right priceLen  form-control", @readonly = "readonly" })</td>
+        
+    <td>@Html.TextBoxFor(model => model.UOMn, new { @class = "  dUOMn form-control", @readonly = "readonly" })</td>
+    <td>@Html.TextBoxFor(model => model.UOMPrice, new { @class = "  dUOMPrice right priceLen  form-control", @readonly = "readonly" })</td>
+    <td>@Html.TextBoxFor(model => model.UOMUQty, new { @class = "  dUOMUQty right priceLen  form-control", @readonly = "readonly" })</td>
+    <td>@Html.TextBoxFor(model => model.UOMWQty, new { @class = "  dUOMWQty right priceLen  form-control", @readonly = "readonly" })</td>
+    <td>@Html.TextBoxFor(model => model.RawItemType, new { @class = "  dRawItemType  form-control", @readonly = "readonly" })</td>
+    <td>@Html.TextBoxFor(model => model.PBOMId, new { @class = "  dPBOMId   form-control", @readonly = "readonly" })</td>
+    <td>@Html.TextBoxFor(model => model.PInvoiceNo, new { @class = "  dPInvoiceNo form-control", @readonly = "readonly" })</td>
+    <td>@Html.TextBox("CostPrice", "0", new { @class = "  dCostPrice form-control", @readonly = "readonly" })</td>
+    <td>
+        @Html.TextBoxFor(model => model.IssueOnProduction, new{ @class = "  dIssueOnProduction form-control", @readonly = "readonly" })
+        @Html.HiddenFor(m => m.EffectDate)
+        @Html.HiddenFor(m => m.RawItemNo)
+        @Html.HiddenFor(m => m.TransactionType)
+    </td>
+  
+    @*<td>
+        @Html.TextBoxFor(model => model.IssueOnProduction, new { @class = "  dIssueOnProduction form-control", @readonly = "readonly" })
+        
+        @Html.HiddenFor(m => m.EffectDate)
+        @Html.HiddenFor(m => m.RawItemNo)
+        @Html.HiddenFor(m => m.PBOMId)
+        @Html.HiddenFor(m => m.VATRate)
+        @Html.HiddenFor(m => m.TradingMarkUp)
+        @Html.HiddenFor(m => m.MarkUpValue)
+        @Html.HiddenFor(m => m.UOMUQty)
+        @Html.HiddenFor(m => m.UOMWQty)
+        @Html.HiddenFor(m => m.RawOHCost)
+    </td>*@
+}
+        
+</tr>
+    
+
+

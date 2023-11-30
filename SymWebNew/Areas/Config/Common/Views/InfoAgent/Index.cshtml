@@ -1,0 +1,117 @@
+﻿    <script type="text/javascript">
+        $(document).ready(function () {
+            SelectAllForDelete();
+            $.datepicker.regional[""].dateFormat = 'dd/M/y';
+            $.datepicker.setDefaults($.datepicker.regional['']);
+            var oTable = $('#myDataTable').dataTable({
+                "bServerSide": true,
+                "sAjaxSource": "/Common/InfoAgent/_index",
+                "bProcessing": true,
+                "aLengthMenu": tablelength(),
+                "bJqueryUI": true,
+                "bAutoWidth": false,
+                "sScrollX": '160%',
+                "aoColumns": [
+                                {
+                                    "sName": "Id",
+                                    "bSearchable": false,
+                                    "bSortable": false,
+                                    "sWidth": "9%",
+                                    "sClass":"center",
+                                    "fnRender": function (oObj) {
+                                        return '<a title="Click on for Details" style="text-decoration:none;"    href=\"/Common/InfoAgent/Edit?Id=' + oObj.aData[0] + '\"  class="sym-btn-edit-row"></a>';
+                                    }
+                                }
+                               , { "sName": "FullName", "sWidth": "9%" }
+                               , { "sName": "PresentDistrictId", "sWidth": "9%" }
+                               , { "sName": "MobileBankType", "sWidth": "9%" }
+                               , { "sName": "MobileBankNo", "sWidth": "9%" }
+                               , { "sName": "MobileNo", "sWidth": "9%" }
+                               , { "sName": "Email", "sWidth": "9%" }
+                               , { "sName": "CompanyName", "sWidth": "9%" }
+                               , { "sName": "Gender", "sWidth": "9%" }
+                               , { "sName": "DOB", "sWidth": "15%" }
+                ]
+            });
+                        
+            oTable.columnFilter({
+                sPlaceHolder: "head:after",
+                aoColumns: [{ type: "checkbox", "sClass": "chkAll" } 
+                           , { type: "text" }                        
+                           , { type: "text" }                        
+                           , { type: "text" }                        
+                           , { type: "text" }                        
+                           , { type: "text" }                        
+                           , { type: "text" }                        
+                           , { type: "text" }                        
+                           , { type: "text" }                        
+                           , { type: "date-range" }
+                ]
+            });
+        });
+    </script>
+@{
+    ViewBag.Title = "Index";
+    ViewBag.Location = "Common=>Info Agent=>Index"; 
+}
+<div class="headrow">
+        <button type="button" title="Add New Agent" data-url="/Common/InfoAgent/Create" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+     <label class="pull-right">Agent Information</label>
+</div>
+    <div class="thinbox">
+        <div class="th_thinbox">
+        <p>Agent List</p>   
+        </div>
+<p></p>
+        <div id="container">
+            <div id="demo">
+                <table id="myDataTable" class="display">
+                    <thead>
+                         <tr>
+                             <th  class="center" >&nbsp;</th>
+                            <th>Full Name</th>
+                            <th>Present District</th>
+                            <th>Mobile Bank Type</th>
+                            <th>Mobile Bank No</th>
+                            <th>Mobile No</th>
+                            <th>Email</th>
+                            <th>Company Name</th>
+                            <th>Gender</th>
+                            <th>Date of Birth</th>
+                        </tr>
+                        <tr>
+                            <th  class="center" >Actions</th>
+                            <th>Full Name</th>
+                            <th>Present District</th>
+                            <th>Mobile Bank Type</th>
+                            <th>Mobile Bank No</th>
+                            <th>Mobile No</th>
+                            <th>Email</th>
+                            <th>Company Name</th>
+                            <th>Gender</th>
+                            <th>Date of Birth</th>
+                        </tr>
+
+@*
+                        //Id
+                        //FullName
+                        //PresentDistrictId
+                        //MobileBankType
+                        //MobileBankNo
+                        //MobileNo
+                        //Email
+                        //CompanyName
+                        //Gender
+                        //DOB
+                        *@
+                    </thead>
+                    <tbody> 
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <br />
+        </div>
+<div class="headrow">
+        <button type="button" title="Add New Agent" data-url="/Common/InfoAgent/Create" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+</div>

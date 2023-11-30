@@ -1,0 +1,30 @@
+﻿@model IEnumerable<VATViewModel.DTOs.TransferVM>
+@using UIHelper.MVC
+@{
+    Layout = null;
+    var sl = 1;
+}
+    @foreach (var item in Model)
+    {
+        <tr class="trSelectPopUpTranser">
+
+            <td>
+
+                @Html.CheckBox("Selected", false, new { @style = "margin: auto", @class = "dSelected form-control" })
+            </td>
+            <td>@sl<span style="display:none;" class=" popUpBranch">@item.BranchName</span></td>
+
+            <td class="popUpTransferFromNo">@item.TransferFromNo</td>
+            <td>@item.TransactionDateTime</td>
+            <td>@item.TransferFromName</td>
+            <td>@item.SerialNo</td>
+            <td class="popUpReferenceNo">@item.ReferenceNo</td>
+            <td class="popUpPost">@item.Post</td>
+            <td>@item.TransactionType<span style="display:none;" class=" popUpBranchDb"></span></td>
+            @{
+                sl++;
+        
+            }
+        </tr>
+    }
+

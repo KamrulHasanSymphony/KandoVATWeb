@@ -1,0 +1,185 @@
+﻿@model VATViewModel.DTOs.DisposeFinishDetailVM
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+
+<style>
+    .trkmodal {
+        padding-top: 10%;
+    }
+
+    .trkmodal-content {
+        width: 44%;
+        padding-bottom: 10px;
+    }
+
+    .customDatePicker {
+        background: #fefede url(/Images/calendar.jpg) no-repeat 98% !important;
+    }
+    /*no padding with little margin bttom*/
+    div.trkmodal-body div.npForm {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+        padding-bottom: 0px !important;
+        margin-bottom: 10px;
+    }
+
+        div.trkmodal-body div.npForm div.npForm {
+            margin-bottom: 0px !important;
+        }
+</style>
+
+<div class="trkmodal-content">
+    <div class="trkmodal-header">
+        <span class="close">&times;</span>
+        <h2 class="text-center">Previous Invoice Information</h2>
+    </div>
+    <div class="trkmodal-body">
+        @using (Html.BeginForm("PopUpPreviousPurchase", "DisposeFinish", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmPopUpPreviousPurchase" }))
+        {
+           
+            <div class="row">
+                
+                <div class="npForm col-md-6">
+                    <label>Product Name</label>
+
+                    @Html.TextBox("ProductName", "", new { @placeholder = "Product Name", @class = " cProductName form-control", @readonly = "readonly" })
+
+                </div>
+
+                <div class="npForm col-md-6">
+                    <label>Used Quantity</label>
+
+                    @Html.TextBox("UsedQuantity", "", new { @placeholder = "Used Quantity", @class = " cUsedQuantityD  form-control", @readonly = "readonly" })
+
+                </div>
+
+            </div>
+
+
+            <div class="row">
+                <div class="npForm col-md-6">
+                    <label>Invoice No</label>
+
+                    @Html.TextBox("PurchaseNo", "", new { @placeholder = "Invoice No", @class = " cPreviousInvoiceNo form-control" })
+
+                </div>
+              
+                <div class="npForm col-md-6">
+                    <label>Purchase Quantity</label>
+
+                    @Html.TextBox("PurchaseQuantity", "", new { @placeholder = "Previous Quantity", @class = " cPreviousQuantity  form-control" })
+
+                </div>
+
+            </div>
+
+            <div class="row">
+             
+                <div class="npForm col-md-6">
+                    <label>VATRate(%)</label>
+
+                    @Html.TextBox("VATRate", "", new { @placeholder = "Previous VATRate", @class = " cPreviousVATRate  form-control" })
+
+                </div>
+
+                <div class="npForm col-md-6">
+                    <label>VAT Amount</label>
+
+                    @Html.TextBox("VATAmount", "", new { @placeholder = "Previous VAT Amount", @class = " cPreviousVATAmount  form-control" })
+
+                </div>
+
+            </div>
+
+
+            <div class="row">
+               
+                <div class="npForm col-md-6">
+                    <label>Comments</label>
+
+                    @Html.TextBox("Comments", "", new { @placeholder = "Comments", @class = " cComments  form-control" })
+
+                </div>
+            </div>
+
+            <button type="button" class=" btn sym-btn-add btnAdd "> Add</button>
+            @*<button type="button" class="sym-btn-close closeBtn pull-right"> Close</button>*@
+        }
+    </div>
+</div>
+
+
+<script src="~/assets/javascripts/custom.js"></script>
+<script>
+
+    $(document).ready(function () {
+
+        function closeModal() {
+            $("#myHigherModal").html("");
+            trkmodal.style.display = "none";
+        }
+
+        var span = document.getElementsByClassName("close")[0];
+        var trkmodal = document.getElementById('myHigherModal');
+        //When the user clicks on <span> (x), close the trkmodal
+        span.onclick = function () {
+            closeModal();
+
+            //PreviousInvoiceInformation();
+        }
+
+        $('.btnAdd').click(function () {
+
+            PreviousInvoiceInformation();
+
+        });
+
+        function PreviousInvoiceInformation() {
+            
+            var UsedQuantity = $('.cUsedQuantityD').val();
+            var PreviousInvoiceNo = $('.cPreviousInvoiceNo').val();
+            var PreviousQuantity = $('.cPreviousQuantity').val();
+            var PreviousVATRate = $('.cPreviousVATRate').val();
+            var PreviousVATAmount = $('.cPreviousVATAmount').val();
+            var Comments = $('.cComments').val();
+
+            if (PreviousInvoiceNo == "0" || PreviousInvoiceNo == "") {
+                ShowResult("Fail", "Enter a Previous Invoice No first!");
+                return;
+            }
+
+            if (isNaN(PreviousVATRate) || PreviousVATRate < 0 || PreviousVATRate == "") {
+                PreviousVATRate = 0;
+            }
+
+            if (isNaN(PreviousQuantity) || PreviousQuantity <= 0 || PreviousQuantity == "") {
+                ShowResult("Fail", "Purchase Quantity can not be zero");
+                $('.cPreviousQuantity').css('background-color', 'yellow');
+                return;
+            }
+
+            if (isNaN(PreviousVATAmount) || PreviousVATAmount <= 0 || PreviousVATAmount == "") {
+                ShowResult("Fail", "Purchase VAT Amount can not be zero");
+                $('.cPreviousVATAmount').css('background-color', 'yellow');
+                return;
+            }
+
+            callbackPreviousPurchaseModal(UsedQuantity, PreviousInvoiceNo, PreviousQuantity, PreviousVATRate, PreviousVATAmount, Comments);
+            
+            closeModal();
+
+        }
+
+    });
+</script>
+
+<script>
+    $(function () {
+
+        valiDation("frmPopUpPreviousPurchase");
+
+    });
+</script>
+

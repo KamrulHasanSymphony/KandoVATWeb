@@ -1,0 +1,81 @@
+﻿@model VATViewModel.DTOs.LoginVM
+@using UIHelper.MVC
+<link href="~/assets/css/loginform.css" rel="stylesheet" />
+<style>
+    .parentDiv {
+        position: relative;
+    }
+    .addOnDiv {
+        position: absolute;
+        background-color:grey;
+        z-index:5;
+        margin:0 auto 0 -130px;
+        font-weight:300;
+        font-size:18px;
+        padding:15px 12px;
+        text-align:center;
+        width:40px;
+    }
+</style>
+<div class="wrapper">
+    <div class="container">
+        <img src="~/Images/symphonyLogo.png" width="250px" style="margin:0 auto"/>
+        @using (Html.BeginForm("Login", "Home", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmGLUser" }))
+{
+    <div class=" parentDiv">
+        <span class=" addOnDiv fa fa-user"></span>
+        @Html.TextBoxFor(model => model.UserName, new { placeholder = " User Name", @id = "logId", @class = "required " })
+    </div>
+    <div class=" parentDiv">
+        <span class=" addOnDiv fa fa-key"></span>
+        @Html.PasswordFor(model => model.UserPassword, new { @value = "", @autocomplete = "off", placeholder = "Password", @id = "password", @class = "  required " })
+    </div>
+            <div class="loginDropdown">
+                @Html.SimpleDropDownFor(model => model.CompanyID, "/Config/DropDown/CompanyName", new { @class = " lid loginBranchId selectDropdown required " })
+            </div>
+            @Html.TextBoxFor(model => model.SessionDate, new { @class = "customDatePicker defaultDate loginDatePicker" })
+            
+            <button onclick="Login()" id="login-button">Login</button>
+}
+    </div>
+
+    <ul class="bg-bubbles">
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+</div>
+
+<script>
+    function Login() {
+        var logId = $('#logId').val();
+        var password = $('#password').val();
+        var loginBranchId = $('.lid').val();
+
+        if (parseInt(logId.length) > 0 && parseInt(password.length) > 0) {
+            if (loginBranchId!="") {
+                pageSubmit('frmGLUser');
+            }
+            else {
+                ShowResult("Fail", "Please Select Branch !");
+                return;
+            }
+        }
+        else {
+            ShowResult("Fail", "Please input User Name and Password!");
+            return;
+
+        }
+
+    }
+</script>
+
+
+

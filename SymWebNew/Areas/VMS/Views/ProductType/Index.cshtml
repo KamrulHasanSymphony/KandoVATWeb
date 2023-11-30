@@ -1,0 +1,67 @@
+﻿<div class="headrow">
+    <button type="button" title="Add New ProductType" data-url="/VMS/ProductType/Create" onclick="GoTo(this)" id=""  class=" sym-btn-add ">&nbsp;New</button>
+    <button type="button" title="Delete ProductType" data-url="/VMS/ProductType/Delete" onclick="deletedData(this, 'myDataTable');" id="" class="sym-btn-remove">&nbsp;Delete</button>
+    <label class="pull-right">Product Type </label>
+</div>
+<div class="thinbox  animated zoomIn fast">
+    <div class="th_thinbox">
+        <p>Product Type List</p>
+    </div>
+    <table id="myDataTable" class="display">
+        <thead>
+            <tr>
+                <th class="center">
+                    <input type="checkbox" class="chkAll" />Select All</th>
+                <th>Product Type</th>
+                <th>Type ID1</th>
+                <th>Type ID12</th>
+                <th>Type ID123</th>
+                <th>BOM Id</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <br />
+</div>
+<div class="headrow">
+        <button type="button" title="Add New ProductType" data-url="/VMS/ProductType/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+        <button type="button" title="Delete ProductType" data-url="/VMS/ProductType/Delete" onclick="deletedData(this, 'myDataTable');" id="" class="sym-btn-remove">&nbsp;Delete</button>
+</div>
+<script language="javascript" type="text/javascript">
+    $(document).ready(function () {
+        SelectAllForDelete();
+        $.datepicker.regional[""].dateFormat = 'dd/M/y';
+        $.datepicker.setDefaults($.datepicker.regional['']);
+        var oTable = $('#myDataTable').dataTable({
+            "bServerSide": true,
+            "sAjaxSource": "/VMS/ProductType/_index",
+            "bProcessing": true,
+            "aLengthMenu": tablelength(),
+            "bJqueryUI": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+                            {
+                                "sName": "Id",
+                                "bSearchable": false,
+                                "bSortable": false,
+                                "sWidth": "10%",
+                                "sClass": "center",
+                                "fnRender": function (oObj) {
+                                    return ' <input onclick="CheckAll(this)" type="checkbox" data-Id="' + oObj.aData[0] + '">'
+                                        + '&nbsp; <a id=""  title="Click on for Edit"  style="text-decoration:none;"   href=\"/VMS/ProductType/Edit/' + oObj.aData[0] + '\" class=" innerListLink sym-btn-edit-row"></a>'
+                                        + '&nbsp; <a title="Click on for Delete"  data-url="/VMS/ProductType/Delete" onclick="deletedData(this, myDataTable,\'' + oObj.aData[0] + '\');"  class="sym-btn-remove-row"></a>'
+                                    ;
+                                }
+                                //"sName": "Id", "sWidth": "12%"
+                            }
+                            , { "sName": "ProductType", "sWidth": "10%" }
+                            , { "sName": "TypeID1", "sWidth": "10%" }
+                            , { "sName": "TypeID12", "sWidth": "10%" }
+                            , { "sName": "TypeID123", "sWidth": "10%" }
+                            , { "sName": "BOMId", "sWidth": "10%" }
+
+            ]
+        });
+    });
+</script>

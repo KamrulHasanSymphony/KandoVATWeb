@@ -1,0 +1,44 @@
+﻿@model VATViewModel.DTOs.SettingsVM
+@using (Html.BeginForm("Edit", "Setting", FormMethod.Post, new { @Id = "frmSetting" }))
+{
+    <div class="row">
+        <div class="col-md-2">
+            @Html.HiddenFor(model => model.SettingId)
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.SettingGroup, new { @class = " form-control",@readonly="readonly" })
+                @Html.ValidationMessageFor(model => model.SettingGroup)
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.SettingName, new { @class = "  form-control" ,@readonly="readonly" })
+                @Html.ValidationMessageFor(model => model.SettingName)
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.SettingValue, new { @class = " required form-control typeCheck" })
+                @Html.ValidationMessageFor(model => model.SettingValue)
+
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.SettingType, new { @class = " form-control expectedType",@readonly="readonly"  })
+                @Html.ValidationMessageFor(model => model.SettingType)
+            </div>
+        </div>
+        <div class="col-md-2">
+            <button type="button" onclick="update(this);" value="Update" class="sym-btn-update">&nbsp;Update</button>
+        </div>
+    </div>
+}
+<script>
+    //$(function () {
+        function update(sender) {
+            var model = $(sender).closest('#frmSetting').serialize();
+            var url = "/VMS/Setting/Update";
+            var result = submit(url, model);
+        }
+    //});
+</script>

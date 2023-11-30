@@ -1,0 +1,158 @@
+﻿
+@model VATViewModel.DTOs.VehicleVM
+@using UIHelper.MVC
+@using (Html.BeginForm("CreateEdit", "Vehicle", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmVehicle" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.VehicleID)
+    @Html.HiddenFor(model => model.Operation)
+    <div class="headrow">
+        @if (Model.Operation == "add")
+        {
+        <button type="button" name="btnName" value="Save" title="Save Data" onclick="pageSubmit('frmVehicle')" class="sym-btn-save">&nbsp;Save</button>
+        <label class="pull-right">Vehicle > Create</label>
+        }
+        else
+        {
+        <button type="button" name="btnName" value="Update" title="Update Data" onclick="pageSubmit('frmVehicle')" class="sym-btn-update">&nbsp;Update</button>
+        <label class="pull-right">Vehicle > Edit</label>
+        }
+        <button type="button" title="Go To Index" data-url="/VMS/Vehicle" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New Vehicle" data-url="/VMS/Vehicle/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+    </div>
+    
+    if (Model.Operation == "update") {
+    <div class="col-sm-12 col-md-12">
+        <div class="input-group   col-lg-8  col-md-8  col-sm-8 col-xs-12 text-color col-md-offset-2" style="">
+            <a class="input-group-addon btn btn-primary hidden-xs changePage" data-pager-action='first' id="first"><i class="fa fa-angle-double-left"></i>First</a>
+            <a class="input-group-addon btn btn-primary hidden-xs changePage" data-pager-action='previous' id="precode"><i class="fa fa-angle-left"></i>Previous</a>
+            @Html.SimpleDropDown("", "/Config/DropDown/IdNameDropdown?tableName=Vehicles&Id=VehicleID&Name=VehicleNo&AllData=no&code=VehicleCode", new { @class = " trNavigateMenu form-control selectDropdown " })
+            <a class="input-group-addon btn btn-primary changePage" data-pager-action='current' id="current"><i class="fa fa-search"></i></a>
+            <a class="input-group-addon btn btn-primary hidden-xs changePage" data-pager-action='next' id="nextcode">Next <i class="fa  fa-angle-right"></i></a>
+            <a class="input-group-addon btn btn-primary hidden-xs changePage" data-pager-action='last' id="last">Last <i class="fa  fa-angle-double-right"></i></a>
+        </div>
+    </div>
+    }
+    
+    <div class="col-md-12 trkPX-0">
+    <div class="thinbox animated zoomIn faster">
+        <div class="th_thinbox">
+            <p>Vehicle</p>
+        </div>
+        <div class="row">
+            <div class="form-group">
+
+                <label for="VehicleID" class="col-md-2 control-label text-right trkLabelMargin">VehicleID</label>
+                <div class="col-md-4">
+                    @Html.TextBoxFor(model => model.VehicleID, new { @placeholder = "~~~ New ~~~", @class = "cVehicleID form-control", @readonly = "readonly" })
+                    @Html.ValidationMessageFor(model => model.VehicleID)
+                </div>
+
+
+                <label for="VehicleCode" class="col-md-2 control-label text-right trkLabelMargin">Description</label>
+                <div class="col-md-4">
+                    @Html.TextAreaFor(model => model.Description, new { @placeholder = "Description", @class = "  form-control" })
+                    @Html.ValidationMessageFor(model => model.Description)                  
+                </div>
+
+                <label for="VehicleType" class="col-md-2 control-label text-right trkLabelMargin">Vehicle Code</label>
+                <div class="col-md-4">
+                    @Html.TextBoxFor(model => model.Code, new { @placeholder = "Vehicle Code", @class = "cVehicleCode form-control" })
+                    @Html.ValidationMessageFor(model => model.Code)
+
+                </div>
+
+
+
+
+                <label for="VehicleCode" class="col-md-2 control-label text-right trkLabelMargin">Driver Name</label>
+                <div class="col-md-4">
+                   @Html.TextBoxFor(model => model.DriverName, new { @placeholder = "Driver Name", @class = "  form-control" })
+                   @Html.ValidationMessageFor(model => model.DriverName)
+                </div>
+
+              <label for="VehicleType" class="col-md-2 control-label text-right trkLabelMargin">Vehicle Type</label>
+              <div class="col-md-4">
+                  @Html.TextBoxFor(model => model.VehicleType, new { @placeholder = "Type", @class = "required form-control" })
+                        @Html.ValidationMessageFor(model => model.VehicleType)
+              </div>
+
+
+              <label for="VehicleNo" class="col-md-2 control-label text-right trkLabelMargin" >Comments</label>
+              <div class="col-md-4">
+                  @Html.TextAreaFor(model => model.Comments, new { @placeholder = "Comments", @class = "  form-control" })
+                  @Html.ValidationMessageFor(model => model.Comments)
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="Description" class="col-md-2 control-label text-right trkLabelMargin">Vehicle No</label>
+              <div class="col-md-4">
+                  @Html.TextBoxFor(model => model.VehicleNo, new { @placeholder = "Vehicle No", @class = " required form-control" })
+                  @Html.ValidationMessageFor(model => model.VehicleNo)
+              </div>
+              <label for="DriverName" class="col-md-2 control-label text-right trkLabelMargin">Is Active</label>
+              <div class="col-md-4">
+                @Html.SimpleDropDownFor(m => m.ActiveStatus, "/Config/DropDown/DecisionList", new { @class = " trNavigateMenu form-control required" })
+              </div>
+            </div>
+
+            
+
+            
+
+            
+            
+        </div>
+    </div>
+    </div>
+    
+    <div class="headrow">
+        @if (Model.Operation == "add")
+        {
+        <button type="button" name="btnName" value="Save" title="Save Data" onclick="pageSubmit('frmVehicle')" class="sym-btn-save">&nbsp;Save</button>
+        <label class="pull-right">Vehicle > Create</label>
+        }
+        else
+        {
+        <button type="button" name="btnName" value="Update" title="Update Data" onclick="pageSubmit('frmVehicle')" class="sym-btn-update">&nbsp;Update</button>
+        <label class="pull-right">Vehicle > Edit</label>
+        }
+    <button type="button" title="Go To Index" data-url="/VMS/Vehicle" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+    <button type="button" title="Add New Vehicle" data-url="/VMS/Vehicle/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+    </div>
+}
+<script>
+    $(function () {
+        valiDation("frmVehicle");
+
+        var operation = '@Model.Operation';
+        if (operation == "update") {
+            navigatePage();
+        }
+
+        function navigatePage() {
+            var interval = setInterval(function () {
+                if (document.querySelectorAll('.trNavigateMenu option').length > 0) {
+                    var id = '@Model.VehicleID';
+                    $('.trNavigateMenu').select2("val", id);
+                    clearInterval(interval);
+                }
+            }, 200);
+            ////navigating previous-next
+            $('.changePage').click(function () {
+                var id = '@Model.VehicleID';
+                var btn = $(this).attr("data-pager-action");
+                if (btn.toLocaleLowerCase() == "current") {
+                    var targetId = $('.trNavigateMenu').val();
+                    if (id == targetId) {
+                        return;
+                    }
+                    id = targetId;
+                }
+                window.location = "/VMS/Vehicle/Navigate?id=" + id + "&btn=" + btn;
+            });
+        }
+    });
+
+</script>

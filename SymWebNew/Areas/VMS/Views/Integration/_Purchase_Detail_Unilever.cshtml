@@ -1,0 +1,82 @@
+﻿@model System.Data.DataTable
+@using UIHelper.MVC
+@*@{
+        Layout = null;
+    }*@
+
+@{
+    Layout = "~/Areas/VMS/Views/Shared/_ModalLayout.cshtml";
+}
+@*<style>
+    .trkMT10 {
+        margin-top: 10px;
+    }
+
+    .sortableHeader {
+        cursor: pointer;
+    }
+
+    table.trkFixTable tr.trSelectPopUpProduct td {
+        overflow-x: hidden;
+    }
+</style>*@
+
+<div class="HigherModal-content">
+    <div class="HigherModal-header">
+        <span class="closeHigher" onclick="closeModal()">&times;</span>
+        <h2 class="text-center">Details</h2>
+    </div>
+    <div class="HigherModal-body formDesign">
+        <div class="row">
+            <div class="fixedParent">
+                <table class="trkFixTable" id="productPopUpTable_Detail">
+                    <thead>
+                        <tr>
+                            <th>ID                       </th>
+                            <th>Item Code                </th>
+                            <th>Item Name                </th>
+                            <th>UOM                      </th>
+                            <th>ProductType              </th>
+                            <th>Quantity                 </th>
+                            <th>TotalPrice               </th>
+                            <th>SDAmount                 </th>
+                            <th>VATAmount                </th>
+
+                        </tr>
+                    </thead>
+                    <tbody id="popUpTbody_Detail">
+                        @foreach (System.Data.DataRow dr in Model.Rows)
+                        {
+                            <tr>
+                                <td>@dr["ID"]</td>
+                                <td>@dr["Item_Code"]</td>
+                                <td>@dr["Item_Name"]</td>
+                                <td>@dr["UOM"]</td>
+                                <td>@dr["ProductType"]</td>
+                                <td>@dr["Quantity"]</td>
+                                <td>@dr["Total_Price"]</td>
+                                <td>@dr["SD_Amount"]</td>
+                                <td>@dr["VAT_Amount"]</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script language="javascript" type="text/javascript">
+
+    function callingFixedPopUpTable_Detail() {
+
+        var args = [150, 100, 200, 80, 100, 150, 150, 150, 150, 150, 150, 100, 100, 100, 100, 100];
+        trkFixedPopUpTable("productPopUpTable_Detail", 3, args);
+    }
+
+
+    $(function () {
+        callingFixedPopUpTable_Detail();
+    })
+</script>

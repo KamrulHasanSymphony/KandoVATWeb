@@ -1,0 +1,234 @@
+﻿@model VATViewModel.DTOs.Vat19ViewModel
+
+
+
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+<style>
+    label{
+        min-height:28px !important;
+    }
+</style>
+
+
+
+
+
+<div class="row">
+    <div class=" col-md-7 trkNPLDiv">
+        <div class="trkReportSection">
+            <label>বিক্রয় সংক্রান্ত তথ্য</label>
+        </div>
+        <div>
+            <label>১। করযোগ্য পণ্য, সেবা বা সেবার নীট বিক্রয়</label>
+        </div>
+        <div>
+            <label>২। শূন্য হারের পণ্য বা সেবার বিক্রয় (রপ্তানী)</label>
+        </div>
+        <div>
+            <label>৩। অব্যহতি প্রাপ্ত পণ্য, সেবা বা পণ্য ও সেবার নীট বিক্রয়</label>
+        </div>
+        <div class="trkReportSection">
+            <label>প্রদেয় হিসাব</label>
+        </div>
+        <div>
+            <label>৪। মোট প্রদেয় কর(সারি ১ হইতে এসডি+ভ্যাট)</label>
+        </div>
+        <div>
+            <label>৫। অন্যান্য সমন্নয়করন(প্রদেয়/উৎসে/করতন/বয়েয়া/অর্থদন্ড/জরিমানা/স্থান ও স্থাপনা ভাড়া গ্রহনকারী)</label>
+        </div>
+        <div>
+            <label>৬। সর্বমোট প্রদেয় (সারি ৪+৫)</label>
+        </div>
+        <div class="trkReportSection">
+            <label>ক্রয় সংক্রান্ত তথ্য</label>
+        </div>
+        <div>
+            <label>৭। স্থানীয় পর্যায়ে করযোগ্য পণ্য, সেবা বা পণ্য ও সেবার ক্রয়</label>
+        </div>
+        <div>
+            <label>৮। করযোগ্য পণ্য,  সেবা বা পণ্য ও সেবার আমদানি</label>
+        </div>
+        <div>
+            <label>৯। রপ্তানির ক্ষেত্রে অন্যান্য কর রেয়াত</label>
+        </div>
+        <div>
+            <label>১০। অব্যাহতি প্রাপ্ত পণ্য, সেবা বা পণ্য অ সেবার নীট ক্রয়</label>
+        </div>
+        <div class="trkReportSection">
+            <label>রেয়াত / প্রত্যর্পণ হিসাব</label>
+        </div>
+        <div>
+            <label>১১। মোট রেয়াতযোগ্য কর (সারি ৭+৮+৯)</label>
+        </div>
+        <div>
+            <label>১২। অন্যান্য সমন্নয়করন(রেয়াত/পাওনা/আমদানি পর্যায়ে অগ্রিম মূসক/উৎসে প্রদত্ত মূসক)</label>
+        </div>
+        <div>
+            <label>১৩। পূর্ববর্তী মাসের জের</label>
+        </div>
+        <div>
+            <label>১৪। সর্বমোট রেয়াত ( সারি ১১+১২+১৩)</label>
+        </div>
+        <div class="trkReportSection">
+            <label>চুরান্ত হিসাব</label>
+        </div>
+        <div>
+            <label>১৫। নীট প্রদেয়(সারি ৬-১৪)</label>
+        </div>
+        <div>
+            <label>১৬। ট্রেজারীতে জমা</label>
+        </div>
+        <div>
+            <label>১৭। পরবর্তী মাসের প্রারম্ভিক জের</label>
+        </div>
+        <div>
+            <label>১৮। পরিদপ্তর হইতে প্রত্যর্পণ</label>
+        </div>
+        <div class="trkReportSection">
+            <label>সরবরাহকারী কর্তৃক উৎসে মূসক কর্তনের হিসাব </label>
+        </div>
+        <div>
+            <label>১৯। উৎসে কর্তিত মোট মূসকের পরিমান</label>
+        </div>
+    </div>
+
+    <div class=" col-md-5 trkNPLDiv">
+        <div class="col-md-12 trkNPLDiv">
+            <div class="col-md-4 trkNPLDiv">
+                <div class="trkReportSection">
+                    <label>বিক্রয় মূল্য</label>
+                </div>
+                <div>
+                    @Html.TextBoxFor(m => m.Line1SalePrice, new { @class = "priceLen right form-control" })
+                </div>
+                <div>
+                    @Html.TextBoxFor(m => m.Line2SalePrice, new { @class = "priceLen right form-control" })
+                </div>
+                <div>
+                    @Html.TextBoxFor(m => m.Line3SalePrice, new { @class = "priceLen right form-control" })
+                </div>
+            </div>
+            <div class="col-md-4 trkNPLDiv">
+                <div class="trkReportSection">
+                    <label>সম্পূরক শুল্ক </label>
+                </div>
+                <div>
+                    @Html.TextBoxFor(m => m.Line1Duty, new { @class = "priceLen right form-control" })
+                </div>
+                <div>
+                    @Html.TextBoxFor(m => m.Line2Duty, new { @class = "priceLen right form-control" })
+                </div>
+            </div>
+            <div class="col-md-4 trkNPLDiv">
+                <div class="trkReportSection">
+                    <label>মূল্য সংযোজন কর</label>
+                </div>
+                <div>
+                    @Html.TextBoxFor(m => m.Line1VatPrice, new { @class = "priceLen right form-control" })
+                </div>
+                <div>
+                    @Html.TextBoxFor(m => m.Line2VatPrice, new { @class = "priceLen right form-control" })
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 trkNPLDiv">
+            <div class="trkReportSection">
+                <label>পরিমান </label>
+            </div>
+            <div>
+                @Html.TextBoxFor(m => m.Line4Amount, new { @class = "priceLen right form-control" })
+            </div>
+            <div>
+                @Html.TextBoxFor(m => m.Line5Amount, new { @class = "priceLen right form-control" })
+            </div>
+            <div>
+                @Html.TextBoxFor(m => m.Line6Amount, new { @class = "priceLen right form-control" })
+            </div>
+        </div>
+
+        <div class="col-md-12 trkNPLDiv">
+            <div class="col-md-6 trkNPLDiv">
+                <div class="trkReportSection">
+                    <label>ক্রয় মূল্য </label>
+                </div>
+                <div>
+                    @Html.TextBoxFor(m => m.Line7PurchasePrice, new { @class = "priceLen right form-control" })
+                </div>
+                <div>
+                    @Html.TextBoxFor(m => m.Line8PurchasePrice, new { @class = "priceLen right form-control" })
+                </div>
+                <div>
+                    @Html.TextBoxFor(m => m.Line9PurchasePrice, new { @class = "priceLen right form-control" })
+                </div>
+                <div>
+                    @Html.TextBoxFor(m => m.Line10PurchasePrice, new { @class = "priceLen right form-control" })
+                </div>
+            </div>
+
+            <div class="col-md-6 trkNPLDiv">
+                <div class="trkReportSection">
+                    <label>মূল্য সংযোজন কর </label>
+                </div>
+                <div>
+                    @Html.TextBoxFor(m => m.Line7VatPrice, new { @class = "priceLen right form-control" })
+                </div>
+                <div>
+                    @Html.TextBoxFor(m => m.Line8VatPrice, new { @class = "priceLen right form-control" })
+                </div>
+                <div>
+                    @Html.TextBoxFor(m => m.Line9VatPrice, new { @class = "priceLen right form-control" })
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-md-12 trkNPLDiv">
+            <div class="trkReportSection">
+                <label>পরিমান </label>
+            </div>
+            <div>
+                @Html.TextBoxFor(m => m.Line11Amount, new { @class = "priceLen right form-control" })
+            </div>
+            <div>
+                @Html.TextBoxFor(m => m.Line12Amount, new { @class = "priceLen right form-control" })
+            </div>
+            <div>
+                @Html.TextBoxFor(m => m.Line13Amount, new { @class = "priceLen right form-control" })
+            </div>
+            <div>
+                @Html.TextBoxFor(m => m.Line14Amount, new { @class = "priceLen right form-control" })
+            </div>
+        </div>
+
+        <div class="col-md-12 trkNPLDiv">
+            <div class="trkReportSection">
+                <label>পরিমান </label>
+            </div>
+            <div>
+                @Html.TextBoxFor(m => m.Line15Amount, new { @class = "priceLen right form-control" })
+            </div>
+            <div>
+                @Html.TextBoxFor(m => m.Line16Amount, new { @class = "priceLen right form-control" })
+            </div>
+            <div>
+                @Html.TextBoxFor(m => m.Line17Amount, new { @class = "priceLen right form-control" })
+            </div>
+            <div>
+                @Html.TextBoxFor(m => m.Line18Amount, new { @class = "priceLen right form-control" })
+            </div>
+        </div>
+
+        <div class="col-md-12 trkNPLDiv">
+            <div class="trkReportSection">
+                <label>পরিমান </label>
+            </div>
+            <div>
+                @Html.TextBoxFor(m => m.Line19Amount, new { @class = "priceLen right form-control" })
+            </div>
+        </div>
+    </div>
+</div>

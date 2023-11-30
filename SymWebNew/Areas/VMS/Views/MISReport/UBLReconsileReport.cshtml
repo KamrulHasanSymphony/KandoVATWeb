@@ -1,0 +1,130 @@
+﻿@model VATViewModel.DTOs.IntegrationParam
+@using UIHelper.MVC
+@{
+    ViewBag.Title = "UBLReconsileReport";
+}
+
+@using (Html.BeginForm("DataProcess", "MISReport", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmProcessdata" }))
+{
+   
+    <div class="headrow">
+       
+    </div>
+
+
+    <div class="col-md-12 trkPX-0">
+        <div class="thinbox animated zoomIn faster">
+            <div class="th_thinbox">
+                <p>Day End Reconsile</p>
+            </div>
+            <div class="row">
+              
+                <div class="npForm col-md-2">
+                    <label>From Date</label>
+                    @Html.TextBoxFor(m => m.FromDate, new { @placeholder = "From Date", @class = "customDatePicker form-control defaultDate" })
+                </div>
+                <div class="npForm col-md-1">
+                </div>
+                    <div class="npForm col-md-2">
+                        <label>To Date</label>
+                        @Html.TextBoxFor(m => m.ToDate, new { @placeholder = "To Date", @class = "customDatePicker form-control defaultDate" })
+                    </div>
+                </div>
+        </div>
+    </div>
+    <div class="headrow">
+        <button type="button" title="Process" onclick="SaveData('Process')" class="sym-btn-save">&nbsp;Process</button>
+        <button type="button" title="Download" onclick="ExportExcel()" class=" sym-btn-save">&nbsp;Download  Data</button>
+
+    </div>
+    
+    <div id="myHigherModal" class="HigherModal"></div>
+    
+}
+<form id="ReportForm" method="post" target="_blank"></form>
+
+<script>
+    function modalInitHigher(url) {
+        var modal = document.getElementById('myHigherModal');
+        $.ajax({
+            url: url,
+            cache: false,
+            beforeSend: function () { $(".loading").show(); },
+            complete: function () { $(".loading").fadeOut(200).hide("slow") },
+            success: function (html) {
+                modal.style.display = "block";
+                $("#myHigherModal").html(html);
+            }
+        });
+    }
+    function callbackFromProductModal(sender) {
+        var itemNo = $(sender).children('td.popUpItemNo').text();
+        $('#ItemNo').val(itemNo);
+    }
+    $(function () {
+        $('.productBtn').click(function () {
+            var url = "/Vms/Product/GetProductPopUp?targetId=ProductName";
+            modalInitHigher(url);
+        });
+    });
+</script>
+
+<script>
+    $(function () {
+        var date = $('.trVAT17Date').val();
+        if (date != null && date != "") {
+            $('#StartDate').val(date);
+            $('#EndDate').val(date);
+        }
+        var productName = $('tr.active .dItemName').val();
+        if (productName == null || productName == "") {
+            return;
+        }
+
+
+        $('.trProductName').val(productName);
+        var itemNo = $('tr.active .dItemNo').val();
+
+        $('.popUpItemNo').val(itemNo);
+
+    })
+</script>
+
+<script>
+    $(function () {
+        valiDation("frmProcessdata");
+
+    });
+
+    function SaveData(flag) {
+           
+        $('#flag').val(flag);
+
+        pageSubmit('frmProcessdata');
+    }
+
+    function ExportExcel() {
+
+        var questionMSG = "Are you sure to Export Excel!";
+
+        Ask(questionMSG, function () {
+            var FromDate=$('#FromDate').val();
+            var ToDate = $('#ToDate').val();
+            var url = '/VMS/MISReport/ExportData';
+            $('<input type="hidden" name="FromDate"/>').val(FromDate).appendTo('#ReportForm');
+            $('<input type="hidden" name="ToDate"/>').val(ToDate).appendTo('#ReportForm');
+            var url = '/VMS/MISReport/ExportData';
+            $('#ReportForm').attr('action', url);
+            $("#ReportForm").submit();
+        });
+    }
+
+</script>
+
+
+
+
+
+
+
+

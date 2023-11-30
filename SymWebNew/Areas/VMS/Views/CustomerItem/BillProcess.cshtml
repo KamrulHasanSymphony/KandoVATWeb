@@ -1,0 +1,356 @@
+﻿@model VATViewModel.DTOs.CustomerItemVM
+@using UIHelper.MVC
+@using SymOrdinary
+@using System.Threading;
+@using VATServer.Ordinary
+
+@{
+    ShampanIdentity identity = null;
+    try
+    {
+        identity = (ShampanIdentity)Thread.CurrentPrincipal.Identity;
+    }
+    catch (Exception)
+    {
+        Response.Redirect("/VMS/Home/Login");
+        return;
+    }
+}
+
+@{
+    ViewBag.Title = "Index";
+}
+
+@Html.HiddenFor(model => model.TransactionType, new { @class = " cTransactionType" })
+
+<div class="headrow">
+
+    <button type="button" title="Process Bill" onclick="BillProcess()" id="" class="sym-btn-approve ">&nbsp;Process</button>
+    <button type="button" title="GoTo Sale Index" data-url="/VMS/SaleInvoice/Index?TransactionType=ServiceNS" onclick="GoTo(this)" id="" class="sym-btn-detail ">&nbsp;Sale Index</button>
+    <button type="button" title="Export Data" onclick="ExportExcel()" class="sym-btn-Excel-Export">&nbsp;Export</button>
+
+    <div style="display: none" id="formAppend"></div>
+
+    <label class="pull-right">Bill Process</label>
+
+</div>
+
+<div class="tab-content">
+    <div id="IssueIndex" class="tab-pane fade  in active">
+        <div class="thinbox  animated zoomIn faster">
+            <div class="th_thinbox">
+                <p>Bill Porcess</p>
+            </div>
+            <div class="dtSearch formDesign">
+                <div class="row">
+
+                    <div class="col-md-2">
+                        <div class="editor-label">
+                            <label>Process Date</label>
+                        </div>
+                        <div class="editor-field">
+                            @*@Html.SimpleDropDownFor(m => m.PeriodName, "//", new { @class = "cPeriodName form-control selectDropdown" })*@
+
+                            @Html.TextBoxFor(model => model.ProcessDate, new { @placeholder = "Process Date", @class = " cProcessDate customDatePicker form-control" })
+
+
+                        </div>
+                    </div>
+
+                    @Html.Hidden("pDate", "");
+
+                   
+                </div>
+                <div class="row">
+
+                    <div class="col-md-4">
+                        <div class="editor-label">
+                            <label>&nbsp;</label>
+                        </div>
+                        <div class="editor-field">
+                            <button type="button" title="Click to Search" id="btnDialog" class="sym-btn-search">&nbsp;Search</button>
+                            <button type="button" title="Clear Data" id="Clear" class=" sym-btn-clear">&nbsp;Clear</button>
+
+                        </div>
+                    </div>
+                  
+                </div>
+
+
+
+            </div>
+            <p>&nbsp;</p>
+            <table id="myDataTable" class="display">
+                <thead>
+                    <tr>
+                        <th class="center"><input type="checkbox" class="chkAll" /> Action</th>
+                        <th>Customer Code</th>
+                        <th>Customer Name</th>
+                        <th>Total Value </th>
+                        <th>Attention</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <br />
+        </div>
+
+        <div class="headrow">
+            
+            <div class="col-md-5">
+                <button type="button" title="Process Bill" onclick="BillProcess()" id="" class="sym-btn-approve ">&nbsp;Process</button>
+                <button type="button" title="GoTo Sale Index" data-url="/VMS/SaleInvoice/Index?TransactionType=ServiceNS" onclick="GoTo(this)" id="" class="sym-btn-detail ">&nbsp;Sale Index</button>
+
+                <label style="text-align: right; color: black; font-size: 1.7em; float: right;">Total Value :</label>
+            </div>
+            <div class="col-md-6">
+                <p class="">
+                    @Html.Label("TotalValue", new { @class = " cTotalValue cvalueDesign" })
+                </p>
+
+                @*<label  class="cTotalValue">500000.000</label>*@
+            </div>
+
+        
+        </div>
+        <div id="myModal" class="trkmodal"></div>
+    </div>
+
+</div>
+
+<script>
+
+    $(".chkAll").click(function () {
+        $('.dSelected:input:checkbox').not(this).prop('checked', this.checked);
+    });
+
+    function ExportExcel() {
+
+        var questionMSG = "Are you sure to Export Excel!";
+
+        Ask(questionMSG, function () {
+
+            var IDs = [];
+            var $Items = $(".dSelected:input:checkbox:checked");
+
+            if ($Items == null || $Items.length == 0) {
+                ShowResult("Fail", "You are requested to Select before Export!");
+                return;
+            }
+
+            $Items.each(function () {
+
+                var ID = $(this).attr("data-Id");
+                IDs.push(ID);
+            });
+
+            var model = {
+                IDs: IDs,
+
+            }
+
+            var url = '/VMS/CustomerItem/ExportExcell_BillProcess';
+
+            var form = $('<form action="' + url + '"></form>');
+
+            IDs.forEach(function (item) {
+                form.append($('<input  value="' + item + '" name="IDs" />'))
+            })
+            form.appendTo('#formAppend').submit()
+
+            ////$.ajax({
+            ////    url: url
+            ////    , data: model
+            ////    , type: 'Get'
+            ////    , traditional: true
+            ////    , beforeSend: function () { $(".loading").show(); }
+            ////    , success: function (rVM) {
+            ////        alert(rVM);
+            ////        ShowResult(rVM.Status, rVM.Message);
+            ////    }
+            ////    , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+
+            ////});
+
+        });
+
+    }
+
+
+</script>
+
+
+
+<script>
+
+    function BillProcess() {
+
+        var IDs = [];
+        var $Items = $(".dSelected:input:checkbox:checked");
+
+        if ($Items == null || $Items.length == 0) {
+            ShowResult("Fail", "You are requested to Select before Process!");
+            return;
+        }
+
+        ////var PeriodName = $('.cPeriodName :selected').val();
+        ////var questionMSG = "Are you sure to Process Bill for the month of " + PeriodName;
+
+        var ProcessDate = $(".cProcessDate").val();
+
+        var questionMSG = "Are you sure to Process Bill for the date of " + ProcessDate;
+
+        Ask(questionMSG, function () {
+
+            $Items.each(function () {
+
+                var ID = $(this).attr("data-Id");
+                IDs.push(ID);
+            });
+
+            var model = {
+                IDs: IDs,
+
+            }
+
+
+            var url = "/VMS/CustomerItem/ProcessBill?IDs=" + IDs + "&ProcessDate=" + ProcessDate + "&TransactionType=ServiceNS";
+
+            $.ajax({
+                url: url
+                , data: model
+                , type: 'Post'
+                , traditional: true
+                , beforeSend: function () { $(".loading").show(); }
+                , success: function (rVM) {
+                    //ShowResult(rVM.Status, rVM.Message);
+
+                    MsgAskOk(rVM.Message, rVM.Status);
+
+                }
+                , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+
+            });
+        });
+
+    }
+
+
+    $(function () {
+
+        DropdownLoad($('#PeriodName'), "/Config/DropDown/FiscalPeriod", '@Model.PeriodName')
+
+    });
+
+</script>
+
+<script language="javascript" type="text/javascript">
+
+    $(document).ready(function () {
+
+        ////SelectAllForDelete();
+        //$.datepicker.regional[""].dateFormat = 'dd/M/y';
+        //$.datepicker.setDefaults($.datepicker.regional['']);
+        var ProcessDate = $(".cProcessDate").val();
+        var oTable = $('#myDataTable').dataTable({
+            "bServerSide": true,
+            "sAjaxSource": "/VMS/CustomerItem/_GetCustomerItem?transactionType=@Model.TransactionType" ,//+ "&ProcessDate=" + $(".cProcessDate").val()
+            "bProcessing": false,
+            "aLengthMenu": tablelength(),
+            "bJqueryUI": true,
+            "bAutoWidth": false,
+
+            "fnServerData": function (sSource, aoData, fnCallback) {
+
+                $('.dtSearch :input').each(function () {
+                    var Name = $(this).attr("Id")
+                    var Value = $(this).val()
+                    aoData.push({ "name": Name, "value": Value });
+
+                });
+                $.getJSON(sSource, aoData, function (json) {
+                    fnCallback(json);
+
+                    var sum = 0;
+
+                    for (var i = 0; i < json.aaData.length; i++) {
+
+                        sum += Number(json.aaData[i][3]);
+
+                    }
+                    var pDate=$(".cProcessDate").val();
+                    var date = $(".cProcessDate").val(pDate);
+
+                    $('.cTotalValue').text(sum.toFixed(4));
+
+
+                });
+            },
+
+            "aoColumns": [
+                            {
+                                "sName": "Id",
+                                "bSearchable": false,
+                                "bSortable": false,
+                                "sWidth": "6%",
+                                "sClass": "center",
+                                "fnRender": function (oObj) {
+                                    return ' <input onclick="CheckAll(this)" class="dSelected" type="checkbox" data-Id="' + oObj.aData[0] + '">'
+                                        //+ '&nbsp; <a title="Click on for Edit" href=\"/VMS/CustomerItem/Edit/' + oObj.aData[0].split('~')[0] + '?TransactionType=' + oObj.aData[7] + '\" class="sym-btn-edit-row"></a>'
+                                        //+ '&nbsp; <a title="Click on for Post" data-url="/VMS/IssueHeader/Post"  onclick=checkValidBranch(this,' + oObj.aData[0].split('~')[2] + '); data-Id="' + oObj.aData[0] + '\" class="sym-btn-post-row"></a>'
+                                    ;
+                                }
+                            }
+                            , { "sName": "CustomerCode", "sWidth": "8%" }
+                            , { "sName": "CustomerName", "sWidth": "15%" }
+                            , { "sName": "TotalValue", "sWidth": "8%","sClass":"BillAmnt" }
+                            , { "sName": "Attention", "sWidth": "15%" }
+                            , { "sName": "Notes", "sWidth": "15%" }
+            ]
+        });
+
+        $('#btnDialog').click(function () {
+            var model = $('.dtSearch :input').serialize();
+            $.ajax({
+                url: "/VMS/CustomerItem/_GetCustomerItem",
+                cache: false,
+                data: model,
+                success: function (html) {
+
+                    oTable.fnDraw();
+                }
+            });
+        });
+
+
+        ////clearing fields
+        $("#Clear").on('click', function () {
+            $(".Dropdown").select2("val", "");
+            $(".form-control").val("");
+        });
+
+
+    });
+    function checkValidBranch(element, branchId) {
+        if ('@Session["BranchId"]' != branchId) {
+            ShowResult("Fail", "This Information not for this Branch!");
+            return;
+        }
+
+        btnPost(element);
+    }
+</script>
+
+<style>
+    .cvalueDesign {
+        margin-left: 11px;
+        color: black !important;
+        font-size: 1.6em;
+        margin-top: -3px;
+        margin-left: 6px;
+    }
+</style>
+
+
+

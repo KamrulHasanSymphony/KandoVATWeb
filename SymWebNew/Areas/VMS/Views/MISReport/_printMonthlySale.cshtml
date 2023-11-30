@@ -1,0 +1,146 @@
+﻿@model VATViewModel.DTOs.SaleMISViewModel
+@using UIHelper.MVC
+@{
+    Layout = "~/Areas/VMS/Views/Shared/_ModalLayout.cshtml";
+}
+<style>
+
+</style>
+<div class="trkmodal-content">
+    <div class="trkmodal-header">
+        <span class="close">&times;</span>
+        <h2 class="text-center">Monthly Sale Report</h2>
+    </div>
+    <div class="trkmodal-body">
+        @using (Html.BeginForm("DownloadMonthlySale", "MISReport", FormMethod.Post, new { enctype = "multipart/form-data", @target = "_blank", @Id = "frmWastage" }))
+        {
+             @Html.HiddenFor(m => m.ReportType, new { @class = "cReportType" })
+
+            <div class="npForm col-md-12">
+                <div class="col-md-10 npForm">
+                    <label>Product Name</label>
+                    @Html.HiddenFor(m => m.ItemNo)
+                    @Html.TextBoxFor(m => m.ProductName, new { @class = " form-control trProductName", @readonly = "readonly" })
+                </div>
+                <div class=" col-md-2 npForm">
+                    <label>&nbsp;</label>
+                    <button type="button" class=" sym-btn-search productBtn">Search</button>
+                </div>
+            </div>
+
+       
+            <div class="npForm col-md-6">
+                <label> First Month</label>
+                @*@Html.TextBoxFor(m => m.DateFrom, new { @placeholder = "Start Date", @class = "customDatePicker form-control" })*@
+                @Html.SimpleDropDownFor(m => m.DateFrom, "/Config/DropDown/FiscalPeriod", new { @class = " form-control selectDropdown" })
+            </div>
+            <div class="npForm col-md-6">
+                <label>Second Month</label>
+                @*@Html.TextBoxFor(m => m.DateTo, new { @placeholder = "End Date", @class = "customDatePicker form-control" })*@
+                @Html.SimpleDropDownFor(m => m.DateTo, "/Config/DropDown/FiscalPeriod", new { @class = " form-control selectDropdown" })
+            </div>
+
+            <button type="button" class=" btn sym-btn-report trPreview"> Preview</button>
+            <button type="button" class=" sym-btn-download-row trDownload"> Download</button>
+            <button type="button" class="sym-btn-close closeBtn pull-right"> Close</button>
+        }
+    </div>
+</div>
+<div id="myHigherModal" class="HigherModal"></div>
+<script>
+    $(document).ready(function () {
+        ////boolean checkbox
+        CheckBoxDesign();
+        MyCheckBox('@Model.Post', 'input-1', 'Post');
+
+        ///check validation
+        function checkValidation() {
+            var startDate = $('#DateFrom').val();
+            if (startDate == "") {
+                ShowResult("Fail", "Select First Month!");
+                return false;
+            }
+            var endDate = $('#DateTo').val();
+            if (endDate == "") {
+                ShowResult("Fail", "Select Second Month!");
+                return false;
+            }
+            return true;
+        }
+
+        ////clicking preview button
+        $('.trPreview').click(function () {
+
+
+            var isValid = checkValidation();
+            if (isValid == false) {
+                return;
+            }
+            $('#ReportType').val("Preview");
+
+            $('#frmWastage').submit();
+            //pageSubmit('frmMisPurchase');
+        });
+
+
+        ////clicking preview button
+        $('.trDownload').click(function () {
+            var isValid = checkValidation();
+            if (isValid == false) {
+                return;
+            }
+
+            $('#ReportType').val("ExcelDownload");
+
+            $('#frmWastage').submit();
+            //pageSubmit('frmWastage');
+        });
+
+        function closeModal() {
+            $("#myModal").html("");
+            trkmodal.style.display = "none";
+        }
+
+        var span = document.getElementsByClassName("close")[0];
+        var trkmodal = document.getElementById('myModal');
+        //When the user clicks on <span> (x), close the trkmodal
+        span.onclick = function () {
+            closeModal();
+        }
+
+        $('.closeBtn').click(function () {
+            closeModal();
+        });
+
+    });
+</script>
+
+@*for clicking product button*@
+<script>
+    function modalInitHigher(url) {
+        var modal = document.getElementById('myHigherModal');
+        $.ajax({
+            url: url
+            ,cache: false
+            ,beforeSend: function () { $(".loading").show(); }
+            ,success: function (html) {
+                modal.style.display = "block";
+                $("#myHigherModal").html(html);
+            }
+            , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+        });
+    }
+    function callbackFromProductModal(sender) {
+        var itemNo = $(sender).children('td.popUpItemNo').text();
+        $('#ItemNo').val(itemNo);
+    }
+    function callbackFromSaleModal(returnId, sender) {
+        ////nothing for now
+    }
+    $(function () {
+        $('.productBtn').click(function () {
+            var url = "/Vms/Product/GetProductPopUp?targetId=ProductName";
+            modalInitHigher(url);
+        });
+    });
+</script>

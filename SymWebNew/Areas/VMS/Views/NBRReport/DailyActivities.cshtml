@@ -1,0 +1,73 @@
+﻿@model VATViewModel.DTOs.VAT6_1ParamVM
+@using UIHelper.MVC
+@{
+    ViewBag.Title = "DailyActivities";
+}
+
+@*<h2>DailyActivities</h2>*@
+
+
+
+
+    @using (Html.BeginForm("_DailyActivities", "NBRReport", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmProcess"}))
+    {
+        @*@Html.HiddenFor(model => model.Flag)*@
+        @*@Html.HiddenFor(model => model.ProcesType, new { @class = "cProcesType" })*@
+        @Html.HiddenFor(model => model.ProcesType, new { @class = "cProcesType" })
+
+        <div class="headrow">
+        </div>
+
+        <div class="col-md-12 trkPX-0 Center">
+            <div class="thinbox animated zoomIn faster">
+                <div class="th_thinbox">
+                    <h3>Process Daily Activity</h3>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <div class="row">
+                           
+                            <div class="col-md-12 center">
+
+                                 <button type="button" title="ProcessData" onclick="Process()"style=" font-size: 1.8em; line-height: 2; padding: 8px 12px;" class="sym-btn-save btn-lg">&nbsp;Process</button>
+                                  
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="headrow">
+            @*<button type="button" title="ProcessData" onclick="ProcessData()" class="sym-btn-save">&nbsp;Process</button>*@
+            @*<button type="button" title="Delete_Process" onclick="SaveData('Delete_Process')" class="sym-btn-save">&nbsp;Delete-Process</button>*@
+            @*<button type="button" title="Re-Process" onclick="ExportExcel()" class=" sym-btn-save">&nbsp;Download Negative Data</button>*@
+        </div>
+
+
+
+
+
+    }
+
+
+<script>
+
+    $(function () {
+        valiDation("frmProcessdata");
+
+    });
+
+
+    function Process() {
+
+        //$('#flag').val(flag);
+
+        pageSubmit('frmProcess');
+    }
+
+
+</script>

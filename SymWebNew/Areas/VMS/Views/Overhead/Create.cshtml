@@ -1,0 +1,270 @@
+﻿@model VATViewModel.DTOs.ProductVM
+@using UIHelper.MVC
+@using (Html.BeginForm("CreateEdit", "Overhead", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmProductMy" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.Operation)
+    @Html.HiddenFor(model => model.ItemNo)
+    @Html.HiddenFor(model => model.UOM)
+    @Html.HiddenFor(model => model.OpeningDate)
+
+
+    <div class="headrow">
+        @if (Model.Operation == "add")
+        {
+            <button type="button" name="btnName" value="Save" title="Save Data" onclick="pageSubmit('frmProductMy')" class="sym-btn-save">&nbsp;Save</button>
+            <label class="pull-right">Overhead > Create</label>
+        }
+        else
+        {
+            <button type="button" name="btnName" value="Update" title="Update Data" onclick="pageSubmit('frmProductMy')" class="sym-btn-update">&nbsp;Update</button>
+            <label class="pull-right">Overhead > Edit</label>
+        }
+        <button type="button" title="Go To Index" data-url="/VMS/Overhead" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New Product" data-url="/VMS/Overhead/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+    </div>
+    @*if (Model.Operation == "update") {
+        <div class="col-sm-12 col-md-12">
+            <div class="input-group   col-lg-8  col-md-8  col-sm-8 col-xs-12 text-color col-md-offset-2" style="">
+                <a class="input-group-addon btn btn-primary hidden-xs changePage" data-pager-action='first' id="first"><i class="fa fa-angle-double-left"></i>First</a>
+                <a class="input-group-addon btn btn-primary hidden-xs changePage" data-pager-action='previous' id="precode"><i class="fa fa-angle-left"></i>Previous</a>
+                @Html.SimpleDropDown("", "/Config/DropDown/IdNameDropdownOverhead?Id=ItemNo&Name=ProductName&AllData=no&code=ProductCode", new { @class = " trNavigateMenu form-control selectDropdown " })
+                <a class="input-group-addon btn btn-primary changePage" data-pager-action='current' id="current"><i class="fa fa-search"></i></a>
+                <a class="input-group-addon btn btn-primary hidden-xs changePage" data-pager-action='next' id="nextcode">Next <i class="fa  fa-angle-right"></i></a>
+                <a class="input-group-addon btn btn-primary hidden-xs changePage" data-pager-action='last' id="last">Last <i class="fa  fa-angle-double-right"></i></a>
+            </div>
+        </div>
+        }*@
+    <div class="col-md-12" style="padding:0px;">
+        <div class="thinbox animated zoomIn faster">
+            <div class="th_thinbox">
+                <p>Basic</p>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label for="ProductCode" class="col-md-2 control-label text-right trkLabelMargin">Product Code</label>
+                    <div class="col-md-4">
+                        @if (Model.Operation == "update")
+                        {
+                            <div class="input-group col-md-6" style="margin-bottom:6px;">
+                                @Html.TextBoxFor(model => model.ProductCode, new { @placeholder = "Code", @class = " required form-control", @readonly = "readonly" })
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="input-group col-md-6" style="margin-bottom:6px;">
+                                @Html.TextBoxFor(model => model.ProductCode, new { @placeholder = "Code", @class = " required form-control" })
+                            </div>
+                        }
+
+
+                        @Html.ValidationMessageFor(model => model.ProductCode)
+                    </div>
+                    <label for="ProductName" class="col-md-2 control-label text-right trkLabelMargin">ProductName</label>
+                    <div class="col-md-4">
+                        @Html.TextBoxFor(model => model.ProductName, new { @placeholder = "Name", @class = " required form-control" })
+                        @Html.ValidationMessageFor(model => model.ProductName)
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="RebatePercent" class="col-md-2 control-label text-right trkLabelMargin">Rebate Percent</label>
+                    <div class="col-md-4" style="margin-bottom:6px;">
+                        <div class="input-group col-md-6">
+                            @Html.TextBoxFor(model => model.RebatePercent, new { @placeholder = "Rebate Percent", @class = "priceLen  form-control" })
+                            <span class="input-group-addon">%</span>
+                        </div>
+                        @Html.ValidationMessageFor(model => model.RebatePercent)
+                    </div>
+                    <label for="Type" class="col-md-2 control-label text-right trkLabelMargin">Type</label>
+                    <div class="col-md-4">
+                        <div class="input-group col-md-6" style="margin-bottom:6px;">
+                            @Html.TextBoxFor(model => model.Type, new { @Value = "Overhead", @class = "form-control", @readonly = "readonly" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Type)
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="CategoryID" class="col-md-2 control-label text-right trkLabelMargin">Category</label>
+                    <div class="col-md-4">
+                        <div class="input-group col-md-8" style="margin-bottom:6px;">
+                            @Html.SimpleDropDownFor(model => model.CategoryID, "/Config/DropDown/ProductCategory?IsRaw=Overhead", new { @class = "required form-control trkMT-0" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.CategoryID)
+                    </div>
+
+                    <label for="VATRate" class="col-md-2 control-label text-right trkLabelMargin">VAT Rate</label>
+                    <div class="col-md-4">
+                        <div class="input-group col-md-6" style="margin-bottom:6px;">
+                            @Html.TextBoxFor(model => model.VATRate, new { @placeholder = "VAT Rate", @class = " priceLen form-control" })
+                            <span class="input-group-addon">%</span>
+                        </div>
+                        @Html.ValidationMessageFor(model => model.VATRate)
+                    </div>
+
+
+                    <label for="SD" class="col-md-2 control-label text-right trkLabelMargin">SD</label>
+                    <div class="col-md-4">
+                        <div class="input-group col-md-6" style="margin-bottom:6px;">
+                            @Html.TextBoxFor(model => model.SD, new { @placeholder = "SD", @class = " priceLen form-control" })
+                            <span class="input-group-addon">%</span>
+                        </div>
+                        @Html.ValidationMessageFor(model => model.SD)
+                    </div>
+
+                    <label for="HSCodeNo" class="col-md-2 control-label text-right trkLabelMargin">HS #</label>
+                    <div class="col-md-4">
+                        @Html.TextBoxFor(model => model.HSCodeNo, new { @placeholder = "HS Code No", @class = " form-control" })
+                        @Html.ValidationMessageFor(model => model.HSCodeNo)
+                    </div>
+
+                    <label class="col-md-2 control-label text-right trkLabelMargin">Toll Product</label>
+                    <div class="col-md-4">
+                        @Html.HiddenFor(m => m.TollProduct)
+                        <input id="input-2" type="checkbox">
+                    </div>
+                    @*<div class="checkbox">
+                            <label>
+                                @Html.CheckBoxFor(model => model.TollProduct, null)<strong>Toll Product?</strong>
+                            </label>
+                        </div>*@
+                </div>
+            </div>
+        </div>
+
+
+        <div class="thinbox animated zoomIn faster">
+            <div class="th_thinbox">
+                <p>Other</p>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label for="ProductDescription" class="col-md-2 control-label text-right trkLabelMargin">Description</label>
+                    <div class="col-md-4">
+                        @Html.TextAreaFor(model => model.ProductDescription, new { @placeholder = "Description", @class = "  form-control" })
+                        @Html.ValidationMessageFor(model => model.ProductDescription)
+                    </div>
+                    <label for="Comments" class="col-md-2 control-label text-right trkLabelMargin">Comments</label>
+                    <div class="col-md-4">
+                        @Html.TextAreaFor(model => model.Comments, new { @placeholder = "Comments", @class = " form-control" })
+                        @Html.ValidationMessageFor(model => model.Comments)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label text-right trkLabelMargin">Is Active</label>
+                    <div class="form-group">
+                        <div class="col-md-4" style="margin-top:6px;">
+                            @*@Html.HiddenFor(m => m.ActiveStatus)*@
+                            @Html.SimpleDropDownFor(m => m.ActiveStatus, "/Config/DropDown/DecisionList", new { @class = "cIsConfirmed form-control required" })
+                            @*<input id="input-1" type="checkbox">*@
+                        </div>
+                    </div>
+                    <label class="col-md-2 control-label text-right trkLabelMargin">Is Confirmed</label>
+                    <div class="col-md-4" style="margin-top:6px;">
+                        @Html.SimpleDropDownFor(m => m.IsConfirmed, "/Config/DropDown/DecisionList", new { @class = "cIsConfirmed form-control required" })
+
+                    </div>
+
+                    @*<label class="col-md-2 control-label text-right trkLabelMargin">Is Confirmed</label>
+                        <div class="col-md-2 trkPX-0" style="margin-bottom: 6px;">
+                            @Html.SimpleDropDownFor(m => m.IsConfirmed, "/Config/DropDown/DecisionList", new { @class = "cIsConfirmed form-control required" })
+
+                        </div>*@
+
+
+                    <label class="col-md-2 control-label text-right trkLabelMargin">VDS</label>
+                    <div class="col-md-4" style="margin-top:6px;">
+                        @Html.SimpleDropDownFor(m => m.IsVDS, "/Config/DropDown/DecisionList", new { @class = "cIsConfirmed form-control required" })
+
+                    </div>
+
+
+
+                    <label class="col-md-2 control-label text-right trkLabelMargin">Fixed VAT Rebate</label>
+                    <div class="col-md-1" style="margin-top:6px;">
+                        @Html.SimpleDropDownFor(m => m.IsFixedVATRebate, "/Config/DropDown/DecisionList", new { @class = "cIsFixedOtherSD form-control" })
+
+                    </div>
+
+                    <label class="col-md-2 control-label text-right trkLabelMargin">Is Sample</label>
+                    <div class="col-md-1" style="margin-top:6px;">
+                        @Html.SimpleDropDownFor(m => m.IsSample, "/Config/DropDown/DecisionList", new { @class = "cIsSample form-control" })
+
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class="headrow">
+        @if (Model.Operation == "add")
+        {
+            <button type="button" name="btnName" value="Save" title="Save Data" onclick="pageSubmit('frmProductMy')" class="sym-btn-save">&nbsp;Save</button>
+        }
+        else
+        {
+            <button type="button" name="btnName" value="Update" title="Update Data" onclick="pageSubmit('frmProductMy')" class="sym-btn-update">&nbsp;Update</button>
+        }
+        <button type="button" title="Go To Index" data-url="/VMS/Overhead" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New Product" data-url="/VMS/Overhead/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+
+    </div>
+}
+<script>
+    $(document).ready(function () {
+        $(function () {
+            valiDation("frmProductMy");
+            @*MyCheckBox('@Model.ActiveStatus', 'input-1', 'ActiveStatus');*@
+            MyCheckBox('@Model.TollProduct', 'input-2', 'TollProduct');
+
+            navigatePage();
+        });
+
+        function navigatePage() {
+            var interval = setInterval(function () {
+                if (document.querySelectorAll('.trNavigateMenu option').length > 0) {
+                    var id = '@Model.ItemNo';
+                    $('.trNavigateMenu').select2("val", id);
+                    clearInterval(interval);
+                }
+            }, 200);
+            ////navigating previous-next
+            $('.changePage').click(function () {
+                var id = '@Model.ItemNo';
+                var btn = $(this).attr("data-pager-action");
+                if (btn.toLocaleLowerCase() == "current") {
+                    var targetId = $('.trNavigateMenu').val();
+                    if (id == targetId) {
+                        return;
+                    }
+                    id = targetId;
+                }
+                window.location = "/VMS/Overhead/Navigate?id=" + id + "&btn=" + btn;
+            });
+        }
+    });
+</script>
+@*for setting vat & sd rate*@
+<script>
+    $(function () {
+        $('#CategoryID').change(function () {
+            var categoryVal = $(this).val();
+            var url = "/VMS/ProductCategory/GetProductGroupVM?id=" + categoryVal;
+            $.ajax({
+                url: url,
+                cache: false,
+                beforeSend: function () { $(".loading").show(); },
+                success: function (data) {
+                    var vatRate = data.VATRate;
+                    $('#VATRate').val(vatRate);
+                },
+                complete: function () { $(".loading").fadeOut(200).hide("slow") }
+
+            });
+        });
+    });
+</script>

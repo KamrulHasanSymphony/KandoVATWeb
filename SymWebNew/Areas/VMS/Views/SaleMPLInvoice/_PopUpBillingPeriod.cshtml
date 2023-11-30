@@ -1,0 +1,325 @@
+﻿@model VATViewModel.DTOs.SaleDetailVm
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+
+<style>
+    .trkmodal {
+        padding-top: 10%;
+    }
+
+    .trkmodal-content {
+        width: 44%;
+        padding-bottom: 10px;
+    }
+
+    .customDatePicker {
+        background: #fefede url(/Images/calendar.jpg) no-repeat 98% !important;
+    }
+    /*no padding with little margin bttom*/
+    div.trkmodal-body div.npForm {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+        padding-bottom: 0px !important;
+        margin-bottom: 10px;
+    }
+
+        div.trkmodal-body div.npForm div.npForm {
+            margin-bottom: 0px !important;
+        }
+</style>
+
+<div class="trkmodal-content">
+    <div class="trkmodal-header">
+        <span class="close">&times;</span>
+        <h2 class="text-center">Billing Information</h2>
+    </div>
+    <div class="trkmodal-body">
+        @using (Html.BeginForm("PopUpBillingPeriod", "SaleInvoice", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmPopUpBillingPeriod" }))
+        {
+
+            @Html.HiddenFor(model => model.TransactionType)
+            @Html.HiddenFor(model => model.Quantity)
+            @Html.HiddenFor(model => model.PromotionalQuantity)
+            @Html.HiddenFor(model => model.SubTotal)
+            @Html.HiddenFor(model => model.SD)
+            @Html.HiddenFor(model => model.SDAmount)
+            @Html.HiddenFor(model => model.Total)
+            @Html.HiddenFor(model => model.HPSRate)
+            @Html.HiddenFor(model => model.HPSAmount)
+            @Html.HiddenFor(model => model.TradingMarkUp)
+            @Html.HiddenFor(model => model.Type)
+            @Html.HiddenFor(model => model.UOMPrice)
+            @Html.HiddenFor(model => model.UOMc)
+            @Html.HiddenFor(model => model.UOMn)
+            @Html.HiddenFor(model => model.UOMQty)
+            @Html.HiddenFor(model => model.CurrencyValue)
+            @Html.HiddenFor(model => model.DollerValue)
+            @Html.HiddenFor(model => model.VatName)
+            @Html.HiddenFor(model => model.BOMId)
+            @Html.HiddenFor(model => model.BOMReferenceNo)
+            @Html.HiddenFor(model => model.CConversionDate)
+            @Html.HiddenFor(model => model.Weight)
+            @Html.HiddenFor(model => model.ValueOnly)
+            @Html.HiddenFor(model => model.TotalValue)
+            @Html.HiddenFor(model => model.WareHouseRent)
+            @Html.HiddenFor(model => model.WareHouseVAT)
+            @Html.HiddenFor(model => model.ATVRate)
+            @Html.HiddenFor(model => model.ATVablePrice)
+            @Html.HiddenFor(model => model.ATVAmount)
+            @Html.HiddenFor(model => model.IsCommercialImporter)
+            @Html.HiddenFor(model => model.VDSAmountD)
+            @Html.HiddenFor(model => model.ProductDescription)
+            @Html.HiddenFor(model => model.IsFixedVAT)
+            @Html.HiddenFor(model => model.FixedVATAmount)
+            @Html.HiddenFor(model => model.BENumber)
+
+            @Html.HiddenFor(model => model.ItemNo)
+            @Html.HiddenFor(model => model.TradingD)
+            @Html.HiddenFor(model => model.NonStockD)
+            @Html.HiddenFor(model => model.SaleTypeD)
+            @Html.HiddenFor(model => model.CommentsD)
+            @Html.HiddenFor(model => model.InvoiceLineNo)
+            @Html.HiddenFor(model => model.VATAmount)
+
+            @Html.Hidden("BillingPeriodToOld", "", new { @class = " cBillingPeriodToOld" })
+            @Html.Hidden("BillingPeriodFromOld", "", new { @class = " cBillingPeriodFromOld" })
+            @Html.Hidden("BillingDaysOld", "", new { @class = " cBillingDaysOld" })
+            @Html.Hidden("NBRPriceOld", "", new { @class = " cNBRPriceOld" })
+            @Html.Hidden("VATAmountOld", "", new { @class = " cVATAmountOld" })
+
+
+            <div class="row">
+                <div class="npForm col-md-6">
+                    <label>Product Code</label>
+
+                    @Html.TextBoxFor(model => model.ProductCode, new { @placeholder = "Product Code", @class = " cProductCode form-control", @readonly = "readonly" })
+
+                </div>
+                <div class="npForm col-md-6">
+                    <label>Product Name</label>
+
+                    @Html.TextBoxFor(model => model.ProductName, new { @placeholder = "Product Name", @class = " cProductName form-control", @readonly = "readonly" })
+
+                </div>
+            </div>
+
+            <div class="row">
+                @*<div class="npForm col-md-6">
+                        <label>Invoice No</label>
+
+                        @Html.TextBox("PreviousSalesInvoiceNoD", "", new { @placeholder = "Invoice No", @class = " cPreviousSalesInvoiceNoD form-control" })
+
+                    </div>*@
+                <div class="npForm col-md-6">
+                    <label>Billing Period From</label>
+
+                    @Html.TextBoxFor(model => model.BillingPeriodFrom, new { @placeholder = "Billing Period From", @class = " cBillingPeriodFrom customDatePicker defaultDate form-control", @Id = "idBillingPeriodFrom" })
+
+                </div>
+
+                <div class="npForm col-md-6">
+                    <label>Billing Period To</label>
+
+                    @Html.TextBoxFor(model => model.BillingPeriodTo, new { @placeholder = "Billing Period To", @class = " cBillingPeriodTo customDatePicker defaultDate form-control", @Id = "idBillingPeriodTo" })
+
+                </div>
+            </div>
+
+
+            <div class="row">
+
+                <div class="npForm col-md-3">
+                    <label>Days</label>
+                    @Html.TextBoxFor(model => model.BillingDays, new { @placeholder = "Days", @class = " cBillingDays  form-control", @readonly = "readonly" })
+
+                </div>
+
+                <div class="npForm col-md-2">
+                    <label>UOM</label>
+                    @Html.TextBoxFor(model => model.UOM, new { @placeholder = "UOM", @class = " cUOM  form-control", @readonly = "readonly" })
+                </div>
+
+                <div class="npForm col-md-3">
+                    <label>VATRate(%)</label>
+
+                    @Html.TextBoxFor(model => model.VATRate, new { @placeholder = "VATRate", @class = " cVATRate  form-control", @readonly = "readonly" })
+
+                </div>
+
+                <div class="npForm col-md-4">
+                    <label>NBR Price</label>
+
+                    @Html.TextBoxFor(model => model.NBRPrice, new { @placeholder = "NBRPrice", @class = " cNBRPrice  form-control", @readonly = "readonly" })
+
+                </div>
+
+            </div>
+
+
+            <button type="button" class=" btn sym-btn-update trAdd btnUpdate "> Update</button>
+            @*<button type="button" class=" btn sym-btn-post btnCalculation "> Calculation</button>*@
+            @*<button type="button" class="sym-btn-close closeBtn pull-right"> Close</button>*@
+        }
+    </div>
+</div>
+
+
+<script src="~/assets/javascripts/custom.js"></script>
+<script>
+
+    $("#idBillingPeriodFrom").change(function () {
+       
+        ValueCalculation("Y");
+    });
+
+    $("#idBillingPeriodTo").change(function () {
+
+        ValueCalculation("N");
+    });
+
+    $('.btnCalculation').click(function () {
+
+
+    });
+
+    function ValueCalculation(isFromDateChange) {
+       
+        var billingFromDate = $('#idBillingPeriodFrom').val();
+        var billingToDate = $('#idBillingPeriodTo').val();
+        var value = parseFloat($('.cNBRPriceOld').val().replace(/\,/g, ''));
+        var VatRate = parseFloat($('.cVATRate').val().replace(/\,/g, ''));
+
+        var fromDate = new Date(billingFromDate);
+        var ToDate = new Date(billingToDate);
+
+        if (fromDate > ToDate) {
+
+            ShowResult("Fail", "FromDate cannot be prior ToDate!");
+
+            if (isFromDateChange == "Y") {
+                $('.cBillingPeriodFrom').val("");
+
+            }
+            else {
+                $('.cBillingPeriodTo').val("");
+
+            }
+
+            return;
+        }
+
+        // The number of milliseconds in one day
+        var ONE_DAY = 1000 * 60 * 60 * 24
+
+        // Convert both dates to milliseconds
+        var fromDate_ms = fromDate.getTime()
+        var ToDate_ms = ToDate.getTime()
+
+        // Calculate the difference in milliseconds
+        var difference_ms = Math.abs(fromDate_ms - ToDate_ms)
+
+        // Convert back to days and return
+        var BillingDays = Math.round(difference_ms / ONE_DAY)
+
+        BillingDays = BillingDays + 1;
+
+        var DaysOfMonth = new Date(ToDate.getFullYear(), ToDate.getMonth() + 1, 0);
+        var TotalDaysOfMonth = DaysOfMonth.getDate();
+
+        var billAmount = value * BillingDays / TotalDaysOfMonth;
+
+        var VATAmount = billAmount * VatRate / 100;
+
+        $('.cBillingDays').val(BillingDays);
+        $('.cNBRPrice').val(billAmount.toFixed(2));
+        $('#VATAmount').val(VATAmount.toFixed(2));
+
+    }
+
+    $(document).ready(function () {
+        //$('#frmExpFromNo').submit();
+
+        function closeModal() {
+            $("#myHigherModal").html("");
+            trkmodal.style.display = "none";
+
+            ////BillingInformation();
+        }
+
+        var span = document.getElementsByClassName("close")[0];
+        var trkmodal = document.getElementById('myHigherModal');
+        //When the user clicks on <span> (x), close the trkmodal
+        span.onclick = function () {
+
+            var billingFromDate = $('.cBillingPeriodFromOld').val();
+            var billingToDate = $('.cBillingPeriodToOld').val();
+            var BillingDays = $('.cBillingDaysOld').val();
+            var NBRPrice = parseFloat($('.cNBRPriceOld').val().replace(/\,/g, ''));
+            var VATAmount = parseFloat($('.cVATAmountOld').val().replace(/\,/g, ''));
+
+            $('#idBillingPeriodFrom').val(billingFromDate);
+            $('#idBillingPeriodTo').val(billingToDate);
+            $('.cBillingDays').val(BillingDays);
+            $('.cNBRPrice').val(NBRPrice);
+            $('#VATAmount').val(VATAmount);
+
+            //closeModal();
+            BillingInformation();
+        }
+
+        //$('.closeBtn').click(function () {
+        //    closeModal();
+        //});
+
+        $('.btnUpdate').click(function () {
+
+            var billingFromDate = $('#idBillingPeriodFrom').val();
+            var billingToDate = $('#idBillingPeriodTo').val();
+
+            if (billingFromDate == null || billingFromDate == "") {
+
+                ShowResult("Fail", "FromDate cannot be null or empty!");
+
+                return;
+            }
+
+            if (billingToDate == null || billingToDate == "") {
+
+                ShowResult("Fail", "ToDate cannot be null or empty!");
+
+                return;
+            }
+
+            BillingInformation();
+
+        });
+
+        function BillingInformation() {
+            var model = $('.trkmodal-body :input').serialize();
+
+            callbackBillingInformationModal(model);
+
+            closeModal();
+        }
+
+
+
+    });
+</script>
+
+<script>
+    $(function () {
+
+        $('.cBillingPeriodFromOld').val('@Model.BillingPeriodFrom');
+        $('.cBillingPeriodToOld').val('@Model.BillingPeriodTo');
+        $('.cBillingDaysOld').val('@Model.BillingDays');
+        $('.cNBRPriceOld').val('@Model.NBRPrice');
+        $('.cVATAmountOld').val('@Model.VATAmount');
+
+        valiDation("frmPopUpBillingPeriod");
+
+    });
+</script>
+

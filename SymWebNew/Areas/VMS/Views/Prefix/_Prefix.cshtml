@@ -1,0 +1,44 @@
+﻿@model VATViewModel.DTOs.CodeVM
+@using (Html.BeginForm("Edit", "Prefix", FormMethod.Post, new { @Id = "frmPrefix" }))
+{
+    <div class="row">
+        <div class="col-md-2">
+            @Html.HiddenFor(model => model.CodeId)
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.CodeGroup, new { @class = "  form-control",@readonly="readonly" })
+                @Html.ValidationMessageFor(model => model.CodeGroup)
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.CodeName, new { @class = " form-control" ,@readonly="readonly" })
+                @Html.ValidationMessageFor(model => model.CodeName)
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.prefix, new { @class = "required  form-control" })
+                @Html.ValidationMessageFor(model => model.prefix)
+
+            </div>
+        </div>
+        <div class="col-md-1">
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.Lenth, new { @class = "required form-control"})
+                @Html.ValidationMessageFor(model => model.Lenth)
+            </div>
+        </div>
+        <div class="col-md-1">
+            <button type="button" onclick="update(this);" value="Update" class="sym-btn-update">&nbsp;Update</button>
+        </div>
+    </div>
+}
+<script>
+    //$(function () {
+    function update(sender) {
+        var model = $(sender).closest('#frmPrefix').serialize();
+        var url = "/VMS/Prefix/Update";
+        var result = submit(url, model);
+    }
+    //});
+</script>

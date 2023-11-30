@@ -1,0 +1,43 @@
+﻿@model SymViewModel.Attendance.EmployeeMonthlyOvertimeVM
+@{
+    ViewBag.Title = "EmployeeMonthlyOvertime";
+}
+<tr>
+
+
+    <th>&nbsp;@Html.DisplayFor(model => model.Code)</th>
+    <th>@Html.DisplayFor(model => model.EmpName)</th>
+    <th>@Html.TextBoxFor(model => model.TotalOvertime, new { @onchange = "TimeFormat(this)", @class = "NumberCheck col-md-12 right tm" })</th>
+    <th>@Html.TextBoxFor(model => model.TotalLateInHrs, new { @onchange = "TimeFormat(this)", @class = "NumberCheck col-md-12 right tm" })</th>
+    <th>@Html.TextBoxFor(model => model.TotalEarlyOutHrs, new { @onchange = "TimeFormat(this)", @class = "NumberCheck col-md-12 right tm" })</th>
+
+    <th>@Html.TextBoxFor(model => model.Remarks, new { @class = "col-md-12 right tm" })</th>
+    <th>@Html.DisplayFor(model => model.Designation)</th>
+    <th>@Html.DisplayFor(model => model.Department)</th>
+    <th>@Html.DisplayFor(model => model.Section)</th>
+    <th>@Html.DisplayFor(model => model.Project)</th>
+
+    @Html.HiddenFor(model => model.Code)
+    @Html.HiddenFor(model => model.EmpName)
+    @Html.HiddenFor(model => model.EmployeeId)
+    @Html.HiddenFor(model => model.DesignationId)
+    @Html.HiddenFor(model => model.DepartmentId)
+    @Html.HiddenFor(model => model.SectionId)
+    @Html.HiddenFor(model => model.ProjectId)
+    @Html.HiddenFor(model => model.SearchFid)
+
+
+    @Html.HiddenFor(model => model.TotalOvertimePrevious)
+    @Html.HiddenFor(model => model.TotalLateInHrsPrevious)
+    @Html.HiddenFor(model => model.TotalEarlyOutHrsPrevious)
+    @Html.HiddenFor(model => model.IsManual)
+
+
+</tr>
+
+
+<script>
+    $(".NumberCheck").each(function () {
+        this.value = parseFloat(this.value).toFixed(2);
+    });
+</script>

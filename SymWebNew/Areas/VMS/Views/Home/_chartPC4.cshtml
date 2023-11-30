@@ -1,0 +1,148 @@
+﻿@model SymViewModel.Sage.GLReportVM
+@using UIHelper.MVC
+@using SymOrdinary
+@using System.Threading;
+@{ 
+    
+    ShampanIdentity identity = null;
+    try
+    {
+        identity = (ShampanIdentity)Thread.CurrentPrincipal.Identity;
+    }
+    catch (Exception)
+    {
+        Response.Redirect("/Sage/Home/Login");
+        return;
+    }
+}
+
+
+<div class="th_thinbox">
+    <p>(04) Petty Cash Multiple Branch - Total Amount</p>
+</div>
+<div class="PettyCashDetailsBar">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="editor-label">
+                @Html.LabelFor(model => model.DateFrom)
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="editor-field">
+                @Html.TextBox("DateFromPC4", null, new { @placeholder = "Date From", @class = "dtFromPC4 customDatePicker form-control" })
+                @Html.ValidationMessageFor(model => model.DateFrom)
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="editor-label">
+                @Html.LabelFor(model => model.DateTo)
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="editor-field">
+                @Html.TextBox("DateToPC4", null, new { @placeholder = "Date To", @class = "dtToPC4 customDatePicker form-control" })
+                @Html.ValidationMessageFor(model => model.DateTo)
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        &nbsp;
+        <button title="Click to Show Petty Cash Multiple Branch - Total Amount" id="" class=" searchBtnPC4 sym-btn-search">&nbsp;Search</button>
+    </div>
+    <hr />
+
+    <div class="row">
+        <div class="container  col-md-12 ">
+            <h2 class="card-header ">Petty Cash Details</h2>
+            <div class="card-block" style="height:100%; width:100%">
+                <canvas id="BarChartPC4" height="3" width="1"></canvas>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    $(".searchBtnPC4").click(function () {
+        SearchingPC4();
+    });
+
+    function SearchingPC4() {
+        var DateFrom = $(".dtFromPC4").val();
+        var DateTo = $(".dtToPC4").val();
+
+        Obj = new Object();
+
+        Obj.DateFrom = DateFrom;
+        Obj.DateTo = DateTo;
+        var Param = $.param(Obj);
+
+        loadsbarPC4(Param);
+        
+
+        //var canvas = document.querySelector('canvas#BarChartPC4'), ctx = canvas.getContext('2d');
+        //fitToContainer(canvas);
+        ////ctx.fillStyle = 'yellow';
+        ////for (var i = 0; i < 5; ++i) ctx.fillRect(i * 18 + 2, 2, 16, 16);
+        
+
+
+    }
+
+
+</script>
+
+<script>
+    function loadsbarPC4(Param) {
+
+        backgroundColor = bkColor();
+
+        //url = url + "?" + Param;
+        $('#BarChartPC4').html("");
+        var labels = [];
+        var datas = [];
+        $.ajax({
+            url: "/Sage/Home/PettyCashChart4" + "?" + Param,
+            type: 'GET',
+            beforeSend: function () { $(".loading").show(); },
+            complete: function () { $(".loading").fadeOut(200).hide("slow") },
+            success: function (data) {
+                $.each(data, function (index, value) {
+                    labels.push(value.BranchName + '=>' + value.TransactionAmount);
+                    datas.push(value.TransactionAmount);
+                });
+
+                var ctx = document.getElementById("BarChartPC4").getContext('2d');
+                //ctx.canvas.width = 1;// window.innerWidth;
+                //ctx.canvas.height = 3; //window.innerHeight;
+
+                var myChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Branch',
+                            data: datas,
+                            backgroundColor: backgroundColor
+                        }]
+                    }
+                });
+            },
+        });
+
+    }
+    //function fitToContainer(canvas) {
+    //    canvas.style.width = '100%';
+    //    canvas.style.height = '200%';
+    //    canvas.width = canvas.offsetWidth;
+    //    canvas.height = canvas.offsetHeight;
+    //}
+</script>
+
+<script>
+
+
+
+</script>

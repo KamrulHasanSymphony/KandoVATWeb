@@ -1,0 +1,63 @@
+﻿@model VATViewModel.DTOs.EmailSendViewModel
+@using UIHelper.MVC
+@using SymOrdinary
+@using System.Threading;
+@{
+    ViewBag.Title = "Index";
+}
+<div class="headrow">
+    <button type="button" title="Add New mail" data-url="/VMS/Email/Index" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+</div>
+
+<div class="thinbox">
+    <div class="th_thinbox">
+        <p>Email List </p>
+    </div>
+    <table id="myDataTable" class="display">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Mail From</th>
+                <th>Mail To</th>
+                <th>Subject</th>
+                <th>Is Sent</th>
+                <th>Schedule Date</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <br />
+</div>
+
+<div class="headrow">
+    <button type="button" title="Add New mail" data-url="/VMS/Email/Index" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+</div>
+
+<script language="javascript" type="text/javascript">
+
+    $(document).ready(function () {
+        SelectAllForDelete();
+        $.datepicker.regional[""].dateFormat = 'dd/M/y';
+        $.datepicker.setDefaults($.datepicker.regional['']);
+        var oTable = $('#myDataTable').dataTable({
+            "bServerSide": true,
+            "sAjaxSource": "/VMS/Email/_index",
+            "bProcessing": true,
+            "aLengthMenu": tablelength(),
+            "bJqueryUI": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+                              { "sName": "Id", "bVisible":false}
+                            , { "sName": "FromAddress", "sWidth": "10%" }
+                            , { "sName": "ToAddress", "sWidth": "10%" }
+                            , { "sName": "Subject", "sWidth": "15%" }
+                            , { "sName": "IsSend", "sWidth": "10%" }
+                            , { "sName": "ScheduleDate", "sWidth": "12%" }
+            ]
+        });
+
+    });
+</script>
+
+

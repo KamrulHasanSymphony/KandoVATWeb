@@ -1,0 +1,537 @@
+﻿@using UIHelper.MVC
+@{
+    Layout = "~/Areas/VMS/Views/Shared/_ModalLayout.cshtml";
+}
+<style>
+    .trkMT10 {
+        margin-top: 10px;
+    }
+
+    .sortableHeader {
+        cursor: pointer;
+    }
+
+    table.trkFixTable tr.trSelectPopUpProduct td {
+        overflow-x: hidden;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-2">
+        <div class="editor-label">
+            <label>Search Value</label>
+        </div>
+        <div class="editor-field">
+            @Html.TextBox("SearchValue", "", new { @class = " form-control" })
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="editor-label">
+            <label for="DeliveryDate">From Date</label>
+        </div>
+        <div class="editor-field">
+            @Html.TextBox("FromDate", "", new { @placeholder = "From Date", @class = "  customDatePicker  form-control" })
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="editor-label">
+            <label for="DeliveryDate">To Date</label>
+        </div>
+        <div class="editor-field">
+            @Html.TextBox("ToDate", "", new { @placeholder = "To Date", @class = "  customDatePicker  form-control" })
+        </div>
+    </div>
+
+    <div class="col-md-1">
+        <label>&nbsp;</label>
+        <button type="button" title="Click to Search" id="searchBtn" class="sym-btn-search btnCreditSearch" style="width:100%">&nbsp;Search</button>
+    </div>
+    <div class="col-md-1">
+        <label>&nbsp;</label>
+        <button type="button" title="Click to Save" id="btnSaveCredit" class="sym-btn-save btnSaveCredit" style="width:100%">&nbsp;Save</button>
+    </div>
+
+    <div class="cSingleData">
+        <div class="col-md-1 center">
+            <div class="editor-label">
+                <label>Preview Only</label>
+            </div>
+            <div class="editor-field" style="margin-left:50%">
+                @Html.CheckBox("PreviewOnly", new { @class = " form-control", @checked="checked" })
+            </div>
+        </div>
+        <div class="col-md-1">
+            <label>&nbsp;</label>
+            <button type="button" class=" sym-btn-report btnReportPreview" style="width:100%">&nbsp;VAT 6.7</button>
+        </div>
+        <div class="col-md-1">
+            <label>&nbsp;</label>
+            <button type="button" title="Post Data" class="sym-btn-post btnPost" style="width:100%">&nbsp;Post</button>
+        </div>
+        <div class="col-md-1">
+            <label>&nbsp;</label>
+            <button type="button" title="Click to Clear" id="clearBtn" class="sym-btn-clear btnClear" style="width:100%">&nbsp;Clear</button>
+        </div>
+        @*<div class="col-md-1">
+                <label>&nbsp;</label>
+                <button type="button" title="Go to Page" onclick="GoToPage()" class="sym-btn-detail">&nbsp;Go</button>
+            </div>*@
+    </div>
+</div>
+
+<div class="row">
+    <div class="fixedParent">
+        <table class="trkFixTable" id="productPopUpTable">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" class="chkAll" />Select              </th>
+                    <th>Action                  </th>
+                    <th>Post                    </th>
+                    <th>Invoice No              </th>
+                    <th>ID                      </th>
+                    <th>Reference No            </th>
+                    <th>Branch Code             </th>
+                    <th>Customer Name           </th>
+                    <th>Customer Code           </th>
+                    <th>Invoice Date Time       </th>
+                    <th>Delivery Address        </th>
+                    <th>Vehicle No              </th>
+                    <th>Vehicle Type            </th>
+                    <th>Total Value             </th>
+                    <th>Total Quantity          </th>
+                    <th>Total VAT Amount        </th>
+                    <th>Processed               </th>
+                </tr>
+            </thead>
+            <tbody id="popUpTbody"></tbody>
+        </table>
+    </div>
+</div>
+
+<form id="ReportForm" method="post" target="_blank"></form>
+<div id="myHigherModal" class="HigherModal"></div>
+
+
+@*--------------------------------------------------Search, Save--------------------------------------------------*@
+
+<script>
+    $(function () {
+
+        $("#Integration #searchBtn").on("click", function () {
+
+            IntegrationSearch();
+        });
+
+        $("#Integration #btnSaveCredit").on("click", function () {
+            var questionMSG = "Are you sure to Save Data!";
+            Ask(questionMSG, function () {
+
+                IntegrationSave();
+
+            });
+
+        });
+
+        $("#Integration #clearBtn").on("click", function () {
+            IntegrationClear();
+        });
+
+
+    });
+
+
+    function IntegrationSearch() {
+
+        var model = {
+            RefNo: $("#Integration #SearchValue").val(),
+            FromDate: $("#Integration #FromDate").val(),
+            ToDate: $("#Integration #ToDate").val()
+        }
+
+        if (model.refNo != null && model.refNo != "") {
+
+            model.FromDate = null;
+            model.ToDate = null;
+        }
+
+        $.ajax({
+            data: model
+            , url: "/VMS/Integration/GetCreditData_BCL"
+            , cache: false
+            , beforeSend: function () { $(".loading").show(); }
+            , success: function (html) {
+                $("#Integration #popUpTbody").html("");
+                $("#Integration #popUpTbody").html(html);
+                callingFixedPopUpTable();
+
+                var SelectedItem = $("#Integration  .trSelectPopUpProduct");
+
+                if (SelectedItem.length <= 0) {
+                    ShowResult("Fail", "This Transaction Already Integrated or Not Exist in Source!");
+                    return;
+                }
+
+            }
+            , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+        });
+    }
+
+    function IntegrationSave() {
+
+        var IDs = [];
+        var $Items = $("#Integration  .dSelected:input:checkbox:checked");
+
+        if ($Items == null || $Items.length == 0) {
+            ShowResult("Fail", "You are requested to Select before Save!");
+            return;
+        }
+
+        $Items.each(function () {
+
+            var ID = $(this).closest('tr').find('.dID').text();
+
+            var InvoiceNo = $(this).closest('tr').find('.dInvoiceNo').text();
+            if (InvoiceNo != null && InvoiceNo != "") {
+                return;
+            }
+
+            IDs.push(ID);
+        });
+
+
+        if (IDs == null || IDs.length == 0) {
+            ShowResult("Fail", "No Data to Integrate!");
+            return;
+        }
+
+
+        var model = {
+            RefNo: $("#Integration #SearchValue").val()
+            , FromDate: $("#Integration #FromDate").val()
+            , ToDate: $("#Integration #ToDate").val()
+            , TransactionType: $("#Integration #TransactionType").val()
+            , IDs: IDs
+        }
+
+        if (model.refNo != null && model.refNo != "") {
+
+            model.FromDate = null;
+            model.ToDate = null;
+        }
+
+        $.ajax({
+            data: model
+            , url: "/VMS/Integration/SaveCredit_BCL"
+            , cache: false
+            , traditional: true
+            , type: "POST"
+            , beforeSend: function () { $(".loading").show(); }
+            , success: function (rVM) {
+
+                ShowResult(rVM.Status, rVM.Message);
+
+                if (rVM.Status == "Success") {
+                    IntegrationSearch();
+                }
+
+            },
+            error: function () {
+                ShowResult("Fail", "Something gone wrong");
+            }
+            , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+        });
+
+    }
+
+    function IntegrationClear() {
+
+        $("#Integration .searchText :input").val("");
+    }
+</script>
+
+@*--------------------------------------------------Preview, Post--------------------------------------------------*@
+
+<script>
+    function GoToPage() {
+        var SalesInvoiceNo = $("#Integration #SalesInvoiceNo").val();
+        if (SalesInvoiceNo == null || SalesInvoiceNo == "") {
+            ShowResult("Fail", "No Data Available!");
+            $("#Integration #SalesInvoiceNo").focus();
+            return;
+        }
+
+        var url = "/VMS/SaleInvoice/GetSaleMaster" + "?" + "SaleNo=" + SalesInvoiceNo;
+        $.getJSON(url, function (vm) {
+
+            var Id = vm.Id;
+
+            window.location = "/VMS/SaleInvoice/Edit/" + Id;
+
+        });
+
+
+    }
+
+    $(function () {
+
+
+        $("#Integration .btnReportPreview").on("click", function () {
+
+            IntegrationReportPreview();
+
+        });
+
+
+        $("#Integration .btnPost").on("click", function () {
+
+            var questionMSG = "Are you sure to Post Data!";
+
+            Ask(questionMSG, function () {
+
+                IntegrationPostData();
+
+            });
+
+        });
+
+        function IntegrationReportPreview() {
+
+            //////var SalesInvoiceNo = $("#Integration #SalesInvoiceNo").val();
+
+            //////if (SalesInvoiceNo == null || SalesInvoiceNo == "") {
+            //////    ShowResult("Fail", "No Data Available!");
+            //////    $("#Integration #SalesInvoiceNo").focus();
+            //////    return;
+            //////}
+
+            //////var url = "/Vms/NBRReport/Report_VAT6_7" + "?" + "SalesInvoiceNo=" + SalesInvoiceNo;
+            //////window.open(url, "_blank");
+
+
+
+
+
+            var $Items = $("#Integration  .dSelected:input:checkbox:checked");
+
+            if ($Items == null || $Items.length == 0) {
+                ShowResult("Fail", "You are requested to Select before Preview!");
+                return;
+            }
+
+            $('#Integration #ReportForm').html("");
+
+            var IDs = [];
+            $Items.each(function () {
+
+
+
+                var ID = $(this).closest('tr').find('.dInvoiceNo').text();
+
+                var InvoiceNo = $(this).closest('tr').find('.dInvoiceNo').text();
+                if (InvoiceNo == null || InvoiceNo == "") {
+                    return;
+                }
+
+                IDs.push(ID);
+
+                $('<input type="hidden" name="IDs"/>').val(ID).appendTo('#Integration #ReportForm');
+
+
+            });
+
+
+            if (IDs == null || IDs.length == 0) {
+                ShowResult("Fail", "No Invoice to Preview!");
+                return;
+            }
+
+
+            var PreviewOnly = $("#PreviewOnly").is(":checked") ? true : false;
+
+            var url = "/VMS/Integration/Report_VAT6_7_Preview";
+            url = url + "?" + "PreviewOnly=" + PreviewOnly;
+
+
+            $('#Integration #ReportForm').attr('action', url);
+
+            $("#Integration #ReportForm").submit();
+
+
+            ////var url = "/Vms/NBRReport/Report_VAT6_7" + "?" + "SalesInvoiceNo=" + SalesInvoiceNo;
+            ////window.open(url, "_blank");
+
+        }
+
+        function IntegrationPostData() {
+
+            var IDs = [];
+            var $Items = $("#Integration .dSelected:input:checkbox:checked");
+
+            if ($Items == null || $Items.length == 0) {
+                ShowResult("Fail", "You are requested to Select before Post!");
+                return;
+            }
+
+            $Items.each(function () {
+
+                var ID = $(this).closest('tr').find('.dInvoiceNo').text();
+                var Post = $(this).closest('tr').find('.dPost').text();
+
+                if (ID == null || ID == "" || Post == "Y") {
+                    return;
+                }
+                IDs.push(ID);
+            });
+
+
+            if (IDs == null || IDs.length == 0) {
+                ShowResult("Fail", "No Invoice is ready to Post!");
+                return;
+            }
+
+            var model = {
+                ////DataSourceType: $("#DataSourceType").val()
+                ////,
+                IDs: IDs
+            }
+
+            var url = '/VMS/Integration/SalePost';
+
+
+            $.ajax({
+                url: url
+                , data: model
+                , type: 'Post'
+                , traditional: true
+                , beforeSend: function () { $(".loading").show(); }
+                , success: function (rVM) {
+                    ShowResult(rVM.Status, rVM.Message);
+
+                    if (rVM.Status == "Success") {
+                        IntegrationSearch();
+                    }
+                }
+                , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+
+            });
+
+
+        }
+
+
+
+    });
+
+</script>
+
+
+@*--------------------------------------------------Detail--------------------------------------------------*@
+<script>
+    ////$(function () {
+
+    function IntegrationShowDetail(sender) {
+
+        var url = "/VMS/Integration/GetCreditData_Detail_BCL";
+
+        var IDs = [];
+        var ID = $(sender).closest('tr').find('.dID').text();
+        IDs.push(ID);
+
+        var model = {
+            Processed: 'ALL'
+            ////, DataSourceType: $("#DataSourceType").val()
+            , IDs: IDs
+        }
+
+        var modal = document.getElementById('myHigherModal');
+        $.ajax({
+            url: url,
+            data: model,
+            traditional: true,
+            cache: false,
+            beforeSend: function () { $(".loading").show(); },
+            success: function (html) {
+                modal.style.display = "block";
+                $("#myHigherModal").html(html);
+            }
+            , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+        });
+
+    }
+    ////});
+
+</script>
+
+
+@*--------------------------------------------------MISC--------------------------------------------------*@
+
+<script>
+    $("#Integration .chkAll").click(function () {
+        $('#Integration  .dSelected:input:checkbox').not(this).prop('checked', this.checked);
+    });
+
+</script>
+
+<script language="javascript" type="text/javascript">
+
+    function callingFixedPopUpTable() {
+        var args = [100, 100, 100, 100, 150, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100];
+        trkFixedPopUpTable("productPopUpTable", 3, args);
+    }
+
+
+    $(function () {
+        callingFixedPopUpTable();
+    })
+
+
+    function closeModal() {
+        var modal = $('#Integration #myHigherModal');
+
+        modal.html("");
+        modal.css("display", "none");
+    }
+</script>
+
+
+
+@*--------------------------------------------------Unused--------------------------------------------------*@
+
+<script>
+
+    ////$(function () {
+    ////    $('#productPopUpTable').unbind().on('dblclick', '.trSelectPopUpProduct', function () {
+    ////        var refNo = $(this).children('td.refNo').text();
+
+    ////        selectPopUpCredit(refNo, this);
+    ////    });
+
+
+    ////    function selectPopUpCredit(refNo, sender) {
+
+    ////        window.location = "/VMS/SaleInvoice/SelectSale?refNo=" + refNo;
+    ////    }
+
+
+    ////    $(document).on('click', '.trSelectPopUpProduct', function () {
+    ////        var activeEl = $('tr.active');
+    ////        activeEl.removeClass("active");
+    ////        $(this).addClass(" active");
+    ////    });
+
+    ////});
+
+
+</script>
+
+<script>
+
+    ////$(function () {
+
+    ////    ////$("#Clear").on('click', function () {
+    ////    ////    $(".HigherModal-body .Dropdown").select2("val", "");
+    ////    ////    $(".HigherModal-body .form-control").val("");
+    ////    ////});
+    ////});
+</script>
+

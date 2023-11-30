@@ -1,0 +1,777 @@
+﻿@{
+    ViewBag.Title = "CharInfo";
+    Layout = "~/Areas/VMS/Views/Shared/_HomeLayout.cshtml";
+}
+
+<div class="thinbox formDesign" >
+
+    <div class="th_thinbox">
+        Search Parameters
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+
+            <div class="editor-label">
+                <label>First Month </label>
+            </div>
+            <div class="editor-field">
+                @Html.TextBox("FMonthDate", DateTime.Now.ToString("dd-MMM-yyyy"), new { @placeholder = "Date From", @class = "customDatePicker defaultDate form-control" })
+            </div>
+
+
+        </div>
+        
+        <div class="col-md-2">
+
+            <div class="editor-label">
+                <label>Second Month</label>
+            </div>
+            <div class="editor-field">
+                @Html.TextBox("SMonthDate", DateTime.Now.ToString("dd-MMM-yyyy"), new { @placeholder = "Date From", @class = "customDatePicker defaultDate form-control" })
+            </div>
+
+
+        </div>
+
+    </div>
+</div>
+<div class="headrow">
+    <button type="button" title="Load Data" id="load" class="sym-btn-refresh">&nbsp;Load</button>
+</div>
+
+
+<div class="row">
+    
+    <div class="col-md-6">
+        <div style="height: 20em; width: 50em;">
+            <canvas id="Sale"></canvas>
+        </div>
+    </div>
+    
+    
+    <div class="col-md-6">
+        <div style="height: 20em; width: 50em;">
+            <canvas id="SaleVAT"></canvas>
+
+        </div>
+    </div>
+
+</div>
+
+
+
+<div class="row card">
+
+    <div class="col-md-6 container">
+        <div style="height: 20em; width: 50em; margin-top: 5em" >
+            <canvas id="Part3"></canvas>
+        </div>
+    </div>
+
+    <div class="col-md-6 container">
+        <div style="height: 20em; width: 50em; margin-top: 5em">
+            <canvas id="Part32"></canvas>
+        </div>
+    </div>
+
+</div>
+
+<div class="row">
+
+
+    <div class="col-md-6">
+        <div style="height: 20em; width: 50em; margin-top: 5em">
+            <canvas id="Part4"></canvas>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div style="height: 20em; width: 50em; margin-top: 5em">
+            <canvas id="Part42"></canvas>
+        </div>
+    </div>
+
+
+</div>
+
+<div class="row">
+
+    <div class="col-md-6">
+        <div style="height: 20em; width: 50em; margin-top: 5em">
+            <canvas id="Part5"></canvas>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div style="height: 20em; width: 50em; margin-top: 5em">
+            <canvas id="Part6"></canvas>
+        </div>
+    </div>
+
+</div>
+
+
+
+<div class="row">
+
+    <div class="col-md-6">
+        <div style="height: 20em; width: 50em; margin-top: 5em">
+            <canvas id="Part52"></canvas>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div style="height: 20em; width: 50em; margin-top: 5em">
+            <canvas id="Part62"></canvas>
+        </div>
+    </div>
+
+</div>
+
+<div style="margin: 5em">
+
+</div>
+
+@section scripts2
+{
+    <script>
+
+        //var speedCanvas = document.getElementById("Sale");
+
+        Chart.defaults.global.defaultFontFamily = "Lato";
+        Chart.defaults.global.defaultFontSize = 18;
+
+        //var dataFirst = {
+        //    label: "Car A - Speed (mph)",
+        //    data: [0, 59, 75, 20, 20, 55, 40],
+        //    lineTension: 0,
+        //    fill: false,
+        //    borderColor: 'red'
+        //};
+
+        //var dataSecond = {
+        //    label: "Car B - Speed (mph)",
+        //    data: [20, 15, 60, 60, 65, 30, 70],
+        //    lineTension: 0,
+        //    fill: false,
+        //    borderColor: 'blue'
+        //};
+
+        //var speedData = {
+        //    labels: ["0s", "10s", "20s", "30s", "40s", "50s", "60s"],
+        //    datasets: [dataFirst, dataSecond]
+        //};
+
+        //var chartOptions = {
+        //    legend: {
+        //        display: true,
+        //        position: 'top',
+        //        labels: {
+        //            boxWidth: 80,
+        //            fontColor: 'black'
+        //        }
+        //    }
+        //};
+
+        //var lineChart = new Chart(speedCanvas, {
+        //    type: 'line',
+        //    data: speedData,
+        //    options: chartOptions
+        //});
+
+
+        //lineChart.destroy();
+
+        //lineChart = new Chart(speedCanvas, {
+        //    type: 'line',
+        //    data: speedData,
+        //    options: chartOptions
+        //});
+
+
+        var lineChart = {};
+        var lineChart2 = {};
+        var myChart = {}
+        var myChart2 = {}
+        var myChart3 = {}
+        var myChart4 = {}
+        var myChart5 = {}
+        var myChart6 = {}
+        var myChart77 = {}
+        var myChart8 = {}
+
+        $("#load").on("click",
+            function() {
+
+                var firstMonth = $("#FMonthDate").val();
+                var secondMonth = $("#SMonthDate").val();
+
+                $.ajax({
+                    url: "/VMS/Home/GetSaleData?firstMonth=" + firstMonth + "&secondMonth=" + secondMonth,
+                        type: 'GET',
+                        beforeSend: function() { $(".loading").show(); },
+                        complete: function() { $(".loading").fadeOut(200).hide("slow") },
+                    })
+                    .done(function (data) {
+
+
+                        try {
+                            lineChart.destroy();
+                        } catch (e) {
+
+                        } 
+
+
+                        var speedCanvas = document.getElementById("Sale");
+                        var chartOptions = {
+                            legend: {
+                                display: true,
+                                position: 'top',
+                                labels: {
+                                    boxWidth: 80,
+                                    fontColor: 'black'
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: 'Sale Value'
+                            }
+                        };
+
+                         lineChart = new Chart(speedCanvas, {
+                            type: 'line',
+                            data: data,
+                            options: chartOptions
+                        });
+
+                    })
+                    .fail(function() {
+                    });
+
+
+                $.ajax({
+                        url: "/VMS/Home/GetSaleVAT?firstMonth=" + firstMonth + "&secondMonth=" + secondMonth,
+                        type: 'GET',
+                        beforeSend: function () { $(".loading").show(); },
+                        complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                    })
+                    .done(function (data) {
+
+                        try {
+                            lineChart2.destroy();
+                        } catch (e) {
+
+                        }
+
+                        var speedCanvas = document.getElementById("SaleVAT");
+                        var chartOptions = {
+                            legend: {
+                                display: true,
+                                position: 'top',
+                                labels: {
+                                    boxWidth: 80,
+                                    fontColor: 'black'
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: 'Sale VAT'
+                            }
+                        };
+
+                        lineChart2 = new Chart(speedCanvas, {
+                            type: 'line',
+                            data: data,
+                            options: chartOptions
+                        });
+
+                    })
+                    .fail(function () {
+
+                    });
+//////////////////////////////////////////////////////////////////////////////////
+               
+                var backgroundColor = [
+                    "#2ecc71",
+                    "#3498db",
+                    "#95a5a6",
+                    "#9b59b6",
+                    "#f1c40f",
+                    "#e74c3c",
+                    "#421e2e",
+                    "#302525",
+                    "#704704",
+                    "#0e5704",
+                    "#03574e",
+                    "#480366",
+                    "#34495e"
+                ];
+
+                var PeriodName = moment(firstMonth).format('MMMM-YY');
+                var Section = "LineA";
+                var PartNo = "part3";
+                var previousmonth = "0";
+
+                var url = "/VMS/Chart/VAT9_1ChartPie";
+                url = url + "?" + "BranchId=" + "0" + "&PeriodName=" + PeriodName + "&Section=" + Section + "&PartNo=" + PartNo + "&previousmonth=" + previousmonth;
+
+
+                $.ajax({
+                    url: url,
+                        type: 'GET',
+                        beforeSend: function () { $(".loading").show(); },
+                        complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                    })
+                    .done(function (data) {
+
+                        try {
+                            myChart.destroy();
+                        } catch (e) {
+
+                        }
+                        var labels = [];
+                        var datas = [];
+
+                        var chartOptions = {
+                            title: {
+                                display: true,
+                                text: '9.1 Part 3 ' + moment(firstMonth).format('MMMM-YY')
+                            }
+                        };
+
+                        $.each(data[0], function (index, value) {
+                            labels.push(value.Description);//+ '-' + value.Value
+                            datas.push(value.Value);
+                        });
+
+                        var ctx = document.getElementById("Part3").getContext('2d');
+                        myChart = new Chart(ctx, {
+                            type: 'pie',
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    backgroundColor: backgroundColor,
+                                    data: datas
+                                }],
+                            },
+                            options: chartOptions
+                        });
+
+                    })
+                    .fail(function () {
+
+                    });
+
+//////////////////////////////////////////////////////////////////////////////////////
+                PeriodName = moment(firstMonth).format('MMMM-YY');
+                 Section = "LineA";
+                 PartNo = "part4";
+                 previousmonth = "0";
+
+                var url = "/VMS/Chart/VAT9_1ChartPie";
+                url = url + "?" + "BranchId=" + "0" + "&PeriodName=" + PeriodName + "&Section=" + Section + "&PartNo=" + PartNo + "&previousmonth=" + previousmonth;
+
+
+                $.ajax({
+                        url: url,
+                        type: 'GET',
+                        beforeSend: function () { $(".loading").show(); },
+                        complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                    })
+                    .done(function (data) {
+
+                        try {
+                            myChart1.destroy();
+                        } catch (e) {
+
+                        }
+                        var labels = [];
+                        var datas = [];
+
+                        var chartOptions = {
+                            title: {
+                                display: true,
+                                text: '9.1 Part 4 ' + moment(firstMonth).format('MMMM-YY')
+                            }
+                        };
+
+                        $.each(data[0], function (index, value) {
+                            labels.push(value.Description);//+ '-' + value.Value
+                            datas.push(value.Value);
+                        });
+
+                        var ctx = document.getElementById("Part4").getContext('2d');
+                        myChart1 = new Chart(ctx, {
+                            type: 'pie',
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    backgroundColor: backgroundColor,
+                                    data: datas
+                                }],
+                            },
+                            options: chartOptions
+                        });
+
+                    })
+                    .fail(function () {
+
+                    });
+
+                //////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                PeriodName = moment(secondMonth).format('MMMM-YY');
+                 Section = "LineA";
+                 PartNo = "part4";
+                 previousmonth = "0";
+
+                var url = "/VMS/Chart/VAT9_1ChartPie";
+                url = url + "?" + "BranchId=" + "0" + "&PeriodName=" + PeriodName + "&Section=" + Section + "&PartNo=" + PartNo + "&previousmonth=" + previousmonth;
+
+
+                $.ajax({
+                        url: url,
+                        type: 'GET',
+                        beforeSend: function () { $(".loading").show(); },
+                        complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                    })
+                    .done(function (data) {
+
+                        try {
+                            myChart4.destroy();
+                        } catch (e) {
+
+                        }
+                        var labels = [];
+                        var datas = [];
+
+                        var chartOptions = {
+                            title: {
+                                display: true,
+                                text: '9.1 Part 4 ' + PeriodName
+                            }
+                        };
+
+                        $.each(data[0], function (index, value) {
+                            labels.push(value.Description);//+ '-' + value.Value
+                            datas.push(value.Value);
+                        });
+
+                        var ctx = document.getElementById("Part42").getContext('2d');
+                        myChart4 = new Chart(ctx, {
+                            type: 'pie',
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    backgroundColor: backgroundColor,
+                                    data: datas
+                                }],
+                            },
+                            options: chartOptions
+                        });
+
+                    })
+                    .fail(function () {
+
+                    });
+               
+
+                //////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                PeriodName = moment(secondMonth).format('MMMM-YY');
+                Section = "LineA";
+                PartNo = "part3";
+                previousmonth = "0";
+
+                var url = "/VMS/Chart/VAT9_1ChartPie";
+                url = url + "?" + "BranchId=" + "0" + "&PeriodName=" + PeriodName + "&Section=" + Section + "&PartNo=" + PartNo + "&previousmonth=" + previousmonth;
+
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    beforeSend: function () { $(".loading").show(); },
+                    complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                })
+                    .done(function (data) {
+
+                        try {
+                            myChart3.destroy();
+                        } catch (e) {
+
+                        }
+                        var labels = [];
+                        var datas = [];
+
+                        var chartOptions = {
+                            title: {
+                                display: true,
+                                text: '9.1 Part 3 ' + PeriodName
+                            }
+                        };
+
+                        $.each(data[0], function (index, value) {
+                            labels.push(value.Description);//+ '-' + value.Value
+                            datas.push(value.Value);
+                        });
+
+                        var ctx = document.getElementById("Part32").getContext('2d');
+                        myChart3 = new Chart(ctx, {
+                            type: 'pie',
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    backgroundColor: backgroundColor,
+                                    data: datas
+                                }],
+                            },
+                            options: chartOptions
+                        });
+
+                    })
+                    .fail(function () {
+
+                    });
+
+
+
+                //////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                PeriodName = moment(firstMonth).format('MMMM-YY');
+                Section = "LineA";
+                PartNo = "part5";
+                previousmonth = "0";
+
+                var url = "/VMS/Chart/VAT9_1ChartPie";
+                url = url + "?" + "BranchId=" + "0" + "&PeriodName=" + PeriodName + "&Section=" + Section + "&PartNo=" + PartNo + "&previousmonth=" + previousmonth;
+
+                console.log(url);
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    beforeSend: function () { $(".loading").show(); },
+                    complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                })
+                    .done(function (data) {
+
+                        try {
+                            myChart5.destroy();
+                        } catch (e) {
+
+                        }
+                        var labels = [];
+                        var datas = [];
+
+                        var chartOptions = {
+                            title: {
+                                display: true,
+                                text: '9.1 Part 5 ' + moment(firstMonth).format('MMMM-YY')
+                            }
+                        };
+
+                        $.each(data[0], function (index, value) {
+                            labels.push(value.Description);//+ '-' + value.Value
+                            datas.push(value.Value);
+                        });
+
+                        var ctx = document.getElementById("Part5").getContext('2d');
+                        myChart5 = new Chart(ctx, {
+                            type: 'pie',
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    backgroundColor: backgroundColor,
+                                    data: datas
+                                }],
+                            },
+                            options: chartOptions
+                        });
+
+                    })
+                    .fail(function () {
+
+                    });
+
+
+
+                //////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                PeriodName = moment(firstMonth).format('MMMM-YY');
+                Section = "LineA";
+                PartNo = "part6";
+                previousmonth = "0";
+
+                var url = "/VMS/Chart/VAT9_1ChartPie";
+                url = url + "?" + "BranchId=" + "0" + "&PeriodName=" + PeriodName + "&Section=" + Section + "&PartNo=" + PartNo + "&previousmonth=" + previousmonth;
+
+                console.log(url);
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    beforeSend: function () { $(".loading").show(); },
+                    complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                })
+                    .done(function (data) {
+
+                        try {
+                            myChart6.destroy();
+                        } catch (e) {
+
+                        }
+                        var labels = [];
+                        var datas = [];
+
+                        var chartOptions = {
+                            title: {
+                                display: true,
+                                text: '9.1 Part 6 ' + moment(firstMonth).format('MMMM-YY')
+                            }
+                        };
+
+                        $.each(data[0], function (index, value) {
+                            labels.push(value.Description);//+ '-' + value.Value
+                            datas.push(value.Value);
+                        });
+
+                        var ctx = document.getElementById("Part6").getContext('2d');
+                        myChart6 = new Chart(ctx, {
+                            type: 'pie',
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    backgroundColor: backgroundColor,
+                                    data: datas
+                                }],
+                            },
+                            options: chartOptions
+                        });
+
+                    })
+                    .fail(function () {
+
+                    });
+
+
+                //////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                PeriodName = moment(secondMonth).format('MMMM-YY');
+                Section = "LineA";
+                PartNo = "part5";
+                previousmonth = "0";
+
+                var url = "/VMS/Chart/VAT9_1ChartPie";
+                url = url + "?" + "BranchId=" + "0" + "&PeriodName=" + PeriodName + "&Section=" + Section + "&PartNo=" + PartNo + "&previousmonth=" + previousmonth;
+
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    beforeSend: function () { $(".loading").show(); },
+                    complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                })
+                    .done(function (data) {
+
+                        try {
+                            myChart77.destroy();
+                        } catch (e) {
+
+                        }
+                        var labels = [];
+                        var datas = [];
+
+                        var chartOptions = {
+                            title: {
+                                display: true,
+                                text: '9.1 Part 5 ' + moment(secondMonth).format('MMMM-YY')
+                            }
+                        };
+
+                        $.each(data[0], function (index, value) {
+                            labels.push(value.Description);//+ '-' + value.Value
+                            datas.push(value.Value);
+                        });
+
+                        var ctx = document.getElementById("Part52").getContext('2d');
+                        myChart77 = new Chart(ctx, {
+                            type: 'pie',
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    backgroundColor: backgroundColor,
+                                    data: datas
+                                }],
+                            },
+                            options: chartOptions
+                        });
+
+                    })
+                    .fail(function () {
+
+                    });
+
+
+                //////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                PeriodName = moment(secondMonth).format('MMMM-YY');
+                Section = "LineA";
+                PartNo = "part6";
+                previousmonth = "0";
+
+                var url = "/VMS/Chart/VAT9_1ChartPie";
+                url = url + "?" + "BranchId=" + "0" + "&PeriodName=" + PeriodName + "&Section=" + Section + "&PartNo=" + PartNo + "&previousmonth=" + previousmonth;
+
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    beforeSend: function () { $(".loading").show(); },
+                    complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                })
+                    .done(function (data) {
+
+                        try {
+                            myChart8.destroy();
+                        } catch (e) {
+
+                        }
+                        var labels = [];
+                        var datas = [];
+
+                        var chartOptions = {
+                            title: {
+                                display: true,
+                                text: '9.1 Part 6 ' + moment(secondMonth).format('MMMM-YY')
+                            }
+                        };
+
+                        $.each(data[0], function (index, value) {
+                            labels.push(value.Description);//+ '-' + value.Value
+                            datas.push(value.Value);
+                        });
+
+                        var ctx = document.getElementById("Part62").getContext('2d');
+                        myChart8 = new Chart(ctx, {
+                            type: 'pie',
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    backgroundColor: backgroundColor,
+                                    data: datas
+                                }],
+                            },
+                            options: chartOptions
+                        });
+
+                    })
+                    .fail(function () {
+
+                    });
+
+
+
+            });
+
+    </script>
+}

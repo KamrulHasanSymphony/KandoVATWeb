@@ -1,0 +1,1226 @@
+﻿@model VATViewModel.DTOs.BOMNBRVM
+@using UIHelper.MVC
+@using (Html.BeginForm("CreateEdit", "Vat1", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmVat1" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.BOMId)
+    @Html.HiddenFor(model => model.Post)
+    @Html.HiddenFor(model => model.Operation)
+    @Html.HiddenFor(model=>model.VatAmount)
+    @Html.HiddenFor(model=>model.SDAmount)
+    
+    <style>
+        div.btn-group .btn{
+            padding-top:0px !important;
+            padding-bottom:0px !important;
+        }
+    </style>
+    
+    <input id="ConvFactor" type="hidden"/>
+    <div class="headrow">
+        @if (Model.Operation == "update")
+        {
+            <button type="button" title="Update Data" onclick="SaveData()" class="sym-btn-update">&nbsp;Update</button>
+            <button type="button" title="" onclick="showModal()" class="sym-btn-report">&nbsp;VAT 6.1</button>
+            if (Model.Post == "N")
+            {
+                <button type="button" title="Post Data" onclick="PostData(this)" class="sym-btn-post">&nbsp;Post</button>
+            }
+            <label class="pull-right">VAT 1 > Edit</label>
+        }
+        else if (Model.Operation == "add")
+        {
+            <button type="button" title="Save Data" onclick="SaveData()" class="sym-btn-save">&nbsp;Save</button>
+            <label class="pull-right">VAT 1 > Create</label>
+        }
+        <button type="button" title="Go To Index" data-url="/VMS/Vat1" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New Issue" data-url="/VMS/Vat1/Create" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+    </div>
+    if (Model.Operation == "update") {
+    @*<div class="col-sm-12 col-md-12">
+        <div class="input-group   col-lg-8  col-md-8  col-sm-8 col-xs-12 text-color col-md-offset-2" style="">
+            <a class="input-group-addon btn btn-primary hidden-xs changePage" data-pager-action='first' id="first"><i class="fa fa-angle-double-left"></i>First</a>
+            <a class="input-group-addon btn btn-primary hidden-xs changePage" data-pager-action='previous' id="precode"><i class="fa fa-angle-left"></i>Previous</a>
+            @Html.SimpleDropDown("", "/Config/DropDown/IdNameDropdown?tableName=BOMs&Id=BOMId&Name=EffectDate&AllData=yes&code=FinishItemNo", new { @class = " trNavigateMenu form-control selectDropdown " })
+            <a class="input-group-addon btn btn-primary changePage" data-pager-action='current' id="current"><i class="fa fa-search"></i></a>
+            <a class="input-group-addon btn btn-primary hidden-xs changePage" data-pager-action='next' id="nextcode">Next <i class="fa  fa-angle-right"></i></a>
+            <a class="input-group-addon btn btn-primary hidden-xs changePage" data-pager-action='last' id="last">Last <i class="fa  fa-angle-double-right"></i></a>
+        </div>
+    </div>*@
+    }
+    
+    <div class="col-md-3 trkNPLDiv">
+        <div class="thinbox animated zoomIn faster ">
+            <div class="th_thinbox trkformDesign">
+                <p>Finish Product</p>
+            </div>
+            <div class="row trkformDesign">
+                <div class="form-group">
+                    <label for="trItemGroup" class="control-label">Group</label>
+                    <div class="form-group">
+                        <div class="editor-field">
+                            @Html.SimpleDropDown("trItemGroup", "/Config/DropDown/ProductCategory", new { @class = " trMasterGroupId  form-control  selectDropdown" })
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="trItemGroup" class="control-label">Product</label>
+                    <div class="form-group">
+                        @Html.HiddenFor(model=>model.ItemNo)
+                        <div class="editor-field">
+                            @Html.SimpleDropDown("MasterCode", "//", new { @class = " trMasteritemId  form-control  selectDropdown" })
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="editor-label">
+                        @*<label for="FinishItemName">Product Name</label>*@
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(m => m.FinishItemName, new { @placeholder = "Finish Product Name", @class = " trMasterItemName  form-control", @readonly = "readonly" })
+                    </div>
+                </div>
+                <div class="form-group col-md-6 trkNPLDiv">
+                    <div class="editor-label">
+                        @*<label for="ProductCode">Product Code</label>*@
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBox("ProductCode", null, new { @placeholder = "Product Code", @class = " trMasterProductCode  form-control", @readonly = "readonly" })
+                    </div>
+                </div>
+                <div class="form-group col-md-6 trkNPLDiv trkNPRDiv">
+                    <div class="editor-label">
+                        @*<label for="HsCode">HS Code</label>*@
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBox("HsCode", null, new { @placeholder = "HS Code", @class = " trMasterHsCode  form-control", @readonly = "readonly" })
+                    </div>
+                </div>
+
+                <div class="form-group col-md-8 trkNPLDiv">
+                    <div class="editor-label">
+                        <label for="VATName">VAT Name</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.SimpleDropDownFor(m => m.VATName, "/Config/DropDown/VatTypesList", new { @class = " trMastervatName  form-control " })
+                    </div>
+                </div>
+                <div class="form-group col-md-4 trkNPLDiv trkNPRDiv">
+                    <div class="editor-label">
+                        <label for="Uom">UOM</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBox("Uom", null, new { @placeholder = "UOM", @class = " trMasterUom  form-control", @readonly = "readonly" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="editor-label">
+                        <label for="EffectDate">Effect Date</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.EffectDate, new { @class = " trMasterEffectDate customDatePicker form-control" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 trkNPLDiv">
+        <div class="thinbox animated zoomIn faster ">
+            <div class="th_thinbox trkformDesign">
+                <p>Usable Item</p>
+            </div>
+            <div class="row trkformDesign">
+                <div class="form-group">
+                    <label for="trItemGroup" class="control-label">Group</label>
+                    <div class="form-group">
+                        <div class="editor-field">
+                            @Html.SimpleDropDown("trUsableItemGroup", "/Config/DropDown/ProductCategory", new { @class = " trUsableGroupId  form-control  selectDropdown" })
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="trItemGroup" class="control-label">Product</label>
+                    <div class="form-group">
+                        <div class="editor-field">
+                            @Html.SimpleDropDown("trUsableItem", "//", new { @class = " trUsableItemId  form-control  selectDropdown" })
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="editor-label">
+                        @*<label for="FinishItemName">Product Name</label>*@
+                    </div>
+                    <div class="editor-field">
+                        @Html.Hidden("trUsableItemNo")
+                        @Html.Hidden("trUsableCategoryId")
+                        @Html.TextBox("trUsableItemName", null, new { @placeholder = "Finish Product Name", @class = " trFinishItemName  form-control", @readonly = "readonly" })
+                    </div>
+                </div>
+                <div class="form-group col-md-6 trkNPLDiv">
+                    <div class="editor-label">
+                        @*<label for="ProductCode">Product Code</label>*@
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBox("trUsableItemCode", null, new { @placeholder = "Product Code", @class = " trProductCode  form-control", @readonly = "readonly" })
+                    </div>
+                </div>
+                <div class="form-group col-md-6 trkNPLDiv trkNPRDiv">
+                    <div class="editor-label">
+                        @*<label for="HsCode">HS Code</label>*@
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBox("trUsableHsCode", null, new { @placeholder = "HS Code", @class = " trHsCode  form-control", @readonly = "readonly" })
+                    </div>
+                </div>
+
+
+                <div class="form-group col-md-6 trkNPLDiv ">
+                    <div class="editor-label">
+                        <label for="Uom">UOM</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBox("Uom", null, new { @placeholder = "UOM", @class = " trUom  form-control", @readonly = "readonly" })
+                    </div>
+                </div>
+                <div class="form-group col-md-6 trkNPLDiv trkNPRDiv">
+                    <div class="editor-label">
+                        <label for="VATName">VAT Name</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBox("Uom", null, new { @placeholder = "VAT Name", @class = " trVatName  form-control", @readonly = "readonly" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="editor-label">
+                        <label for="EffectDate">Customer</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.SimpleDropDownFor(m=>m.CustomerID, "/Config/DropDown/Customer", new { @class = " customerId  form-control  selectDropdown" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 trkNPLDiv">
+        <div class="thinbox animated zoomIn faster ">
+            <div class="row trkformDesign">
+                <div class="col-md-6 trkNPLDiv">
+                    <label for="trItemGroup" class="control-label">Cost Price</label>
+                    <div class="form-group">
+                        <div class="editor-field">
+                            @Html.TextBox("trCostPrice","0", new { @class = " trCostPrice priceLen right  form-control" })
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-6 trkNPLDiv trkNPRDiv">
+                    <label for="PackSize" class="control-label">UOM</label>
+                    <div class="form-group">
+                        <div class="editor-field">
+                            <select class="Dropdown form-control DropdownInited trPackSize" id="PackSize"></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group trkNPLDiv col-md-6">
+                    <div class="editor-label">
+                        <label for="FinishItemName">Total Qty</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBox("trTotalQuantity", "0", new { @class = " trTotalQuantity priceLen right form-control" })
+                    </div>
+                </div>
+                <div class="form-group trkNPLDiv trkNPRDiv col-md-6" >
+                    <div class="editor-label">
+                        <label for="trWastage">Wastage</label>
+                    </div>
+                    <div class="editor-field col-md-9" style="padding-left:0px;padding-right:0px;">
+                        @Html.TextBox("trWastage", null, new { @placeholder = "Wastage", @class = " trWastage priceLen right form-control" })
+                    </div>
+                    <div class="col-md-3" style="padding-left:0px;padding-right:0px;">
+                        <input type="hidden" id="wastagePercent" value="True">
+                        <button type="button" class="btn btn-sm trkbtn wastagePercent">%</button>
+                    </div>
+                </div>
+                <div class="form-group trkNPLDiv col-md-6">
+                    <div class="editor-label">
+                        <label for="trUseQty">Use Qty</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBox("trUseQty", null, new { @placeholder = "Use Quantity", @class = " trUseQty priceLen right form-control",@readonly="readonly" })
+                    </div>
+                </div>
+                <div class="form-group trkNPLDiv trkNPRDiv col-md-6">
+                    <div class="editor-label">
+                        <label for="trNetCost">Net Cost</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBox("trNetCost", null, new { @placeholder = "Net Cost", @class = " trNetCost priceLen right form-control", @readonly = "readonly" })
+                    </div>
+                </div>
+                <div class="form-group col-md-6 trkNPLDiv">
+                    <div class="editor-label">
+                        <label>Issue</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.Hidden("trIssue","True")
+                        <input id="input-1" type="checkbox">
+                    </div>
+                </div>
+                <div class="form-group trkNPLDiv trkNPRDiv col-md-6">
+                    <button type="button" class="sym-btn-add-row addItemRow" style="padding-top:6px;padding-bottom:6px;margin-top:10px;"> Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 trkNPLDiv" >
+        <div class="thinbox animated zoomIn faster">
+            <div class="th_thinbox trkformDesign">
+                <p>Overhead & Value addition cost</p>
+            </div>
+            <div class="row trkformDesign">
+                <div class="form-group">
+                    <label for="trOverheadId" class="control-label">Overhead Name</label>
+                    <div class="form-group">
+                        <div class="editor-field">
+                            @Html.SimpleDropDown("trOverheadId", "/Config/DropDown/GetProductByType?type=Overhead", new { @class = " trOverheadId  form-control  selectDropdown" })
+                        </div>
+                    </div>
+                </div>
+                <div class="orm-group col-md-6 trkNPLDiv">
+                    <label for="trOverheadCost" class="control-label">Cost</label>
+                    <div class="form-group">
+                        <div class="editor-field">
+                            @Html.TextBox("trOverheadCost","0", new { @class = " trOverheadCost priceLen right  form-control" })
+                        </div>
+                    </div>
+                </div>
+                <div class="orm-group col-md-6 trkNPLDiv trkNRLDiv">
+                    <label for="trOverheadCode" class="control-label">Code</label>
+                    <div class="form-group">
+                        <div class="editor-field">
+                            @Html.TextBox("trOverheadCode", null, new { @placeholder = "Overhead Code", @class = " trOverheadCode form-control", @readonly = "readonly" })
+                        </div>
+                    </div>
+                </div>
+                <div class="orm-group col-md-6 trkNPLDiv">
+                    <label for="trOverheadRebate" class="control-label">Rebate(%)</label>
+                    <div class="form-group">
+                        <div class="editor-field">
+                            @Html.TextBox("trOverheadRebate", null, new { @placeholder = "Rebate", @class = " trOverheadRebate priceLen right form-control" })
+                        </div>
+                    </div>
+                </div>
+                <div class="orm-group col-md-6 trkNPLDiv trkNRLDiv">
+                    <label for="trOverheadNonRebate" class="control-label">Non-Rebate(%)</label>
+                    <div class="form-group">
+                        <div class="editor-field">
+                            @Html.TextBox("trOverheadNonRebate", null, new { @placeholder = "Non-Rebate", @class = " trOverheadNonRebate priceLen right form-control", @readonly = "readonly" })
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group trkNPLDiv trkNPRDiv col-md-6">
+                    <button class="sym-btn-add-row trAddOverhead" type="button"> Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-9 trkNPLDiv">
+        <div class="thinbox animated zoomIn faster" style="margin-top:-10px;padding:0px">
+            <div class="trkTable">
+                @if (Model.Items != null)
+                {
+                    <table class="table zeroPadding">
+                        <thead>
+                            <tr style="border:none !important">
+                                <th>Action</th>
+                                <th>Name</th>
+                                <th>Code</th>
+                                <th>UOM</th>
+                                <th>UnitCost</th>
+                                <th>UseQty</th>
+                                <th>WastageQty</th>
+                                <th>TotalQty</th>
+                                <th>Rebate %</th>
+                                <th>SubTotal</th>
+                                <th>Convt. Factor</th>
+                                <th>Base UOM</th>
+                                <th>Base Price</th>
+                                <th>Base U Qty</th>
+                                <th>Base W Qty</th>
+                                <th>InputType</th>
+                                <th>PBOMId</th>
+                                <th>Invoice No</th>
+                                <th>Cost Price</th>
+                                <th>IssueOnProduction</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="itemRows">
+                            @foreach (var item in Model.Items)
+                            {
+                                Html.RenderPartial("_items", item);
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 trkNPLDiv" >
+        <div class="thinbox animated zoomIn faster" style="margin-top:-10px;padding:0px">
+            <div class="OverflowX trkML100">
+                @if (Model.Overheads != null)
+                {
+                    <table class="table smallTable">
+                        <thead>
+                            <tr style="border:none !important">
+                                <th>Action</th>
+                                <th>HeadName</th>
+                                <th>HeadAmount</th>
+                                <th>Cost</th>
+                                <th>Percent</th>
+                                <th>OHCode</th>
+                                <th>HeadID</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="itemOverheads">
+                            @foreach (var item in Model.Overheads)
+                            {
+                                Html.RenderPartial("_overheads", item);
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-md-9 trkNPLDiv">
+        <div class="thinbox animated zoomIn faster" style="margin-top:-10px;">
+            <div class="row trkformDesign">
+                <div class="form-group trkNPLDiv col-md-4">
+                    <div class="editor-label">
+                        <label for="Comments">Remarks</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextAreaFor(m => m.Comments, new { @placeholder = "Comments", @class = " trComments form-control" })
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="form-group trkNPLDiv col-md-3">
+                        <div class="editor-label">
+                            <label for="TradingMarkup">Trading MarkUp</label>
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(m => m.TradingMarkup, new { @class = " trTradingMarkUp right form-control",@readonly="readoony" })
+                        </div>
+                        <div class="editor-label">
+                            <label for="SDRate">SD(%)</label>
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(m => m.SDRate, new { @class = " trSD right form-control", @readonly = "readoony" })
+                        </div>
+                        <div class="editor-label">
+                            <label for="VATRate">VAT(%)</label>
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(m => m.VATRate, new {@class = " trVatRate right form-control", @readonly = "readoony" })
+                        </div>
+                    </div>
+                    <div class="form-group trkNPLDiv col-md-9">
+                        <div>
+                            <div class="trkNPLDiv col-md-8">
+                                <div class="editor-label">
+                                    <label>&nbsp;</label>
+                                </div>
+                                <div class="editor-field">
+                                    <label for="TotalA" style="text-align:right;margin:5px 5px 0px 0px;">Total Consumption with Overhead(A)</label>
+                                </div>
+                            </div>
+                            <div class="trkNPLDiv col-md-4">
+                                <div class="editor-label">
+                                    <label>&nbsp;</label>
+                                </div>
+                                <div class="editor-field">
+                                    @Html.TextBox("TotalA", "0", new { @class = " trTotalA right form-control",@readonly="readonly" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="trkNPLDiv col-md-6">
+                                <div class="editor-label">
+                                    <label for="SalePrice">Sale Price</label>
+                                </div>
+                                <div class="editor-field">
+                                    @Html.TextBox("SalePrice","0", new { @class = " trSalePrice right form-control" })
+                                </div>
+                            </div>
+                            <div class="trkNPLDiv col-md-6">
+                                <div class="editor-label">
+                                    <label for="WholeSalePrice" style="color:red;">A+B+C</label>
+                                </div>
+                                <div class="editor-field">
+                                    @Html.TextBox("ABC", "0", new { @class = " trABC right form-control", @readonly = "readonly" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="trkNPLDiv col-md-6">
+                                <div class="editor-label">
+                                    <label for="PPacketPrice">Packet Price</label>
+                                </div>
+                                <div class="editor-field">
+                                    @Html.TextBoxFor(m => m.PPacketPrice, new { @class = " trPacketPrice right form-control" })
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 trkNPLDiv">
+        <div class="thinbox animated zoomIn faster" style="margin-top:-10px;">
+            <div class="editor-label">
+                <label for="TotalB" style="margin-bottom:0px;margin-top:5px;">Total Value Addition(B)</label>
+            </div>
+            <div class="editor-field">
+                @Html.TextBox("TotalB", "0", new { @class = " trTotalB right form-control", @readonly = "readonly" })
+            </div>
+            <div class="editor-label">
+                <label for="Profit" style="margin-bottom:0px;margin-top:5px;">Profit(C)</label>
+            </div>
+            <div class="editor-field">
+                @Html.TextBoxFor(m=>m.Margin, new { @class = " trProfit right form-control" })
+            </div>
+            <div class="editor-label">
+                <label for="WholeSalePrice" style="margin-bottom:0px;margin-top:5px;">Whole Sale Price</label>
+            </div>
+            <div class="editor-field">
+                @Html.TextBoxFor(m => m.WholeSalePrice, new { @class = " trWholeSale right form-control", @readonly = "readonly" })
+            </div>
+        </div>
+    </div>
+
+    <div class="headrow">
+        @if (Model.Operation == "update")
+        {
+            <button type="button" title="Update Data" onclick="SaveData()" class="sym-btn-update">&nbsp;Update</button>
+            <button type="button" title="" onclick="showModal()" class="sym-btn-report">&nbsp;VAT 6.1</button>
+            if (Model.Post == "N") 
+            {
+                <button type="button" title="Post Data" onclick="PostData(this)" class="sym-btn-post">&nbsp;Post</button>                
+            }
+        }
+        else if (Model.Operation == "add")
+        {
+            <button type="button" title="Save Data" onclick="SaveData()" class="sym-btn-save">&nbsp;Save</button>
+        }
+        <button type="button" title="Go To Index" data-url="/VMS/Vat1" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New Petty Cash" data-url="/VMS/Vat1/Create" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+    </div>
+}
+
+<div id="myModal" class="trkmodal"></div>
+
+@*<div id="productDetails" class="trkmodal">
+    <div class="trkmodal-content">
+    </div>
+</div>*@
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        ////clicking add usable item button
+        $('.addItemRow').click(function () {
+            var finishItem = $('.trMasteritemId').val();
+            if (finishItem == null || finishItem == "" || finishItem == 0) {
+                ShowResult("Fail", "Select a finish item first");
+                return;
+            }
+            var product = $('.trUsableItemId').val();
+            if (product == "" || product == null) {
+                ShowResult("Fail", "Select a item first");
+                return;
+            }
+            var quantity = $('.trTotalQuantity').val();
+            if (isNaN(quantity) || quantity == 0 || quantity == "") {
+                ShowResult("Fail", "Quantity can't be zero");
+                return;
+            }
+            var itemNo = $('.trProductCode').val();
+            var count = 0;
+
+            $('.dItemCode').each(function () {
+                var existing = $(this).val();
+                if (itemNo == existing) {
+                    count++;
+                }
+            });
+            if (count > 0) {
+                ShowResult("Fail", "Item already exists!");
+                return;
+            }
+            AddItem();
+        });
+        ////adding item row function
+        function AddItem() {
+            ////form fields 
+            var name=$('.trFinishItemName').val();
+            var code = $('.trProductCode').val();
+            var itemNo = $('#trUsableItemNo').val();
+            var categoryId = $('#trUsableCategoryId').val();
+            if (categoryId == null) {
+                alert(456);
+            }
+            var hsCode = $('.trHsCode').val();
+            var uom = $('.trPackSize').val();
+            var convFact = parseFloat($('#ConvFactor').val().replace(/\,/g, ''));
+            var baseUom = $('.trUom').val();
+            var basePrice = parseFloat($('.trCostPrice').val().replace(/\,/g, ''));
+            var unitCost = parseFloat(basePrice * convFact);
+            var totalQty = parseFloat($('.trTotalQuantity').val().replace(/\,/g, ''));
+            var useQty = parseFloat($('.trUseQty').val().replace(/\,/g, ''));
+            var wQty = parseFloat(totalQty - useQty);
+            var rebate = 0;
+            var subTotal = parseFloat($('.trNetCost').val().replace(/\,/g, ''));
+            var baseUQty = parseFloat(useQty * convFact);
+            var baseWQty = parseFloat(wQty * convFact);
+            var issue = $('#trIssue').val();
+            var issueOnProduction="Y";
+            var effectDate=$('.trMasterEffectDate').val();
+            if (issue != "True") {
+                issueOnProduction = "N";
+            }
+            var finishItemCode = $('.trMasteritemId').val();
+            ////the detail view Model 
+            var model = {
+                RawItemName: name,
+                RawItemCode: code,
+                UOM: uom,
+                UnitCost: unitCost,
+                UseQuantity: useQty,
+                WastageQuantity: wQty,
+                TotalQuantity: totalQty,
+                RebateRate: rebate,
+                Cost: subTotal,
+                UOMc: convFact,
+                UOMn: baseUom,
+                UOMPrice: basePrice,
+                UOMUQty: baseUQty,
+                UOMWQty: baseWQty,
+                IssueOnProduction: issueOnProduction,
+                RawItemNo: itemNo,
+                CategoryId: categoryId,
+                EffectDate: effectDate
+            }
+            ////calling blank item function
+            $.ajax({
+                data: model,
+                url: "/Vms/Vat1/BlankItem",
+                cache: false,
+                success: function (html) {
+                    ////alert(html);
+                    $("#itemRows").append(html);
+                    SubTotal();
+                }
+            });
+            ////resetting fields
+            $('.trCostPrice').val("0");
+            calculateWastage();
+
+        }
+        ////clicking add overhead item button
+        $('.trAddOverhead').click(function () {
+            var code = $('.trOverheadCode').val();
+            if (code == "" || code == null) {
+                ShowResult("Fail", "Please select overhead first!");
+                return;
+            }
+
+            var itemNo = code;
+            var count = 0;
+
+            $('.dItemCode').each(function () {
+                var existing = $(this).val();
+                if (itemNo == existing) {
+                    count++;
+                }
+            });
+            if (count > 0) {
+                ShowResult("Fail", "Item already exists!");
+                return;
+            }
+            AddOverhead();
+        });
+        function AddOverhead() {
+            ////form fields
+            var code = $('.trOverheadCode').val();
+            
+            var url = "/Vms/Vat1/GetOverheadDetails?productCode=" + code;
+            $.getJSON(url, function (data) {
+                var code = data.split('~')[0];
+                var itemNo = data.split('~')[3];
+                var name = data.split('~')[4];
+                var uom = data.split('~')[5];
+
+                var cost = $('.trOverheadCost').val();
+                var rebate = $('.trOverheadRebate').val();
+                ////the detail view Model
+                var model = {
+                    RawItemName: name,
+                    RawItemCode: code,
+                    UOM: uom,
+                    UnitCost: cost * rebate/100,
+                    UseQuantity: 1,
+                    WastageQuantity: 0,
+                    TotalQuantity: 1,
+                    RebateRate: rebate,
+                    Cost: cost * rebate/100,
+                    UOMc: 1,
+                    UOMn: uom,
+                    UOMPrice: cost*rebate/100,
+                    UOMUQty: 1,
+                    UOMWQty: 0,
+                    IssueOnProduction: "N",
+                    RawItemNo: itemNo,
+                    RawItemType: "Overhead"
+                }
+                ////calling blank item function
+                $.ajax({
+                    data: model,
+                    url: "/Vms/Vat1/BlankItem",
+                    cache: false,
+                    success: function (html) {
+                        $("#itemRows").append(html);
+                        SubTotal();
+                    }
+                });
+                ////adding overhead detail section
+                var nonRebate=100-rebate;
+                var overheadModel = {
+                    HeadName: name,
+                    HeadAmount: cost,
+                    AdditionalCost: cost * nonRebate / 100,
+                    RebatePercent: nonRebate,
+                    OHCode: code,
+                    HeadID:itemNo
+                }
+                ////calling blank overhead function
+                $.ajax({
+                    data: overheadModel,
+                    url: "/Vms/Vat1/BlankOverhead",
+                    cache: false,
+                    success: function (html) {
+                        $("#itemOverheads").append(html);
+                        SubTotal();
+                    }
+                });
+                ////resetting fields
+                $('.trOverheadId').select2("val", "");
+                $('.trOverheadCode').val("");
+                $('.trOverheadCost').val("");
+                $('.trOverheadRebate').val("");
+                $('.trOverheadNonRebate').val("");
+            });
+
+            
+        }
+        ////removing a row  
+        function RemoveItem(sender) {
+            var type = $(sender).parents("tr:first").find("td .dRawItemType").val();
+            if (type == "Overhead") {
+                ShowResult("Fail", "Please delete Overhead items from Overhead Details");
+                return;
+            }
+            Ask("Are you sure to Delete the item!", function () {
+                $(sender).parents("tr:first").remove();
+                SubTotal();
+            });
+        }
+        ////removing overhead
+        function RemoveOverhead(sender) {
+            Ask("Are you sure to Delete the item!", function () {
+                $(sender).parents("tr:first").remove();
+                var code = $(sender).parents("tr:first").find("td .dOHCode").val();
+                $('.dItemCode').each(function () {
+                    var existing = $(this).val();
+                    if (code == existing) {
+                        $(this).closest("tr").remove();
+                    }
+                });
+                SubTotal();
+            });
+        }
+        ////edit a row 
+        function EditItem(sender) {
+            var type = $(sender).parents("tr:first").find("td .dRawItemType").val();
+            if (type == "Overhead") {
+                ShowResult("Fail", "Please edit Overhead items from Overhead Details");
+                return;
+            }
+            ////setting the value
+            var code = $(sender).closest('.tablerow').find('.dItemCode').val();
+            var url = "/Vms/Vat1/GetProductDetails?productCode=" + code;
+            $.getJSON(url, function (data) {
+                var categoryId = data.split('~')[6];
+
+                $('.trUsableGroupId').select2("val", categoryId);
+
+                settingUsableProducts();
+                setTimeout(function () {
+                    $('.trUsableItemId').select2("val", code);
+                    usableProductNameDetails();
+                },800)
+                var quantity = $(sender).closest('.tablerow').find('.dTotalQuantity').val();
+                $('.trTotalQuantity').val(quantity);
+                $(sender).parents("tr:first").remove();
+                SubTotal();
+            });
+        }
+        ////edit overhead 
+        function EditOverhead(sender) {
+            var name = $(sender).parents("tr:first").find("td .dHeadName").val();
+            var code = $(sender).parents("tr:first").find("td .dOHCode").val();
+            var cost = $(sender).parents("tr:first").find("td .dHeadAmount").val();
+            var percent = $(sender).parents("tr:first").find("td .dRebatePercent").val();
+            var rebate = 100 - percent;
+
+            $('.dItemName').each(function () {
+                var existing = $(this).val();
+                if (name == existing) {
+                    $(this).closest("tr").remove();
+                    return;
+                }
+            });
+            ////setting the value
+            $('.trOverheadId').select2("val", code);
+            $('.trOverheadCode').val(code);
+            $('.trOverheadCost').val(cost);
+            $('.trOverheadRebate').val(rebate);
+            $('.trOverheadNonRebate').val(percent);
+            $(sender).closest("tr").remove();
+        }
+
+    ////clicking on percent
+    $('.wastagePercent').click(function () {
+        setTimeout(function () {
+            calculateWastage();
+        }, 500);
+    });
+    ////On leave wastage
+    $(".trWastage").blur(function () {
+        calculateWastage();
+    });
+        ////on leave profit
+    $('.trProfit').blur(function () {
+        SubTotal();
+        
+    });
+        ////on leave salePrice
+    $('.trSalePrice').blur(function () {
+        var abc = parseFloat($('.trABC').val());
+        var salePrice = parseFloat($(this).val());
+        var profit = salePrice - abc;
+        $('.trProfit').val(profit);
+        SubTotal();
+    });
+    ////Wastage calculating function
+    function calculateWastage() {
+        var status = $('#wastagePercent').val();
+        var totalQuantity = parseFloat($('.trTotalQuantity').val().replace(/\,/g, ''));
+        var wastageAmount = parseFloat($('.trWastage').val().replace(/\,/g, ''));
+        if (isNaN(totalQuantity)) {
+            totalQuantity = 0;
+        }
+        if (isNaN(wastageAmount)) {
+            wastageAmount = 0;
+        }
+
+        var usedQuantity = 0;
+
+        if (status == 'True') {
+            usedQuantity = totalQuantity - (totalQuantity * wastageAmount / 100);
+        }
+        else {
+            usedQuantity = totalQuantity - wastageAmount;
+        }
+        $('.trWastage').val(wastageAmount);
+        $('.trUseQty').val(usedQuantity);
+        calculateNetCost();
+
+    }
+    ////calculating net cost
+    function calculateNetCost() {
+        var uom = $('.trUom').val();
+        var pack = $('.trPackSize').val();
+        var conFact = 1;
+        if (uom != pack) {
+            var interval = setInterval(function () {
+                conFact = $('#ConvFactor').val();
+                if (conFact!= "1") {
+                    //alert(conFact);
+                    if (isNaN(conFact) || conFact == "" || conFact == null) {
+                        conFact = 1;
+                    }
+                    var costPrice = parseFloat($('.trCostPrice').val().replace(/\,/g, ''));
+                    if (isNaN(costPrice)) {
+                        costPrice = 0;
+                    }
+                    var usedQuantity = parseFloat($('.trUseQty').val().replace(/\,/g, ''));
+                    if (isNaN(usedQuantity)) {
+                        usedQuantity = 0;
+                    }
+                    var netCost = conFact * costPrice * usedQuantity;
+                    $('.trNetCost').val(netCost);
+                    clearInterval(interval);
+                }
+            }, 200);
+        }
+        else {
+            if (isNaN(conFact) || conFact == "" || conFact == null) {
+                conFact = 1;
+            }
+            var costPrice = parseFloat($('.trCostPrice').val().replace(/\,/g, ''));
+            if (isNaN(costPrice)) {
+                costPrice = 0;
+            }
+            var usedQuantity = parseFloat($('.trUseQty').val().replace(/\,/g, ''));
+            if (isNaN(usedQuantity)) {
+                usedQuantity = 0;
+            }
+            var netCost = conFact * costPrice * usedQuantity;
+            $('.trNetCost').val(netCost);
+        }
+    }
+    ////changing Qty
+    $(".trCostPrice").blur(function () {
+        calculateWastage();
+    });
+    ///changing cost price
+    $(".trTotalQuantity").blur(function () {
+        calculateWastage();
+    });
+    $(function () {
+        valiDation("frmVat1");
+        MyCheckBox("True", 'input-1', 'trIssue');
+        $('.customDatePicker').prop("readonly", false);
+        ////navigation mode
+        var operation = '@Model.Operation';
+        //if (operation == "update") {
+        //    navigatePage();
+        //}
+        ////showing subtotal value
+        SubTotal();
+        ////for counting discount amount based on % symbol
+        MyToggleBox('wastagePercent');
+        ////changing usable item group
+        $('.trUsableGroupId').change(function () {
+            settingUsableProducts();
+        });
+        ////changing finish item group
+        $('.trMasterGroupId').change(function () {
+            settingFinishProducts();
+        });
+        ////changing usable item
+        $('.trUsableItemId').change(function () {
+            usableProductNameDetails();
+            var interval = setInterval(function () {
+                if ($('.trUom').val() != "") {
+                    UomOptions();
+                    GetConvFactor();
+                    clearInterval(interval);
+                }
+            }, 200);
+        });
+        ////changing master item
+        $('.trMasteritemId').change(function () {
+            finishProductNameDetails();
+        });
+        ////changing overhead
+        $('.trOverheadId').change(function () {
+            overheadDetails();
+        });
+
+    });
+        
+        ////setting list for usable product settingFinishProducts
+        function settingUsableProducts() {
+            $('.trUsableItemId').select2("val", "");
+            var value = $('.trUsableGroupId').val();
+            var productNames = "";
+
+            var url = "/Config/DropDown/DropDownProductByCategory/?id=" + value;
+            productNames += "<option value=0>Select</option>";
+            $.getJSON(url, function (data) {
+                $.each(data, function (i, state) {
+                    productNames += "<option value='" + state.Value + "'>" + state.Text + "</option>";
+                });
+
+                $('.trUsableItemId').html(productNames);
+            });
+            //usableProductNameDetails();
+        }
+        ////setting list for finish product 
+        function settingFinishProducts() {
+            $('.trMasteritemId').select2("val", "");
+            var value = $('.trMasterGroupId').val().toString();
+            var productNames = "";
+
+            var url = "/Config/DropDown/DropDownProductByCategory/?id=" + value;
+            productNames += "<option value=0>Select</option>";
+            $.getJSON(url, function (data) {
+                $.each(data, function (i, state) {
+                    productNames += "<option value='" + state.Value + "'>" + state.Text + "</option>";
+                });
+
+                $('.trMasteritemId').html(productNames);
+            });
+        }
+        ////getting usable product details  
+        function usableProductNameDetails() {
+            var code = $('.trUsableItemId').val();
+            if (code == 0 || code == null) {
+                $('.trFinishItemName').val("");
+                $('.trProductCode').val("");
+                $('.trHsCode').val("");
+                $('.trUom').val("");
+                $('.trCostPrice').val("0");
+                calculateWastage();
+                return;
+            }
+            var url = "/Vms/Vat1/GetProductDetails?productCode=" + code;
+            $.getJSON(url, function (data) {
+                var name = data.split('~')[0];
+                var code = data.split('~')[1];
+                var hscode = data.split('~')[2];
+                var uom = data.split('~')[3];
+                var costPrice = data.split('~')[4];
+                var itemNo = data.split('~')[5];
+                var categoryId = data.split('~')[6];
+
+                $('.trFinishItemName').val(name);
+                $('.trProductCode').val(code);
+                $('.trHsCode').val(hscode);
+                $('.trUom').val(uom);
+                $('.trCostPrice').val(costPrice);
+                $('#trUsableItemNo').val(itemNo);
+                $('#trUsableCategoryId').val(categoryId);
+
+                var html = "<option value=" + uom + ">" + uom + "</option>";
+                $('#PackSize').html(html);
+
+                calculateWastage();
+            });
+        }
+
+        ////getting finish product details
+        function finishProductNameDetails() {
+            var code = $('.trMasteritemId').val();
+            if (code == 0 || code == null) {
+                $('.trMasterItemName').val("");
+                $('.trMasterProductCode').val("");
+                $('.trMasterHsCode').val("");
+                $('.trMasterUom').val("");
+                $('.trMastervatName').val("VAT 1");
+
+                return;
+            }
+            var url = "/Vms/Vat1/GetProductDetails?productCode=" + code;
+            $.getJSON(url, function (data) {
+                var name = data.split('~')[0];
+                var code = data.split('~')[1];
+                var hscode = data.split('~')[2];
+                var uom = data.split('~')[3];
+                var itemNo = data.split('~')[5];
+                var trading = data.split('~')[7];
+                var sd = data.split('~')[8];
+                var vat = data.split('~')[9];
+
+
+                $('.trMasterItemName').val(name);
+                $('.trMasterProductCode').val(code);
+                $('.trMasterHsCode').val(hscode);
+                $('.trMasterUom').val(uom);
+                $('.trMastervatName').val("VAT 1");
+                $('.trSD').val(sd);
+                $('.trTradingMarkUp').val(trading);
+                $('.trVatRate').val(vat);
+                $('#ItemNo').val(itemNo);
+            });
+        }
+
+        ////getting overhead details
+        function overheadDetails() {
+            var code = $('.trOverheadId').val();
+            if (code == 0 || code == null||code=="") {
+                $('.trOverheadCost').val("");
+                $('.trOverheadCode').val("");
+                $('.trOverheadRebate').val("");
+                $('.trOverheadNonRebate').val("");
+                return;
+            }
+            var url = "/Vms/Vat1/GetOverheadDetails?productCode=" + code;
+            $.getJSON(url, function (data) {
+                var code = data.split('~')[0];
+                var rebatePercent = data.split('~')[1];
+                var cost = data.split('~')[2];
+                if (isNaN(rebatePercent) || rebatePercent == null) {
+                    rebatePercent = 0;
+                }
+                if (isNaN(cost) || cost == null) {
+                    cost = 0;
+                }
+                var nonRebate = 100 - rebatePercent;
+                $('.trOverheadCost').val(cost);
+                $('.trOverheadCode').val(code);
+                $('.trOverheadRebate').val(rebatePercent);
+                $('.trOverheadNonRebate').val(nonRebate);
+            });
+        }
+        ////changing uom to/packet size
+        $('.trPackSize').change(function () {
+            GetConvFactor();
+            calculateNetCost();
+        });
+        ////changing rebate percent
+        $('.trOverheadRebate').blur(function () {
+            changeRebatePercent();
+        });
+        ////changing rebate percent function
+        function changeRebatePercent() {
+            var rebate = $('.trOverheadRebate').val();
+            if (isNaN(rebate)||rebate=="") {
+                rebate = 0;
+            }
+            var nonRebate = 100 - rebate;
+            $('.trOverheadNonRebate').val(nonRebate);
+        }
+        ////uom conversion method
+        function GetConvFactor() {
+            var uomFrom = $('.trUom').val();
+            var uomTo = $('.trPackSize').val();
+            if (uomFrom == uomTo) {
+                $('#ConvFactor').val(1);
+                return;
+            }
+            var actionUrl = "/Vms/Vat1/GetConvFactor?uomFrom=" + uomFrom + "&UomTo=" + uomTo;
+            $.getJSON(actionUrl, function (data) {
+                var uomConv = parseFloat(data);
+                $('#ConvFactor').val(uomConv);
+            });
+
+        }
+
+        ////uom option method
+        function UomOptions() {
+            var uom = $('.trUom').val();
+            var url = "/Vms/Vat1/GetUomOption?uomFrom=" + uom;
+            $.ajax({
+                url: url,
+                cache: false,
+                success: function (html) {
+                    $('#PackSize').append(html);
+                }
+            });
+        }
+         
+        ////subtotal calculating method 
+        function SubTotal() {
+            var TotalA = 0;
+            $('.dSubTotal').each(function () {
+                var amountA = parseFloat($(this).val());
+                TotalA += amountA;
+            });
+            $('.trTotalA').val(TotalA);
+
+            var TotalB = 0;
+            $('.dAdditionalCost').each(function () {
+                var amountB = parseFloat($(this).val());
+                TotalB += amountB;
+            });
+            $('.trTotalB').val(TotalB);
+            var profitC = parseFloat($('.trProfit').val());
+            var abc = TotalA + TotalB + profitC;
+            $('.trABC').val(abc);
+            $('.trSalePrice').val(abc);
+            var tradingMarkUp = parseFloat($('.trTradingMarkUp').val());
+            var tradingTotal = abc+abc * tradingMarkUp / 100;
+
+            var sdRate = parseFloat($('.trSD').val());
+            var sdAmount = tradingTotal * sdRate / 100;
+            var sdTotal = tradingTotal + sdAmount;
+
+            var vatRate = parseFloat($('.trVatRate').val());
+            var vatAmount = sdTotal * vatRate / 100;
+            var vatTotal = sdTotal + vatAmount;
+            
+            $('#SDAmount').val(vatAmount);
+            $('#VatAmount').val(vatAmount);
+
+            $('.trWholeSale').val(vatTotal);
+        }
+
+        ////form posting method
+        function SaveData() {
+            //var Post = $("#Post").val();
+            //if (Post.toLowerCase() == 'true' || Post.toLowerCase() == 'y') {
+            //    ShowResult("Fail", "Data Already Posted. Can't Update!");
+            //    return;
+            //}
+
+            //var trDate = $(".trDate").val();
+            //if (trDate == "") {
+            //    ShowResult("Fail", "Please Select Issue Date!");
+            //    return;
+            //}
+            var itemCount = 0;
+            $('.dItemName').each(function () {
+                var existing = $(this).val();
+                if (itemNo == existing) {
+                    itemCount++;
+                }
+            });
+            if (overheadCount == 0) {
+                ShowResult("Fail", "There is no data in item grid");
+                return;
+            }
+
+            var overheadCount = 0;
+            $('.dHeadName').each(function () {
+                var existing = $(this).val();
+                if (itemNo == existing) {
+                    overheadCount++;
+                }
+            });
+            if (overheadCount == 0) {
+                ShowResult("Fail", "There is no data in overhead grid");
+                    return;
+            }
+            
+            pageSubmit('frmVat1');
+        }
+
+        ////posting method
+        function PostData(sender) {
+            //var Id = $("#Id").val();
+            //var Post = $("#Post").val();
+            //if (Post.toLowerCase() == 'true' || Post.toLowerCase() == 'y') {
+            //    ShowResult("Fail", "Data Already Posted!");
+            //    return;
+            //}
+            //var url = '/Vms/Vat1/Post?ids=' + Id + '~';
+            //var questionMSG = "Are you sure to Post Data!";
+            //singlePostDlete(questionMSG, url);
+        }
+
+    </script>
+    
+}

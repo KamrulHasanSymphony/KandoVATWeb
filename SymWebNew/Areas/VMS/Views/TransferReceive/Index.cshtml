@@ -1,0 +1,353 @@
+﻿@model VATViewModel.DTOs.TransferReceiveVM
+@using UIHelper.MVC
+@using SymOrdinary
+@using System.Threading;
+@{
+    ShampanIdentity identity = null;
+    try
+    {
+        identity = (ShampanIdentity)Thread.CurrentPrincipal.Identity;
+    }
+    catch (Exception)
+    {
+        Response.Redirect("/VMS/Home/Login");
+        return;
+    }
+}
+
+@{
+    ViewBag.Title = "Index";
+}
+<div class="headrow">
+    <div style="display: none" id="formAppend"></div>
+    <button type="button" title="Add New Issue" data-url="/VMS/TransferReceive/Create?tType=@Model.TransactionType" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+    @*<label class="pull-right">Transfer Recieve (@Model.TransactionType)</label>*@
+    
+    @if (@Model.TransactionType == "62In")
+    {
+        <label class="pull-right">Transfer Recieve > FG(IN)</label>
+    }
+    else if (@Model.TransactionType == "61In")
+    {
+        <label class="pull-right">Transfer Recieve > RM(IN)</label>
+    }
+    else
+    {
+        <label class="pull-right">Transfer Recieve (@Model.TransactionType)</label>
+    }
+
+
+</div>
+
+<div id="TransferIndex" class="thinbox  animated zoomIn faster">
+    <div class="th_thinbox">
+        <p>Transfer Recieve List</p>
+    </div>
+    <div class="dtSearch formDesign">
+        <div class="row">
+            @*<div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.TransferReceiveNo)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.TransferReceiveNo, new { @placeholder = "Transfer Receive No", @class = "  form-control" })
+                    </div>
+                </div>*@
+
+
+            @Html.HiddenFor(model => model.TransactionType, new { @class = " cTransactionType" })
+            <div class="col-md-2">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.SearchField)
+                </div>
+                <div class="editor-field">
+                    @Html.SimpleDropDownFor(m => m.SearchField, "/Config/DropDown/TransferReceiveColumnSearch", new { @class = " form-control " })
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.SearchValue)
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.SearchValue, new { @class = "  form-control" })
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.ReceiveDateFrom)
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.ReceiveDateFrom, new { @placeholder = "Receive Date From", @class = "customDatePicker defaultDate  form-control" })
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.ReceiveDateTo)
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.ReceiveDateTo, new { @placeholder = "Receive Date To", @class = "customDatePicker defaultDate  form-control" })
+                </div>
+            </div>
+            <div class="col-md-1">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.Post)
+                </div>
+                <div class="editor-field">
+                    <select id="Post" class="form-control">
+                        <option value=""></option>
+                        <option value="Y">Y</option>
+                        <option value="N">N</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="editor-label">
+                    <label>&nbsp;</label>
+                </div>
+                <div class="editor-field">
+                    <button type="button" title="Click to Search" id="btnDialog" class="sym-btn-search">&nbsp;Search</button>
+                    <button type="button" title="Clear Data" id="Clear" class=" sym-btn-clear">&nbsp;Clear</button>
+                    <button type="button" title="Post Data" onclick="PostData()" class="sym-btn-post">&nbsp;Post</button>
+                    <button type="button" title="Export Data" onclick="ExportExcel()" class="sym-btn-Excel-Export">&nbsp;Export</button>
+                    <label>Export All</label>
+                    @Html.CheckBox("ExportAll", new { id = "idExportAll", @class = "cExportAll form-control", @name = "att[]" })
+                </div>
+
+
+            </div>
+            @*<div class="editor-label">
+                    <label>Export All</label>
+                    @Html.CheckBox("ExportAll", new { id = "idExportAll", @class = "cExportAll form-control", @name = "att[]" })
+                </div>*@
+
+
+
+
+        </div>
+    </div>
+    <p>&nbsp;</p>
+    <table id="myDataTable" class="display">
+        <thead>
+            <tr>
+                <th class="center"><input type="checkbox" class="chkAll" />Action</th>
+                <th>Transfer Receive No</th>
+                <th>Transaction Date</th>
+                <th>Transfer from No</th>
+                <th>TotalAmount</th>
+                <th>Serial No</th>
+                <th>Is Posted</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <br />
+</div>
+
+<div class="headrow">
+    <button type="button" title="Add New Issue" data-url="/VMS/TransferReceive/Create?tType=@Model.TransactionType" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+</div>
+
+<script>
+
+    function PostData() {
+
+        var questionMSG = "Are you sure to Post Data!";
+
+        Ask(questionMSG, function () {
+
+
+            var IDs = [];
+            var $Items = $(".dSelected:input:checkbox:checked");
+
+            if ($Items == null || $Items.length == 0) {
+                ShowResult("Fail", "You are requested to Select before Post!");
+                return;
+            }
+
+            $Items.each(function () {
+                var ID;
+                ID = $(this).attr("data-Id");
+                
+                var vID = ID.split("~")[0];
+
+                IDs.push(vID);
+            });
+
+            var model = {
+                IDs: IDs
+            }
+            var url = '/VMS/TransferReceive/MultiplePost';
+
+            $.ajax({
+                url: url
+                , data: model
+                , type: 'Post'
+                , traditional: true
+                , beforeSend: function () { $(".loading").show(); }
+                , success: function (rVM) {
+                    ShowResult(rVM.Status, rVM.Message);
+                }
+                , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+
+            });
+        });
+
+    }
+
+    function ExportExcel() {
+
+        var questionMSG = "Are you sure to Export Excel!";
+
+        Ask(questionMSG, function () {
+            ////var SearchField = $('#SearchField').val();
+            ////var SearchValue = $('#SearchValue').val();
+
+            var TransferIssue = $('#TransferReceive').val();
+            //var CustomerID = $('#CustomerID').val();
+            var ReceiveDateFrom = $('#ReceiveDateFrom').val();
+            var ReceiveDateTo = $('#ReceiveDateTo').val();
+            //var Post = $('#Post').val();
+            //////var InvoiceDateTimeTo = $('#InvoiceDateTimeTo').val();
+            //////var BranchId = $('#BranchId').val();
+            //////var BranchId = $('#BranchId').val();
+
+            //var SelectTop = $('#SelectTop').val();
+            var ExportAll = $('#idExportAll').is(":checked");
+            var TransactionType = $('.cTransactionType').val();
+
+            var IDs = [];
+            var $Items = $("#TransferIndex .dSelected:input:checkbox:checked");
+
+            if (!ExportAll) {
+                if ($Items == null || $Items.length == 0) {
+                    ShowResult("Fail", "You are requested to Select before Export!");
+                    return;
+                }
+            }
+
+            $Items.each(function () {
+                var ID;
+                ID = $(this).attr("data-Id");
+
+                var vID = ID.split("~")[0];
+
+                IDs.push(vID);
+            });
+
+            var model = {
+                IDs: IDs
+            }
+            var url = '/VMS/TransferReceive/ExportExcel';
+            var form = $('<form action="' + url + '"></form>');
+
+            IDs.forEach(function (item) {
+                form.append($('<input  value="' + TransferIssue + '" name="IDs" />'))
+
+            })
+
+            //form.append($('<input  value="' + SearchField + '" name="SearchField" />'))
+            //form.append($('<input  value="' + SearchValue + '" name="SearchValue" />'))
+            form.append($('<input  value="' + ReceiveDateFrom + '" name="ReceiveDateFrom" />'))
+            form.append($('<input  value="' + ReceiveDateTo + '" name="ReceiveDateTo" />'))
+            ////form.append($('<input  value="' + Post + '" name="Post" />'))
+            //form.append($('<input  value="' + Post + '" name="Post" />'))
+            //form.append($('<input  value="' + BranchId + '" name="BranchId" />'))
+
+           // form.append($('<input  value="' + SelectTop + '" name="SelectTop" />'))
+            form.append($('<input  value="' + ExportAll + '" name="ExportAll" />'))
+            form.append($('<input  value="' + TransactionType + '" name="TransactionType" />'))
+
+            form.appendTo('#formAppend').submit()
+           
+        });
+
+    }
+
+</script>
+
+<script language="javascript" type="text/javascript">
+
+    function btnPostTransferReceive(sender) {
+        var IdPost = $(sender).attr('data-Id');
+        var TransferReceiveNo = IdPost.split('~')[0];
+        var Post = IdPost.split('~')[1];
+        if (Post.toLowerCase() == 'true' || Post.toLowerCase() == 'y') {
+            ShowResult("Fail", "Data Already Posted!");
+            return;
+        }
+        var url = $(sender).attr("data-url") + "?TransferReceiveNo=" + TransferReceiveNo;
+        var questionMSG = "Are you sure to Post Data!";
+        singleOperation(questionMSG, url);
+    }
+
+    $(document).ready(function () {
+
+        SelectAllForDelete();
+        $.datepicker.regional[""].dateFormat = 'dd/M/y';
+        $.datepicker.setDefaults($.datepicker.regional['']);
+        var oTable = $('#myDataTable').dataTable({
+            "bServerSide": true,
+            "sAjaxSource": "/VMS/TransferReceive/_index?transactionType=@Model.TransactionType",
+            "bProcessing": true,
+            "aLengthMenu": tablelength(),
+            "bJqueryUI": true,
+            "bAutoWidth": false,
+
+            "fnServerData": function (sSource, aoData, fnCallback) {
+                $('.dtSearch :input').each(function () {
+                    var Name = $(this).attr("Id")
+                    var Value = $(this).val()
+                    aoData.push({ "name": Name, "value": Value });
+                });
+                $.getJSON(sSource, aoData, function (json) {
+                    fnCallback(json);
+                });
+            },
+
+            "aoColumns": [
+                            {
+                                "sName": "Id",
+                                "bSearchable": false,
+                                "bSortable": false,
+                                "sWidth": "20%",
+                                "sClass": "center",
+                                "fnRender": function (oObj) {
+                                    return ' <input onclick="CheckAll(this)" class="dSelected" type="checkbox" data-Id="' + oObj.aData[0] + '">'
+                                    + '&nbsp; <a title="Click on for Edit" href=\"/VMS/TransferReceive/Edit/' + oObj.aData[0].split('~')[0] + '?TransactionType=' + oObj.aData[7] + '\" class="sym-btn-edit-row"></a>'
+                                        + '&nbsp; <a title="Click on for Post" data-url="/VMS/TransferReceive/Post"  onclick=btnPostTransferReceive(this); data-Id="' + oObj.aData[1] + '~' + oObj.aData[0].split('~')[1] + '\" class="sym-btn-post-row"></a>'
+                                    ;
+                                }
+                            }
+                            , { "sName": "TransferReceiveNo", "sWidth": "20%" }
+                            , { "sName": "TransactionDateTime", "sWidth": "10%" }
+                            , { "sName": "TransferFromNo", "sWidth": "15%" }
+                            , { "sName": "TotalAmount", "sWidth": "10%" }
+                            , { "sName": "SerialNo", "sWidth": "12%" }
+                            , { "sName": "Post", "sWidth": "10%" }
+            ]
+        });
+
+        $('#btnDialog').click(function () {
+            var model = $('.dtSearch :input').serialize();
+            $.ajax({
+                url: "/VMS/TransferReceive/Index",
+                cache: false,
+                data: model,
+                success: function (html) {
+                    oTable.fnDraw();
+                }
+            });
+        });
+        ////clearing fields
+        $("#Clear").on('click', function () {
+            $(".Dropdown").select2("val", "");
+            $(".form-control").val("");
+        });
+
+        
+
+    });
+</script>
+

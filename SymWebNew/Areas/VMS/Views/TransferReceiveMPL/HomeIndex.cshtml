@@ -1,0 +1,186 @@
+﻿@{
+    ViewBag.Title = "HomeIndex";
+}
+
+@*@using SymOrdinary
+@using System.Threading;
+
+@{
+    ShampanIdentity identity = null;
+    try
+    {
+        identity = (ShampanIdentity)Thread.CurrentPrincipal.Identity;
+    }
+    catch (Exception)
+    {
+        Response.Redirect("/VMS/Home/Login");
+        return;
+    }
+}*@
+
+
+@*<h2>Sales HomeIndex</h2>*@
+<style>
+    .myUL, .myUL ul {
+        list-style-type: none;
+    }
+
+    .myUL {
+        margin: 0;
+        padding: 0;
+    }
+
+        .myUL li {
+            cursor: pointer;
+            font-size: 20px;
+            border: 2px solid #44fcd4;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 5px;
+            border-radius: 10px;
+        }
+
+            .myUL li:hover {
+                color: white;
+                border: 2px solid #00aa08;
+            }
+
+    ul.myUL .trCaret {
+        cursor: pointer;
+        user-select: none;
+        -webkit-user-select: none; /* Safari 3.1+ */
+        -moz-user-select: none; /* Firefox 2+ */
+        -ms-user-select: none; /* IE 10+ */
+    }
+
+    ul.myUL li {
+        color: #42f4c5;
+        background-color: #003ea3;
+    }
+
+    ul.myUL .trCaret {
+        color: white;
+    }
+
+        ul.myUL .trCaret::before {
+            content: "\25B6";
+            color: #ffb049;
+            display: inline-block;
+            margin-right: 6px;
+        }
+
+    ul.myUL .trCaret-down::before {
+        transform: rotate(90deg);
+    }
+
+    ul.myUL .nested {
+        display: none;
+    }
+
+    ul.myUL .active {
+        display: block;
+    }
+</style>
+
+<div class="thinbox">
+    <div class="th_thinbox">
+        <p class="text-center" style=" padding-left: 7%;">Sales</p>
+    </div>
+    <div class="row animated zoomIn faster">
+        <div class="col-md-3 col-md-offset-5">
+            <ul class="myUL">
+
+                @*@if (identity.IsPermitted("140110"))
+                {*@
+                    <li>
+                        <span class="trCaret">Sale</span>
+                        <ul class="nested">
+                            @*@if (identity.IsPermitted("140110110"))
+                            {*@
+                                <li class="Local" data-url="/Vms/SaleInvoice/Index?TransactionType=Other" onclick="GoTo(this)">Local</li>
+                            @*}
+                            @if (identity.IsPermitted("140110120"))
+                            {*@
+                                <li class="Export" data-url="/Vms/SaleInvoice/Index?TransactionType=Export" onclick="GoTo(this)">Export</li>
+                            @*}
+
+                            @if (identity.IsPermitted("140110160"))
+                            {*@
+                                @*<li class="ServiceNStock" data-url="/Vms/SaleInvoice/Index?TransactionType=ServiceNS" onclick="GoTo(this)">Service N Stock</li>*@
+                            @*}*@
+
+                        </ul>
+                    </li>
+                @*}
+
+                @if (identity.IsPermitted("140130"))
+                {*@
+                    <li>
+                        <span class="trCaret">Transfer Issue/Receive</span>
+                        <ul class="nested">
+                            @*@if (identity.IsPermitted("140130140"))
+                            {*@
+                                <li class="Local" data-url="/Vms/TransferIssue/Index?transactionType=62Out" onclick="GoTo(this)">FG(Out)</li>
+
+                            @*}
+
+                            @if (identity.IsPermitted("140130130"))
+                            {*@
+                                <li class="Local" data-url="/Vms/TransferIssue/Index?transactionType=61Out" onclick="GoTo(this)">RM(Out)</li>
+
+                            @*}
+
+                            @if (identity.IsPermitted("140130120"))
+                            {*@
+                                <li class="Local" data-url="/Vms/TransferReceive/Index?transactionType=62In" onclick="GoTo(this)">FG(In)</li>
+
+                            @*}
+
+                            @if (identity.IsPermitted("140130110"))
+                            {*@
+                                <li class="Local" data-url="/Vms/TransferReceive/Index?transactionType=61In" onclick="GoTo(this)">RM(In)</li>
+
+                            @*}*@
+
+                        </ul>
+                    </li>
+                @*}*@
+
+
+                @*<li>
+                        <span class="trCaret">Production</span>
+                        <ul class="nested">
+                            <li class="issueReport">Issue</li>
+                            <li class="receiveReport">Receive</li>
+                        </ul>
+                    </li>*@
+
+            </ul>
+
+        </div>
+
+
+        <div class="col-md-3"></div>
+    </div>
+
+</div>
+
+@*<div id="myModal" class="trkmodal"></div>*@
+
+<script>
+    ////expanding menus
+    $(function () {
+        var toggler = document.getElementsByClassName("trCaret");
+        var i;
+
+        for (i = 0; i < toggler.length; i++) {
+            toggler[i].addEventListener("click", function () {
+                this.parentElement.querySelector(".myUL .nested").classList.toggle("active");
+                this.classList.toggle("trCaret-down");
+            });
+        }
+    });
+
+</script>
+
+

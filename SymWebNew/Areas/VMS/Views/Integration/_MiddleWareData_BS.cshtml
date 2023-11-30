@@ -1,0 +1,187 @@
+﻿@model System.Data.DataTable
+
+@{
+    ViewBag.Title = "_MiddleWareData_BS";
+}
+
+@*@Html.Hidden("transactionType", Model.Rows[0]["TransactionType"])*@
+
+<div class="HigherModal-content">
+    <div class="HigherModal-header">
+        <span class="closeHigher" onclick="closeModal()">&times;</span>
+        <h2 class="text-center">Details</h2>
+    </div>
+    <div>
+
+        <div class="HigherModal-body formDesign">
+            <div class="row">
+                <div class="fixedParent">
+                    <table class="trkFixTable" id="productPopUpTable_Detail">
+                        <thead>
+                            <tr>
+                                <th>ID             </th>
+                                <th>Customer_Code  </th>
+                                <th>Item_Name      </th>
+                                <th>Branch_Code    </th>
+                                <th>Quantity       </th>
+                                <th>NBR_Price      </th>
+                                <th>Invoice_Date   </th>
+                                <th>Reference_No    </th>
+                                <th>VehicleType     </th>
+                                <th>Vehicle_No      </th>
+                                <th>TransactionType </th> 
+                                <th>Remarks         </th>
+                                @*<th>UOM             </th>
+                                    <th>TotalPrice      </th>*@
+                            </tr>
+                        </thead>
+                        <tbody id="popUpTbody_Detail">
+                            @foreach (System.Data.DataRow dr in Model.Rows)
+                            {
+                                <tr>
+                                    <td>@dr["ID"]</td>
+                                    <td>@dr["Customer_Code"]</td>
+                                    <td>@dr["Item_Name"]</td>
+                                    <td>@dr["Branch_Code"]</td>
+                                    <td>@dr["Quantity"]</td>
+                                    <td>@dr["NBR_Price"]</td>
+                                    <td>@dr["Invoice_Date"]</td>
+                                    <td>@dr["Reference_No"]</td>
+                                    <td>@dr["VehicleType"]</td>
+                                    <td>@dr["Vehicle_No"]</td>
+                                    <td>@dr["TransactionType"]</td> 
+                                    <td>@dr["Remarks"]</td>
+                                    @*<td>@dr["UOM"]</td>
+                                        <td>@dr["TotalPrice"]</td>*@
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="HigherModal-header">
+        @*<button type="button" title="Export Data" onclick="ExportExcel()" class="cLocal sym-btn-Excel-Export">&nbsp;Export</button>*@
+
+    </div>
+
+</div>
+
+<script language="javascript" type="text/javascript">
+
+    function callingFixedPopUpTable_Detail() {
+
+        var args = [150, 150, 200, 150, 100, 150, 100, 150, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100];
+        trkFixedPopUpTable("productPopUpTable_Detail", 3, args);
+    }
+
+
+    $(function () {
+        callingFixedPopUpTable_Detail();
+    })
+
+    function ExportExcel() {
+        console.log("vms");
+        var questionMSG = "Are you sure to Export Excel!";
+
+        Ask(questionMSG, function () {
+
+            //var SearchField = $('#SearchField').val();
+
+            //var SearchValue = $('#SearchValue').val();
+            //var SaleType = $('#SaleType').val();
+            //var CustomerID = $('#CustomerID').val();
+            //var IsPrint = $('#IsPrint').val();
+            //var Post = $('#Post').val();
+            //var InvoiceDateTimeFrom = $('#InvoiceDateTimeFrom').val();
+            //var InvoiceDateTimeTo = $('#InvoiceDateTimeTo').val();
+            //var BranchId = $('#BranchId').val();
+            //var IsInstitution = $('#IsInstitution').val();
+            //var SelectTop = $('#SelectTop').val();
+            //var ExportAll = $('#idExportAll').is(":checked");
+            //var TransactionType = $('#TransactionType').val();
+            // console.log("TEST EXPORT");
+            // console.log(ExportAll);
+
+            //var IDs = [];
+            //var $Items = $("#SaleIndex  .dSelected:input:checkbox:checked");
+            //if (!ExportAll) {
+
+            //    if ($Items == null || $Items.length == 0) {
+            //        ShowResult("Fail", "You are requested to Select before Export!");
+            //        return;
+            //    }
+            //}
+            console.log("vms");
+
+            $Items.each(function () {
+
+                var ID = $(this).attr("data-Id");
+                IDs.push(ID);
+            });
+
+            var model = {
+                IDs: IDs,
+
+            }
+
+            var url = '/VMS/Home/ExportExcell';
+            console.log("vms");
+            var form = $('<form action="' + url + '"></form>');
+
+            IDs.forEach(function (item) {
+                form.append($('<input  value="' + item + '" name="Ids" />'))
+
+            })
+
+            //form.append($('<input  value="' + SearchField + '" name="SearchField" />'))
+
+            //form.append($('<input  value="' + SearchValue + '" name="SearchValue" />'))
+            //form.append($('<input  value="' + SaleType + '" name="SaleType" />'))
+            //form.append($('<input  value="' + CustomerID + '" name="CustomerID" />'))
+            //form.append($('<input  value="' + IsPrint + '" name="IsPrint" />'))
+            //form.append($('<input  value="' + Post + '" name="Post" />'))
+            //form.append($('<input  value="' + InvoiceDateTimeFrom + '" name="InvoiceDateTimeFrom" />'))
+            //form.append($('<input  value="' + InvoiceDateTimeTo + '" name="InvoiceDateTimeTo" />'))
+            //form.append($('<input  value="' + BranchId + '" name="BranchId" />'))
+            //form.append($('<input  value="' + IsInstitution + '" name="IsInstitution" />'))
+            //form.append($('<input  value="' + SelectTop + '" name="SelectTop" />'))
+            //form.append($('<input  value="' + ExportAll + '" name="ExportAll" />'))
+            //form.append($('<input  value="' + TransactionType + '" name="TransactionType" />'))
+
+            form.appendTo('#formAppend').submit()
+            //form.appendTo('body').submit()
+
+            //    $.ajax({
+            //        url: url
+            //        , data: model
+            //        , type: 'Get'
+            //        , traditional: true
+            //        , beforeSend: function () { $(".loading").show(); }
+            //        , success: function (rVM) {
+            //            ShowResult(rVM.Status, rVM.Message);
+            //        }
+            //        , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+
+            //    });
+        });
+
+
+    }
+
+    $(".cLocal").on('click', function () {
+        // var customerName = $('.trCustomerId option:selected').text();
+        // var url = "/Vms/Home/GetLocalUnprocesData?CustomerName=" + customerName;
+        var tType = $('#transactionType').val();
+        var url = "/Vms/Home/ExportExcell?TransactionType=" + tType;
+        var modal = document.getElementById('myHigherModal');
+
+        window.open(url, '_blank');
+
+    });
+
+   
+</script>

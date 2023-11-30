@@ -1,0 +1,145 @@
+﻿@model SymViewModel.Vms.IssueHeaderViewModel
+@using UIHelper.MVC
+@using SymOrdinary
+@using System.Threading;
+@{ 
+    ShampanIdentity identity = null;
+    try
+    {
+        identity = (ShampanIdentity)Thread.CurrentPrincipal.Identity;
+    }
+    catch (Exception)
+    {
+        Response.Redirect("/VMS/Home/Login");
+        return;
+    }
+}
+
+@{
+    ViewBag.Title = "Index";
+}
+<div class="headrow">
+    <button type="button" title="Add New Petty Cash" data-url="/VMS/IssueHeader/Create?tType=@Model.TransactionType" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+    <button type="button" title="Post Checked Issue" data-url="/VMS/IssueHeader/Post" onclick="postedData(this, 'myDataTable');" id="" class="sym-btn-post">&nbsp;Post</button>
+    <label class="pull-right">Issue Header </label>
+</div>
+
+<div class="thinbox">
+    <div class="th_thinbox">
+        <p>Issue Header</p>
+    </div>
+
+    <div class="row">
+        <div class="col-md-2">
+            <div class="editor-label">
+                @Html.LabelFor(model => model.IssueDateTimeFrom)
+            </div>
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.IssueDateTimeFrom, new { @placeholder = "Date From", @class = "dtFrom customDatePicker form-control" })
+                @Html.ValidationMessageFor(model => model.IssueDateTimeFrom)
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="editor-label">
+                @Html.LabelFor(model => model.IssueDateTimeTo)
+            </div>
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.IssueDateTimeTo, new { @placeholder = "Date To", @class = "dtTo customDatePicker form-control" })
+                @Html.ValidationMessageFor(model => model.IssueDateTimeTo)
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="editor-label">
+                <label>&nbsp;</label>
+            </div>
+            <div class="editor-field">
+                <button type="button" title="Click to Search" id="searchBtn" class="sym-btn-search">&nbsp;Search</button>
+            </div>
+        </div>
+    </div>
+    <br />
+    <p></p>
+    <table id="myDataTable" class="display">
+        <thead>
+            <tr>
+                <th class="center">
+                    <input type="checkbox" class="chkAll" />
+                    Select All</th>
+                <th>Item No</th>
+                <th>Issue Date</th>
+                <th>Total Vat</th>
+                <th>Total Amount</th>
+                <th>Serial No</th>
+                <th>Is Posted</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <br />
+</div>
+
+<div class="headrow">
+    <button type="button" title="Add New Issue" data-url="/VMS/IssueHeader/Create?tType=@Model.TransactionType"" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+    <button type="button" title="Post Checked Issue" data-url="/VMS/IssueHeader/Post" onclick="postedData(this, 'myDataTable');" id="" class="sym-btn-post">&nbsp;Post</button>
+</div>
+
+<script language="javascript" type="text/javascript">
+
+    $(document).ready(function () {
+
+        SelectAllForDelete();
+        $.datepicker.regional[""].dateFormat = 'dd/M/y';
+        $.datepicker.setDefaults($.datepicker.regional['']);
+        var oTable = $('#myDataTable').dataTable({
+            "bServerSide": true,
+            "sAjaxSource": "/VMS/IssueHeader/_index?tType=@Model.TransactionType",
+            "bProcessing": true,
+            "aLengthMenu": tablelength(),
+            "bJqueryUI": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+                            {
+                                "sName": "Id",
+                                "bSearchable": false,
+                                "bSortable": false,
+                                "sWidth": "20%",
+                                "sClass": "center",
+                                "fnRender": function (oObj) {
+                                    return ' <input onclick="CheckAll(this)" type="checkbox" data-Id="' + oObj.aData[0].split('~')[0] + '">'
+                                        + '&nbsp; <a title="Click on for Edit" href=\"/VMS/IssueHeader/Edit/' + oObj.aData[0].split('~')[0] + '\" class="sym-btn-edit-row"></a>'
+                                        + '&nbsp; <a title="Click on for Post" data-url="/VMS/IssueHeader/Post"  onclick=btnPost(this); data-Id="' + oObj.aData[0] + '\" class="sym-btn-post-row"></a>'
+                                    ;
+                                }
+                            }
+                            , { "sName": "ItemNo", "sWidth": "20%" }
+                            , { "sName": "IssueDateTime", "sWidth": "10%" }
+                            , { "sName": "TotalVat", "sWidth": "15%" }
+                            , { "sName": "TotalAmount", "sWidth": "10%" }
+                            , { "sName": "SerialNo", "sWidth": "12%" }
+                            , { "sName": "Post", "sWidth": "10%" }
+            ]
+        });
+
+        $('#searchBtn').click(function () {
+            var oParam = {
+                  "dtFrom": ""
+                , "dtTo": ""
+            };
+            oParam.dtFrom = $(".dtFrom").val();
+            oParam.dtTo = $(".dtTo").val();
+
+            $.ajax({
+                url: "/VMS/IssueHeader/Index?tType=@Model.TransactionType",
+                cache: false,
+                data: oParam,
+                success: function (html) {
+                    oTable.fnDraw();
+                }
+            });
+        });
+
+
+    });
+</script>
+

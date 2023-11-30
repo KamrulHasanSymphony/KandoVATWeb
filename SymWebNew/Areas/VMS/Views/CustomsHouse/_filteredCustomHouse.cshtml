@@ -1,0 +1,23 @@
+﻿@model IEnumerable<VATViewModel.DTOs.CustomsHouseVM>
+@using UIHelper.MVC
+@{
+    Layout = null;
+    var sl = 1;
+}
+@foreach (var CustomHouse in Model)
+{
+    <tr class="trSelectPopUpCustomer">
+        <td>@sl</td>
+        <td class=" popUpCustomHouseCode">@CustomHouse.Code</td>
+        @*<td class=" popUpCustomsHouseName" title="@CustomHouse.CustomsHouseName">@CustomHouse.CustomsHouseName</td>*@
+        <td class=" popUpCustomsHouseName">@CustomHouse.CustomsHouseName</td>
+        <td>@CustomHouse.CustomsHouseAddress</td>
+        <td>@CustomHouse.ActiveStatus</td>
+        @*<td>@CustomHouse.CustomsHouseAddress</td>        
+        <td>@CustomHouse.ActiveStatus</td>*@
+        <td hidden class=" popUpCustomHouseId">@CustomHouse.ID</td>
+        @{
+    sl++;
+        }
+    </tr>
+}

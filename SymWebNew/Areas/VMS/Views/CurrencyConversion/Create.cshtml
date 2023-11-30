@@ -1,0 +1,155 @@
+﻿
+@model VATViewModel.DTOs.CurrencyConversionVM
+@using UIHelper.MVC
+@using (Html.BeginForm("CreateEdit", "CurrencyConversion", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmCurrencyConversion" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.CurrencyConversionId)
+    @Html.HiddenFor(model => model.Operation)
+    <div class="headrow">
+        @if (Model.Operation == "add")
+        {
+        <button type="button" name="btnName" value="Save" title="Save Data" onclick="pageSubmit('frmCurrencyConversion')" class="sym-btn-save">&nbsp;Save</button>
+        <label class="pull-right">CurrencyConversion > Create</label>
+        }
+        else
+        {
+        <button type="button" name="btnName" value="Update" title="Update Data" onclick="pageSubmit('frmCurrencyConversion')" class="sym-btn-update">&nbsp;Update</button>
+        <label class="pull-right">Currency Conversion > Edit</label>
+        }
+        <button type="button" title="Go To Index" data-url="/VMS/CurrencyConversion" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New Currency Conversion" data-url="/VMS/CurrencyConversion/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+    </div>
+    if (Model.Operation == "update") {
+    <div class="col-sm-12 col-md-12">
+        <div class="input-group   col-lg-8  col-md-8  col-sm-8 col-xs-12 text-color col-md-offset-2" style="">
+            <a class="input-group-addon btn btn-primary hidden-xs changePage" data-pager-action='first' id="first"><i class="fa fa-angle-double-left"></i>First</a>
+            <a class="input-group-addon btn btn-primary hidden-xs changePage" data-pager-action='previous' id="precode"><i class="fa fa-angle-left"></i>Previous</a>
+            @Html.SimpleDropDown("", "/Config/DropDown/IdNameDropdown?tableName=CurrencyConversion&Id=CurrencyConversionId&Name=CurrencyCodeFrom&AllData=no&code=CurrencyCodeTo", new { @class = " trNavigateMenu form-control selectDropdown " })
+            <a class="input-group-addon btn btn-primary changePage" data-pager-action='current' id="current"><i class="fa fa-search"></i></a>
+            <a class="input-group-addon btn btn-primary hidden-xs changePage" data-pager-action='next' id="nextcode">Next <i class="fa  fa-angle-right"></i></a>
+            <a class="input-group-addon btn btn-primary hidden-xs changePage" data-pager-action='last' id="last">Last <i class="fa  fa-angle-double-right"></i></a>
+        </div>
+    </div>
+    }
+    <div class="col-md-12" style="padding:0px;">
+        <div class="thinbox animated zoomIn faster">
+         <div class="th_thinbox">
+            <p>Currency</p>
+        </div>
+        <div class="row">
+
+            <div class="form-group">
+
+                <label for="CurrencyConversionId" class="col-md-2 control-label text-right trkLabelMargin">ID</label>
+                <div class="col-md-4" style="margin-bottom:6px;">
+                    <div class="col-md-6 trkPX-0">
+                        @Html.TextBoxFor(model => model.CurrencyConversionId, new { @placeholder = "~~~ New ~~~", @class = " form-control" })
+                    </div>
+                    @Html.ValidationMessageFor(model => model.CurrencyConversionId)
+                </div>
+
+                <label for="CurrencyRate" class="col-md-2 control-label text-right trkLabelMargin">Rate</label>
+                <div class="col-md-4" style="margin-bottom:6px;">
+                    <div class="col-md-6 trkPX-0">
+                        @Html.TextBoxFor(model => model.CurrencyRate, new { @class = "priceLen  form-control" })
+                    </div>
+                    @Html.ValidationMessageFor(model => model.CurrencyRate)
+                </div>
+
+            </div>
+                
+                <div class="form-group">
+                    <label for="CurrencyCodeFrom" class="col-md-2 control-label text-right trkLabelMargin">From</label>
+                    <div class="col-md-4">
+                        <div class="col-md-6 trkPX-0" style="margin-bottom:6px;">
+                            @Html.SimpleDropDownFor(model => model.CurrencyCodeFrom, "/Config/DropDown/Currency", new { @class = "required form-control trkMT-0" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.CurrencyCodeFrom)
+                    </div>
+                    <label for="CurrencyCodeTo" class="col-md-2 control-label text-right trkLabelMargin">To</label>
+                    <div class="col-md-4">
+                        <div class="col-md-6 trkPX-0" style="margin-bottom:6px;">
+                            @Html.SimpleDropDownFor(model => model.CurrencyCodeTo, "/Config/DropDown/Currency", new { @class = "required form-control trkMT-0" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.CurrencyCodeTo)
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    
+                    <label for="ConversionDate" class="col-md-2 control-label text-right trkLabelMargin">Conversion Date</label>
+                    <div class="col-md-4">
+                        <div class="col-md-6 trkPX-0">
+                            @Html.TextBoxFor(model => model.ConvertionDate, new { @placeholder = "Conversion Date", @class = " trDate customDatePicker required form-control" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.ConvertionDate)
+                    </div>
+
+                    <label class="col-md-2 control-label text-right trkLabelMargin">Is Active</label>
+                    <div class="col-md-2">
+                        @Html.SimpleDropDownFor(m => m.ActiveStatus, "/Config/DropDown/DecisionList", new { @class = " trNavigateMenu form-control required" })
+                    </div>
+
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-group">
+                    <label for="Comments" class="col-md-2 control-label text-right trkLabelMargin">Comments</label>
+                    <div class="col-md-4">
+                        @Html.TextAreaFor(model => model.Comments, new { @placeholder = "Comments", @class = "  form-control" })
+                        @Html.ValidationMessageFor(model => model.Comments)
+                    </div>
+                    
+                </div>
+            </div>
+    </div>
+    </div>
+    <div class="headrow">
+        @if (Model.Operation == "add")
+        {
+        <button type="button" name="btnName" value="Save" title="Save Data" onclick="pageSubmit('frmCurrencyConversion')" class="sym-btn-save">&nbsp;Save</button>
+        <label class="pull-right">CurrencyConversion > Create</label>
+        }
+        else
+        {
+        <button type="button" name="btnName" value="Update" title="Update Data" onclick="pageSubmit('frmCurrencyConversion')" class="sym-btn-update">&nbsp;Update</button>
+        <label class="pull-right">CurrencyConversion > Edit</label>
+        }
+    <button type="button" title="Go To Index" data-url="/VMS/CurrencyConversion" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+    <button type="button" title="Add New CurrencyConversion" data-url="/VMS/CurrencyConversion/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+    </div>
+}
+<script>
+    function navigatePage() {
+        var interval = setInterval(function () {
+            if (document.querySelectorAll('.trNavigateMenu option').length > 0) {
+                var id = '@Model.CurrencyConversionId';
+                $('.trNavigateMenu').select2("val", id);
+                clearInterval(interval);
+            }
+        }, 200);
+        ////navigating previous-next
+        $('.changePage').click(function () {
+            var id = '@Model.CurrencyConversionId';
+                var btn = $(this).attr("data-pager-action");
+                if (btn.toLocaleLowerCase() == "current") {
+                    var targetId = $('.trNavigateMenu').val();
+                    if (id == targetId) {
+                        return;
+                    }
+                    id = targetId;
+                }
+                window.location = "/VMS/CurrencyConversion/Navigate?id=" + id + "&btn=" + btn;
+            });
+        }
+
+    $(function () {
+        valiDation("frmCurrencyConversion");
+
+        var operation = '@Model.Operation';
+        if (operation == "update") {
+            navigatePage();
+        }
+    });
+
+</script>

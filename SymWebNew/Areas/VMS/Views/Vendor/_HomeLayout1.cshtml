@@ -1,0 +1,307 @@
+﻿@using System.Configuration
+@using VATServer.Ordinary
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<title>ShampanVAT</title>
+	@*<link href="~/Images/GDIC/favicon.ico" rel="shortcut icon" type="image/x-icon" />*@
+	<meta name="viewport" content="width=device-width" />
+
+	@*<script src="~/assets/javascripts/jQuery2.1.4.js"></script>*@
+	<script src="~/Scripts/jquery-3.6.1.js"></script>
+
+	@*<link href="~/Content/coustom.css" rel="stylesheet" />*@
+
+    @*@Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/docs.min.css")*@
+    @*@Styles.Render("~/Content/coustom.css")*@
+    @*@Styles.Render("~/UIFramework/KendoUI/Css/Common.css")
+    @Styles.Render("~/UIFramework/KendoUI/Css/CommonSize.css")
+    @Styles.Render("~/fonts/fontawesome5.6.3/css/all.css")
+    @Styles.Render("~/UIFramework/FileInput/css/fileinput.css")*@
+
+    @*@Styles.Render("~/Content/Menu/LightOperaDropDownMenu.css")*@
+
+    @*@Styles.Render("~/Content/animate.css")*@
+
+	<link href="~/Content/docs.min.css" rel="stylesheet" />
+	<link href="~/UIFramework/KendoUI/Css/Common.css" rel="stylesheet" />
+	<link href="~/UIFramework/KendoUI/Css/CommonSize.css" rel="stylesheet" />
+	<link href="~/UIFramework/FileInput/css/fileinput.css" rel="stylesheet" />
+	<link href="~/fonts/fontawesome5.6.3/css/all.css" rel="stylesheet" />
+	<link href="~/Content/Menu/LightOperaDropDownMenu.css" rel="stylesheet" />
+    <link href="~/Content/animate.css" rel="stylesheet" />
+    
+
+	<link href="~/assets/css/menu.css" rel="stylesheet" />
+
+	<link href="~/assets/css/jquery-ui.css" rel="stylesheet" />
+	<link href="~/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+	@*<link href="~/assets/plugins/font-awesome/css/font-awesome.css" rel="stylesheet" />*@
+	<link href="~/assets/css/toastr.css" rel="stylesheet" />
+	<link href="~/assets/css/trkStyles.css" rel="stylesheet" />
+
+	@*<link href="~/assets/stylesheets/common.css" rel="stylesheet" />*@
+
+	@*<link href="~/assets/stylesheets/font-awesome.css" rel="stylesheet" />*@
+	<link href="~/assets/stylesheets/animate.css" rel="stylesheet" />
+
+	<link href="~/assets/css/jquery.ptTimeSelect.css" rel="stylesheet" />
+	<link href="~/assets/css/SymphonyBtn.css" rel="stylesheet" />
+	<link href="~/assets/css/dataTables.colVis.css" rel="stylesheet" />
+	<link href="~/assets/css/select2.css" rel="stylesheet" />
+	<link href="~/assets/kendoUI2021/kendo/Style/kendo.common.min.css" rel="stylesheet" />
+	<link href="~/assets/kendoUI2021/kendo/Style/kendo.blueopal.min.css" rel="stylesheet" />
+
+	@Styles.Render("~/Content/css")
+
+	<style>
+        .LogoutButton {
+            width: 24px;
+            height: 24px;
+            border-radius: 5px;
+            padding-left: -3px !important;
+        }
+
+        .wth {
+            width: 15%;
+        }
+    </style>
+	
+</head>
+<body onload="window.scroll(0, 150)">
+
+@*<div class="loading">
+	<img src="~/Images/squares.gif" />
+</div>*@
+
+<div id="hrcss1">
+
+	@if (true)
+	{
+		string NBRAuth = "";
+
+		try
+		{
+			NBRAuth = new AppSettingsReader().GetValue("NBRAuth", typeof(string)).ToString();
+
+		}
+		catch (Exception e)
+		{
+			NBRAuth = "";
+
+		}
+
+		if (string.IsNullOrEmpty(NBRAuth) || NBRAuth.ToLower() == "all")
+		{
+                @*@Html.Partial("_navbarACI")*@
+			@Html.Partial("_navbar")
+
+		}
+		else if (NBRAuth.ToLower() == "fornbr")
+		{
+			@Html.Partial("_navbarACINBR")
+		}
+
+	}
+	else if (OrdinaryVATDesktop.IsUnileverCompany(Convert.ToString(Session["CompanyCode"])))
+	{
+		@Html.Partial("_navbarCEL")
+	}
+	else
+	{
+		@Html.Partial("_navbar")
+
+	}
+	@*@Html.Partial("_rightNav")*@
+	@*@Html.Partial("_rightNav")*@
+	<!--/.content-->
+	<div class="contentBody" style="min-height: 500px">
+
+		@RenderBody()
+		<script>
+
+                @*var sessionTimeoutMilliseconds = @Session["COOKIE_TIMEOUT"]*@
+
+                //setTimeout(function () {
+                //    window.location.href = '/VMS/Home/Login';
+                //}, sessionTimeoutMilliseconds);
+            </script>
+
+		@Scripts.Render("~/bundles/jquery")
+		@RenderSection("scripts", required: false)
+	</div>
+	<style>
+            .footer {
+                z-index: 5;
+                /*position: fixed;*/
+                left: 0;
+                bottom: 0;
+                width: 100%;
+                background-color: #b200ff;
+            }
+
+            .footerLog {
+                display: initial;
+                color: #00ff21;
+            }
+
+            .contentBody {
+                padding-bottom: 0px;
+            }
+
+            .clearfix {
+                overflow: auto;
+            }
+        </style>
+
+	@*      <a id="back-to-top" href="#" class=" back-to-top" role="button" title="Click to return on the top page" data-toggle="tooltip" data-placement="left">
+            <img src="~/Images/gotop.png" style="width: 40px; height: 40px;" /></a>
+        *@
+	<div>
+
+		<div class="dialog-confirm" style="display: none">
+			<p>
+				<span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+				Are you sure to delete?
+			</p>
+		</div>
+		<div class="dialog-create" style="display: none">
+		</div>
+		<div class="dialog-edit" style="display: none">
+		</div>
+		<div class="dialog-detail" style="display: none">
+		</div>
+		<div class="dialog-report" style="display: none">
+		</div>
+		<div class="dialog-audit" style="display: none">
+		</div>
+		<div class="dialog-approve" style="display: none">
+		</div>
+		<div class="dialog-reject" style="display: none">
+		</div>
+		<div class="dialog-accept" style="display: none">
+		</div>
+		<div class="dialog-receive" style="display: none">
+		</div>
+	</div>
+	<br />
+	<div class="clearfix"></div>
+	@*        <div class="footer">
+                        <p><i class="fa fa-asterisk"></i>Powered By <a href="http://symphonysoftt.com/" target="_blank">Symphony</a>.</p>
+
+            </div>*@
+
+
+	<div class=" footer content black" style="">
+		<div class="row">
+			<div class="col-md-2">
+				<p><i class="fa fa-asterisk"></i>Powered By <a href="http://symphonysoftt.com/" target="_blank">Symphony</a>.</p>
+				@*<p style="margin-top: -20px"><i class="fa fa-wrench"></i>Developed By <a href="http://symphonysoftt.com/" target="_blank">Symphony</a>.</p>*@
+			</div>
+			<div class="col-md-3">
+				<p>
+
+					<label class="footerLog">Branch : </label>
+					@if (@Session["LogInBranch"] != null)
+					{
+						@Session["LogInBranch"].ToString()
+					}
+
+				</p>
+			</div>
+			<div class="col-md-2">
+				<p>
+					<label class="footerLog">User : </label>
+					@if (@Session["LogInUserName"] != null)
+					{
+						@Session["LogInUserName"].ToString()
+					}
+
+				</p>
+			</div>
+			<div class="col-md-3">
+				<p>
+					<label class="footerLog">Login Time : </label>
+					@if (@Session["LogInLoginTime"] != null)
+					{
+						@Session["LogInLoginTime"].ToString()
+					}
+				</p>
+			</div>
+			<div class="col-md-2">
+				<p>
+					<label class="footerLog">Version : </label>
+					@if (@Session["SoftwareVersion"] != null)
+					{
+						@Session["SoftwareVersion"].ToString()
+					}
+				</p>
+			</div>
+
+		</div>
+
+	</div>
+
+
+
+</div>
+
+
+<script src="~/assets/javascripts/toastr.js"></script>
+@*<script src="~/assets/javascripts/jquery.min.js"></script>*@
+
+<script src="~/assets/javascripts/jquery.validate.js"></script>
+<script src="~/assets/javascripts/jquery.validate.min.js"></script>
+@*<script src="~/assets/javascripts/jquery.validate.unobtrusive.min.js"></script>*@
+
+<script src="~/Scripts/jquery-3.6.1.min.js"></script>
+@*<script src="~/assets/javascripts/jquery-1.8.2.min.js"></script>
+<script src="~/assets/javascripts/jquery-ui-1.8.24.min.js"></script>*@
+
+<script src="~/assets/kendoUI2021/kendo/kendo.all.min.js"></script>
+<script src="~/assets/javascripts/default.js"></script>
+<script src="~/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+<script src="~/assets/NewFolder1/jquery.dataTables.min.js"></script>
+
+<script src="~/assets/javascripts/jquery.ptTimeSelect.js"></script>
+<script src="~/assets/javascripts/jquery.dataTables.columnFilter.js"></script>
+<script src="~/assets/js/dataTables.colVis.js"></script>
+
+<script src="~/assets/javascripts/select2.js"></script>
+
+<script src="~/assets/plugins/chartjs/moment.js"></script>
+<script src="~/assets/javascripts/chart.min.js"></script>
+<script src="~/assets/javascripts/tableHeadFixer.js"></script>
+<script src="~/assets/javascripts/bootstrap-checkbox.js" defer></script>
+@*<script src="~/assets/javascripts/custom.js"></script>*@
+
+@*<p>cdn.datatables.net/fixedcolumns/3.2.0/js/dataTables.fixedColumns.min.js</p>*@
+<script src="~/assets/DataTables/FixedColumns-3.2.5/js/fixedColumns.dataTables.js"></script>
+<script>
+        //$(function () {
+        //    sessionDateTime()
+        //})
+
+        function sessionDateTime() {
+            var date = $(".customDatePicker.defaultDate").val();
+            //var changeableDate = $(".customDatePickerChangeable").val();
+
+            var today = FormatDate(new Date());
+            if (date == "") {
+                $(".customDatePicker.defaultDate").val(today);
+            }
+
+            //if (changeableDate == "") {
+            //    $(".customDatePickerChangeable").val(today);
+            //}
+        }
+    </script>
+
+@RenderSection("scripts2", false)
+</body>
+</html>
+

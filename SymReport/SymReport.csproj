@@ -1,0 +1,516 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{D3F37DFA-4EA0-42D9-8CD4-6366570D94F2}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SymReport</RootNamespace>
+    <AssemblyName>SymReport</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="CrystalDecisions.CrystalReports.Engine, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="CrystalDecisions.ReportSource, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="CrystalDecisions.Shared, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DSVATReports.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DSVATReports.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReportFiles\VMS\MIS19.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MIS19.rpt</DependentUpon>
+    </Compile>
+    <Compile Include="ReportFiles\VMS\Rpt18Break.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Rpt18Break.rpt</DependentUpon>
+    </Compile>
+    <Compile Include="ReportFiles\VMS\Rpt19Break.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Rpt19Break.rpt</DependentUpon>
+    </Compile>
+    <Compile Include="ReportFiles\VMS\RptAdjustment.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RptAdjustment.rpt</DependentUpon>
+    </Compile>
+    <Compile Include="ReportFiles\VMS\RptBankList.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RptBankList.rpt</DependentUpon>
+    </Compile>
+    <Compile Include="ReportFiles\VMS\RptComapnyProfile.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RptComapnyProfile.rpt</DependentUpon>
+    </Compile>
+    <Compile Include="ReportFiles\VMS\RptCurrent_AC_VAT18.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RptCurrent_AC_VAT18.rpt</DependentUpon>
+    </Compile>
+    <Compile Include="ReportFiles\VMS\RptCustomerGroup.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RptCustomerGroup.rpt</DependentUpon>
+    </Compile>
+    <Compile Include="ReportFiles\VMS\RptCustomerListing.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RptCustomerListing.rpt</DependentUpon>
+    </Compile>
+    <Compile Include="ReportFiles\VMS\RptInputOutputCoEfficient.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RptInputOutputCoEfficient.rpt</DependentUpon>
+    </Compile>
+    <Compile Include="ReportFiles\VMS\RptIssue.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RptIssue.rpt</DependentUpon>
+    </Compile>
+    <Compile Include="ReportFiles\VMS\RptIssueSummery.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RptIssueSummery.rpt</DependentUpon>
+    </Compile>
+    <Compile Include="ReportFiles\VMS\RptMISIssue.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RptMISIssue.rpt</DependentUpon>
+    </Compile>
+    <Compile Include="ReportFiles\VMS\RptMISPurchase1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RptMISPurchase1.rpt</DependentUpon>
+    </Compile>
+    <Compile Include="ReportFiles\VMS\RptMISReceive.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RptMISReceive.rpt</DependentUpon>
+    </Compile>
+    <Compile Include="ReportFiles\VMS\RptMISSales1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RptMISSales1.rpt</DependentUpon>
+    </Compile>
+    <Compile Include="ReportFiles\VMS\RptProductCategoryListing.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RptProductCategoryListing.rpt</DependentUpon>
+    </Compile>
+    <Compile Include="ReportFiles\VMS\RptProductListing.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RptProductListing.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ReportFiles\VMS\RptPurchaseSummery.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RptPurchaseSummery.rpt</DependentUpon>
+    </Compile>
+    <Compile Include="ReportFiles\VMS\RptPurchaseSummeryByProduct.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RptPurchaseSummeryByProduct.rpt</DependentUpon>
+    </Compile>
+    <Compile Include="ReportFiles\VMS\RptPurchaseTransaction.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RptPurchaseTransaction.rpt</DependentUpon>
+    </Compile>
+    <Compile Include="ReportFiles\VMS\RptPurchaseTransaction_Duty.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RptPurchaseTransaction_Duty.rpt</DependentUpon>
+    </Compile>
+    <Compile Include="ReportFiles\VMS\RptPurchase_LCInfo.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RptPurchase_LCInfo.rpt</DependentUpon>
+    </Compile>
+    <Compile Include="ReportFiles\VMS\RptReceivingReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RptReceivingReport.rpt</DependentUpon>
+    </Compile>
+    <Compile Include="ReportFiles\VMS\RptReceivingSummery.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RptReceivingSummery.rpt</DependentUpon>
+    </Compile>
+    <Compile Include="ReportFiles\VMS\RptSaleReceive.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RptSaleReceive.rpt</DependentUpon>
+    </Compile>
+    <Compile Include="ReportFiles\VMS\RptSD.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RptSD.rpt</DependentUpon>
+    </Compile>
+    <Compile Include="ReportFiles\VMS\RptSerialStockStatus.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RptSerialStockStatus.rpt</DependentUpon>
+    </Compile>
+    <Compile Include="ReportFiles\VMS\RptStockAll.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RptStockAll.rpt</DependentUpon>
+    </Compile>
+    <Compile Include="ReportFiles\VMS\RptStockQty.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RptStockQty.rpt</DependentUpon>
+    </Compile>
+    <Compile Include="ReportFiles\VMS\RptTR.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RptTR.rpt</DependentUpon>
+    </Compile>
+    <Compile Include="ReportFiles\VMS\RptTrasurryDepositeNew.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RptTrasurryDepositeNew.rpt</DependentUpon>
+    </Compile>
+    <Compile Include="ReportFiles\VMS\RptTreasuryDepositTransaction.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RptTreasuryDepositTransaction.rpt</DependentUpon>
+    </Compile>
+    <Compile Include="ReportFiles\VMS\RptTRVDS.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RptTRVDS.rpt</DependentUpon>
+    </Compile>
+    <Compile Include="ReportFiles\VMS\RptVAT16_New.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RptVAT16_New.rpt</DependentUpon>
+    </Compile>
+    <Compile Include="ReportFiles\VMS\RptVAT17.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RptVAT17.rpt</DependentUpon>
+    </Compile>
+    <Compile Include="ReportFiles\VMS\RptVAT17_New.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RptVAT17_New.rpt</DependentUpon>
+    </Compile>
+    <Compile Include="ReportFiles\VMS\RptVAT17_NewDigit3.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RptVAT17_NewDigit3.rpt</DependentUpon>
+    </Compile>
+    <Compile Include="ReportFiles\VMS\RptVAT18Breakdown.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RptVAT18Breakdown.rpt</DependentUpon>
+    </Compile>
+    <Compile Include="ReportFiles\VMS\RptVAT18_New.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RptVAT18_New.rpt</DependentUpon>
+    </Compile>
+    <Compile Include="ReportFiles\VMS\RptVAT19.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RptVAT19.rpt</DependentUpon>
+    </Compile>
+    <Compile Include="ReportFiles\VMS\RptVAT19NewFormat.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RptVAT19NewFormat.rpt</DependentUpon>
+    </Compile>
+    <Compile Include="ReportFiles\VMS\RptVAT1New.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RptVAT1New.rpt</DependentUpon>
+    </Compile>
+    <Compile Include="ReportFiles\VMS\RptVAT1New7Digit_Legal.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RptVAT1New7Digit_Legal.rpt</DependentUpon>
+    </Compile>
+    <Compile Include="ReportFiles\VMS\RptVAT7Main.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RptVAT7Main.rpt</DependentUpon>
+    </Compile>
+    <Compile Include="ReportFiles\VMS\RptVendorGroup.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RptVendorGroup.rpt</DependentUpon>
+    </Compile>
+    <Compile Include="ReportFiles\VMS\RptVendorListing.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RptVendorListing.rpt</DependentUpon>
+    </Compile>
+    <Compile Include="ReportFiles\VMS\RptWastage.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RptWastage.rpt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DSVATReports.xsc">
+      <DependentUpon>DSVATReports.xsd</DependentUpon>
+    </None>
+    <None Include="DSVATReports.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>DSVATReports.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="DSVATReports.xss">
+      <DependentUpon>DSVATReports.xsd</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ReportFiles\VMS\MIS19.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>MIS19.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFiles\VMS\Rpt18Break.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Rpt18Break.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFiles\VMS\Rpt19Break.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Rpt19Break.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFiles\VMS\RptAdjustment.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>RptAdjustment.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFiles\VMS\RptBankList.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>RptBankList.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFiles\VMS\RptComapnyProfile.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>RptComapnyProfile.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFiles\VMS\RptCurrent_AC_VAT18.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>RptCurrent_AC_VAT18.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFiles\VMS\RptCustomerGroup.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>RptCustomerGroup.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFiles\VMS\RptCustomerListing.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>RptCustomerListing.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFiles\VMS\RptInputOutputCoEfficient.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>RptInputOutputCoEfficient.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFiles\VMS\RptIssue.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>RptIssue.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFiles\VMS\RptIssueSummery.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>RptIssueSummery.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFiles\VMS\RptMISIssue.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>RptMISIssue.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFiles\VMS\RptMISPurchase1.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>RptMISPurchase1.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFiles\VMS\RptMISReceive.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>RptMISReceive.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFiles\VMS\RptMISSales1.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>RptMISSales1.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFiles\VMS\RptProductCategoryListing.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>RptProductCategoryListing.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFiles\VMS\RptProductListing.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>RptProductListing.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFiles\VMS\RptPurchaseSummery.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>RptPurchaseSummery.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFiles\VMS\RptPurchaseSummeryByProduct.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>RptPurchaseSummeryByProduct.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFiles\VMS\RptPurchaseTransaction.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>RptPurchaseTransaction.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFiles\VMS\RptPurchaseTransaction_Duty.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>RptPurchaseTransaction_Duty.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFiles\VMS\RptPurchase_LCInfo.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>RptPurchase_LCInfo.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFiles\VMS\RptReceivingReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>RptReceivingReport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFiles\VMS\RptReceivingSummery.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>RptReceivingSummery.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFiles\VMS\RptSaleReceive.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>RptSaleReceive.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFiles\VMS\RptSD.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>RptSD.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFiles\VMS\RptSerialStockStatus.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>RptSerialStockStatus.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFiles\VMS\RptStockAll.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>RptStockAll.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFiles\VMS\RptStockQty.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>RptStockQty.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFiles\VMS\RptTR.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>RptTR.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFiles\VMS\RptTrasurryDepositeNew.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>RptTrasurryDepositeNew.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFiles\VMS\RptTreasuryDepositTransaction.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>RptTreasuryDepositTransaction.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFiles\VMS\RptTRVDS.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>RptTRVDS.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFiles\VMS\RptVAT16_New.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>RptVAT16_New.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFiles\VMS\RptVAT17.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>RptVAT17.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFiles\VMS\RptVAT17_New.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>RptVAT17_New.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFiles\VMS\RptVAT17_NewDigit3.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>RptVAT17_NewDigit3.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFiles\VMS\RptVAT18Breakdown.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>RptVAT18Breakdown.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFiles\VMS\RptVAT18_New.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>RptVAT18_New.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFiles\VMS\RptVAT19.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>RptVAT19.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFiles\VMS\RptVAT19NewFormat.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>RptVAT19NewFormat.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFiles\VMS\RptVAT1New.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>RptVAT1New.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFiles\VMS\RptVAT1New7Digit_Legal.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>RptVAT1New7Digit_Legal.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFiles\VMS\RptVAT7Main.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>RptVAT7Main.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFiles\VMS\RptVendorGroup.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>RptVendorGroup.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFiles\VMS\RptVendorListing.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>RptVendorListing.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReportFiles\VMS\RptWastage.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>RptWastage.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

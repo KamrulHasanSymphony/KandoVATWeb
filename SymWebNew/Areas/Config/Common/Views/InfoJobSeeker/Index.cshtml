@@ -1,0 +1,155 @@
+﻿    <script type="text/javascript">
+        $(document).ready(function () {
+            SelectAllForDelete();
+            $.datepicker.regional[""].dateFormat = 'dd/M/y';
+            $.datepicker.setDefaults($.datepicker.regional['']);
+            var oTable = $('#myDataTable').dataTable({
+                "bServerSide": true,
+                "sAjaxSource": "/Common/InfoJobSeeker/_index",
+                "bProcessing": true,
+                "aLengthMenu": tablelength(),
+                "bJqueryUI": true,
+                "bAutoWidth": false,
+                "sScrollX": '200%',
+                "aoColumns": [
+                                {
+                                    "sName": "Id",
+                                    "bSearchable": false,
+                                    "bSortable": false,
+                                    "sWidth": "6%",
+                                    "sClass":"center",
+                                    "fnRender": function (oObj) {
+                                        return '<a title="Click on for Details" style="text-decoration:none;"    href=\"/Common/InfoJobSeeker/Edit?Id=' + oObj.aData[0] + '\"  class="sym-btn-edit-row"></a>';
+                                    }
+                                }
+                               , { "sName": "FullName", "sWidth": "6%" }
+                               , { "sName": "PresentDistrictId", "sWidth": "6%" }
+                               , { "sName": "Gender", "sWidth": "6%" }
+                               , { "sName": "DOB", "sWidth": "8%" }
+                               , { "sName": "JobCategoryId", "sWidth": "5%" }
+                               , { "sName": "JobLevel", "sWidth": "5%" }
+                               , { "sName": "JobNature", "sWidth": "5%" }
+                               , { "sName": "CareerObjective", "sWidth": "5%" }
+                               , { "sName": "LastSchool", "sWidth": "5%" }
+                               , { "sName": "LastDegree", "sWidth": "5%" }
+                               , { "sName": "EducationSubject", "sWidth": "5%" }
+                               , { "sName": "LastCompany", "sWidth": "5%" }
+                               , { "sName": "ExperianceYear", "sWidth": "5%" }
+                               , { "sName": "Mobile", "sWidth": "5%" }
+                               , { "sName": "Email", "sWidth": "5%" }
+                               , { "sName": "Speciality", "sWidth": "5%" }
+                               , { "sName": "Website", "sWidth": "6%" }
+                ]
+            });
+            oTable.columnFilter({
+                sPlaceHolder: "head:after",
+                aoColumns: [{ type: "checkbox", "sClass": "chkAll" }
+                           , { type: "text" }
+                           , { type: "text" }
+                           , { type: "text" }
+                           , { type: "date-range" }
+                           , { type: "text" }
+                           , { type: "text" }
+                           , { type: "text" }
+                           , { type: "text" }
+                           , { type: "text" }
+                           , { type: "text" }
+                           , { type: "text" }
+                           , { type: "text" }
+                           , { type: "text" }
+                           , { type: "text" }
+                           , { type: "text" }
+                           , { type: "text" }
+                           , { type: "text" }
+                ]
+            });
+        });
+    </script>
+@{
+    ViewBag.Title = "Index";
+    ViewBag.Location = "Payroll=>Info Job Seeker=>Index"; 
+}
+<div class="headrow">
+        <button type="button" title="Add New Job Seeker" data-url="/Common/InfoJobSeeker/Create" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+     <label class="pull-right">Job Seeker Information</label>
+</div>
+    <div class="thinbox">
+        <div class="th_thinbox">
+        <p>Job Seeker List</p>   
+        </div>
+<p></p>
+        <div id="container">
+            <div id="demo">
+                <table id="myDataTable" class="display">
+                    <thead>
+                         <tr>
+                             <th  class="center" >&nbsp;</th>
+                            <th>Full Name</th>
+                            <th>Present District</th>
+                            <th>Gender</th>
+                            <th>Date of Birth</th>
+                            <th>Job Category</th>
+                            <th>Job Level</th>
+                            <th>Job Nature</th>
+                            <th>Career Objective</th>
+                            <th>Last School</th>
+                            <th>Last Degree</th>
+                            <th>Education Subject</th>
+                            <th>Last Company</th>
+                            <th>Experiance Year</th>
+                            <th>Mobile</th>
+                            <th>Email</th>
+                            <th>Speciality</th>
+                            <th>Website    </th>
+                        </tr>
+                        <tr>
+                            <th  class="center" >Actions</th>
+                            <th>Full Name</th>
+                            <th>Present District</th>
+                            <th>Gender</th>
+                            <th>Date of Birth</th>
+                            <th>Job Category</th>
+                            <th>Job Level</th>
+                            <th>Job Nature</th>
+                            <th>Career Objective</th>
+                            <th>Last School</th>
+                            <th>Last Degree</th>
+                            <th>Education Subject</th>
+                            <th>Last Company</th>
+                            <th>Experiance Year</th>
+                            <th>Mobile</th>
+                            <th>Email</th>
+                            <th>Speciality</th>
+                            <th>Website    </th>
+                        </tr>
+
+@*
+                        FullName
+                        PresentDistrictId
+                        Gender
+                        DOB
+                        JobCategoryId
+                        JobLevel
+                        JobNature
+                        CareerObjective
+                        LastSchool
+                        LastDegree
+                        EducationSubject
+                        LastCompany
+                        ExperianceYear
+                        Mobile
+                        Email
+                        Speciality
+                        Website    
+                        *@
+                    </thead>
+                    <tbody> 
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <br />
+        </div>
+<div class="headrow">
+        <button type="button" title="Add New Job Seeker" data-url="/Common/InfoJobSeeker/Create" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+</div>

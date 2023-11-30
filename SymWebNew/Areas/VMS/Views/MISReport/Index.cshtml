@@ -1,0 +1,447 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+@*@using SymOrdinary
+@using System.Threading;
+
+@{
+    ShampanIdentity identity = null;
+    try
+    {
+        identity = (ShampanIdentity)Thread.CurrentPrincipal.Identity;
+    }
+    catch (Exception)
+    {
+        Response.Redirect("/VMS/Home/Login");
+        return;
+    }
+}*@
+
+<style>
+    .myUL, .myUL ul {
+        list-style-type: none;
+    }
+
+    .myUL {
+        margin: 0;
+        padding: 0;
+    }
+
+    .myUL li {
+        cursor: pointer;
+        font-size: 20px;
+        border: 2px solid #44fcd4;
+        padding: 10px;
+        margin-top: 5px;
+        margin-bottom: 5px;
+        border-radius: 10px;
+    }
+
+    .myUL li:hover {
+        color: white;
+        border: 2px solid #00aa08;
+    }
+     ul.myUL .trCaret {
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none; /* Safari 3.1+ */
+            -moz-user-select: none; /* Firefox 2+ */
+            -ms-user-select: none; /* IE 10+ */
+        }
+
+    ul.myUL li {
+        color: #42f4c5;
+        background-color: #003ea3;
+    }
+
+    ul.myUL .trCaret {
+        color: white;
+    }
+
+    ul.myUL .trCaret::before {
+        content: "\25B6";
+        color: #ffb049;
+        display: inline-block;
+        margin-right: 6px;
+    }
+
+    ul.myUL .trCaret-down::before {
+         transform: rotate(90deg);
+    }
+
+    ul.myUL .nested {
+        display: none;
+    }
+
+    ul.myUL .active {
+        display: block;
+    }
+</style>
+@*<div class="thinbox">
+        <div class="th_thinbox">
+            <p class="text-center">MIS Reports</p>
+        </div>
+        <div class="row animated zoomIn faster">
+            <div class="col-md-3 col-md-offset-3">
+                <ul class="myUL">
+                    <li class="purchaseReport">Purchase</li>
+                    <li>
+                        <span class="trCaret">Production</span>
+                        <ul class="nested">
+                            <li class="issueReport">Issue</li>
+                            <li class="receiveReport">Receive</li>
+                        </ul>
+                    </li>
+                    <li class="saleReport">Sale</li>
+                    <li>
+                        <span class="trCaret">Stock</span>
+                        <ul class="nested">
+                            <li class="stockReport">Stock</li>
+                            <li class="receiveStockReport">Receive Sale</li>
+                        </ul>
+                    </li>
+                    <li class="DepositReport">Deposit</li>
+                    <li class="AdjustmentReport">Adjustment</li>
+                    <li class="CoEfficientReport">Co-Efficient</li>
+                    <li class="TransferIssueReport">TransferIssue</li>
+                    <li class="TransferReceiveReport">TransferReceive</li>
+                </ul>
+
+            </div>
+            <div class="col-md-3">
+                <ul class="myUL">
+                    <li class="WastageReport">Wastage</li>
+                    <li>Value Change</li>
+                    <li class="TollRegisterReport">Toll Register</li>
+                    <li class="SerialStockReport">Serial Stock</li>
+                    <li class="PurchaseLCReport">Purchase LC</li>
+                    <li>Sale C/E</li>
+                    <li class="CStatementCReport">Comparison Statement</li>
+                </ul>
+            </div>
+
+            <div class="col-md-3"></div>
+        </div>
+
+    </div>*@
+
+
+
+
+
+@*<div class="thinbox">
+        <div class="th_thinbox">
+            <p class="text-center" style="padding-left: 7%;">MIS Reports</p>
+        </div>
+        <div class="row animated zoomIn faster">
+            <div class="col-md-3 col-md-offset-5">
+                <ul class="myUL">
+
+                    <li class="saleReport text-center">Sale</li>
+                    <li class="purchaseReport text-center">Purchase</li>
+
+                    <li class="purchaseReport text-center">Transfer</li>
+                    <li class="purchaseReport text-center">Stock</li>
+
+                </ul>
+
+            </div>
+
+
+            <div class="col-md-3"></div>
+        </div>
+
+    </div>*@
+
+
+<div class="thinbox">
+    <div class="th_thinbox">
+        <p class="text-center" style=" padding-left: 7%;">MIS Reports</p>
+    </div>
+    <div class="row animated zoomIn faster">
+        <div class="col-md-3 col-md-offset-5">
+            <ul class="myUL">
+
+                @*@if (identity.IsPermitted("190110110"))
+                {*@
+                    <li class="purchaseReport">Purchase</li>
+
+                @*}
+
+                @if (identity.IsPermitted("190130110"))
+                {*@
+                    <li class="saleReport">Sale</li>
+
+                @*}
+
+                @if (identity.IsPermitted("190120"))
+                {*@
+                    <li>
+                        <span class="trCaret">Production</span>
+                        <ul class="nested">
+                            @*@if (identity.IsPermitted("190120110"))
+                            {*@
+                                <li class="issueReport">Issue</li>
+
+                            @*}
+                            @if (identity.IsPermitted("190120120"))
+                            {*@
+                                <li class="receiveReport">Receive</li>
+
+                            @*}*@
+                        </ul>
+                    </li>
+                @*}*@
+
+                @*@if (identity.IsPermitted("190140"))
+                {*@
+                    <li>
+                        <span class="trCaret">Stock</span>
+                        <ul class="nested">
+                            @*@if (identity.IsPermitted("190140110"))
+                            {*@
+                                <li class="stockReport">Stock</li>
+
+                            @*}
+                            @if (identity.IsPermitted("190140120"))
+                            {*@
+                                <li class="receiveStockReport">Receive Sale</li>
+
+                            @*}
+                            @if (identity.IsPermitted("190140130"))
+                            {*@
+                                <li class="Reconsciliation">Reconsciliation</li>
+
+                            @*}
+                            @if (identity.IsPermitted("190140140"))
+                            {*@
+                                <li class="BranchStockMovement">Branch Stock Movement</li>
+
+                            @*}*@
+
+                        </ul>
+                    </li>
+                @*}
+
+
+
+                @if (identity.IsPermitted("190150"))
+                {*@
+                    <li>
+                        <span class="trCaret">Deposit</span>
+                        <ul class="nested">
+                            @*@if (identity.IsPermitted("190150110"))
+                            {*@
+                                <li class="DepositReport">Deposit</li>
+
+                            @*}
+                            @if (identity.IsPermitted("190150120"))
+                            {*@
+                            <li class="CurrentAccount">Current Account</li>
+                            <li class="SummaryVDS">Summary VDS</li>
+
+                            @*}*@
+
+                        </ul>
+                    </li>
+                @*}
+
+                @if (identity.IsPermitted("190160"))
+                {*@
+                    <li>
+                        <span class="trCaret">Others</span>
+                        <ul class="nested">
+                            @*@if (identity.IsPermitted("190160110"))
+                            {*@
+                                <li class="AdjustmentReport">Adjustment</li>
+
+                            @*}
+                            @if (identity.IsPermitted("190160120"))
+                            {*@
+                                <li class="CoEfficientReport">Co-Efficient</li>
+
+                            @*}
+                            @if (identity.IsPermitted("190160130"))
+                            {*@
+                                <li class="WastageReport">Wastage</li>
+
+                            @*}*@
+
+                            @*@if (identity.IsPermitted("150"))
+                            {
+                                <li class="ValueChange">Value Change</li>
+
+                            }*@
+
+                            @*@if (identity.IsPermitted("190160150"))
+                            {*@
+                                <li class="SerialStockReport">Serial Stock</li>
+
+                            @*}
+                            @if (identity.IsPermitted("190160160"))
+                            {*@
+                                <li class="PurchaseLCReport">Purchase LC</li>
+
+                            @*}*@
+
+                            @*@if (identity.IsPermitted("110"))
+                            {
+                                <li class="CStatementCReport">Comparison Statement</li>
+
+                            }*@
+
+
+
+                        </ul>
+                    </li>
+                @*}*@
+
+
+
+                @*<li class="TransferIssueReport">TransferIssue</li>
+                    <li class="TransferReceiveReport">TransferReceive</li>*@
+            </ul>
+
+        </div>
+        @*<div class="col-md-3">
+                <ul class="myUL">
+                    <li class="TollRegisterReport">Toll Register</li>
+                    <li>Sale C/E</li>
+                </ul>
+
+
+
+            </div>*@
+
+        <div class="col-md-3"></div>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+<div id="myModal" class="trkmodal"></div>
+<script>
+    ////expanding menus
+    $(function () {
+        var toggler = document.getElementsByClassName("trCaret");
+        var i;
+
+        for (i = 0; i < toggler.length; i++) {
+            toggler[i].addEventListener("click", function () {
+                this.parentElement.querySelector(".myUL .nested").classList.toggle("active");
+                this.classList.toggle("trCaret-down");
+            });
+        }
+    });
+
+    $(function () {
+        function modalInit(url) {
+            var modal = document.getElementById('myModal');
+            $.ajax({
+                url: url,
+                cache: false,
+                beforeSend: function () { $(".loading").show(); },
+                complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                success: function (html) {
+                    modal.style.display = "block";
+                    $("#myModal").html(html);
+                }
+            });
+        }
+
+        $('.issueReport').click(function () {
+            var url = "/Vms/MISReport/PrintIssue";
+            modalInit(url);
+        });
+
+        $('.receiveReport').click(function () {
+            var url = "/Vms/MISReport/PrintReceive";
+            modalInit(url);
+        });
+
+        $('.purchaseReport').click(function () {
+            var url = "/Vms/MISReport/PrintPurchase";
+            modalInit(url);
+        });
+
+        $('.saleReport').click(function () {
+            var url = "/Vms/MISReport/PrintSale";
+            modalInit(url);
+        });
+        $('.stockReport').click(function () {
+            var url = "/Vms/MISReport/PrintStock";
+            modalInit(url);
+        });
+        $('.receiveStockReport').click(function () {
+            var url = "/Vms/MISReport/PrintReceiveStock";
+            modalInit(url);
+        });
+        $('.DepositReport').click(function () {
+            var url = "/Vms/MISReport/PrintDeposit";
+            modalInit(url);
+        });
+        $('.SummaryVDS').click(function () {
+            var url = "/Vms/MISReport/PrintVDS";
+            modalInit(url);
+        });
+        $('.AdjustmentReport').click(function () {
+            var url = "/Vms/MISReport/PrintAdjustment";
+            modalInit(url);
+        });
+        $('.CoEfficientReport').click(function () {
+            var url = "/Vms/MISReport/PrintCoEfficient";
+            modalInit(url);
+        });
+        $('.TransferIssueReport').click(function () {
+            var url = "/Vms/MISReport/TransferIssue";
+            modalInit(url);
+        });
+        $('.TransferReceiveReport').click(function () {
+            var url = "/Vms/MISReport/TransferReceive";
+            modalInit(url);
+        });
+        $('.WastageReport').click(function () {
+            var url = "/Vms/MISReport/PrintWastage";
+            modalInit(url);
+        });
+        $('.TollRegisterReport').click(function () {
+            var url = "/Vms/MISReport/PrintTollRegister";
+            modalInit(url);
+        });
+        $('.SerialStockReport').click(function () {
+            var url = "/Vms/MISReport/PrintSerialStock";
+            modalInit(url);
+        });
+        $('.PurchaseLCReport').click(function () {
+            var url = "/Vms/MISReport/PrintPurchaseLC";
+            modalInit(url);
+        });
+        $('.CStatementCReport').click(function () {
+            var url = "/Vms/MISReport/PrintCStatement";
+            modalInit(url);
+        });
+        $('.CurrentAccount').click(function () {
+            var url = "/Vms/MISReport/PrintCurrentAccount";
+            modalInit(url);
+        });
+
+        $('.Reconsciliation').click(function () {
+            var url = "/Vms/MISReport/PrintReconsciliation";
+            modalInit(url);
+        });
+
+        $('.BranchStockMovement').click(function () {
+            var url = "/Vms/MISReport/PrintBranchStockMovement";
+            modalInit(url);
+        });
+
+
+    });
+
+</script>

@@ -1,0 +1,45 @@
+﻿@model VATViewModel.DTOs.ProductTransfersDetailVM
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+<tr class="tablerow">
+    @using (Html.BeginCollectionItem("Details"))
+    {
+    <td>
+        <a id="" title="Click to Remove" onclick="RemoveItem(this);" class="sym-btn-remove-row "></a>
+        <a id="" title="Click to Edit" onclick="EditItem(this);" class="sym-btn-edit-row"></a>
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.FromItemName, new { @class = "  dFromItemName   form-control", @readonly = "readonly"})
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.FromItemNo, new { @class = "  dFromItemNo   form-control", @readonly = "readonly" })
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.FromQuantity, new { @class = "  dFromQuantity   right priceLen  form-control", @readonly = "readonly"})
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.FromUOM, new { @class = "  dFromUOM   form-control", @readonly = "readonly"})
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.FromUOMConversion, new { @class = "  dFromUOMConversion right priceLen  form-control", @readonly = "readonly"})
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.ToItemName, new { @class = "  dToItemName   form-control", @readonly = "readonly"})
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.ToItemNo, new { @class = "  dToItemNo   form-control", @readonly = "readonly" })
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.ToQuantity, new { @class = "  dToQuantity   form-control", @readonly = "readonly" })
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.ToUOM, new { @class = "  dToUOM   form-control", @readonly = "readonly" })
+    </td>
+       
+        
+    }
+</tr>
+
+

@@ -1,0 +1,36 @@
+﻿@model IEnumerable<VATViewModel.DTOs.PurchaseMasterVM>
+@using UIHelper.MVC
+@{
+    Layout = null;
+    var sl = 1;
+}
+    @foreach (var item in Model)
+    {
+        <tr class="trSelectPopUpIssue">
+            <td>
+
+                @Html.CheckBox("Selected", false, new { @style = "margin: auto", @class = "dSelected form-control" })
+            </td>
+            <td>@sl</td>
+            <td class="popUpItemNo">@item.PurchaseInvoiceNo</td>
+            <td title="@item.VendorName">@item.VendorName</td>
+            <td>@item.ReceiveDate</td>
+            <td>@item.InvoiceDate</td>
+            <td>@item.TotalVATAmount</td>
+            <td>@item.TotalAmount</td>
+            <td>@item.ProductType</td>
+            <td>@item.SerialNo</td>
+            <td>@item.LCNumber</td>
+            <td>@item.BENumber</td>
+            <td>@item.Post</td>
+            <td>@item.ReturnId</td>
+            <td>@item.TransactionType</td>
+            <td>@item.LCDate</td>
+            <td>@item.LandedCost</td>
+            <td>@item.CustomHouse</td>
+            @{
+        sl++;
+            }
+        </tr>
+    }
+

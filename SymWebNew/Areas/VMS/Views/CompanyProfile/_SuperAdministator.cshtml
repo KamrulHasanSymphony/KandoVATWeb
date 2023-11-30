@@ -1,0 +1,185 @@
+﻿@model VATViewModel.DTOs.LoginVM
+
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+<link href="~/assets/newJqueryUI/jquery-ui.css" rel="stylesheet" />
+<style>
+    .trkmodal{
+        padding-top:10%;
+    }
+    .trkmodal-content {
+        width: 25%;
+        padding-bottom: 10px;
+    }
+    .customDatePicker {
+        background: #fefede url(/Images/calendar.jpg) no-repeat 98% !important;
+    }
+    /*no padding with little margin bttom*/
+    div.trkmodal-body div.npForm {
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+        padding-bottom: 0px !important;
+        margin-bottom: 10px;
+    }
+    div.trkmodal-body div.npForm div.npForm {
+        margin-bottom: 0px !important;
+    }
+   
+</style>
+<div class="trkmodal-content">
+    <div class="trkmodal-header">
+        <span class=" close closeBtn">&times;</span>
+        <h2 class="text-center">Super Administator</h2>
+    </div>
+    <div class="trkmodal-body">
+    @using (Html.BeginForm("CreateEditN", "CompanyProfile", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmVAT11" }))
+    {
+
+          <div class="npForm col-md-12">
+            <label>User</label>
+              @Html.PasswordFor(m => m.UserName, new { @placeholder = "User Name", @class = "cUser form-control " })
+        </div>
+   
+    <div class="npForm col-md-12">
+        <label>PWD</label>
+        @Html.PasswordFor(m => m.UserPassword, new { @placeholder = "Password", @class = "cPassword form-control " })
+    </div>
+        
+        
+
+
+        @*@Html.HiddenFor(m => m.Operation);
+        @Html.HiddenFor(m => m.IsSymphonyUser);*@
+        
+
+        <button type="button" class=" btn btn-success trVAT11">Super Login</button>
+    }
+    </div>
+</div>
+<div id="myModal" class="trkmodal"></div>
+<div id="productDetails" class="trkmodal">
+    <div class="trkmodal-content">
+    </div>
+</div>
+
+<div id="myHigherModal" class="HigherModal"></div>
+<script src="~/assets/javascripts/custom.js"></script>
+<script>
+    $(document).ready(function () {
+        ////clicking preview button
+        $('.trNo').click(function () {
+            //var product = $('.trItemNo :selected').val();
+            //if (product == "") {
+            //    ShowResult("Fail", "Select a product first!");
+            //    return;
+            //}
+            $("#IsSymphonyUser").val("false");
+            $("#Operation").val("Update");
+            $('#frmVAT11').submit();
+            //pageSubmit('frmVAT11');
+        });
+        $(function () {
+            function modalInit(url) {
+                var modal = document.getElementById('myModal');
+                $.ajax({
+                    url: url,
+                    cache: false,
+                    beforeSend: function () { $(".loading").show(); },
+                    complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                    success: function (html) {
+                        modal.style.display = "block";
+                        $("#myModal").html(html);
+                    }
+                });
+            }
+
+            $('.trVAT11').click(function () {
+                var UserName = $('.cUser').val();
+                    console.log(UserName)
+                if (UserName ==null  || UserName == "") {
+                    ShowResult("Fail", "Enter User Name first!");
+                    return;
+                }
+
+                var Password = $('.cPassword').val();
+
+                if (Password == null || Password == "") {
+                    ShowResult("Fail", "Enter Password first!");
+                    return;
+                }
+                var actionUrl = "/VMS/CompanyProfile/GetSuperAdmistator?UserName=" + UserName + "&Password=" + Password;
+                $.getJSON(actionUrl, function (data) {
+                    var SuperAdmistator = (data);
+                    console.log(SuperAdmistator)
+                    if (UserName.toUpperCase()=="ADMINISTRATOR")
+                    {
+                        
+                        if(obj1UserName==obj1UserName)
+                        {
+                            if(UserName.toUpperCase()=="ADMINISTRATOR"||Password.toUpperCase()==obj1UserPassword.toUpperCase())
+                            {
+                                var CompanyProfileVM =
+                                {
+                                    IsSymphonyUser: true,
+                                    Operation: 'Update'
+                                }
+                                ShowResult("Success", "Thanks for login as Super Administrator!");
+                                //var url = "/Vms/CompanyProfile/CreateEditN?CompanyProfileVM=" + CompanyProfileVM;
+                                $.ajax({
+                                    type: "post",
+                                    url: "/Vms/CompanyProfile/CreateEditN",
+                                    data: CompanyProfileVM,
+         
+                                    cache: false,
+                                   
+                                });
+                            }
+                        }
+                    }
+                    
+                });
+                //var url = "/VMS/CompanyProfile/SuperAdmistator";
+
+                //modalInit(url);
+            });
+
+        });
+    
+
+        //InitDropDowns();
+        //////for select2 dropdown
+        //$(".selectDropdown").select2();
+        //$(".selectDropdown").trigger('change');
+        //$(".selectDropdown").removeClass('form-control');
+
+        function closeModal() {
+            $("#myModal").html("");
+            trkmodal.style.display = "none";
+        }
+
+        //////var span = document.getElementsByClassName("close")[0];
+        var trkmodal = document.getElementById('myModal');
+        //When the user clicks on <span> (x), close the trkmodal
+        //////span.onclick = function () {
+        //////    closeModal();
+        //////}
+
+        $('.closeBtn').click(function () {
+            closeModal();
+        });
+
+     
+        //$(function () {
+        //  $('.trVAT11').click(function () {
+        //    var pageNo = $(".cpageNo").val();
+        //    var PrinterName = $(".cPrinterList").val();
+        //    var url = "/Vms/NBRReportController/ReportVAT11?pageNo=" + pageNo + "&PrinterName=" + PrinterName;
+        //    console.log(url);
+
+        //  });
+        //});
+
+    });
+</script>

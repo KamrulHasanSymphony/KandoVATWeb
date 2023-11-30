@@ -1,0 +1,103 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+<div class="headrow">
+    <button type="button" title="Add New TDS" data-url="/VMS/TDS/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+    <button type="button" title="Delete TDS" data-url="/VMS/TDS/Delete" onclick="deletedData(this, 'myDataTable');" id="" class="sym-btn-remove">&nbsp;Delete</button>
+    <label class="pull-right">TDS</label>
+</div>
+
+<div class="thinbox animated slideInDown faster">
+    <div class="th_thinbox">
+        <p>TDS</p>
+    </div>
+    <table id="myDataTable" class="display">
+        <thead>
+            <tr>
+                <th class="display"><input type="checkbox" class="chkAll" /> Select All</th>
+                <th>Section</th>
+                <th>Sub Section</th>
+                <th>Discription</th>
+                <th>MinValue</th>
+                <th>MaxValue</th>
+                <th>Rate</th>
+                <th>Comments</th>                
+            </tr>
+        </thead>
+    </table>
+    <br />
+</div>
+
+
+
+
+<div class="headrow">
+    <button type="button" title="Add New TDS" data-url="/VMS/TDS/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+    <button type="button" title="Delete TDS" data-url="/VMS/TDS/Delete" onclick="deletedData(this, 'myDataTable');" id="" class="sym-btn-remove">&nbsp;Delete</button>
+    <label class="pull-right">TDS</label>
+</div>
+
+
+<script language="javascript" type="text/javascript">
+    $(document).ready(function () {
+        SelectAllForDelete();
+        $.datepicker.regional[""].dateFormat = 'dd/M/y';
+        $.datepicker.setDefaults($.datepicker.regional['']);
+
+        function modalInit() {
+            var modal = document.getElementById('myModal');
+            $('.printBtn').click(function () {
+                var url = "/Vms/TDS/Print";
+                $.ajax({
+                    url: url,
+                    cache: false,
+                    beforeSend: function () { $(".loading").show(); },
+                    complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                    success: function (html) {
+                        modal.style.display = "block";
+                        $("#myModal").html(html);
+                    }
+                });
+            });
+        }
+        modalInit();
+
+
+        var oTable = $('#myDataTable').dataTable({
+            "bServerSide": true,
+            "sAjaxSource": "/VMS/TDS/_index",
+            "bProcessing": true,
+            "aLengthMenu": tablelength(),
+            "bJqueryUI": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+                            {
+                                "sName": "Id",
+                                "bSearchable": false,
+                                "bSortable": false,
+                                "sWidth": "8%",
+                                "sClass": "center",
+                                "fnRender": function (oObj) {
+                                    return ' <input onclick="CheckAll(this)" type="checkbox" data-Id="' + oObj.aData[0] + '">'
+                                        + '&nbsp; <a id=""  title="Click on for Edit"  style="text-decoration:none;"   href=\"/VMS/TDS/Edit/' + oObj.aData[0] + '\" class=" innerListLink sym-btn-edit-row"></a>'
+                                   + '&nbsp; <a title="Click on for Delete"  data-url="/VMS/TDS/Delete" onclick="deletedData(this, myDataTable,\'' + oObj.aData[0] + '\');"  class="sym-btn-remove-row"></a>'
+                                    ;
+                                }
+                                //"sName": "Id", "sWidth": "12%"
+                            }
+                            , { "sName": "Section", "sWidth": "12%" }
+                            , { "sName": "Code", "sWidth": "10%" }
+                            , { "sName": "Description", "sWidth": "8%" }
+                            , { "sName": "MinValue", "sWidth": "8%" }
+                            , { "sName": "MaxValue", "sWidth": "8%" }
+                            , { "sName": "Rate", "sWidth": "8%" }
+                            , { "sName": "Comments", "sWidth": "8%" }
+                            
+
+
+            ]
+        });
+    });
+</script>
+

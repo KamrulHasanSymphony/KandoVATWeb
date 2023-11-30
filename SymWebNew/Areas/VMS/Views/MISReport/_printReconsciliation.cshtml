@@ -1,0 +1,110 @@
+﻿@model VATViewModel.DTOs.ProductionMISViewModel
+@using UIHelper.MVC
+@{
+    Layout = "~/Areas/VMS/Views/Shared/_ModalLayout.cshtml";
+}
+<div class="trkmodal-content">
+    <div class="trkmodal-header">
+        <span class="close">&times;</span>
+        <h2 class="text-center">Reconsciliation</h2>
+    </div>
+    <div class="trkmodal-body">
+        @using (Html.BeginForm("ReportReconsciliation", "MISReport", FormMethod.Post, new { enctype = "multipart/form-data", @target = "_blank", @Id = "frmPopUpDeposit" }))
+        {
+
+
+            <div class="npForm col-md-6">
+                <label>Date From</label>
+                @Html.TextBoxFor(m => m.IssueDateFrom, new { @placeholder = "Start Date", @class = "cIssueDateFrom customDatePicker form-control" })
+            </div>
+
+            <div class="npForm col-md-6">
+                <label>Date To</label>
+                @Html.TextBoxFor(m => m.IssueDateTo, new { @placeholder = "End Date", @class = "cIssueDateTo customDatePicker form-control" })
+            </div>
+            
+            @*<div class="npForm col-md-6">
+                <label>Branch Name</label>
+                @Html.SimpleDropDownFor(m => m.BranchId, "/Config/DropDown/BranchProfile", new { @class = " form-control selectDropdown cBranchId" })
+            </div>*@
+            
+            @Html.HiddenFor(m => m.PreviewOnly, new { @class = " PreviewOnly" })
+
+
+            <button type="button" class="sym-btn-Excel-Export cDownload"> Download</button>
+            <button type="button" class="sym-btn-close closeBtn pull-right"> Close</button>
+        }
+    </div>
+</div>
+<div id="myHigherModal" class="HigherModal"></div>
+<script>
+    $(document).ready(function () {
+        ////boolean checkbox
+        CheckBoxDesign();
+        MyCheckBox('@Model.Post', 'input-1', 'Post');
+        ///check validation
+        function checkValidation() {
+            var startDate = $('.cIssueDateFrom').val();
+            if (startDate == "") {
+                ShowResult("Fail", "Select start date!");
+                return false;
+            }
+            var endDate = $('.cIssueDateTo').val();
+            if (endDate == "") {
+                ShowResult("Fail", "Select end date!");
+                return false;
+            }
+            return true;
+        }
+        //clicking preview button
+        $('.cDownload').click(function () {
+
+            var isValid = checkValidation();
+            if (isValid == false) {
+                return;
+            }
+            $("#PreviewOnly").val(true);
+
+            $('#frmPopUpDeposit').submit();
+
+        });
+
+
+        function closeModal() {
+            $("#myModal").html("");
+            trkmodal.style.display = "none";
+        }
+
+        var span = document.getElementsByClassName("close")[0];
+        var trkmodal = document.getElementById('myModal');
+        //When the user clicks on <span> (x), close the trkmodal
+        span.onclick = function () {
+            closeModal();
+        }
+
+        $('.closeBtn').click(function () {
+            closeModal();
+        });
+
+        function modalInitHigher(url) {
+            var modal = document.getElementById('myHigherModal');
+            $.ajax({
+                url: url,
+                cache: false,
+                beforeSend: function () { $(".loading").show(); },
+                complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                success: function (html) {
+                    modal.style.display = "block";
+                    $("#myHigherModal").html(html);
+                }
+            });
+        }
+
+    });
+</script>
+@*callback from higher modal*@
+<script>
+    function callbackFromDepositModal(sender) {
+        ////issue logic here
+    }
+</script>

@@ -1,0 +1,55 @@
+﻿@using UIHelper.MVC
+<div class="headrow">
+    <label class="pull-right">Leave Migration > Opening Balance (Multi)</label>
+</div>
+<div class="thinbox">
+    <div class="th_thinbox">
+        <p>Leave Migration Opening</p>
+    </div>
+    <div class="row">
+        <div class="thinbox col-md-6">
+            <div class="th_thinbox">
+                <p>Upload</p>
+            </div>
+            @using (Ajax.BeginForm("OpeningBalance", "LeaveMigration", null, new AjaxOptions { }, new { enctype = "multipart/form-data", id = "OpeningBalance" }))
+            { 
+                <div class="col-md-6">
+                    <label>File</label>
+                    <input type="file" accept=".xlsx" name="file" id="FileUpload" style="width: 200px;" />
+                </div>
+                <div class="col-md-6">
+                    <label>&nbsp;</label>
+                    <button type="submit" class="sym-btn-file-upload" value="Upload" style="width: 50%; text-align: center;">&nbsp;Upload</button>
+                </div>
+            }
+        </div>
+        <div class="thinbox col-md-6">
+            <div class="th_thinbox">
+                <p>Download</p>
+            </div>
+            <div class="col-md-6">
+                <label>year</label>
+                @Html.SimpleDropDown("vyear", "/Config/DropDown/Year", new { @class = "required form-control" })
+            </div>
+            <div class="col-md-2">
+                <label>&nbsp;</label>
+                @*<input type="button" value="Download" id="btnSearch" class="sym-btn-Excel-Export" />*@
+                <button id="btnSearch" class="sym-btn-Excel-Export" type="button">&nbsp;Download</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#btnSearch').click(function () {
+        var path = window.location.href;
+        var vyear = $('#vyear').val();
+        if (vyear == "") {
+            ShowResult('Fail', "Please Select Leave year");
+        }
+        else {
+            window.location = '@Url.Action("OpeningBalanceDownload", "LeaveMigration")' + '?vyear=' + vyear
+        }
+    });
+
+</script>

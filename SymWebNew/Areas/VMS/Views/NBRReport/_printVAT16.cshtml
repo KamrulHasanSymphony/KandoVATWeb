@@ -1,0 +1,284 @@
+﻿@model SymVATWebUI.Areas.VMS.Models.Vat16ViewModel
+@using System.Configuration
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+
+<style>
+    .trkmodal {
+        padding-top: 10%;
+    }
+
+    .trkmodal-content {
+        width: 50%;
+        padding-bottom: 20px;
+    }
+
+    .customDatePicker {
+        background: #fefede url(/Images/calendar.jpg) no-repeat 98% !important;
+    }
+    /*no padding with little margin bttom*/
+    div.trkmodal-body div.npForm {
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+        padding-bottom: 0px !important;
+        margin-bottom: 10px;
+    }
+
+    div.trkmodal-body div.npForm div.npForm {
+        margin-bottom: 0px !important;
+    }
+
+    .btnmar {
+        margin-left: 12px;
+    }
+</style>
+
+@{
+    string NBRAuth = "";
+
+    try
+    {
+        NBRAuth = new AppSettingsReader().GetValue("NBRAuth", typeof(string)).ToString();
+
+    }
+    catch (Exception e)
+    {
+        NBRAuth = "";
+
+    }
+
+}
+
+
+<div class="trkmodal-content">
+    <div class="trkmodal-header">
+        <span class="close">&times;</span>
+        <h2 class="text-center">Report(VAT 6.1) Purchase Register</h2>
+    </div>
+    <div class="trkmodal-body">
+        @using (Html.BeginForm("ReportVAT16", "NBRReport", FormMethod.Post, new { enctype = "multipart/form-data", @target = "_blank", @Id = "frmVAT16" }))
+        {
+            <div class="npForm col-md-12">
+                <div class="col-md-10 npForm">
+                    <label>Product Name</label>
+                    @Html.HiddenFor(m => m.ItemNo, new { @class = " popUpItemNo" })
+                    @Html.TextBox("PopUpProductName", null, new { @class = " form-control trProductName", @readonly = "readonly" })
+                </div>
+                <div class=" col-md-2 npForm">
+                    <label>&nbsp;</label>
+                    <button type="button" class=" sym-btn-search productBtn">Search</button>
+                </div>
+            </div>
+            <div class="npForm col-md-6">
+                <label>Date From</label>
+                @Html.TextBoxFor(m => m.StartDate, new { @placeholder = "Start Date", @class = "customDatePicker form-control defaultDate" })
+            </div>
+            <div class="npForm col-md-6">
+                <label>Date To</label>
+                @Html.TextBoxFor(m => m.EndDate, new { @placeholder = "End Date", @class = "customDatePicker form-control defaultDate" })
+            </div>
+            
+          <div class="npForm col-md-2" style="padding-right:0px;">
+              <label>Branch Wise</label>
+              @Html.CheckBoxFor(m => m.BranchWise, new { id = "idBranchWise", @class = "cBranchWise form-control", @name = "att[]" })
+         </div>
+            <div class="npForm col-md-10">
+               <label>Branch</label>
+                @*@Html.SimpleDropDownFor(m => m.BranchId, "/Config/DropDown/BranchProfile", new { @class = " form-control selectDropdown" })*@
+                @Html.DropDownListFor(model => model.BranchId, new SelectList(Model.BranchList, "BranchID", "BranchName", Model.BranchId), new { @class = "form-control" })
+            </div>
+
+            <div class="npForm col-md-2">
+                <label>Font Size</label>
+                @Html.SimpleDropDownFor(m => m.FontSize, "/Config/DropDown/Font", new { @class = " form-control selectDropdown" })
+            </div>
+            <div class="npForm col-md-2">
+                <label>English</label>
+                @Html.SimpleDropDownFor(m => m.InEnglish, "/Config/DropDown/Language", new { @class = " form-control selectDropdown" })
+
+            </div>
+
+            @Html.HiddenFor(m => m.PreviewOnly);
+
+            <br />
+
+            <label>&nbsp;</label>
+
+
+            if(string.IsNullOrEmpty(NBRAuth) || NBRAuth.ToLower() == "all")
+            {
+                <button type="button" class=" btn sym-btn-report btnmar trPreview">Preview</button>
+            }
+
+
+            <button type="button" class=" btn sym-btn-report btnmar trVAT16"> VAT 6.1</button>
+            <button type="button" class="sym-btn-close closeBtn pull-right"> Close</button> 
+        }
+    </div>
+</div>
+
+<div id="myHigherModal" class="HigherModal"></div>
+
+<script src="~/assets/javascripts/custom.js"></script>
+<script>
+    $(document).ready(function () {
+        ////setting first item
+        var interval = setInterval(function () {
+            if (document.querySelectorAll('.trItemNo option').length > 0) {
+                var id = '@Model.ItemNo';
+
+                $('.trItemNo').select2("val", id);
+                clearInterval(interval);
+            }
+        }, 200);
+
+        function checkValidation() {
+
+            var product = $('.popUpItemNo').val();
+
+            if (product == "") {
+                ShowResult("Fail", "Select a product first!");
+                return false;
+            }
+            var startDate = $('#StartDate').val();
+
+            if (startDate == "") {
+                ShowResult("Fail", "Select start date!");
+                return false;
+            }
+            var endDate = $('#EndDate').val();
+            if (endDate == "") {
+                ShowResult("Fail", "Select end date!");
+                return false;
+            }
+            return true;
+        }
+
+        ////clicking preview button
+        $('.trPreview').click(function () {
+
+            let value = $('.popUpItemNo').val();
+
+
+            var isValid = checkValidation();
+            if (isValid == false) {
+                return;
+            }
+
+           
+            $("#PreviewOnly").val('true');
+            $('#frmVAT16').submit();
+        });
+        ////clicking vat16 button
+        $('.trVAT16').click(function () {
+
+            //let value = $('.popUpItemNo').val();
+            //var isValid = checkValidation();
+            //if (isValid == false) {
+            //    return;
+            //}           
+            //$("#PreviewOnly").val("false");
+            //$('#frmVAT16').submit();
+
+            let value = $('.popUpItemNo').val();
+
+
+            var isValid = checkValidation();
+            if (isValid == false) {
+                return;
+            }
+
+
+            $("#PreviewOnly").val('false');
+            $('#frmVAT16').submit();
+
+
+        });
+        ////for dropdown
+        InitDropDowns();
+        ////for select2 dropdown
+
+        //$(".selectDropdown").select2();
+        //$(".selectDropdown").trigger('change');
+        //$(".selectDropdown").removeClass('form-control');
+
+        function ItemChange() {
+            var value = $('.trName').val().toString();
+            if (value == 0) {
+                $('.trBranch').val("");
+                return;
+            }
+            var url = "/Vms/BankInformation/GetItemInfo?ItemId=" + value;
+
+            $.getJSON(url, function (data) {
+                $('.trBranch').val(data);
+            });
+        }
+        ////changing item
+        $('.trName').change(function () {
+            ItemChange();
+        });
+
+        function closeModal() {
+            $("#myModal").html("");
+            trkmodal.style.display = "none";
+        }
+
+        var span = document.getElementsByClassName("close")[0];
+        var trkmodal = document.getElementById('myModal');
+        //When the user clicks on <span> (x), close the trkmodal
+        span.onclick = function () {
+            closeModal();
+        }
+
+        $('.closeBtn').click(function () {
+            closeModal();
+        });
+
+    });
+</script>
+
+<script>
+    function modalInitHigher(url) {
+        var modal = document.getElementById('myHigherModal');
+        $.ajax({
+            url: url,
+            cache: false,
+            beforeSend: function () { $(".loading").show(); },
+            complete: function () { $(".loading").fadeOut(200).hide("slow") },
+            success: function (html) {
+                modal.style.display = "block";
+                $("#myHigherModal").html(html);
+            }
+        });
+    }
+    function callbackFromProductModal(sender) {
+        var itemNo = $(sender).children('td.popUpItemNo').text();
+        $('.popUpItemNo').val(itemNo);
+    }
+    $(function () {
+        $('.productBtn').click(function () {
+            var url = "/Vms/Product/GetProductPopUp?targetId=PopUpProductName";
+            modalInitHigher(url);
+        });
+    });
+</script>
+
+<script>
+    $(function () {
+        var date = $('.trVAT16Date').val();
+        if (date != null && date != "") {
+            $('#StartDate').val(date);
+            $('#EndDate').val(date);
+        }
+        var productName = $('tr.active .dItemName').val();
+        if (productName == null || productName == "") {
+            return;
+        }
+        $('.trProductName').val(productName);
+        //var itemNo = $('tr.active .dItemNo').val();
+        //$('.popUpItemNo').val(itemNo);
+    })
+</script>

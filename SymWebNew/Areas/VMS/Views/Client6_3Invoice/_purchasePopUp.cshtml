@@ -1,0 +1,287 @@
+﻿@model VATViewModel.DTOs.PopUpViewModel
+@using UIHelper.MVC
+@{
+    Layout = "~/Areas/VMS/Views/Shared/_ModalLayout.cshtml";
+}
+<style>
+    table.trkFixTable tr.trSelectPopUpIssue td {
+        overflow-x: hidden;
+    }
+    .trkMT10 {
+        margin-top: 10px;
+    }
+    .sortableHeader {
+        cursor: pointer;
+    }
+</style>
+
+@Html.HiddenFor(model => model.TransactionType)
+
+
+<div class="HigherModal-content">
+    <div class="HigherModal-header">
+        <span class="closeHigher">&times;</span>
+        <h2 class="text-center">Purchase Search</h2>
+    </div>
+    
+    <div class=" HigherModal-body formDesign">
+        <div class="row">
+            <div class="col-md-2">
+                <label>Search Field</label>
+                @Html.SimpleDropDown("SearchField", "/Config/DropDown/PurchaseColumnSearch", new { @class = " form-control " })
+            </div>
+            <div class="col-md-2">
+                <label>Search Value</label>
+                @Html.TextBox("SearchValue", "", new { @class = " form-control" })
+            </div>
+            @*<div class="col-md-2">
+                <label>Vendor</label>
+                @Html.SimpleDropDown("popUpVendorId", "/Config/DropDown/Vendor", new { @class = "  form-control selectDropdown " })
+            </div>*@
+            <div class="col-md-2">
+                <label>Vendor Group</label>
+                @Html.SimpleDropDown("popUpVendorGroup", "/Config/DropDown/VendorGroup", new { @class = "  form-control selectDropdown " })
+            </div>
+            <div class="trk1_5">
+                <label for="startPopUpDate">Purchase Date From</label>
+                <div class="editor-field">
+                    @Html.TextBox("startPopUpDate", null, new { @placeholder = "Date From", @class = "dtFrom customDatePicker form-control" })
+                </div>
+            </div>
+            <div class="trk1_5">
+                <label for="endPopUpDate">Purchase Date To</label>
+                <div class="editor-field">
+                    @Html.TextBox("endPopUpDate", null, new { @placeholder = "Date To", @class = "dtTo customDatePicker form-control" })
+                </div>
+            </div>
+            <div class="trk_5 ">
+                <label>Post</label>
+                <select id="postPopUp" class="form-control">
+                    <option value=""></option>
+                    <option value="Y">Y</option>
+                    <option value="N">N</option>
+                </select>
+            </div>
+            <div class="trk_5 ">
+                <label>VDS</label>
+                <select id="vdsPopUp" class="form-control">
+                    <option value=""></option>
+                    <option value="Y">Y</option>
+                    <option value="N">N</option>
+                </select>
+            </div>
+
+            <div class="col-md-2">
+                <label>&nbsp;</label>
+                <div class="editor-field">
+                    <button type="button" title="Click to Search" id="searchBtn" class="sym-btn-search btnPopUpSearch">&nbsp;Search</button>
+                    <button type="button" title="Clear Data" id="Clear" class=" sym-btn-clear">&nbsp;Clear</button>
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-1">
+                <label>&nbsp;</label>
+                <div class="editor-field">
+                    <button type="button" title="Select Data" onclick="SelectData()" class="sym-btn-post">&nbsp;Ok</button>
+                    @*<button type="button" title="Click to Save" id="okBtn" class="sym-btn-save btnOkSearch">Ok</button>*@
+                </div>
+            </div>
+
+        </div>
+            <div class="row">
+                <div class="fixedParent">
+                    <table class="trkFixTable" id="PopUpTable">
+                        <thead>
+                            <tr>
+                                <th>SL</th>
+                                <th>Invoice No</th>
+                                <th>Vendor Name</th>
+                                <th>Vendor Address</th>
+                                <th>Receive Date</th>
+                                <th>Invoice Date</th>
+                                <th>Total VAT</th>
+                                <th>Grand Total</th>
+                                <th>Type</th>
+                                <th>Ref Number</th>
+                                <th>LC Number</th>
+                                <th>BE Number</th>
+                                <th>Post</th>
+                                <th>Return Id</th>
+                                <th>Trans Type</th>
+                                <th>LC Date</th>
+                                <th>Landed Cost</th>
+                                <th>Cusotm House</th>
+                                <th>Vendor ID</th>
+                            </tr>
+                        </thead>
+                        <tbody id="popUpTbody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+</div>
+
+<script language="javascript" type="text/javascript">
+    function callingFixedPopUpTable() {
+        var args = [75,200,200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 50, 200, 200, 200, 200, 200];
+        trkFixedPopUpTable("PopUpTable", 2, args);
+    }
+    $(function () {
+        callingFixedPopUpTable();
+    })
+
+    ////closing higher modal
+    function closeHigherModal() {
+        $("#myHigherModal").html("");
+        trkmodal.style.display = "none";
+    }
+    var span = document.getElementsByClassName("closeHigher")[0];
+    var trkmodal = document.getElementById('myHigherModal');
+    //When the user clicks on <span> (x), close the trkmodal
+    span.onclick = function () {
+        closeHigherModal();
+    }
+
+    $(function () {
+        $(document).on('click', '.trSelectPopUpIssue', function () {
+            var activeEl = $('tr.active');
+            activeEl.removeClass("active");
+            $(this).addClass(" active");
+        });
+
+        //$(document).off('dblclick').on('dblclick', '.trSelectPopUpIssue', function () {
+        //    var itemNo = $(this).children('td.popUpItemNo').text();
+            
+        //    selectPopUpValue(itemNo);
+        //});
+        function selectPopUpValue(itemNo) {
+
+            var target = '@Model.TargetId';
+
+            ////alert(target);
+            ////alert(itemNo);
+
+            ////itemNo = "'" + itemNo + "'";
+
+            closeHigherModal();
+
+            $('#' + target).val(itemNo);
+            callbackFromModal(itemNo);
+        }
+        
+
+    })
+
+    function SelectData() {
+        var IDs = [];
+        var Vandors = [];
+        var VandorsAddres = [];
+        var VendorIDS = [];
+        var $Items = $("#popUpTbody .dSelected:input:checkbox:checked");
+        if ($Items == null || $Items.length == 0) {
+            ShowResult("Fail", "You are requested to Select before Save!");
+            return;
+        }
+        $Items.each(function () {
+
+            var ID = $(this).closest('tr').find('.popUpItemNo').text();
+            var Vandor = $(this).closest('tr').find('.popUpVendor').text();
+            var VandorAddress = $(this).closest('tr').find('.popUpVendorAddress').text();
+            var VendorId = $(this).closest('tr').find('.VendorId').text();
+            
+            //var EngineNumber = $(this).closest('tr').find('.EngineNumber').text();
+            //var ChassisNumber = $(this).closest('tr').find('.ChassisNumber').text();
+            //var ID = $(this).attr("data-id"); //$(this).closest('tr').find('.popUpSalesInvoiceNo').text();
+            //var Vandor = $(this).class("popUpVendor").val();
+            IDs.push(ID);
+            Vandors.push(Vandor);
+            VandorsAddres.push(VandorAddress);
+            VendorIDS.push(VendorId);
+        });
+
+
+        var filteredArray = Vandors.filter(function (item, pos) {
+            return Vandors.indexOf(item) == pos;
+        });
+        if (filteredArray.length >1) {
+            ShowResult("Fail", "Please Select Same Vendor!");
+            return;
+        }
+
+        callbackFromTollInvoiceModal(IDs, Vandors, VandorsAddres,VendorIDS, this);
+        closeHigherModal();
+
+    }
+</script>
+
+<script src="~/assets/javascripts/custom.js"></script>
+
+<script>
+    $(function () {
+
+        if ('@Model.TransactionType' == 'VDS') {
+            $('#postPopUp').val('Y');
+            $('#vdsPopUp').val('Y');
+
+            $('#postPopUp').attr("style", "pointer-events: none;");
+            $('#vdsPopUp').attr("style", "pointer-events: none;");
+
+        }
+
+
+
+
+
+        $('.btnPopUpSearch').click(function () {
+
+            var startDate = $('#startPopUpDate').val();
+            var endDate = $('#endPopUpDate').val();
+            var post = $('#postPopUp').val();
+            var purchaseNo = $('#popUpPurchaseNo').val();
+            var beNumber = $('#popUpBENo').val();
+            var vendorId = $('#popUpVendorId').val();
+            var vendorGroup = $('#popUpVendorGroup').val();
+            var refNo = $('#popUpRefNo').val();
+            var vds = $('#vdsPopUp').val();
+            var searchField=$('#SearchField').val();
+            var searchValue = $('#SearchValue').val();
+
+            var model = {
+                TransactionType:'@Model.TransactionType',
+                PurchaseInvoiceNo: purchaseNo,
+                VendorID: vendorId,
+                VendorGroup: vendorGroup,
+                BENumber: beNumber,
+                Post: post,
+                WithVDS:vds,
+                SerialNo: refNo,
+                InvoiceDateTimeFrom: startDate,
+                InvoiceDateTimeTo: endDate,
+                SearchField: searchField,
+                SearchValue: searchValue
+            }
+
+            $.ajax({
+                data: model,
+                url: "/Vms/Client6_3Invoice/GetFilteredItems?startDat",
+                cache: false,
+                beforeSend: function () { $(".loading").show(); },
+                complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                success: function (html) {
+                    $("#popUpTbody").html("");
+                    $("#popUpTbody").html(html);
+                    callingFixedPopUpTable();
+                }
+            });
+            
+        });
+
+        ////clearing fields
+        $("#Clear").on('click', function () {
+            $(".HigherModal-body .Dropdown").not("#postPopUp, #vdsPopUp").select2("val", "");
+            $(".HigherModal-body .form-control").not("#postPopUp, #vdsPopUp").val("");
+        });
+    });
+</script>

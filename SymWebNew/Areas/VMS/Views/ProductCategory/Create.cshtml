@@ -1,0 +1,151 @@
+﻿@model VATViewModel.DTOs.ProductCategoryVM
+@using UIHelper.MVC
+@using (Html.BeginForm("CreateEdit", "ProductCategory", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmProductCategory" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.CategoryID)
+    @Html.HiddenFor(model => model.Operation)
+
+    <div class="headrow">
+        @if (Model.Operation == "add")
+        {
+            <button type="button" name="btnName" value="Save" title="Save Data" onclick="pageSubmit('frmProductCategory')" class="sym-btn-save">&nbsp;Save</button>
+            <label class="pull-right">Product Category > Create</label>
+        }
+        else
+        {
+            <button type="button" name="btnName" value="Update" title="Update Data" onclick="pageSubmit('frmProductCategory')" class="sym-btn-update">&nbsp;Update</button>
+            <label class="pull-right">Product Category > Edit</label>
+        }
+        <button type="button" title="Go To Index" data-url="/VMS/ProductCategory" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New ProductCategory" data-url="/VMS/ProductCategory/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+
+    </div>
+
+    <div class="thinbox animated zoomIn faster">
+        <div class="th_thinbox">
+            <p>Basic</p>
+        </div>
+        <div class="row trkPX-0">
+            <div class="form-group">
+                <label for="IsRaw" class="col-md-2 control-label text-right trkLabelMargin">Product Group ID</label>
+                <div class="col-md-4">
+
+                    @Html.TextBoxFor(model => model.CategoryID, new { @placeholder = "~~~ New ~~~", @class = "cCategoryID form-control", @readonly = "readonly" })
+                    @Html.ValidationMessageFor(model => model.CategoryID)
+
+                </div>
+
+
+                <label for="VATRate" class="col-md-2 control-label text-right trkLabelMargin">VAT Rate</label>
+                <div class="col-md-4" style="margin-bottom:6px;">
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.VATRate, new { @placeholder = "VAT Rate", @class = " priceLen right required  form-control" })
+                            <span class="input-group-addon">%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <label for="CategoryName" class="col-md-2 control-label text-right trkLabelMargin">Poduct Group</label>
+                <div class="col-md-4">
+                    @Html.TextBoxFor(model => model.CategoryName, new { @placeholder = "Name", @class = " required form-control" })
+                    @Html.ValidationMessageFor(model => model.CategoryName)
+                </div>
+
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="SD" class="col-md-2 control-label text-right trkLabelMargin">SD</label>
+                <div class="col-md-4" style="margin-bottom:6px;">
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.SD, new { @class = " form-control priceLen right" })
+                            <span class="input-group-addon">%</span>
+                        </div>
+                    </div>
+                </div>
+
+
+                <label for="IsRaw" class="col-md-2 control-label text-right trkLabelMargin">Product Type</label>
+                <div class="col-md-4" style="margin-bottom:6px;">
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            @Html.SimpleDropDownFor(model => model.IsRaw, "/Config/DropDown/ProductTypeList", new { @class = "required form-control trkMT-0" })
+                            @Html.ValidationMessageFor(model => model.IsRaw)
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+
+            <div class="form-group">
+                <label for="Comments" class="col-md-2 control-label text-right trkLabelMargin">Comments</label>
+                <div class="col-md-4" style="margin-bottom:6px;">
+                    <div class="col-md-4">
+                        @Html.TextAreaFor(model => model.Comments, new { @placeholder = "Comments", @class = " form-control" })
+                        @Html.ValidationMessageFor(model => model.Comments)
+                    </div>
+                </div>
+
+                <label for="Description" class="col-md-2 control-label text-right trkLabelMargin">Description</label>
+                <div class="col-md-4">
+                    @Html.TextAreaFor(model => model.Description, new { @placeholder = "Description", @class = "  form-control" })
+                    @Html.ValidationMessageFor(model => model.Description)
+                </div>
+
+            </div>
+
+
+            <label for="ReportType" class="col-md-2 control-label text-right trkLabelMargin">Report Type</label>
+            <div class="col-md-4" style="margin-bottom:6px;">
+                <div class="col-md-4">
+                    <div class="input-group">
+                        @Html.SimpleDropDownFor(model => model.ReportType, "/Config/DropDown/ReportType", new { @class = "required form-control trkMT-0" })
+                        @Html.ValidationMessageFor(model => model.ReportType)
+                    </div>
+                </div>
+            </div>
+
+
+
+            <label for="VATRate" class="col-md-2 control-label text-right trkLabelMargin">Is Active</label>
+            <div class="form-group">
+                <div class="col-md-4">
+                    <div class="input-group">
+                        @Html.SimpleDropDownFor(m => m.ActiveStatus, "/Config/DropDown/DecisionList", new { @class = " trNavigateMenu form-control required" })
+                    </div>
+                </div>
+
+            </div>
+
+
+
+
+        </div>
+    </div>
+
+    <div class="headrow">
+        @if (Model.Operation == "add")
+        {
+            <button type="button" name="btnName" value="Save" title="Save Data" onclick="pageSubmit('frmProductCategory')" class="sym-btn-save">&nbsp;Save</button>
+        }
+        else
+        {
+            <button type="button" name="btnName" value="Update" title="Update Data" onclick="pageSubmit('frmProductCategory')" class="sym-btn-update">&nbsp;Update</button>
+        }
+        <button type="button" title="Go To Index" data-url="/VMS/ProductCategory" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New ProductCategory" data-url="/VMS/ProductCategory/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+
+    </div>
+}
+<script>
+    $(function () {
+        valiDation("frmProductCategory");
+    });
+
+</script>

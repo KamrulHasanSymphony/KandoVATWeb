@@ -1,0 +1,37 @@
+﻿@model VATViewModel.DTOs.BOMOHVM
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+
+<tr class="tablerow ">
+    @using (Html.BeginCollectionItem("Overheads"))
+{
+    <td class="text-center" style="position:relative">
+        <a title="Click to Remove" onclick="RemoveOverhead(this);" class="sym-btn-remove-row "></a>
+        <a title="Click to Edit" onclick="EditOverhead(this);" class="sym-btn-edit-row"></a>
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.HeadName, new { @class = "  dHeadName   form-control", @readonly = "readonly" })
+    </td>
+        <td>
+            @Html.TextBoxFor(model => model.HeadAmount, new { @class = "  dHeadAmount   form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.AdditionalCost, new { @class = "  dAdditionalCost right priceLen   form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.RebatePercent, new { @class = "  dRebatePercent right priceLen  form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.OHCode, new { @class = "  dOHCode  form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.HeadID, new { @class = "  dHeadID form-control", @readonly = "readonly" })
+        </td>
+}
+</tr>
+    
+
+
+

@@ -1,0 +1,792 @@
+﻿@model VATViewModel.DTOs.PurchaseMasterVM
+@using UIHelper.MVC
+@using SymOrdinary
+@using System.Threading;
+@using VATServer.Ordinary
+
+@{
+    ShampanIdentity identity = null;
+    try
+    {
+        identity = (ShampanIdentity)Thread.CurrentPrincipal.Identity;
+    }
+    catch (Exception)
+    {
+        Response.Redirect("/VMS/Home/Login");
+        return;
+    }
+}
+
+@{
+    ViewBag.Title = "Index";
+}
+
+@Html.HiddenFor(model => model.TransactionType, new { @class = " cTransactionType" })
+
+<div class="headrow">
+    <div style="display: none" id="formAppend"></div>
+    <button type="button" title="Add New Puchase" data-url="/VMS/Purchase/Create?tType=@Model.TransactionType" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+    <label class="pull-right">@*Purchase Invoice (@Model.TransactionType)*@</label>
+
+    @if (Model.TransactionType == "TollReceive")
+    {
+        <label class="pull-right">Toll Receive Invoice (@Model.TransactionType)</label>
+    }
+    else if (Model.TransactionType == "ClientRawReceive")
+    {
+        <label class="pull-right">Client Raw Receive Invoice (@Model.TransactionType)</label>
+
+    }
+    else if (Model.TransactionType == "ClientFGReceiveWOBOM")
+    {
+        <label class="pull-right">FG Receive (WO BOM) Invoice (@Model.TransactionType)</label>
+    }
+    else if (Model.TransactionType == "TollReceiveRaw")
+    {
+        <label class="pull-right">Toll Receive(Raw) Invoice (@Model.TransactionType)</label>
+    }
+    else
+    {
+        <label class="pull-right">Purchase Invoice (@Model.TransactionType)</label>
+    }
+
+</div>
+
+<div class=" tabMenu">
+    <ul style="font-size: 1.4em;" class="tabDesign nav nav-tabs">
+
+        @if (Model.TransactionType == "TollReceive")
+        {
+            <li class="tabDefault active"><a data-toggle="tab" href="#PurchaseIndex">Toll Receive Index</a></li>
+        }
+        else if (Model.TransactionType == "ClientRawReceive")
+        {
+            <li class="tabDefault active"><a data-toggle="tab" href="#PurchaseIndex">Client Raw Receive Index</a></li>
+        }
+        else if (Model.TransactionType == "ClientFGReceiveWOBOM")
+        {
+            <li class="tabDefault active"><a data-toggle="tab" href="#PurchaseIndex">FG Receive (WO BOM) Index</a></li>
+        }
+        else if (Model.TransactionType == "TollReceiveRaw")
+        {
+            <li class="tabDefault active"><a data-toggle="tab" href="#PurchaseIndex">Toll Receive(Raw) Index</a></li>
+        }
+        else
+        {
+            <li class="tabDefault active"><a data-toggle="tab" href="#PurchaseIndex">Purchase Index</a></li>
+        }
+        @if (!OrdinaryVATDesktop.IsUnileverCompany(Convert.ToString(Session["CompanyCode"])))
+        {
+            <li class="tabDefault"><a data-toggle="tab" href="#Excel" class="vdsInfoTab">Excel Upload</a></li>
+        }
+        <li class="tabDefault"><a data-toggle="tab" href="#Integration" class="">Integration</a></li>
+
+    </ul>
+</div>
+
+<div class="tab-content">
+
+    <div id="PurchaseIndex" class="tab-pane fade  in active">
+
+        <div class="thinbox  animated zoomIn faster">
+            <div class="th_thinbox">
+                @if (Model.TransactionType == "TollReceive")
+                {
+                    <p>Toll Receive Invoices</p>
+                }
+                else if (Model.TransactionType == "ClientRawReceive")
+                {
+                    <p>Client Raw Receive Invoices</p>
+                }
+                else if (Model.TransactionType == "ClientFGReceiveWOBOM")
+                {
+                    <p>FG Receive (WO BOM) Invoices</p>
+                }
+                else if (Model.TransactionType == "TollReceiveRaw")
+                {
+                    <p>Toll Receive(Raw) Invoices</p>
+                }
+                else
+                {
+                    <p>Purchase Invoices</p>
+                }
+            </div>
+            <div class="dtSearch formDesign">
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.SearchField)
+                        </div>
+                        <div class="editor-field">
+                            @Html.SimpleDropDownFor(m => m.SearchField, "/Config/DropDown/PurchaseColumnSearch", new { @class = " form-control " })
+                            @*@Html.TextBoxFor(model => model.SearchField, new { @class = "  form-control" })*@
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.SearchValue)
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(model => model.SearchValue, new { @class = "  form-control" })
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.VendorGroup)
+                        </div>
+                        <div class="editor-field">
+                            @Html.SimpleDropDownFor(model => model.VendorGroup, "/Config/DropDown/VendorGroup", new { @class = " form-control selectDropdown" })
+                        </div>
+                    </div>
+                    <div class="trk_5">
+                        <div class="editor-label">
+                            <label>VDS</label>
+                        </div>
+                        <div class="editor-field">
+                            <select id="WithVDS" class="form-control">
+                                <option value=""></option>
+                                <option value="Y">Y</option>
+                                <option value="N">N</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="trk_5">
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.Post)
+                        </div>
+                        <div class="editor-field">
+                            <select id="Post" class="form-control">
+                                <option value=""></option>
+                                <option value="Y">Y</option>
+                                <option value="N">N</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="trk_5">
+                        <div class="editor-label">
+                            @Html.Label("Rebate")
+                        </div>
+                        <div class="editor-field">
+                            <select id="IsRebate" class="form-control">
+                                <option value=""></option>
+                                <option value="Y">Y</option>
+                                <option value="N">N</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="trk1_5">
+                        <div class="editor-label">
+                            @Html.Label("Date From")
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(model => model.InvoiceDateTimeFrom, new { @placeholder = "Date From", @class = "customDatePicker defaultDate form-control" })@*defaultDate*@
+                        </div>
+                    </div>
+                    <div class="trk1_5">
+                        <div class="editor-label">
+                            @Html.Label("Date To")
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(model => model.InvoiceDateTimeTo, new { @placeholder = "Date To", @class = "customDatePicker defaultDate form-control" })
+                        </div>
+                    </div>
+                    <div class="trk1_5">
+                        <div class="editor-label">
+                            <label>Branch Name</label>
+                        </div>
+                        <div class="editor-field">
+                            @*@Html.SimpleDropDownFor(model => model.BranchId, "/Config/DropDown/BranchProfile", new { @class = " form-control" })*@
+                            @*@Html.SimpleDropDownFor(model => model.BranchId, "/Config/DropDown/UserBranchProfile", new { @class = " form-control" })*@
+                            @Html.DropDownListFor(model => model.BranchId, new SelectList(Model.BranchList, "BranchID", "BranchName", Model.BranchId), new { @class = " form-control" })
+                            @*@Html.SimpleDropDownFor(model => model.BranchId, "/Config/DropDown/BranchProfile", new { @class = " selectDropdown  form-control" })*@
+                        </div>
+                    </div>
+
+
+
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="editor-label">
+                            <label>Select Top</label>
+                        </div>
+                        <div class="editor-field">
+                            @Html.SimpleDropDownFor(model => model.SelectTop, "/Config/DropDown/RecordSelectList", new { @class = " cBranchId form-control" })
+                            &nbsp;
+                        </div>
+                    </div>
+
+                    @if (Model.RebateWithGRN == "N")
+                    {
+                        <div class="col-md-2">
+                            <div class="editor-label">
+                                <label>Rebate Month</label>
+                            </div>
+                            <div class="editor-field">
+                                @Html.SimpleDropDownFor(m => m.RebateDate, "/Config/DropDown/FiscalPeriod", new { @class = "cRebateDate form-control required" })
+
+                                &nbsp;
+                            </div>
+                        </div>
+                    }
+                    <div class="col-md-1">
+                        <div class="editor-label">
+                            <label>Export All</label>
+                        </div>
+                        <div class="editor-field">
+                            @Html.CheckBox("ExportAll", new { id = "idExportAll", @class = "cExportAll form-control", @name = "att[]" })
+                        </div>
+                    </div>
+                    <div class="trk1_5">
+                        <div class="editor-label">
+                            @Html.Label("Period Name")
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(model => model.PeriodDateTime, new { @placeholder = "Period Date", @class = "customDatePicker defaultDate form-control" })
+                        </div>
+                    </div>
+                    <br />
+                    <div class="col-md-1">
+                        <button type="button" title="PeriodDateTime" onclick="PeriodDateTime()" class="sym-btn-Excel-Export">&nbsp;HSCode</button>
+                    </div>
+                    </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="editor-label">
+                            <label>&nbsp;</label>
+                        </div>
+                        <div class="editor-field">
+                            <button type="button" title="Click to Search" id="btnDialog" class="sym-btn-search">Search</button>
+                            <button type="button" title="Clear Data" id="Clear" class=" sym-btn-clear">&nbsp;Clear</button>
+                            <button type="button" title="Post Data" onclick="PostData()" class="sym-btn-post">&nbsp;Post</button>
+                            <button type="button" title="Export Data" onclick="ExportExcell()" class="sym-btn-Excel-Export">&nbsp;Export</button>
+                           
+                            @if (Model.RebateWithGRN == "N")
+                            {
+                                <button type="button" title="Rebate Data" onclick="RebateData()" class="sym-btn-post">&nbsp;Rebate</button>
+                            }
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+            </div>
+            <p>&nbsp;</p>
+            <table id="myDataTable" class="display">
+                <thead>
+                    <tr>
+                        <th class="center">
+                            <input type="checkbox" class="chkAll" />Action
+                        </th>
+                        <th>Purchase Invoice No</th>
+                        <th>Vendor</th>
+                        <th>Receive Date</th>
+                        <th>Total Amount</th>
+                        <th>Total VAT Amount</th>
+                        <th>Is Posted</th>
+                        <th>BE Number</th>
+                        <th>Import ID</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <br />
+        </div>
+
+        <div class="headrow">
+            <button type="button" title="Add New Purchase" data-url="/VMS/Purchase/Create?tType=@Model.TransactionType" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+        </div>
+
+        <div id="myModal" class="trkmodal"></div>
+    </div>
+
+    <div id="Excel" class="tab-pane fade  in ">
+
+        <div class="thinbox row">
+            <div class="th_thinbox">
+                <p>Excel Import</p>
+            </div>
+            @using (Ajax.BeginForm("ImportExcel", "Purchase", null, new AjaxOptions { }, new { enctype = "multipart/form-data", @Id = "frmPurchaseImport" }))
+            {
+                @Html.HiddenFor(model => model.TransactionType)
+
+                <div class="col-md-offset-6 col-md-6 verticalLine">
+                    <div class="col-md-6">
+                        <label>File</label>
+                        @Html.TextBoxFor(model => model.File, new { @type = "file", @accept = ".xlsx", @class = " form-control" })
+                    </div>
+                    <div class="col-md-6">
+                        <label>&nbsp;</label>
+                        <button type="button" onclick="pageSubmit('frmPurchaseImport');" class="sym-btn-file-upload">&nbsp;Upload</button>
+                    </div>
+                </div>
+            }
+        </div>
+
+    </div>
+
+    <div id="Integration" class="tab-pane fade  in formDesign">
+        <div class="thinbox">
+            <div class="th_thinbox">
+                <p>Integration</p>
+            </div>
+
+            @if (Model.TransactionType == "Other" || Model.TransactionType == "Import")
+            {
+
+                if (OrdinaryVATDesktop.IsACICompany(Convert.ToString(Session["CompanyCode"])))
+                {
+                    @Html.Partial("~/Areas/VMS/Views/Integration/_PurchaseHeader_ACI.cshtml")
+
+                }
+                if (OrdinaryVATDesktop.IsUnileverCompany(Convert.ToString(Session["CompanyCode"])))
+                {
+                    @Html.Partial("~/Areas/VMS/Views/Integration/_PurchaseHeader_Unilever.cshtml")
+
+                }
+
+                if (Convert.ToString(Session["CompanyCode"]).ToLower() == "smc" || Convert.ToString(Session["CompanyCode"]).ToLower() == "smcholding")
+                {
+                    if (Model.TransactionType == "ClientFGReceiveWOBOM")
+                    {
+                        @Html.Partial("~/Areas/VMS/Views/Integration/_TollReceiveHeader_SMC.cshtml")
+                    }
+                    else
+                    {
+                        @Html.Partial("~/Areas/VMS/Views/Integration/_PurchaseHeader_SMC.cshtml")
+                    }
+
+                }
+
+                else if (Convert.ToString(Session["CompanyCode"]) == "EON" || Convert.ToString(Session["CompanyCode"]).ToLower() == "purofood" || Convert.ToString(Session["CompanyCode"]).ToLower() == "eahpl" || Convert.ToString(Session["CompanyCode"]).ToLower() == "eail" || Convert.ToString(Session["CompanyCode"]).ToLower() == "eeufl" || Convert.ToString(Session["CompanyCode"]).ToLower() == "exfl")
+                {
+                    @Html.Partial("~/Areas/VMS/Views/Integration/_PurchaseHeader_EON.cshtml")
+
+                }
+
+                else if (Convert.ToString(Session["CompanyCode"]) == "JAPFA")
+                {
+                    @Html.Partial("~/Areas/VMS/Views/Integration/_PurchaseHeader_JAPFA.cshtml")
+
+                }
+                if (OrdinaryVATDesktop.IsNourishCompany(Convert.ToString(Session["CompanyCode"])))
+                {
+                    @Html.Partial("~/Areas/VMS/Views/Integration/_PurchaseHeader_Nourish.cshtml")
+
+                }
+
+                @*else if (Convert.ToString(Session["CompanyCode"]) == "DECATHLON")
+                    {
+                        @Html.Partial("~/Areas/VMS/Views/Integration/_PurchaseHeader_Decathlon.cshtml")
+
+                    }*@
+
+
+            }
+
+            @if (Model.TransactionType == "PurchaseReturn")
+            {
+                if (OrdinaryVATDesktop.IsUnileverCompany(Convert.ToString(Session["CompanyCode"])))
+                {
+                    @Html.Partial("~/Areas/VMS/Views/Integration/_PurchaseHeader_Unilever.cshtml")
+
+                }
+            }
+
+
+
+        </div>
+    </div>
+
+</div>
+
+<script>
+    $("#PurchaseIndex .chkAll").click(function () {
+        $('#PurchaseIndex  .dSelected:input:checkbox').not(this).prop('checked', this.checked);
+    });
+
+</script>
+
+<script>
+
+    function PostData() {
+
+        var questionMSG = "Are you sure to Post Data!";
+
+        Ask(questionMSG, function () {
+
+
+            var IDs = [];
+            var $Items = $("#PurchaseIndex  .dSelected:input:checkbox:checked");
+
+            if ($Items == null || $Items.length == 0) {
+                ShowResult("Fail", "You are requested to Select before Post!");
+                return;
+            }
+
+            $Items.each(function () {
+                var ID;
+                ID = $(this).attr("data-Id");
+                //alert(ID);
+                //console.log(ID, typeof ID);
+
+                var vID = ID.split("~")[0];
+
+                IDs.push(vID);
+            });
+
+            var model = {
+                IDs: IDs
+            }
+            var url = '/VMS/Purchase/MultiplePost';
+
+            $.ajax({
+                url: url
+                , data: model
+                , type: 'Post'
+                , traditional: true
+                , beforeSend: function () { $(".loading").show(); }
+                , success: function (rVM) {
+                    ShowResult(rVM.Status, rVM.Message);
+                }
+                , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+
+            });
+        });
+
+    }
+
+    function PeriodDateTime() {
+        debugger
+        var questionMSG = "Are you sure to HSCode update Data!";
+
+        Ask(questionMSG, function () {
+
+            var IDs = [];
+            var $Items = $("#PurchaseIndex  .dSelected:input:checkbox:checked");
+
+            //if ($Items == null || $Items.length == 0) {
+            //    ////ShowResult("Fail", "You are requested to Select before Rebate!");
+            //    MsgAskOk("You are requested to Select before PeriodDateTime!", "Fail");
+
+            //    return;
+            //}
+
+            var PeriodDateTime = $('.customDatePicker').val();
+            if (PeriodDateTime == "") {
+                MsgAskOk("Please select PeriodDate Time!", "Fail");
+                return;
+
+            }
+
+            $Items.each(function () {
+
+                var ID;
+                ID = $(this).attr("data-Id");
+
+                var vID = ID.split("~")[0];
+
+                IDs.push(vID);
+            });
+
+            var model = {
+                IDs: IDs,
+                PeriodDateTime: PeriodDateTime
+            }
+            var url = '/VMS/Purchase/MultiplePeriodDateTime';
+
+            $.ajax({
+                url: url
+                , data: model
+                , type: 'Post'
+                , traditional: true
+                , beforeSend: function () { $(".loading").show(); }
+                , success: function (rVM) {
+                    //////ShowResult(rVM.Status, rVM.Message);
+                    MsgAskOk(rVM.Message, rVM.Status);
+                }
+                , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+
+            });
+        });
+
+    }
+
+
+    function RebateData() {
+
+        var questionMSG = "Are you sure to Rebate Data!";
+
+        Ask(questionMSG, function () {
+
+            var IDs = [];
+            var $Items = $("#PurchaseIndex  .dSelected:input:checkbox:checked");
+
+            if ($Items == null || $Items.length == 0) {
+                ////ShowResult("Fail", "You are requested to Select before Rebate!");
+                MsgAskOk("You are requested to Select before Rebate!", "Fail");
+
+                return;
+            }
+
+            var RebateMonth = $('.cRebateDate').val();
+            if (RebateMonth == "") {
+                MsgAskOk("Please select Rebate Month!", "Fail");
+                return;
+
+            }
+
+            $Items.each(function () {
+
+                var ID;
+                ID = $(this).attr("data-Id");
+
+                var vID = ID.split("~")[0];
+
+                IDs.push(vID);
+            });
+
+            var model = {
+                IDs: IDs,
+                RebateDate: RebateMonth
+            }
+            var url = '/VMS/Purchase/MultipleRebate';
+
+            $.ajax({
+                url: url
+                , data: model
+                , type: 'Post'
+                , traditional: true
+                , beforeSend: function () { $(".loading").show(); }
+                , success: function (rVM) {
+                    //////ShowResult(rVM.Status, rVM.Message);
+                    MsgAskOk(rVM.Message, rVM.Status);
+                }
+                , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+
+            });
+        });
+
+    }
+
+
+    function ExportExcell() {
+
+        var questionMSG = "Are you sure to Export Data!";
+
+        Ask(questionMSG, function () {
+            var SearchField = $('#SearchField').val();
+
+            var SearchValue = $('#SearchValue').val();
+            var SaleType = $('#SaleType').val();
+            var CustomerID = $('#CustomerID').val();
+            var IsPrint = $('#IsPrint').val();
+            var Post = $('#Post').val();
+            var InvoiceDateTimeFrom = $('#InvoiceDateTimeFrom').val();
+            var InvoiceDateTimeTo = $('#InvoiceDateTimeTo').val();
+            var BranchId = $('#BranchId').val();
+            //var IsInstitution = $('#IsInstitution').val();
+            var SelectTop = $('#SelectTop').val();
+            var ExportAll = $('#idExportAll').is(":checked");
+            var TransactionType = $('#TransactionType').val();
+            // console.log("TEST EXPORT");
+            // console.log(ExportAll);
+
+
+
+            var IDs = [];
+            var $Items = $("#PurchaseIndex  .dSelected:input:checkbox:checked");
+
+            if (!ExportAll) {
+                if ($Items == null || $Items.length == 0) {
+                    ShowResult("Fail", "You are requested to Select before Export!");
+                    return;
+                }
+            }
+
+            $Items.each(function () {
+                var ID;
+                ID = $(this).attr("data-Id");
+                //alert(ID);
+                //console.log(ID, typeof ID);
+
+                var vID = ID.split("~")[0];
+
+                IDs.push(vID);
+            });
+
+            var model = {
+                IDs: IDs
+            }
+            var url = '/VMS/Purchase/ExportExcell';
+
+            var form = $('<form action="' + url + '"></form>');
+
+            IDs.forEach(function (item) {
+                form.append($('<input  value="' + item + '" name="Ids" />'))
+
+            })
+
+            form.append($('<input  value="' + SearchField + '" name="SearchField" />'))
+
+            form.append($('<input  value="' + SearchValue + '" name="SearchValue" />'))
+            //form.append($('<input  value="' + SaleType + '" name="SaleType" />'))
+            //form.append($('<input  value="' + CustomerID + '" name="CustomerID" />'))
+            form.append($('<input  value="' + IsPrint + '" name="IsPrint" />'))
+            form.append($('<input  value="' + Post + '" name="Post" />'))
+            form.append($('<input  value="' + InvoiceDateTimeFrom + '" name="InvoiceDateTimeFrom" />'))
+            form.append($('<input  value="' + InvoiceDateTimeTo + '" name="InvoiceDateTimeTo" />'))
+            form.append($('<input  value="' + BranchId + '" name="BranchId" />'))
+            //form.append($('<input  value="' + IsInstitution + '" name="IsInstitution" />'))
+            form.append($('<input  value="' + SelectTop + '" name="SelectTop" />'))
+            form.append($('<input  value="' + ExportAll + '" name="ExportAll" />'))
+            form.append($('<input  value="' + TransactionType + '" name="TransactionType" />'))
+            form.appendTo('#formAppend').submit()
+
+
+            //$.ajax({
+            //    url: url
+            //    , data: model
+            //    , type: 'Get'
+            //    , traditional: true
+            //    , beforeSend: function () { $(".loading").show(); }
+            //    , success: function (rVM) {
+            //        ShowResult(rVM.Status, rVM.Message);
+            //    }
+            //    , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+
+            //});
+        });
+
+    }
+
+</script>
+
+<script language="javascript" type="text/javascript">
+    function btnMIS(sender) {
+        var purchaseId = $(sender).attr('data-Id');
+        var url = $(sender).attr('data-url');
+        url = url + "?purNo=" + purchaseId;
+        $.ajax({
+            url: url,
+            cache: false,
+            beforeSend: function () { $(".loading").show(); },
+            complete: function () { $(".loading").fadeOut(200).hide("slow") },
+            success: function (html) {
+                var modal = document.getElementById('myModal');
+                modal.style.display = "block";
+                $("#myModal").html(html);
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        function modalInit() {
+            var modal = document.getElementById('myModal');
+            $('.vat18').click(function () {
+                var url = "/Vms/Purchase/PrintVAT18";
+
+                $.ajax({
+                    url: url,
+                    cache: false,
+                    beforeSend: function () { $(".loading").show(); },
+                    complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                    success: function (html) {
+                        modal.style.display = "block";
+                        $("#myModal").html(html);
+                    }
+                });
+            });
+        }
+        modalInit();
+
+        //SelectAllForDelete();
+        $.datepicker.regional[""].dateFormat = 'dd/M/y';
+        $.datepicker.setDefaults($.datepicker.regional['']);
+        var oTable = $('#myDataTable').dataTable({
+            "bServerSide": true,
+            "sAjaxSource": "/VMS/Purchase/_index?TransactionType=@Model.TransactionType",
+            "bProcessing": true,
+            "aLengthMenu": tablelength(),
+            "bJqueryUI": true,
+            "bAutoWidth": false,
+
+            "fnServerData": function (sSource, aoData, fnCallback) {
+                $('.dtSearch :input').each(function () {
+                    var Name = $(this).attr("Id")
+                    var Value = $(this).val()
+                    aoData.push({ "name": Name, "value": Value });
+                });
+                $.getJSON(sSource, aoData, function (json) {
+                    fnCallback(json);
+                });
+            },
+
+            "aoColumns": [
+                            {
+
+
+                                "sName": "Id",
+                                "bSearchable": false,
+                                "bSortable": false,
+                                "sWidth": "12%",
+                                "sClass": "center",
+                                "fnRender": function (oObj) {
+                                    return ' <input onclick="CheckAll(this)" class="dSelected" type="checkbox" data-Id="' + oObj.aData[0] + '">'
+                                    + '&nbsp; <a title="Click on for Edit" href=\"/VMS/Purchase/Edit/' + oObj.aData[0].split('~')[0] + '?TransactionType=' + oObj.aData[9] + '\" class="sym-btn-edit-row"></a>'
+                                        + '&nbsp; <a title="Click on for Post" data-url="/VMS/Purchase/Post"  onclick=checkValidBranch(this,' + oObj.aData[0].split('~')[2] + '); data-Id="' + oObj.aData[0] + '\" class="sym-btn-post-row"></a>'
+
+                                    ;
+                                }
+                            }
+
+                            , { "sName": "PurchaseInvoiceNo", "sWidth": "12%" }
+                            , { "sName": "Vendor", "sWidth": "15%" }
+                            , { "sName": "ReceiveDate", "sWidth": "10%" }
+                            , { "sName": "TotalAmount", "sWidth": "10%" }
+                            , { "sName": "TotalVATAmount", "sWidth": "12%" }
+                            , { "sName": "Post", "sWidth": "8%" }
+                            , { "sName": "BENumber", "sWidth": "10%" }
+                            , { "sName": "ImportIDExcel", "sWidth": "10%" }
+
+            ]
+        });
+
+        $('#btnDialog').click(function () {
+            var model = $('.dtSearch :input').serialize();
+            $.ajax({
+                url: "/VMS/Purchase/Index",
+                cache: false,
+                data: model,
+                success: function (html) {
+                    oTable.fnDraw();
+                }
+            });
+        });
+        ////clearing fields
+        $("#Clear").on('click', function () {
+            $(".Dropdown").select2("val", "");
+            $(".form-control").val("");
+        });
+    });
+
+    function checkValidBranch(element, branchId) {
+        if ('@Session["BranchId"]' != branchId) {
+            ShowResult("Fail", "This Information not for this Branch!");
+            return;
+        }
+
+        btnPost(element);
+    }
+</script>
+
+<style>
+    .cExportAll {
+        margin-left: 20px !important;
+    }
+</style>
+

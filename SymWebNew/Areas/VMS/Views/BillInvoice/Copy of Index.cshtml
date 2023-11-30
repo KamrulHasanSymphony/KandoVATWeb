@@ -1,0 +1,93 @@
+﻿@model SymViewModel.Vms.DepositViewModel
+@using UIHelper.MVC
+@using SymOrdinary
+@using System.Threading;
+@{ 
+    ShampanIdentity identity = null;
+    try
+    {
+        identity = (ShampanIdentity)Thread.CurrentPrincipal.Identity;
+    }
+    catch (Exception)
+    {
+        Response.Redirect("/VMS/Home/Login");
+        return;
+    }
+}
+
+@{
+    ViewBag.Title = "Index";
+}
+<div class="headrow">
+    <button type="button" title="Add New Petty Cash" data-url="/VMS/Deposit/Create" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+    <button type="button" title="Post Checked Issue" data-url="/VMS/Deposit/Post" onclick="postedData(this, 'myDataTable');" id="" class="sym-btn-post">&nbsp;Post</button>
+    <label class="pull-right">Deposit </label>
+</div>
+
+<div class="thinbox">
+    <div class="th_thinbox">
+        <p>Issue Header</p>
+    </div>
+    <table id="myDataTable" class="display">
+        <thead>
+            <tr>
+                <th class="center">
+                    <input type="checkbox" class="chkAll" />
+                    Select All</th>
+                <th>Deposit DateTime</th>
+                <th>Deposit Type</th>
+                <th>Deposit Amount</th>
+                <th>Cheque Bank</th>
+                <th>Treasury No</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <br />
+</div>
+
+<div class="headrow">
+    <button type="button" title="Add New Issue" data-url="/VMS/Deposit/Create" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+    <button type="button" title="Post Checked Issue" data-url="/VMS/Deposit/Post" onclick="postedData(this, 'myDataTable');" id="" class="sym-btn-post">&nbsp;Post</button>
+</div>
+
+<script language="javascript" type="text/javascript">
+
+    $(document).ready(function () {
+        SelectAllForDelete();
+        $.datepicker.regional[""].dateFormat = 'dd/M/y';
+        $.datepicker.setDefaults($.datepicker.regional['']);
+        var oTable = $('#myDataTable').dataTable({
+            "bServerSide": true,
+            "sAjaxSource": "/VMS/Deposit/_index",
+            "bProcessing": true,
+            "aLengthMenu": tablelength(),
+            "bJqueryUI": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+                            {
+                                "sName": "DepositId",
+                                "bSearchable": false,
+                                "bSortable": false,
+                                "sWidth": "20%",
+                                "sClass": "center",
+                                "fnRender": function (oObj) {
+                                    return ' <input onclick="CheckAll(this)" type="checkbox" data-Id="' + oObj.aData[0].split('~')[0] + '">'
+                                        + '&nbsp; <a title="Click on for Edit" href=\"/VMS/Deposit/Edit/' + oObj.aData[0].split('~')[0] + '\" class="sym-btn-edit-row"></a>'
+                                        + '&nbsp; <a title="Click on for Post" data-url="/VMS/Deposit/Post"  onclick=btnPost(this); data-Id="' + oObj.aData[0] + '\" class="sym-btn-post-row"></a>'
+                                        + '&nbsp; <a title="Click on for Report" target="_blank" href="/VMS/Deposit/VoucherReportView?Id=' + oObj.aData[0].split('~')[0] + '\" class="sym-btn-report-row"></a>'
+                                    ;
+                                }
+                            }
+                            , { "sName": "DepositDateTime", "sWidth": "20%" }
+                            , { "sName": "DepositType", "sWidth": "10%" }
+                            , { "sName": "DepositAmount", "sWidth": "15%" }
+                            , { "sName": "ChequeBank", "sWidth": "10%" }
+                            , { "sName": "TreasuryNo", "sWidth": "12%" }
+            ]
+        });
+
+    });
+</script>
+

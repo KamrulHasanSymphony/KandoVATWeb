@@ -1,0 +1,510 @@
+﻿@model VATViewModel.DTOs.VAT6_1ParamVM
+@using UIHelper.MVC
+@{
+    ViewBag.Title = "Process6_1_6_2Permanent";
+}
+
+@*<h2>Process6_1_6_2Permanent</h2>*@
+
+<div class=" tabMenu">
+    <ul style="font-size: 1.4em;" class="tabDesign nav nav-tabs">
+
+
+        <li class="tabDefault active">@*<a data-toggle="tab" href="#PermanentProces"> Permanent Process</a>*@</li>
+        <li class="tabDefault active"><a data-toggle="tab" href="#PermanentProces"> Permanent download</a></li>
+
+        @*<li class="tabDefault"><a data-toggle="tab" href="#DeleteProcess" class="vdsInfoTab">Delete Process</a></li>*@
+
+    </ul>
+</div>
+
+<div class="tab-content">
+
+    <div id="PermanentProces" class="tab-pane fade  in active">
+
+
+        @using (Html.BeginForm("_Process6_1_6_2Permanent", "NBRReport", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmProcessdata" }))
+        {
+            @*@Html.HiddenFor(model => model.Flag)*@
+            @*@Html.HiddenFor(model => model.ProcesType, new { @class = "cProcesType" })*@
+            @Html.HiddenFor(model => model.ProcesType, new { @class = "cProcesType" })
+
+            <div class="headrow">
+            </div>
+
+            <div class="col-md-12 trkPX-0">
+                <div class="thinbox animated zoomIn faster">
+                    <div class="th_thinbox">
+                        @*<p>6.1 & 6.2 Permanent Process</p>*@
+                        <p>6.1 & 6.2 Permanent negative download</p>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="row">
+                                <label for="" class="col-md-2 control-label text-right trkLabelMargin">Product Name</label>
+                                <div class="col-md-4">
+                                    <div class="col-md-8 npForm">
+                                        @Html.HiddenFor(m => m.ItemNo, new { @class = " popUpItemNo" })
+                                        @Html.TextBoxFor(m => m.ProductName, new { @class = " form-control trProductName", @readonly = "readonly" })
+                                    </div>
+                                    <div class=" col-md-2 npForm">
+
+                                        <button type="button" class=" sym-btn-search productBtn">Search</button>
+                                    </div>
+                                </div>
+
+                                <label for="" class="col-md-2 control-label text-right trkLabelMargin">With Product</label>
+                                <div class="col-md-4">
+                                    <div class="col-md-8 npForm">
+                                        @Html.CheckBoxFor(m => m.IsChecked, new { id = "idIsChecked", @class = "cIsChecked form-control", @name = "att[]" })
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+
+                                <label for="Month" class="col-md-2 control-label text-right trkLabelMargin">From Month</label>
+                                <div class="col-md-2">
+                                    @*@Html.TextBoxFor(m => m.IsMonthly, new { @placeholder = "Start Date", @class = "customDatePicker form-control defaultDate" })*@
+                                    @Html.SimpleDropDownFor(m => m.FromPeriodName, "/Config/DropDown/FiscalPeriod", new { @class = "cPeriodMonth form-control required" })
+                                    @Html.ValidationMessageFor(model => model.PeriodMonth)
+                                </div>
+
+                                <label for="Month" class="col-md-2 control-label text-right trkLabelMargin">To Month</label>
+                                <div class="col-md-2">
+                                    @*@Html.TextBoxFor(m => m.IsMonthly, new { @placeholder = "Start Date", @class = "customDatePicker form-control defaultDate" })*@
+                                    @Html.SimpleDropDownFor(m => m.ToPeriodName, "/Config/DropDown/FiscalPeriod", new { @class = "cPeriodMonth form-control required" })
+                                    @Html.ValidationMessageFor(model => model.PeriodMonth)
+                                </div>
+
+                            </div>
+
+                            @*<div class="row">
+
+                                    <label for="DateFrom" class="col-md-2 control-label text-right trkLabelMargin">Date From</label>
+                                    <div class="col-md-2">
+
+                                        @Html.TextBoxFor(m => m.StartDate, new { @placeholder = "Start Date", @class = "customDatePicker form-control defaultDate" })
+                                    </div>
+
+                                    <label for="DateTo" class="col-md-2 control-label text-right trkLabelMargin">Date To</label>
+                                    <div class="col-md-2">
+
+                                        @Html.TextBoxFor(m => m.EndDate, new { @placeholder = "End Date", @class = "customDatePicker form-control defaultDate" })
+                                    </div>
+
+                                </div>*@
+                            <br />
+                            <div class="row">
+                                <div class="npForm col-md-12" style="margin-left:4%;">
+                                    @*<label class="RadioContainer" style="margin-right:4px;">
+                                        6_1Process
+                                        <input type="radio" name="rptType" checked>
+                                        <span class="checkmark"></span>
+                                    </label>
+                                    <label class="RadioContainer" style="margin-right:4px;">
+                                        6_2Process
+                                        <input type="radio" name="rptType">
+                                        <span class="checkmark"></span>
+                                    </label>
+
+                                    <label class="RadioContainer" style="margin-right:4px;">
+                                        6_2_1Process
+                                        <input type="radio" name="rptType">
+                                        <span class="checkmark"></span>
+                                    </label>
+
+                                    <label class="RadioContainer" style="margin-right:4px;">
+                                        BothProcess
+                                        <input type="radio" name="rptType">
+                                        <span class="checkmark"></span>
+                                    </label>*@
+                                    <label class="RadioContainer" style="margin-right:4px;">
+                                        6.1Negativedownload
+                                        <input type="radio" name="rptType">
+                                        <span class="checkmark"></span>
+                                    </label>
+                                    <label class="RadioContainer" style="margin-right:4px;">
+                                        6.2Negativedownload
+                                        <input type="radio" name="rptType">
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="headrow">
+                @*<button type="button" title="ProcessData" onclick="ProcessData()" class="sym-btn-save">&nbsp;Process</button>*@
+                <button type="button" title="ProcessData" onclick="ProcessData()" class="sym-btn-save">&nbsp;download</button>
+                @*<button type="button" title="Delete_Process" onclick="SaveData('Delete_Process')" class="sym-btn-save">&nbsp;Delete-Process</button>*@
+                @*<button type="button" title="Re-Process" onclick="ExportExcel()" class=" sym-btn-save">&nbsp;Download Negative Data</button>*@
+            </div>
+
+
+
+
+
+        }
+    </div>
+
+    <div id="DeleteProcess" class="tab-pane fade  in ">
+
+        @using (Html.BeginForm("_Process6_1_6_2Delete", "NBRReport", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmDeleteData" }))
+        {
+            @*@Html.HiddenFor(model => model.Flag)*@
+            @*@Html.HiddenFor(model => model.ProcesType)*@
+            @Html.HiddenFor(model => model.ProcesType, new { @class = "ccProcesType" })
+            
+
+            <div class="headrow">
+            </div>
+
+            <div class="col-md-12 trkPX-0">
+                <div class="thinbox animated zoomIn faster">
+                    <div class="th_thinbox">
+                        <p>6.1 & 6.2 Permanent Process</p>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="row">
+                                <label for="" class="col-md-2 control-label text-right trkLabelMargin">Product Name</label>
+                                <div class="col-md-4">
+                                    <div class="col-md-8 npForm">
+                                        @Html.HiddenFor(m => m.ItemNo, new { @class = " cItemNo" })
+                                        @Html.TextBoxFor(m => m.ProductName, new { @class = " form-control cProductName", @readonly = "readonly" })
+                                    </div>
+                                    <div class=" col-md-2 npForm">
+
+                                        <button type="button" class=" sym-btn-search productBtn">Search</button>
+                                    </div>
+                                </div>
+
+                                <label for="" class="col-md-2 control-label text-right trkLabelMargin">With Product</label>
+                                <div class="col-md-4">
+                                    <div class="col-md-8 npForm">
+                                        @Html.CheckBoxFor(m => m.IsChecked, new { id = "idIsChecked2", @class = "cIsChecked form-control", @name = "att[]" })
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+
+                                <label for="Month" class="col-md-2 control-label text-right trkLabelMargin">From Month</label>
+                                <div class="col-md-2">
+                                    @*@Html.TextBoxFor(m => m.IsMonthly, new { @placeholder = "Start Date", @class = "customDatePicker form-control defaultDate" })*@
+                                    @Html.SimpleDropDownFor(m => m.FromPeriodName, "/Config/DropDown/FiscalPeriod", new { @class = "cPeriodMonth form-control required" })
+                                    @Html.ValidationMessageFor(model => model.PeriodMonth)
+                                </div>
+
+                                <label for="Month" class="col-md-2 control-label text-right trkLabelMargin">To Month</label>
+                                <div class="col-md-2">
+                                    @*@Html.TextBoxFor(m => m.IsMonthly, new { @placeholder = "Start Date", @class = "customDatePicker form-control defaultDate" })*@
+                                    @Html.SimpleDropDownFor(m => m.ToPeriodName, "/Config/DropDown/FiscalPeriod", new { @class = "cPeriodMonth form-control required" })
+                                    @Html.ValidationMessageFor(model => model.PeriodMonth)
+                                </div>
+
+                            </div>
+
+                            @*<div class="row">
+
+                                    <label for="DateFrom" class="col-md-2 control-label text-right trkLabelMargin">Date From</label>
+                                    <div class="col-md-2">
+
+                                        @Html.TextBoxFor(m => m.StartDate, new { @placeholder = "Start Date", @class = "customDatePicker form-control defaultDate" })
+                                    </div>
+
+                                    <label for="DateTo" class="col-md-2 control-label text-right trkLabelMargin">Date To</label>
+                                    <div class="col-md-2">
+
+                                        @Html.TextBoxFor(m => m.EndDate, new { @placeholder = "End Date", @class = "customDatePicker form-control defaultDate" })
+                                    </div>
+
+                                </div>*@
+                            <br />
+                            <div class="row">
+                                <div class="npForm col-md-12" style="margin-left:4%;">
+                                    <label class="RadioContainer" style="margin-right:4px;">
+                                        6_1Process
+                                        <input type="radio" name="crptType" checked>
+                                        <span class="checkmark"></span>
+                                    </label>
+                                    <label class="RadioContainer" style="margin-right:4px;">
+                                        6_2Process
+                                        <input type="radio" name="crptType">
+                                        <span class="checkmark"></span>
+                                    </label>
+                                    <label class="RadioContainer" style="margin-right:4px;">
+                                        6_2_1Process
+                                        <input type="radio" name="crptType">
+                                        <span class="checkmark"></span>
+                                    </label>
+                                    <label class="RadioContainer" style="margin-right:4px;">
+                                        BothProcess
+                                        <input type="radio" name="crptType">
+                                        <span class="checkmark"></span>
+                                    </label>
+                                    @*<label class="RadioContainer" style="margin-right:4px;">
+                                            6.1Negativedownload
+                                            <input type="radio" name="crptType">
+                                            <span class="checkmark"></span>
+                                        </label>
+                                        <label class="RadioContainer" style="margin-right:4px;">
+                                            6.2Negativedownload
+                                            <input type="radio" name="crptType">
+                                            <span class="checkmark"></span>
+                                        </label>*@
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="headrow">
+                <button type="button" title="Process" onclick="DeleteData()" class="sym-btn-save">&nbsp;DeleteProcess</button>
+                @*<button type="button" title="Delete_Process" onclick="SaveData('Delete_Process')" class="sym-btn-save">&nbsp;Delete-Process</button>*@
+                @*<button type="button" title="Re-Process" onclick="ExportExcel()" class=" sym-btn-save">&nbsp;Download Negative Data</button>*@
+            </div>
+
+
+
+
+
+        }
+
+    </div>
+
+</div>
+
+<div id="myHigherModal" class="HigherModal"></div>
+
+
+<script>
+
+    $(document).ready(function () {
+        $("#idIsChecked").change(function () {
+
+            if (this.checked) {
+
+                $(".cPeriodMonth").removeAttr('disabled', 'disabled');
+                $(".productBtn").removeAttr('disabled', 'disabled');
+                $("#StartDate").removeAttr('disabled', 'disabled');
+                $("#EndDate").removeAttr('disabled', 'disabled');
+                //$("#sr").attr('readonly', 'true');
+            }
+            else {
+
+                $(".cPeriodMonth").removeAttr('disabled');
+                $(".productBtn").attr('disabled', 'disabled');
+                $("#StartDate").attr('disabled', 'disabled');
+                $("#EndDate").attr('disabled', 'disabled');
+
+                //$(".productBtn").removeAttr('disabled');
+                //$("#sr").removeAttr('readonly');
+            }
+        });
+        $("#idIsChecked2").change(function () {
+
+            if (this.checked) {
+
+                $(".cPeriodMonth").removeAttr('disabled', 'disabled');
+                $(".productBtn").removeAttr('disabled', 'disabled');
+                $("#StartDate").removeAttr('disabled', 'disabled');
+                $("#EndDate").removeAttr('disabled', 'disabled');
+                //$("#sr").attr('readonly', 'true');
+            }
+            else {
+
+                $(".cPeriodMonth").removeAttr('disabled');
+                $(".productBtn").attr('disabled', 'disabled');
+                $("#StartDate").attr('disabled', 'disabled');
+                $("#EndDate").attr('disabled', 'disabled');
+
+                //$(".productBtn").removeAttr('disabled');
+                //$("#sr").removeAttr('readonly');
+            }
+        });
+
+        $(".productBtn").attr('disabled', 'disabled');
+        $("#StartDate").attr('disabled', 'disabled');
+        $("#EndDate").attr('disabled', 'disabled');
+
+    });
+
+
+    function modalInitHigher(url) {
+        var modal = document.getElementById('myHigherModal');
+        $.ajax({
+            url: url,
+            cache: false,
+            beforeSend: function () { $(".loading").show(); },
+            complete: function () { $(".loading").fadeOut(200).hide("slow") },
+            success: function (html) {
+                modal.style.display = "block";
+                $("#myHigherModal").html(html);
+            }
+        });
+    }
+    function callbackFromProductModal(sender) {
+        var itemNo = $(sender).children('td.popUpItemNo').text();
+        var ItemName = $(sender).children('td.popUpItemName').text();
+        $('#ItemNo').val(itemNo);
+        $('.cItemNo').val(itemNo);
+        $('.cProductName').val(ItemName);
+    }
+    $(function () {
+        $('.productBtn').click(function () {
+            var url = "/Vms/Product/GetProductPopUp?targetId=ProductName";
+            modalInitHigher(url);
+        });
+    });
+</script>
+
+<script>
+        $(function () {
+            var date = $('.trVAT17Date').val();
+            if (date != null && date != "") {
+                $('#StartDate').val(date);
+                $('#EndDate').val(date);
+            }
+            var productName = $('tr.active .dItemName').val();
+            if (productName == null || productName == "") {
+                return;
+            }
+            $('.trProductName').val(productName);
+            var itemNo = $('tr.active .dItemNo').val();
+
+            $('.trProductName1').val(productName);
+            var itemNo = $('tr.active .dItemNo').val();
+
+            $('.popUpItemNo').val(itemNo);
+
+        })
+</script>
+
+<script>
+
+    $(function () {
+        valiDation("frmProcessdata");
+
+    });
+
+    function ProcessData() {
+
+        var radioValue = $("input[type='radio'][name='rptType']:checked").closest("label.RadioContainer").text().trim();
+        $('.cProcesType').val(radioValue);
+
+        console.log(radioValue);
+
+        var questionMSG = "";
+
+        if (radioValue == "6_1Process") {
+
+            questionMSG = "Do you want to Process 6.1 Permanently?";
+
+        }
+        else if (radioValue == "6_2Process") {
+            questionMSG = "Do you want to Process 6.2 Permanently?";
+        }
+        else if (radioValue == "6_2_1Process") {
+            questionMSG = "Do you want to Process 6.2.1 Permanently?";
+        }
+
+        else if (radioValue == "BothProcess") {
+            questionMSG = "Do you want to BothProcess Permanently?";
+        }
+
+        else if (radioValue == "6.1Negativedownload") {
+            questionMSG = "Do you want to 6.1 Negativedownload?";
+        }
+
+        else if (radioValue == "6.2Negativedownload") {
+            questionMSG = "Do you want to 6.2Negativedownload?";
+        }
+
+
+
+        Ask(questionMSG, function () {
+
+            // $('#ReportType').val(ReportType);
+
+            //   $('#ProcestType').val(radioValue);
+
+
+            pageSubmit('frmProcessdata');
+
+        });
+    }
+
+    function DeleteData() {
+
+        var radioValue = $("input[type='radio'][name='crptType']:checked").closest("label.RadioContainer").text().trim();
+        $('.ccProcesType').val(radioValue);
+
+        var questionMSG = "";
+
+        if (radioValue == "6_1Process") {
+
+            questionMSG = "Do you want to delete 6.1 Permanent data?";
+
+        }
+        else if (radioValue == "6_2Process") {
+            questionMSG = "Do you want to Delete 6.2 Permanently?";
+        }
+        else if (radioValue == "6_2_1Process") {
+            questionMSG = "Do you want to Delete 6.2.1 Permanently?";
+        }
+
+        else if (radioValue == "BothProcess") {
+            questionMSG = "Do you want to delete 6.1 & 6.2 Permanent data?";
+        }
+
+
+
+
+
+        Ask(questionMSG, function () {
+
+            // $('#ReportType').val(ReportType);
+
+            //   $('#ProcestType').val(radioValue);
+
+
+            pageSubmit('frmDeleteData');
+
+        });
+    }
+
+    function ExportExcel() {
+
+        var questionMSG = "Are you sure to Export Excel!";
+
+        Ask(questionMSG, function () {
+            var url = '/VMS/NBRReport/ExportNegaiveData';
+            var form = $('<form action="' + url + '"></form>');
+            form.appendTo('#frmProcessdata').submit()
+        });
+    }
+
+</script>

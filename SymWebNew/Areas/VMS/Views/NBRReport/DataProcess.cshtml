@@ -1,0 +1,135 @@
+﻿@model VATViewModel.DTOs.AVGPriceVm
+@using UIHelper.MVC
+@{
+    ViewBag.Title = "DataProcess";
+}
+
+@using (Html.BeginForm("ReportProcess", "NBRReport", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmProcessdata" }))
+{
+    @Html.HiddenFor(model => model.flag)
+   
+    <div class="headrow">
+       
+    </div>
+
+
+    <div class="col-md-12 trkPX-0">
+        <div class="thinbox animated zoomIn faster">
+            <div class="th_thinbox">
+                <p>Avg Price & NBR Report process</p>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label for="" class="col-md-2 control-label text-right trkLabelMargin">Product Name</label>
+                    <div class="col-md-4">
+                        <div class="col-md-8 npForm">
+                            @Html.HiddenFor(m => m.ItemNo, new { @class = " popUpItemNo" })
+                            @Html.TextBoxFor(m => m.ProductName, new { @class = " form-control trProductName", @readonly = "readonly" })
+                        </div>
+                        <div class=" col-md-2 npForm">
+                          
+                            <button type="button" class=" sym-btn-search productBtn">Search</button>
+                        </div>
+                    </div>
+
+                    <label for="ContactPersonTelephone" class="col-md-2 control-label text-right trkLabelMargin">Date From</label>
+                    <div class="col-md-2">
+                        @*<label>Date From</label>*@
+                        @Html.TextBoxFor(m => m.AvgDateTime, new { @placeholder = "Start Date", @class = "customDatePicker form-control defaultDate" })
+                    </div>
+                    
+                </div>
+
+                <div class="form-group">
+                    
+                   
+                    @*<label for="ContactPersonEmail" class="col-md-2 control-label text-right trkLabelMargin">Email</label>
+                    <div class="col-md-4">
+                        @Html.TextBoxFor(model => model.ContactPersonEmail, new { @placeholder = "Email", @class = " form-control" })
+                        @Html.ValidationMessageFor(model => model.ContactPersonEmail)
+                    </div>*@
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="headrow">
+        <button type="button" title="Process" onclick="SaveData('Process')" class="sym-btn-save">&nbsp;Process</button>
+        <button type="button" title="Re-Process" onclick="SaveData('Re_Process')" class="sym-btn-save">&nbsp;Re-Process</button>
+
+    </div>
+    
+    <div id="myHigherModal" class="HigherModal"></div>
+    
+}
+
+
+<script>
+    function modalInitHigher(url) {
+        var modal = document.getElementById('myHigherModal');
+        $.ajax({
+            url: url,
+            cache: false,
+            beforeSend: function () { $(".loading").show(); },
+            complete: function () { $(".loading").fadeOut(200).hide("slow") },
+            success: function (html) {
+                modal.style.display = "block";
+                $("#myHigherModal").html(html);
+            }
+        });
+    }
+    function callbackFromProductModal(sender) {
+        var itemNo = $(sender).children('td.popUpItemNo').text();
+        $('#ItemNo').val(itemNo);
+    }
+    $(function () {
+        $('.productBtn').click(function () {
+            var url = "/Vms/Product/GetProductPopUp?targetId=ProductName";
+            modalInitHigher(url);
+        });
+    });
+</script>
+
+<script>
+    $(function () {
+        var date = $('.trVAT17Date').val();
+        if (date != null && date != "") {
+            $('#StartDate').val(date);
+            $('#EndDate').val(date);
+        }
+        var productName = $('tr.active .dItemName').val();
+        if (productName == null || productName == "") {
+            return;
+        }
+
+
+        $('.trProductName').val(productName);
+        var itemNo = $('tr.active .dItemNo').val();
+
+        $('.popUpItemNo').val(itemNo);
+
+    })
+</script>
+
+<script>
+    $(function () {
+        valiDation("frmProcessdata");
+
+    });
+
+    function SaveData(flag) {
+           
+        $('#flag').val(flag);
+
+        pageSubmit('frmProcessdata');
+    }
+
+
+</script>
+
+
+
+
+
+
+
+

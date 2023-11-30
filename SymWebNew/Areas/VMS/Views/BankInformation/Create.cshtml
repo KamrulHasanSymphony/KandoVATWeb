@@ -1,0 +1,192 @@
+﻿
+@model VATViewModel.DTOs.BankInformationVM
+@using UIHelper.MVC
+@using (Html.BeginForm("CreateEdit", "BankInformation", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmBankMy" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.BankID)
+    @Html.HiddenFor(model => model.Operation)
+
+    <div class="headrow">
+        @if (Model.Operation == "add")
+        {
+            <button type="button" name="btnName" value="Save" title="Save Data" onclick="pageSubmit('frmBankMy')" class="sym-btn-save">&nbsp;Save</button>
+            <label class="pull-right">Bank > Create</label>
+        }
+        else
+        {
+            <button type="button" name="btnName" value="Update" title="Update Data" onclick="pageSubmit('frmBankMy')" class="sym-btn-update">&nbsp;Update</button>
+            <label class="pull-right">Bank > Edit</label>
+        }
+        <button type="button" title="Go To Index" data-url="/VMS/BankInformation" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New Bank" data-url="/VMS/BankInformation/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+
+    </div>
+    
+    <div class="col-md-6 trkPX-0 trkPR-2">
+        <div class="thinbox animated zoomIn faster">
+            <div class="th_thinbox">
+                <p>Basic</p>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label for="BankCode" class="col-md-4 control-label text-right trkLabelMargin">Code</label>
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.BankCode, new { @placeholder = "Bank Code", @class = " required form-control" })
+                        @Html.ValidationMessageFor(model => model.BankCode)
+                    </div>
+                    <label for="BankName" class="col-md-4 control-label text-right trkLabelMargin">Name</label>
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.BankName, new { @placeholder = "Bank Name", @class = " required form-control" })
+                        @Html.ValidationMessageFor(model => model.BankName)
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="BranchName" class="col-md-4 control-label text-right trkLabelMargin">Branch Name</label>
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.BranchName, new { @placeholder = "Branch Name", @class = " required form-control" })
+                        @Html.ValidationMessageFor(model => model.BranchName)
+                    </div>
+                    <label for="AccountNumber" class="col-md-4 control-label text-right trkLabelMargin">Account No</label>
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.AccountNumber, new { @placeholder = "Account No", @class = "required form-control" })
+                        @Html.ValidationMessageFor(model => model.AccountNumber)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="thinbox animated zoomIn faster">
+            <div class="th_thinbox">
+                <p>Contact Person</p>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label for="ContactPerson" class="col-md-4 control-label text-right trkLabelMargin">Name</label>
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.ContactPerson, new { @placeholder = "Contact Person", @class = "   form-control" })
+                        @Html.ValidationMessageFor(model => model.ContactPerson)
+                    </div>
+                    <label for="ContactPersonDesignation" class="col-md-4 control-label text-right trkLabelMargin">Designation</label>
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.ContactPersonDesignation, new { @placeholder = "Designation", @class = " form-control" })
+                        @Html.ValidationMessageFor(model => model.ContactPersonDesignation)
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="ContactPersonTelephone" class="col-md-4 control-label text-right trkLabelMargin">Telephone</label>
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.ContactPersonTelephone, new { @placeholder = "Telephone No.", @class = " form-control" })
+                        @Html.ValidationMessageFor(model => model.ContactPersonTelephone)
+                    </div>
+                    <label for="ContactPersonEmail" class="col-md-4 control-label text-right trkLabelMargin">Email</label>
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.ContactPersonEmail, new { @placeholder = "Email", @class = " form-control" })
+                        @Html.ValidationMessageFor(model => model.ContactPersonEmail)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 trkPX-0">
+    <div class="thinbox animated zoomIn faster">
+        <div class="th_thinbox">
+            <p>Detail</p>
+        </div>
+        <div class="row">
+            <div class="form-group">
+              <label for="Address1" class="col-md-4 control-label text-right trkLabelMargin">Address1</label>
+              <div class="col-md-8">
+                  @Html.TextBoxFor(model => model.Address1, new { @placeholder = "Address 1", @class = "  form-control" })
+                  @Html.ValidationMessageFor(model => model.Address1)
+              </div>
+              <label for="Address2" class="col-md-4 control-label text-right trkLabelMargin" >Address2</label>
+              <div class="col-md-8">
+                  @Html.TextBoxFor(model => model.Address2, new { @placeholder = "Address 2", @class = "form-control" })
+                  @Html.ValidationMessageFor(model => model.Address2)
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="Address3" class="col-md-4 control-label text-right trkLabelMargin">Address3</label>
+              <div class="col-md-8">
+                  @Html.TextBoxFor(model => model.Address3, new { @placeholder = "Address 3", @class = "form-control" })
+                  @Html.ValidationMessageFor(model => model.Address3)
+              </div>
+              <label for="City" class="col-md-4 control-label text-right trkLabelMargin">District</label>
+              <div class="col-md-8">
+                  @Html.TextBoxFor(model => model.City, new { @placeholder = "District", @class = " form-control" })
+                  @Html.ValidationMessageFor(model => model.City)
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="Email" class="col-md-4 control-label text-right trkLabelMargin">Email</label>
+              <div class="col-md-8">
+                  @Html.TextBoxFor(model => model.Email, new { @placeholder = "Email", @class = " form-control" })
+                  @Html.ValidationMessageFor(model => model.Email)
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="FaxNo" class="col-md-4 control-label text-right trkLabelMargin">FaxNo</label>
+              <div class="col-md-8">
+                  @Html.TextBoxFor(model => model.FaxNo, new { @placeholder = "Fax Number", @class = " form-control" })
+                  @Html.ValidationMessageFor(model => model.FaxNo)
+              </div>
+              <label for="TelephoneNo" class="col-md-4 control-label text-right trkLabelMargin">Telephone No</label>
+              <div class="col-md-8">
+                  @Html.TextBoxFor(model => model.TelephoneNo, new { @placeholder = "Telephone No.", @class = " form-control" })
+                  @Html.ValidationMessageFor(model => model.TelephoneNo)
+              </div>
+            </div>
+
+            <div class="form-group">
+
+              <label for="Comments" class="col-md-4 control-label text-right trkLabelMargin">Comments</label>
+              <div class="col-md-8">
+                  @Html.TextAreaFor(model => model.Comments, new { @placeholder = "Comments", @class = " form-control" })
+                  @Html.ValidationMessageFor(model => model.Comments)
+              </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-4 control-label text-right trkLabelMargin">Is Active</label>
+                <div class="form-group">
+                    <div class="col-md-2" style="margin-top:6px;">
+                        @Html.SimpleDropDownFor(m => m.ActiveStatus, "/Config/DropDown/DecisionList", new { @class = " trNavigateMenu form-control required" })
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        <div class="row">
+            <br />
+        </div>
+    </div>
+    </div>
+    
+    <div class="headrow">
+        @if (Model.Operation == "add")
+        {
+            <button type="button" name="btnName" value="Save" title="Save Data" onclick="pageSubmit('frmBankMy')" class="sym-btn-save">&nbsp;Save</button>
+        }
+        else
+        {
+            <button type="button" name="btnName" value="Update" title="Update Data" onclick="pageSubmit('frmBankMy')" class="sym-btn-update">&nbsp;Update</button>
+        }
+        <button type="button" title="Go To Index" data-url="/VMS/BankInformation" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New Bank" data-url="/VMS/BankInformation/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+
+    </div>
+}
+<script>
+    $(function () {
+        valiDation("frmBankMy");
+    });
+
+
+</script>

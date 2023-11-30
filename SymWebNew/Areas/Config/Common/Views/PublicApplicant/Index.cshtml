@@ -1,0 +1,85 @@
+﻿@model IEnumerable<SymViewModel.Common.PublicApplicantVM>
+
+<div class="thinbox">
+    <div class="th_thinbox">
+        <p>Public Applicant List</p>
+    </div>
+    <p></p>
+    <div class="row">
+        <div id="container">
+            <div id="demo">
+                <table id="myDataTable" class="display">
+                    <thead>
+                      <tr>
+                            <th class="center">
+                                <input type="checkbox" class="chkAll" />Select All</th>
+                            <th>Job Title</th>
+                            <th>Designation Name</th>
+                            <th>Applicant Name</th>
+                            <th>Applicant Email</th>
+                            <th>Expriance</th>
+                            <th>CVIdentificationNo</th>
+                        </tr>
+                        <tr>
+                            <th class="center">Actions</th>
+                           <th>JobTitle</th>
+                            <th>Designation Name</th>
+                            <th>Applicant Name</th>
+                            <th>Applicant Email</th>
+                            <th>Expriance</th>
+                            <th>CVIdentificationNo</th>
+                        </tr>
+                        </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        var oTable = $('#myDataTable').dataTable({
+            "bServerSide": true,
+            "sAjaxSource": "/Common/PublicApplicant/_index",
+            "bProcessing": true,
+            "aLengthMenu": tablelength(),
+            "bJqueryUI": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+                            {
+                                "sName": "Id",
+                                "bSearchable": false,
+                                "bSortable": false,
+                                "sWidth": "9%",
+                                "sClass":"center",
+                                "fnRender": function (oObj) {
+                                    return ' <input onclick="CheckAll(this)" type="checkbox" data-Id="' + oObj.aData[0] + '">&nbsp; <a title="Click on for Edit" style="text-decoration:none;" href=\"/Common/PublicApplicant/Edit/' + oObj.aData[0] + '\"  class=" sym-btn-detail-row"></a>';
+                                }
+                            }
+                            , { "sName": "JobTitle", "sWidth": "30%" }
+                            , { "sName": "DesignationName", "sWidth": "15%" }
+                            , { "sName": "ApplicantName", "sWidth": "10%" }
+                            , { "sName": "ApplicantEmail", "sWidth": "10%" }
+                            , { "sName": "Expriance", "sWidth": "30%" }
+                            , { "sName": "CVIdentificationNo", "sWidth": "10%" }
+            ]
+        });
+        oTable.columnFilter({
+            sPlaceHolder: "head:after",
+            aoColumns: [{ type: "checkbox", "sClass": "chkAll" }
+                       , { type: "text" }
+                       , { type: "text" }
+                       , { type: "text" }
+                       , { type: "text" }
+                       , { type: "text" }
+                       , { type: "text" }
+                       , { type: "text" }
+                     
+                       //, { type: "date-range" }
+            ]
+        });
+        SelectAllForDelete();
+    });
+    </script>

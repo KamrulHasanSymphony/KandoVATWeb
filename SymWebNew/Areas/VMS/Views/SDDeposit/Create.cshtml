@@ -1,0 +1,248 @@
+﻿@model VATViewModel.DTOs.SDDepositVM
+@using UIHelper.MVC
+@using (Html.BeginForm("CreateEdit", "SDDeposit", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmDeposit" }))
+{   
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.DepositId)
+    @Html.HiddenFor(model => model.Post)
+    @Html.HiddenFor(model => model.Operation)
+    @Html.HiddenFor(model => model.TransactionType)
+
+    <input id="ConvFactor" type="hidden" />
+    
+    <div class="headrow">
+        @if (Model.Operation == "update")
+        {
+            <button type="button" title="Update Data" onclick="SaveData()" class="sym-btn-update">&nbsp;Update</button>
+            if (Model.Post == "N")
+            {
+            <button type="button" title="Post Data" onclick="PostData(this)" class="sym-btn-post">&nbsp;Post</button>
+            }
+            <label class="pull-right">SD Deposit > Edit (@Model.TransactionType)</label>
+        }
+        else if (Model.Operation == "add")
+        {
+            <button type="button" title="Save Data" onclick="SaveData()" class="sym-btn-save">&nbsp;Save</button>
+            <label class="pull-right">SD Deposit  > Create (@Model.TransactionType)</label>
+        }
+        <button type="button" title="Go To Index" data-url="/VMS/SDDeposit?tType=@Model.TransactionType" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New Issue" data-url="/VMS/SDDeposit/Create?tType=@Model.TransactionType" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+    </div>
+    
+    <div id="Deposit" class="tab-pane fade in active">
+            <div class="col-md-6 trkPX-0">
+                <div class="thinbox animated zoomIn delay-0.3s">
+                    <div class="th_thinbox">
+                        <p>Basic</p>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="Id" class="col-md-4 control-label text-right trkLabelMargin">Auto No</label>
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(model => model.DepositId, new { @placeholder = "New", @class = "  form-control", @readonly = "readonly" })
+                                @Html.ValidationMessageFor(model => model.Id)
+                            </div>
+                            <label for="TreasuryNo" class="col-md-4 control-label text-right trkLabelMargin">Treasury Challan No</label>
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(model => model.TreasuryNo, new { @placeholder = "Treasury No", @class = " form-control" })
+                                @Html.ValidationMessageFor(model => model.TreasuryNo)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="DepositDate" class="col-md-4 control-label text-right trkLabelMargin">Deposit Date</label>
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(model => model.DepositDate, new { @class = "trDate customDatePicker form-control" })
+                                @Html.ValidationMessageFor(model => model.DepositDate)
+                            </div>
+
+                            <label for="DepositAmount" class="col-md-4 control-label text-right trkLabelMargin">Deposit Amount</label>
+                            <div class="col-md-8" style="margin-bottom: 6px;">
+                                <div class="input-group">
+                                    <span class="input-group-addon">&#2547</span>
+                                    @Html.TextBoxFor(model => model.DepositAmount, new { @placeholder = "Deposit Amount", @class = "priceLen required form-control" })
+                                    @Html.ValidationMessageFor(model => model.DepositAmount)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="DepositType" class="col-md-4 control-label text-right trkLabelMargin">Deposit Type</label>
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(m => m.DepositType, new SelectList(new List<string>() { "Cash", "Opening", "Cheque" }), new { @class = "form-control dropdown", @style = "padding-top:2px;padding-bottom:2px;" })
+                                @*<select name="Type" class="form-control" id="DepositType">
+                            <option value="0">Select</option>
+                            <option value="Opening">Opening</option>
+                            <option value="Cash">Cash</option>
+                            <option value="Cheque">Cheque</option>
+                        </select>*@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 trkPX-0">
+                <div class="thinbox animated zoomIn delay-0.3s">
+                    <div class="th_thinbox">
+                        <p>Through Cheque</p>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="ChequeNo" class="col-md-4 control-label text-right trkLabelMargin">Cheque No</label>
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(model => model.ChequeNo, new { @placeholder = "Cheque No", @class = " form-control" })
+                                @Html.ValidationMessageFor(model => model.ChequeNo)
+                            </div>
+                            <label for="ChequeDate" class="col-md-4 control-label text-right trkLabelMargin">Date</label>
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(model => model.ChequeDate, new { @placeholder = "Cheque Date", @class = "trDate customDatePickerChangeable form-control" })
+                                @Html.ValidationMessageFor(model => model.ChequeDate)
+                            </div>
+                            <label for="ChequeBank" class="col-md-4 control-label text-right trkLabelMargin">Deposit Bank</label>
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(model => model.ChequeBank, new { @placeholder = "Cheque Bank", @class = " form-control" })
+                                @Html.ValidationMessageFor(model => model.ChequeBank)
+                            </div>
+                            <label for="ChequeBankBranch" class="col-md-4 control-label text-right trkLabelMargin">Bank Branch</label>
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(model => model.ChequeBankBranch, new { @placeholder = "Cheque Bank Branch", @class = " form-control" })
+                                @Html.ValidationMessageFor(model => model.ChequeBankBranch)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">&nbsp;</div>
+                    <div class="row">&nbsp;</div>
+                </div>
+
+            </div>
+
+            <div class="col-md-12 trkPX-0">
+                <div class="thinbox animated zoomIn delay-0.3s">
+                    <div class="th_thinbox">
+                        <p>Deposited To</p>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="BankId" class="col-md-2 control-label text-right trkLabelMargin">Bank Name</label>
+                            <div class="col-md-4">
+                                @Html.SimpleDropDownFor(model => model.BankId, "/Config/DropDown/BankInformations", new { @class = "trBankId required form-control trkMT-0" })
+                                @Html.ValidationMessageFor(model => model.BankId)
+                            </div>
+                            <label for="BranchName" class="col-md-2 control-label text-right trkLabelMargin">Branch Name</label>
+                            <div class="col-md-4">
+                                @Html.TextBox("BranchName", null, new { @placeholder = "Branch Name", @class = "trBranchName form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="AccountNo" class="col-md-2 control-label text-right trkLabelMargin">Account No</label>
+                            <div class="col-md-4">
+                                @Html.TextBox("AccountNo", null, new { @placeholder = "Account No", @class = "trAccountNo form-control" })
+                            </div>
+                            <label for="DepositPerson" class="col-md-2 control-label text-right trkLabelMargin">Deposit Person</label>
+                            <div class="col-md-4">
+                                @Html.TextBoxFor(model => model.DepositPerson, new { @placeholder = "Deposit Person", @class = " form-control" })
+                                @Html.ValidationMessageFor(model => model.DepositPerson)
+                            </div>
+
+                            <label for="Comments" class="col-md-2 control-label text-right trkLabelMargin">Remarks</label>
+                            <div class="col-md-4">
+                                @Html.TextAreaFor(model => model.Comments, new { @placeholder = "Comments", @class = " form-control" })
+                                @Html.ValidationMessageFor(model => model.Comments)
+                            </div>
+                            <label for="DepositPersonDesignation" class="col-md-2 control-label text-right trkLabelMargin">Designation</label>
+                            <div class="col-md-4">
+                                @Html.TextBoxFor(model => model.DepositPersonDesignation, new { @placeholder = "Deposit Person Designation", @class = " form-control" })
+                                @Html.ValidationMessageFor(model => model.DepositPersonDesignation)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    
+    <div class="headrow">
+        @if (Model.Operation == "update")
+        {
+            <button type="button" title="Update Data" onclick="SaveData()" class="sym-btn-update">&nbsp;Update</button>
+            if (Model.Post == "N")
+            {
+            <button type="button" title="Post Data" onclick="PostData(this)" class="sym-btn-post">&nbsp;Post</button>                
+            }
+        }
+        else if (Model.Operation == "add")
+        {
+            <button type="button" title="Save Data" onclick="SaveData()" class="sym-btn-save">&nbsp;Save</button>
+        }
+        <button type="button" title="Go To Index" data-url="/VMS/SDDeposit?tType=@Model.TransactionType" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New Petty Cash" data-url="/VMS/SDDeposit/Create?tType=@Model.TransactionType" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+    </div>
+}
+
+<div id="myModal" class="trkmodal"></div>
+
+<div id="purchaseDetails" class="trkmodal">
+    <div class="trkmodal-content">
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+
+        $(function () {
+            valiDation("frmDeposit");
+            $('.customDatePicker').prop("readonly", false);
+            setTimeout(function () {
+                //alert($('.trBankId').val());
+                if ($('.trBankId').val() != "") {
+                    ChangeBank();
+                }
+            }, 500);
+
+        });
+
+        ////Changing bank
+        $('.trBankId').change(function () {
+            ChangeBank();
+        });
+
+        function ChangeBank() {
+            var bankId = $('.trBankId').val();
+            var url = "/Vms/Deposit/GetBankInformation?bankId=" + bankId;
+            $.getJSON(url, function (data) {
+                var branchName = data.split('~')[0];
+                var accountNo = data.split('~')[1];
+
+                $('.trBranchName').val(branchName);
+                $('.trAccountNo').val(accountNo);
+            });
+        }
+
+        ////posting method
+        function PostData(sender) {
+            var Id = $("#Id").val();
+            var Post = $("#Post").val();
+            if (Post.toLowerCase() == 'true' || Post.toLowerCase() == 'y') {
+                ShowResult("Fail", "Data Already Posted!");
+                return;
+            }
+            var url = '/Vms/SDDeposit/Post?ids=' + Id + '~';
+            var questionMSG = "Are you sure to Post Data!";
+            singlePostDlete(questionMSG, url);
+        }
+
+        ////form posting method
+        function SaveData() {
+            var Post = $("#Post").val();
+            if (Post.toLowerCase() == 'true') {
+                ShowResult("Fail", "Data Already Posted. Can't Update!");
+                return;
+            }
+
+            pageSubmit('frmDeposit');
+        }
+
+    </script>
+}

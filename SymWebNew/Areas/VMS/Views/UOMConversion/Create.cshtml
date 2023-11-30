@@ -1,0 +1,110 @@
+﻿@model VATViewModel.DTOs.UOMConversionVM
+@using UIHelper.MVC
+@{
+
+    ViewBag.Title = "Create";
+    ViewBag.Location = "Create";
+}
+@using (Html.BeginForm("CreateEdit", "UOMConversion", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmUOMConversion" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.UOMId)
+    @Html.HiddenFor(model => model.Operation)
+    <div class="thinbox">
+        <div class="th_thinbox">
+            <p>UOM Conversion</p>
+        </div>
+        <div class="UOMConversion">
+            <div>
+
+                <div class="row">
+                    <div class="editor-label">
+                        @*@Html.LabelFor(model => model.UOMId)*@
+                        <label for="UOMId" class="col-md-2 control-label text-right trkLabelMargin">UOMId</label>
+
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.UOMId, new { @placeholder = "~~~ New ~~~", @class = "cUOMId  form-control", @readonly = "readonly" })
+                        @Html.ValidationMessageFor(model => model.UOMId)
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="editor-label">
+                        <label>From</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.SimpleDropDownFor(model => model.UOMFrom, "/Config/DropDown/UOM", new { @class = "required form-control" })
+                        @Html.ValidationMessageFor(model => model.UOMFrom)
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="editor-label">
+                        <label>To</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.SimpleDropDownFor(model => model.UOMTo, "/Config/DropDown/UOM", new { @class = "required form-control" })
+                        @Html.ValidationMessageFor(model => model.UOMTo)
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="editor-label">
+                        @*@Html.LabelFor(model => model.Convertion)*@
+                        <label for="Convertion" class="col-md-2 control-label text-right trkLabelMargin">Convertion</label>
+
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.Convertion, new { @class = "priceLen  form-control" })
+                        @Html.ValidationMessageFor(model => model.Convertion)
+                    </div>
+                </div>
+
+                @*<div class="row">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.CTypes)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.CTypes, new { @placeholder = "Conversion Type", @class = "  form-control" })
+                        @Html.ValidationMessageFor(model => model.CTypes)
+                    </div>
+                </div>*@
+
+                <div class="row">
+                    <div class="editor-label">
+                        <label>Is Active</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.SimpleDropDownFor(m => m.ActiveStatus, "/Config/DropDown/DecisionList", new { @class = " trNavigateMenu form-control required" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="headrow">
+        @if (Model.Operation == "add")
+        {
+            <label class="col-sm-3">
+                <button type="button" name="btnName" value="Save" title="Save Data" onclick="pageSubmit('frmUOMConversion')" class="sym-btn-save">&nbsp;Save</button>
+            </label>
+            <label class="col-sm-4">
+                <button type="button" title="Cancel Data" class=" btncancel sym-btn-cancel">&nbsp;Cancel</button>
+            </label>
+        }
+        else
+        {
+            <label class="col-sm-3">
+                <button type="button" name="btnName" value="Update" title="Update Data" onclick="pageSubmit('frmUOMConversion')" class="sym-btn-update">&nbsp;Update</button>
+            </label>
+            <label class="col-sm-4">
+                <button type="button" title="Cancel Data" class=" btncancel sym-btn-cancel">&nbsp;Cancel</button>
+            </label>
+        }
+    </div>
+}
+<script>
+    $(function () {
+        valiDation("frmUOMConversion");
+        InitDropDowns();
+    });
+
+</script>

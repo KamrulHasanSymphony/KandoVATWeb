@@ -1,0 +1,27 @@
+﻿@{
+    ViewBag.Title = "_detail";
+}
+
+@model VATViewModel.DTOs.ProductNameVM
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+<tr class="tablerow">
+    @using (Html.BeginCollectionItem("Details"))
+    {
+        <td>
+            <a id="" title="Click to Remove" onclick="RemoveItem(this);" class="sym-btn-remove-row "></a>
+            <a id="" title="Click to Edit" onclick="EditItem(this);" class="sym-btn-edit-row"></a>
+            @*<a id="" title="Click to Copy" onclick="CopyItem(this);" class="sym-btn-duplicate-row"></a>*@
+        </td>
+        
+        <td>
+            @Html.TextBoxFor(model => model.ProductName, new { @class = "  dProductName   form-control", @readonly = "readonly" })
+        </td>
+        
+        @Html.HiddenFor(m => m.ItemNo, new { @class = " dItemNo" })
+        @Html.HiddenFor(m => m.Id, new { @class = " dId" })
+        
+    }
+</tr>

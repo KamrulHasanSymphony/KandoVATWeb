@@ -1,0 +1,449 @@
+﻿@model VATViewModel.DTOs.MPLBankDepositSlipHeaderVM
+@using UIHelper.MVC
+@using SymOrdinary
+@using System.Threading;
+@using VATServer.Ordinary
+@{
+    ShampanIdentity identity = null;
+    try
+    {
+        identity = (ShampanIdentity)Thread.CurrentPrincipal.Identity;
+    }
+    catch (Exception)
+    {
+        Response.Redirect("/VMS/Home/Login");
+        return;
+    }
+}
+
+@{
+    ViewBag.Title = "Index";
+}
+
+@Html.HiddenFor(model => model.TransactionType)
+
+<div class="headrow">
+    <div style="display: none" id="formAppend"></div>
+    <button type="button" title="Add New" data-url="/VMS/MPLBankDepositSlip/Create?tType=@Model.TransactionType" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+    
+    <label class="pull-right">Bank Deposit Slip</label>
+</div>
+
+<div class=" tabMenu">
+    <ul style="font-size: 1.4em;" class="tabDesign nav nav-tabs">
+        <li class="tabDefault active"><a data-toggle="tab" href="#SaleIndex">Index</a></li>
+    </ul>
+</div>
+
+
+<div class="tab-content">
+    <div id="SaleIndex" class="tab-pane fade  in active">
+        <div class="thinbox  animated zoomIn animated zoomIn faster">
+            <div class="th_thinbox">
+                @if (Model.TransactionType.ToLower() == "other")
+                {
+                    <p> Bank Deposit Slip </p>
+                }
+            </div>
+            <div class="dtSearch formDesign">
+                <div class="row">
+                    <div class="trk1_5">
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.SearchField)
+                        </div>
+                        <div class="editor-field">
+                            @Html.SimpleDropDownFor(m => m.SearchField, "/Config/DropDown/TransferIssueColumnSearch", new { @class = " form-control " })
+                        </div>
+                    </div>
+                    <div class="trk1_5">
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.SearchValue)
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(model => model.SearchValue, new { @class = "  form-control" })
+                        </div>
+                    </div>
+
+                    <div class="col-md-1">
+                        <div class="editor-label">
+                            <label>Select Top</label>
+                        </div>
+                        <div class="editor-field">
+
+                            @Html.SimpleDropDownFor(model => model.SelectTop, "/Config/DropDown/RecordSelectList", new { @class = " cBranchId form-control" })
+
+                        </div>
+                    </div>
+                    <div class="trk1_5">
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.FromDate)
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(model => model.FromDate, new { @placeholder = "Date From", @class = "customDatePicker defaultDate form-control" })
+                        </div>
+                    </div>
+                    <div class="trk1_5">
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.ToDate)
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(model => model.ToDate, new { @placeholder = "Date To", @class = "customDatePicker defaultDate form-control" })
+                        </div>
+                    </div>
+                    <div class="trk1_5">
+                        <div class="editor-label">
+                            <label>Branch Name</label>
+                        </div>
+                        <div class="editor-field">
+                            @Html.DropDownListFor(model => model.BranchId, new SelectList(Model.BranchList, "BranchID", "BranchName", Model.BranchId), new { @class = "cBranchId form-control" })
+                        </div>
+                    </div>
+                </div>
+               
+
+                <div class="row">
+                    <div class="col-md-7">
+                        <div class="editor-label">
+                            <label>&nbsp;</label>
+                        </div>
+                        <div class="editor-field">
+                            <button type="button" title="Click to Search" id="btnDialog" class="sym-btn-search">&nbsp;Search</button>
+                            <button type="button" title="Clear Data" id="Clear" class=" sym-btn-clear">&nbsp;Clear</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <p>&nbsp;</p>
+            <table id="myDataTable" class="display">
+                <thead>
+                    <tr>
+                        <th class="center"><input type="checkbox" class="chkAll" />Action</th>
+                        <th>Code</th>
+                        <th>Bank Name</th>
+                        <th>Transaction Date</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <br />
+        </div>
+
+        <div class="headrow">
+            <button type="button" title="Add New Sale" data-url="/VMS/MPLBankDepositSlip/Create?tType=@Model.TransactionType" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+        </div>
+
+        <form id="ReportForm" method="post" target="_blank"></form>
+    </div>
+
+
+</div>
+
+
+<div id="myHigherModal" class="HigherModal"></div>
+
+<script language="javascript" type="text/javascript">
+
+    $(document).ready(function () {
+
+        SelectAllForDelete();
+        $.datepicker.regional[""].dateFormat = 'dd/M/y';
+        $.datepicker.setDefaults($.datepicker.regional['']);
+        var oTable = $('#myDataTable').dataTable({
+            "bServerSide": true,
+            "sAjaxSource": "/VMS/MPLBankDepositSlip/_index?TransactionType=@Model.TransactionType",
+            "bProcessing": true,
+            "aLengthMenu": tablelength(),
+            "bJqueryUI": true,
+            "bAutoWidth": false,
+
+            "fnServerData": function (sSource, aoData, fnCallback) {
+                $('.dtSearch :input').each(function () {
+                    var Name = $(this).attr("Id")
+                    var Value = $(this).val()
+                    aoData.push({ "name": Name, "value": Value });
+                });
+
+
+                $.getJSON(sSource, aoData, function (json) {
+                    debugger;
+                    console.log(json.aaData);
+                    $.each(json.aaData, function (index, element) {
+                        debugger;
+                        var totalAmnt = element[4].replace(',', '');
+                        json.aaData[index][4] = parseFloat(totalAmnt).toLocaleString('en-US', { minimumFractionDigits: 2 });
+                    });
+                    debugger;
+                    fnCallback(json);
+                });
+            },
+
+            "aoColumns": [
+                            {
+                                "sName": "Id",
+                                "bSearchable": false,
+                                "bSortable": false,
+                                "sWidth": "12%",
+                                "sClass": "center",
+                                "fnRender": function (oObj) {
+                                    debugger;
+                                    return ' <a title="Click on for Edit" href=\"/VMS/MPLBankDepositSlip/Edit/' + oObj.aData[0].split('~')[0] + '?TransactionType=' + oObj.aData[5] + '\" class="sym-btn-edit-row"></a>'
+                                    ;
+                                }
+                            }
+                            , { "sName": "Code", "sWidth": "10%" }
+                            , { "sName": "SelfBankName", "sWidth": "10%" }
+                            , { "sName": "TransactionDateTime", "sWidth": "15%" }
+                            , { "sName": "TotalAmount", "sWidth": "10%" }
+            ]
+        });
+
+        $('#btnDialog').click(function () {
+            debugger
+            var model = $('.dtSearch :input').serialize();
+            //var BranchId = $('.cBranchId').val();
+            //if (BranchId == null || BranchId == "")
+            //{
+            //    BranchId='0';
+            //}
+            
+            $.ajax({
+                url: "/VMS/MPLBankDepositSlip/Index",
+                cache: false,
+                // data: model,
+                success: function (html) {
+                    oTable.fnDraw();
+                }
+            });
+        });
+
+        ////clearing fields
+        $("#Clear").on('click', function () {
+            $(".Dropdown").select2("val", "");
+            $(".form-control").val("");
+        });
+
+
+    });
+
+    function checkValidBranch(element, branchId) {
+        if ('@Session["BranchId"]' != branchId) {
+            ShowResult("Fail", "This Information not for this Branch!");
+            return;
+        }
+
+        btnPost(element);
+    }
+
+
+    $("#excelUpload").on("click",
+        function (e) {
+
+            e.preventDefault();
+
+            var fileUpload = $("#excelFile").get(0);
+            var files = fileUpload.files;
+
+            var data = new FormData();
+            data.append("file", files[0]);
+            data.append("TransactionType", $("#saleTransactionType").val());
+
+
+            $.ajax({
+                url: "/VMS/MPLBankDepositSlip/GetSettings?group=SaleWeb&name=Setps",
+                type: "GET",
+                contentType: false,
+                timeout: 600000,
+                processData: false,
+                //beforeSend: function () { $(".loading").show(); },
+                //complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                success: function (result) {
+
+                    if (result === "y") {
+
+                        //setTimeout(function() {
+
+
+
+
+                        //},3000)
+
+
+
+                        $.ajax({
+                            url: "/VMS/MPLBankDepositSlip/ProcessExcel",
+                            type: "POST",
+                            data: data,
+                            contentType: false,
+                            timeout: 600000,
+                            processData: false,
+                            beforeSend: function () { $(".loading").show(); },
+                            complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                            success: function (result) {
+
+
+                                result = JSON.parse(result)
+                                console.log(result)
+
+                                if (result.action === "Fail") {
+                                    ShowResult("Fail", "Data Validation Failed");
+                                    return;
+
+                                }
+
+
+                                console.log(result)
+
+                                Ask("Data validation Complete, Are you sure to Save?",
+                                    function () {
+
+                                        $.ajax({
+                                            url: "/VMS/MPLBankDepositSlip/SaveTransactions",
+                                            type: "POST",
+                                            data: data,
+                                            contentType: false,
+                                            processData: false,
+                                            timeout: 600000,
+
+                                            beforeSend: function () { $(".loading").show(); },
+                                            complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                                            success: function (result) {
+                                                result = JSON.parse(result)
+                                                console.log(result)
+
+                                                if (result.action == "Success") {
+                                                    ShowResult("Success", "Data Saved Successfully");
+                                                    //window.location = "/VMS/SaleInvoice/Index?TransactionType="+'@Model.TransactionType';
+                                                }
+                                            },
+                                            error: function (err) {
+                                                err = JSON.parse(err)
+                                                console.log(err)
+                                                ShowResult("Fail", err.message);
+
+                                            }
+                                        });
+
+                                    },
+                                    function () {
+                                    })
+
+
+                            },
+                            error: function (err) {
+
+                            }
+                        });
+
+
+                    } else {
+
+
+                        setTimeout(function () {
+
+                            $.ajax({
+                                url: "/VMS/MPLBankDepositSlip/ImportExcel",
+                                type: "POST",
+                                data: data,
+                                contentType: false,
+                                timeout: 600000,
+                                processData: false,
+                                beforeSend: function () { $(".loading").show(); },
+                                complete: function () {
+                                    $(".loading").fadeOut(200).hide("slow");
+                                    console.log("end")
+                                },
+                                success: function (result) {
+                                    result = JSON.parse(result)
+                                    console.log(result)
+
+                                    if (result.action == "Success") {
+                                        ShowResult("Success", "Data Saved Successfully");
+                                        window.location = "/VMS/SaleInvoice/Index?TransactionType=" + '@Model.TransactionType';
+                                        console.log(result)
+
+                                    } else {
+                                        ShowResult("Fail", result.message);
+
+                                    }
+                                },
+                                error: function (err) {
+                                    ShowResult("Fail", result.message); //"Something gone wrong"
+                                }
+                            })
+
+                        }, 3000);
+                    }
+                },
+                error: function (err) {
+
+                }
+            })
+        });
+
+
+    $(function () {
+
+    })
+
+
+
+    function getSettings(group, name) {
+        debugger;
+        $.ajax({
+            url: "/VMS/SaleInvoice/GetSettings?group=" + group + "&name=" + name,
+            type: "GET",
+            data: data,
+            contentType: false,
+            timeout: 600000,
+            processData: false,
+            beforeSend: function () { $(".loading").show(); },
+            complete: function () { $(".loading").fadeOut(200).hide("slow") },
+            success: function (result) {
+
+
+            },
+            error: function (err) {
+
+            }
+        })
+
+
+
+
+    }
+
+    function callbackFromCustomerModal(sender) {
+        var id = $(sender).children('td.popUpCustomerId').text();
+        var CustomerName = $(sender).children('td.popUpCustomerName').text();
+        //console.log(CustomerName)
+        //console.log(id)
+        $('.trCustomerId').val(id);
+        $('.trCustomerName').val(CustomerName);
+    }
+
+
+
+
+    $('#customerBtn').click(function () {       
+        //var customerName = $('.tr1CustomerId option:selected').text();
+        var customerNames = $('.trCustomerId option:selected').text();
+        //console.log("customerName")
+        var url = "/Vms/Customer/GetCustomerPopUp?CustomerName=" + customerNames;
+        var modal = document.getElementById('myHigherModal');
+        $.ajax({
+            url: url,
+            cache: false,
+            beforeSend: function () { $(".loading").show(); },
+            success: function (html) {
+                modal.style.display = "block";
+                $("#myHigherModal").html(html);
+                console.log(html)
+            }
+        , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+        });
+    });
+
+
+</script>

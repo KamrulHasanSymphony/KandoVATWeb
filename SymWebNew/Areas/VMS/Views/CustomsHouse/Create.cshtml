@@ -1,0 +1,93 @@
+﻿@model VATViewModel.DTOs.CustomsHouseVM
+@using UIHelper.MVC
+@using (Html.BeginForm("CreateEdit", "CustomsHouse", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmCustomsHouse" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.Operation)
+
+    <div class="headrow">
+        @if (Model.Operation == "add")
+        {
+            <button type="button" name="btnName" value="Save" title="Save Data" onclick="pageSubmit('frmCustomsHouse')" class="sym-btn-save">&nbsp;Save</button>
+            <label class="pull-right">Customs House > Create</label>
+        }
+        else
+        {
+            <button type="button" name="btnName" value="Update" title="Update Data" onclick="pageSubmit('frmCustomsHouse')" class="sym-btn-update">&nbsp;Update</button>
+            <label class="pull-right">Customs House > Edit</label>
+        }
+        <button type="button" title="Go To Index" data-url="/VMS/CustomsHouse" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New Customs House" data-url="/VMS/CustomsHouse/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+
+    </div>
+
+    <div class="thinbox animated zoomIn faster">
+        <div class="th_thinbox">
+            <p></p>
+        </div>
+        <div class="row trkPX-0">
+            <div class="form-group">
+                <label for="ID" class="col-md-2 control-label text-right trkLabelMargin">ID</label>
+                <div class="col-md-4">
+                    @Html.TextBoxFor(model => model.ID, new { @class = " form-control cCategoryID", @placeholder = "~~~ New ~~~", @readonly = "readonly" })
+                    @Html.ValidationMessageFor(model => model.ID)
+                </div>
+                <label for="CategoryName" class="col-md-2 control-label text-right trkLabelMargin">Code</label>
+                <div class="col-md-4">
+                    @Html.TextBoxFor(model => model.Code, new { @placeholder = "Code", @class = "cCode required form-control" })
+                    @Html.ValidationMessageFor(model => model.Code)
+                </div>
+
+                <label for="IsRaw" class="col-md-2 control-label text-right trkLabelMargin">Customs House Name</label>
+                <div class="col-md-4">
+                    @Html.TextBoxFor(model => model.CustomsHouseName, new { @placeholder = "Customs House Name", @class = "cCustomsHouseName required form-control" })
+
+                    @Html.ValidationMessageFor(model => model.CustomsHouseName)
+                </div>
+
+
+            </div>
+
+            <div class="form-group">
+                <label for="Description" class="col-md-2 control-label text-right trkLabelMargin">Customs House Address</label>
+                <div class="col-md-4">
+                    @Html.TextAreaFor(model => model.CustomsHouseAddress, new { @placeholder = "Customs House Address", @class = " cCustomsHouseAddress form-control" })
+                    @Html.ValidationMessageFor(model => model.CustomsHouseAddress)
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-2 control-label text-right trkLabelMargin">Is Active</label>
+                <div class="form-group">
+                    <div class="col-md-4" style="margin-top:6px;">
+                        <div class="col-md-4">
+                            @Html.SimpleDropDownFor(m => m.ActiveStatus, "/Config/DropDown/DecisionList", new { @class = " trNavigateMenu form-control required" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="headrow">
+        @if (Model.Operation == "add")
+        {
+            <button type="button" name="btnName" value="Save" title="Save Data" onclick="pageSubmit('frmCustomsHouse')" class="sym-btn-save">&nbsp;Save</button>
+        }
+        else
+        {
+            <button type="button" name="btnName" value="Update" title="Update Data" onclick="pageSubmit('frmCustomsHouse')" class="sym-btn-update">&nbsp;Update</button>
+        }
+        <button type="button" title="Go To Index" data-url="/VMS/CustomsHouse" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New Customs House" data-url="/VMS/CustomsHouse/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+
+    </div>
+}
+<script>
+    $(function () {
+        valiDation("frmCustomsHouse");
+    });
+
+</script>

@@ -1,0 +1,159 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{B98CC664-34BD-4405-B815-CE6F1D9D7B66}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SymViewModel</RootNamespace>
+    <AssemblyName>SymViewModel</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Common\AnyModel.cs" />
+    <Compile Include="Common\ChartVM.cs" />
+    <Compile Include="Common\FileModel.cs" />
+    <Compile Include="Common\OtherInfoVM.cs" />
+    <Compile Include="Common\JSProfileViewVM.cs" />
+    <Compile Include="Common\SampleVM.cs" />
+    <Compile Include="Common\JQueryDataTableParamModel.cs" />
+    <Compile Include="Common\ParameterVM.cs" />
+    <Compile Include="Common\ShampanIdentityVM.cs" />
+    <Compile Include="Enum\BaseEntity.cs" />
+    <Compile Include="Enum\EnumColumnListVM.cs" />
+    <Compile Include="Enum\EnumReportVM.cs" />
+    <Compile Include="Enum\EnumOderByVM.cs" />
+    <Compile Include="Common\CommonVM.cs" />
+    <Compile Include="Common\CodeVM.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Common\CommonMaster.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Common\JQueryDataTableParamVM.cs" />
+    <Compile Include="Common\TableFieldAlterVM.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VMS\AdjustmentMISViewModel.cs" />
+    <Compile Include="VMS\BanderolProductVM.cs" />
+    <Compile Include="VMS\BanderolVM.cs" />
+    <Compile Include="VMS\CoEfficientMISViewModel.cs" />
+    <Compile Include="VMS\CStatementMISViewModel.cs" />
+    <Compile Include="VMS\DepositMISViewModel.cs" />
+    <Compile Include="VMS\FiscalYearPeriodVM.cs" />
+    <Compile Include="VMS\DBUpdateViewModel.cs" />
+    <Compile Include="VMS\IdNameVM.cs" />
+    <Compile Include="VMS\ImportVM.cs" />
+    <Compile Include="VMS\IssueDetailViewModel.cs" />
+    <Compile Include="VMS\MIS19VM.cs" />
+    <Compile Include="VMS\PopUpViewModel.cs" />
+    <Compile Include="VMS\ProductionMISViewModel.cs" />
+    <Compile Include="VMS\ProductTypeViewModel.cs" />
+    <Compile Include="VMS\PurchaseMISViewModel.cs" />
+    <Compile Include="VMS\ShiftVM.cs" />
+    <Compile Include="VMS\StockMISViewModel.cs" />
+    <Compile Include="VMS\SaleMISViewModel.cs" />
+    <Compile Include="VMS\SymphonyVATSysCompanyInformationVM.cs" />
+    <Compile Include="VMS\TollRegisterMISViewModel.cs" />
+    <Compile Include="VMS\UserGroupVM.cs" />
+    <Compile Include="VMS\PackagingInformationVM.cs" />
+    <Compile Include="VMS\UOMConversionVM.cs" />
+    <Compile Include="VMS\UOMNameVM.cs" />
+    <Compile Include="VMS\VAT19header.cs" />
+    <Compile Include="VMS\Vat19ViewModel.cs" />
+    <Compile Include="VMS\VAT_16.cs" />
+    <Compile Include="VMS\VAT_17.cs" />
+    <Compile Include="VMS\VendorGroupVM.cs" />
+    <Compile Include="VMS\VendorVM.cs" />
+    <Compile Include="VMS\AdjustmentHistoryVM.cs" />
+    <Compile Include="VMS\AdjustmentVM.cs" />
+    <Compile Include="VMS\BankInformationVM.cs" />
+    <Compile Include="VMS\BOMMaster.cs" />
+    <Compile Include="VMS\CodeVM.cs" />
+    <Compile Include="VMS\CommonMaster.cs" />
+    <Compile Include="VMS\CompanyProfile.cs" />
+    <Compile Include="VMS\CompanyOverheadVM.cs" />
+    <Compile Include="VMS\CurrencyConversionVM.cs" />
+    <Compile Include="VMS\CurrencyVM.cs" />
+    <Compile Include="VMS\CustomerAddressVM.cs" />
+    <Compile Include="VMS\CustomerGroupVM.cs" />
+    <Compile Include="VMS\CustomerVM.cs" />
+    <Compile Include="VMS\DemandMaster.cs" />
+    <Compile Include="VMS\DepositMaster.cs" />
+    <Compile Include="VMS\DisposeMasterVM.cs" />
+    <Compile Include="VMS\DutyDrawBacks.cs" />
+    <Compile Include="VMS\FiscalYearVM.cs" />
+    <Compile Include="VMS\ImportMaster.cs" />
+    <Compile Include="VMS\IssueMaster.cs" />
+    <Compile Include="VMS\Message.cs" />
+    <Compile Include="VMS\ProductCategoryVM.cs" />
+    <Compile Include="VMS\PurchaseMaster.cs" />
+    <Compile Include="VMS\ReceiveMaster.cs" />
+    <Compile Include="VMS\SaleMaster.cs" />
+    <Compile Include="VMS\SDDepositVM.cs" />
+    <Compile Include="VMS\SettingMaster.cs" />
+    <Compile Include="VMS\SettingsVM.cs" />
+    <Compile Include="VMS\SetupMaster.cs" />
+    <Compile Include="VMS\TableFieldAlterVM.cs" />
+    <Compile Include="VMS\TenderMaster.cs" />
+    <Compile Include="VMS\TransferRawMaster.cs" />
+    <Compile Include="VMS\UserInformationMaster.cs" />
+    <Compile Include="VMS\UserLogsVM.cs" />
+    <Compile Include="VMS\VatNbrReports.cs" />
+    <Compile Include="VMS\VDSMaster.cs" />
+    <Compile Include="VMS\VehicleVM.cs" />
+    <Compile Include="VMS\WastageMISViewModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

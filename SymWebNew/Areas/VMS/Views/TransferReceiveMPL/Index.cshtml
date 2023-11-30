@@ -1,0 +1,556 @@
+﻿@model VATViewModel.DTOs.TransferMPLReceiveVM
+@using UIHelper.MVC
+@using SymOrdinary
+@using System.Threading;
+@using VATServer.Ordinary
+@{
+    ShampanIdentity identity = null;
+    try
+    {
+        identity = (ShampanIdentity)Thread.CurrentPrincipal.Identity;
+    }
+    catch (Exception)
+    {
+        Response.Redirect("/VMS/Home/Login");
+        return;
+    }
+}
+
+@{
+    ViewBag.Title = "Index";
+}
+
+@Html.HiddenFor(model => model.TransactionType)
+
+<style>
+    .aTag {
+        background-color: darkgray !important;
+    }
+
+    .aActiveTag {
+        background-color: deepskyblue !important;
+    }
+</style>
+
+<div class="headrow">
+    <button type="button" title="Post Data" onclick="PostData()" class="sym-btn-post">&nbsp;Post</button>
+    <label class="pull-right">Transfer Receive > FG(In)</label>
+</div>
+
+<div class=" tabMenu">
+    <ul style="font-size: 1.4em;" class="tabDesign nav nav-tabs">
+        <li class="tabDefault active"><a id="aTagReceive" class="aTag" href="/VMS/TransferReceiveMPL/Index">Receive</a></li>
+        <li class="tabDefault active"><a id="aTagIssue" class="aTag" href="/VMS/TransferReceiveMPL/ReceiveIndex">Transfer From</a></li>
+    </ul>
+</div>
+
+
+<div class="tab-content">
+    <div id="SaleIndex" class="tab-pane fade  in active">
+        <div class="thinbox  animated zoomIn animated zoomIn faster">
+            <div class="th_thinbox">
+                @if (Model.TransactionType.ToLower() == "other")
+                {
+                    <p>Transfer Receive List </p>
+                }
+            </div>
+            <div class="dtSearch formDesign">
+                <div class="row">
+                    <div class="trk1_5">
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.SearchField)
+                        </div>
+                        <div class="editor-field">
+                            @Html.SimpleDropDownFor(m => m.SearchField, "/Config/DropDown/TransferReceiveColumnSearch", new { @class = " form-control " })
+                        </div>
+                    </div>
+                    <div class="trk1_5">
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.SearchValue)
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(model => model.SearchValue, new { @class = "  form-control" })
+                        </div>
+                    </div>
+
+                    <div class="trk_5">
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.Post)
+                        </div>
+                        <div class="editor-field">
+                            <select id="Post" class="form-control">
+                                <option value=""></option>
+                                <option value="Y">Y</option>
+                                <option value="N">N</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <div class="editor-label">
+                            <label>Select Top</label>
+
+                        </div>
+                        <div class="editor-field">
+
+                            @Html.SimpleDropDownFor(model => model.SelectTop, "/Config/DropDown/RecordSelectList", new { @class = " cBranchId form-control" })
+
+                        </div>
+                    </div>
+                    <div class="trk1_5">
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.FromDate)
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(model => model.FromDate, new { @placeholder = "Date From", @class = "customDatePicker defaultDate form-control" })
+                        </div>
+                    </div>
+                    <div class="trk1_5">
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.ToDate)
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(model => model.ToDate, new { @placeholder = "Date To", @class = "customDatePicker defaultDate form-control" })
+                        </div>
+                    </div>
+                    <div class="trk1_5">
+                        <div class="editor-label">
+                            <label>Branch Name</label>
+                        </div>
+                        <div class="editor-field">
+                            <div class="editor-field">
+                                @Html.DropDownListFor(model => model.BranchId, new SelectList(Model.BranchList, "BranchID", "BranchName", Model.BranchId), new { @class = "cBranchId form-control"})
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-md-7">
+                        <div class="editor-label">
+                            <label>&nbsp;</label>
+                        </div>
+                        <div class="editor-field">
+                            <button type="button" title="Click to Search" id="btnDialog" class="sym-btn-search">&nbsp;Search</button>
+                            <button type="button" title="Clear Data" id="Clear" class=" sym-btn-clear">&nbsp;Clear</button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            <p>&nbsp;</p>
+            <table id="myDataTable" class="display">
+                <thead>
+                    <tr>
+                        <th class="center"><input type="checkbox" class="chkAll" />Action</th>
+                        <th>Transfer Receive No</th>
+                        <th>Transfer Receive Date</th>
+                        <th>Transfer Issue Date</th>
+                        <th>Total Amount</th>
+                        <th>Total VAT Amount</th>
+                        <th>Transfer From</th>
+                        <th>Transfer To</th>
+                        <th>Is Posted</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <br />
+        </div>
+
+        <div class="headrow">
+            <button type="button" title="Post Data" onclick="PostData()" class="sym-btn-post">&nbsp;Post</button>
+        </div>
+
+        <form id="ReportForm" method="post" target="_blank"></form>
+    </div>
+
+
+</div>
+
+
+
+<div id="myHigherModal" class="HigherModal"></div>
+
+<script>
+
+
+    function PostData() {
+        debugger;
+        var questionMSG = "Are you sure to Post Data!";
+
+        Ask(questionMSG, function () {
+            debugger;
+            var IDs = [];
+            var $Items = $("#SaleIndex  .dSelected:input:checkbox:checked");
+
+            if ($Items == null || $Items.length == 0) {
+                ShowResult("Fail", "You are requested to Select before Post!");
+                return;
+            }
+
+            $Items.each(function () {
+                var ID = $(this).attr("data-Id");
+                ID = ID.split("~");
+                if (ID[1] == "N") {
+                    IDs.push(ID[0]);
+                }
+            });
+            var model = {
+                IDs: IDs,
+            }
+            debugger;
+            var url = '/VMS/TransferReceiveMPL/TransferMPLReceivePost';
+
+            $.ajax({
+                url: url
+                , data: model
+                , type: 'Post'
+                , traditional: true
+                , beforeSend: function () { $(".loading").show(); }
+                , success: function (rVM) {
+                    debugger;
+                    if (rVM != "Already Posted!") {
+                        ShowResult("Success", rVM);
+                        //window.location.href = "/VMS/TransferReceiveMPL/Index";
+                    }
+                    else {
+                        ShowResult("Fail", rVM);
+                    }
+                }
+                , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+
+            });
+        });
+    };
+
+
+</script>
+
+
+
+<script language="javascript" type="text/javascript">
+
+    $(document).ready(function () {
+        debugger;
+        var pathname = window.location.pathname;
+        if (pathname == "/Index" || pathname == "/VMS/TransferReceiveMPL/Index") {
+            $('#aTagReceive').removeClass("aTag");
+            $('#aTagReceive').addClass("aActiveTag");    
+        }
+        else if (pathname == "/ReceiveIndex" || pathname == "/VMS/TransferReceiveMPL/ReceiveIndex") {            
+            $('#aTagIssue').removeClass("aTag");
+            $('#aTagIssue').addClass("aActiveTag");
+        }
+        
+
+        SelectAllForDelete();
+        $.datepicker.regional[""].dateFormat = 'dd/M/y';
+        $.datepicker.setDefaults($.datepicker.regional['']);
+        var oTable = $('#myDataTable').dataTable({
+            "bServerSide": true,
+            "sAjaxSource": "/VMS/TransferReceiveMPL/_index?TransactionType=@Model.TransactionType",
+            "bProcessing": true,
+            "aLengthMenu": tablelength(),
+            "bJqueryUI": true,
+            "bAutoWidth": false,
+
+            "fnServerData": function (sSource, aoData, fnCallback) {
+                $('.dtSearch :input').each(function () {
+                    var Name = $(this).attr("Id")
+                    var Value = $(this).val()
+                    aoData.push({ "name": Name, "value": Value });
+                });
+
+
+                $.getJSON(sSource, aoData, function (json) {
+                    debugger;
+                    console.log(json.aaData);
+                    $.each(json.aaData, function (index, element) {
+                        debugger;
+                        console.log(index, element[3]);
+                        var totalAmnt = element[4].replace(',', '');
+                        var totalVat = element[5].replace(',', '');
+
+                        json.aaData[index][4] = parseFloat(totalAmnt).toLocaleString('en-US', { minimumFractionDigits: 2 });
+                        json.aaData[index][5] = parseFloat(totalVat).toLocaleString('en-US', { minimumFractionDigits: 2 });
+                    });
+                    debugger;
+                    fnCallback(json);
+                });
+            },
+
+            "aoColumns": [
+                            {
+                                "sName": "Id",
+                                "bSearchable": false,
+                                "bSortable": false,
+                                "sWidth": "12%",
+                                "sClass": "center",
+                                "fnRender": function (oObj) {
+                                    debugger;
+                                    return ' <input onclick="CheckAll(this)" class="dSelected" type="checkbox" data-Id="' + oObj.aData[0] + '" data-post="' + oObj.aData[7] + '">'
+                                        + '&nbsp; <a title="Click on for Edit" href=\"/VMS/TransferReceiveMPL/Edit/' + oObj.aData[0].split('~')[0] + '?TransactionType=' + oObj.aData[8] + '\" class="sym-btn-edit-row"></a>'
+                                    ;
+                                }
+                            }
+                            , { "sName": "TransferReceiveNo", "sWidth": "11%" }
+                            , { "sName": "ReceiveDateTime", "sWidth": "11%" }
+                            , { "sName": "TransferDateTime", "sWidth": "11%" }
+                            , { "sName": "TotalAmount", "sWidth": "10%" }
+                            , { "sName": "TotalVATAmount", "sWidth": "10%" }
+                            , { "sName": "TransferFromBranch", "sWidth": "13%" }
+                            , { "sName": "TransferToBranch", "sWidth": "13%" }
+                            , { "sName": "Post", "sWidth": "10%" }
+            ]
+        });
+
+        $('#btnDialog').click(function () {
+            debugger
+            var model = $('.dtSearch :input').serialize();
+            //var BranchId = $('.cBranchId').val();
+            //if (BranchId == null || BranchId == "")
+            //{
+            //    BranchId='0';
+            //}
+            
+            $.ajax({
+                url: "/VMS/TransferIssueMPL/Index",
+                cache: false,
+                // data: model,
+                success: function (html) {
+                    oTable.fnDraw();
+                }
+            });
+        });
+
+        ////clearing fields
+        $("#Clear").on('click', function () {
+            $(".Dropdown").select2("val", "");
+            $(".form-control").val("");
+        });
+
+
+    });
+
+    function checkValidBranch(element, branchId) {
+        if ('@Session["BranchId"]' != branchId) {
+            ShowResult("Fail", "This Information not for this Branch!");
+            return;
+        }
+
+        btnPost(element);
+    }
+
+
+    $("#excelUpload").on("click",
+        function (e) {
+
+            e.preventDefault();
+
+            var fileUpload = $("#excelFile").get(0);
+            var files = fileUpload.files;
+
+            var data = new FormData();
+            data.append("file", files[0]);
+            data.append("TransactionType", $("#saleTransactionType").val());
+
+
+            $.ajax({
+                url: "/VMS/TransferIssueMPL/GetSettings?group=SaleWeb&name=Setps",
+                type: "GET",
+                contentType: false,
+                timeout: 600000,
+                processData: false,
+                //beforeSend: function () { $(".loading").show(); },
+                //complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                success: function (result) {
+
+                    if (result === "y") {
+
+                        //setTimeout(function() {
+
+
+
+
+                        //},3000)
+
+
+
+                        $.ajax({
+                            url: "/VMS/TransferIssueMPL/ProcessExcel",
+                            type: "POST",
+                            data: data,
+                            contentType: false,
+                            timeout: 600000,
+                            processData: false,
+                            beforeSend: function () { $(".loading").show(); },
+                            complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                            success: function (result) {
+
+
+                                result = JSON.parse(result)
+                                console.log(result)
+
+                                if (result.action === "Fail") {
+                                    ShowResult("Fail", "Data Validation Failed");
+                                    return;
+
+                                }
+
+
+                                console.log(result)
+
+                                Ask("Data validation Complete, Are you sure to Save?",
+                                    function () {
+
+                                        $.ajax({
+                                            url: "/VMS/TransferIssueMPL/SaveTransactions",
+                                            type: "POST",
+                                            data: data,
+                                            contentType: false,
+                                            processData: false,
+                                            timeout: 600000,
+
+                                            beforeSend: function () { $(".loading").show(); },
+                                            complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                                            success: function (result) {
+                                                result = JSON.parse(result)
+                                                console.log(result)
+
+                                                if (result.action == "Success") {
+                                                    ShowResult("Success", "Data Saved Successfully");
+                                                    //window.location = "/VMS/SaleInvoice/Index?TransactionType="+'@Model.TransactionType';
+                                                }
+                                            },
+                                            error: function (err) {
+                                                err = JSON.parse(err)
+                                                console.log(err)
+                                                ShowResult("Fail", err.message);
+
+                                            }
+                                        });
+
+                                    },
+                                    function () {
+                                    })
+
+
+                            },
+                            error: function (err) {
+
+                            }
+                        });
+
+
+                    } else {
+
+
+                        setTimeout(function () {
+
+                            $.ajax({
+                                url: "/VMS/SaleInvoice/ImportExcel",
+                                type: "POST",
+                                data: data,
+                                contentType: false,
+                                timeout: 600000,
+                                processData: false,
+                                beforeSend: function () { $(".loading").show(); },
+                                complete: function () {
+                                    $(".loading").fadeOut(200).hide("slow");
+                                    console.log("end")
+                                },
+                                success: function (result) {
+                                    result = JSON.parse(result)
+                                    console.log(result)
+
+                                    if (result.action == "Success") {
+                                        ShowResult("Success", "Data Saved Successfully");
+                                        window.location = "/VMS/SaleInvoice/Index?TransactionType=" + '@Model.TransactionType';
+                                        console.log(result)
+
+                                    } else {
+                                        ShowResult("Fail", result.message);
+
+                                    }
+                                },
+                                error: function (err) {
+                                    ShowResult("Fail", result.message); //"Something gone wrong"
+                                }
+                            })
+
+                        }, 3000);
+                    }
+                },
+                error: function (err) {
+
+                }
+            })
+        });
+
+
+    $(function () {
+
+    })
+
+
+
+    function getSettings(group, name) {
+        debugger;
+        $.ajax({
+            url: "/VMS/SaleInvoice/GetSettings?group=" + group + "&name=" + name,
+            type: "GET",
+            data: data,
+            contentType: false,
+            timeout: 600000,
+            processData: false,
+            beforeSend: function () { $(".loading").show(); },
+            complete: function () { $(".loading").fadeOut(200).hide("slow") },
+            success: function (result) {
+
+
+            },
+            error: function (err) {
+
+            }
+        })
+
+
+
+
+    }
+
+    function callbackFromCustomerModal(sender) {
+        var id = $(sender).children('td.popUpCustomerId').text();
+        var CustomerName = $(sender).children('td.popUpCustomerName').text();
+        //console.log(CustomerName)
+        //console.log(id)
+        $('.trCustomerId').val(id);
+        $('.trCustomerName').val(CustomerName);
+    }
+
+
+
+
+    $('#customerBtn').click(function () {       
+        //var customerName = $('.tr1CustomerId option:selected').text();
+        var customerNames = $('.trCustomerId option:selected').text();
+        //console.log("customerName")
+        var url = "/Vms/Customer/GetCustomerPopUp?CustomerName=" + customerNames;
+        var modal = document.getElementById('myHigherModal');
+        $.ajax({
+            url: url,
+            cache: false,
+            beforeSend: function () { $(".loading").show(); },
+            success: function (html) {
+                modal.style.display = "block";
+                $("#myHigherModal").html(html);
+                console.log(html)
+            }
+        , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+        });
+    });
+
+
+</script>

@@ -1,0 +1,162 @@
+﻿@model IEnumerable<SymViewModel.VMS.DTOs.ProductVM>
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+<style>
+    tfoot {
+        display: table-header-group;
+    }
+    tfoot tr th {
+        padding-left: 2px !important;
+        padding-right: 2px !important;
+    }
+    select.form-control{
+        padding-top:2px !important;
+    }
+</style>
+<div class="trkmodal-content">
+    <div class="trkmodal-header">
+        <span class="close">&times;</span>
+        <h2 class="text-center">Products</h2>
+    </div>
+    <div class="trkmodal-body">
+        <table id="myDataTable" class="display" style="width: 100%">
+            <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Product Code</th>
+                    <th>Cost Price</th>
+                    <th>Product Group </th>
+                    <th>Vat Rate</th>
+                    <th>HSCodeNo</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Product Code</th>
+                    <th class="ignore"></th>
+                    <th class="ignore">CategoryName</th>
+                    <th class="ignore"></th>
+                    <th>HSCodeNo</th>
+                </tr>
+            </tfoot>
+            <tbody>
+                @foreach (var product in Model) {
+                    <tr class="prdRow ">
+                        <td class="name">@product.ProductName</td>
+                        <td class="code">@product.ProductCode</td>
+                        <td>@product.CostPrice</td>
+                        <td>@product.CategoryName</td>
+                        <td>@product.VATRate %</td>
+                        <td>@product.HSCodeNo</td>
+                    </tr>
+                }
+            </tbody>
+            
+        </table>
+        <button type="button" class="btn btn-secondary submitPrd" >Select</button>
+    </div>
+</div>
+<script src="~/assets/DataTables/js/jquery.dataTables.js"></script>
+<script>
+    $(document).ready(function () {
+
+        $('#myDataTable tfoot th').not(".ignore").each(function () {
+            var title = $(this).text();
+            $(this).html('<input type="text" placeholder="Search ' + title + '" class="form-control"/>');
+        });
+
+        //$('#myDataTable tfoot tr').appendTo('#myDataTable thead');
+
+        var table = $('#myDataTable').DataTable({
+            scrollY: "280px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: false,
+
+            initComplete: function () {
+                this.api().columns([3]).every(function () {
+                    var column = this;
+                    var select = $('<select class="form-control"><option value="">Search Product Category</option></select>')
+                        .appendTo($(column.footer()).empty())
+                        .on('change', function () {
+                            var val = $.fn.dataTable.util.escapeRegex(
+                                $(this).val()
+                            );
+
+                            column
+                                .search(val ? '^' + val + '$' : '', true, false)
+                                .draw();
+                        });
+
+                    column.data().unique().sort().each(function (d, j) {
+                        select.append('<option value="' + d + '">' + d + '</option>')
+                    });
+                });
+            }
+
+        });
+
+        table.columns().every(function () {
+            var that = this;
+
+            $('input', this.footer()).on('keyup change', function () {
+                if (that.search() !== this.value) {
+                    that
+                        .search(this.value)
+                        .draw();
+                }
+            });
+        });
+
+        var span = document.getElementsByClassName("close")[0];
+        var trkmodal = document.getElementById('myModal');
+        //When the user clicks on <span> (x), close the trkmodal
+        span.onclick = function () {
+            closeModal();
+        }
+        $(document).keyup(function (e) {
+            if (e.key === "Escape") {
+                closeModal();
+            }
+        });
+        ////closing function
+        function closeModal() {
+            $("#myModal").html("");
+            trkmodal.style.display = "none";
+        }
+        ////Selecting a product
+        $('.prdRow').click(function () {
+            var activeEl = $('tr.active');
+            activeEl.removeClass("active");
+            $(this).addClass(" active");
+        });
+        ///Double click on a product
+        $('.prdRow').dblclick(function () {
+            var code = $(this).children('td.code').text();
+            $('.trItemName').select2("val", code);
+            ProductNameChange(code);
+            $("#myModal").html("");
+            trkmodal.style.display = "none";
+        });
+        ////Clicking select button
+        $('.submitPrd').click(function () {
+            var count = 0;
+            $('tr.active').each(function () {
+                count++;
+            });
+            if (count != 1) {
+                ShowResult("Fail", "select a product first!");
+                return;
+            }
+            var code = $('tr.active').children('td.code').text();
+            $('.trItemName').select2("val", code);
+            ProductNameChange(code);
+            $("#myModal").html("");
+            trkmodal.style.display = "none";
+        });
+        
+    });
+</script>

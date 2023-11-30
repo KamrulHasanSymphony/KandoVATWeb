@@ -1,0 +1,92 @@
+﻿@model IEnumerable<SymViewModel.Attendance.AttendanceRosterAllVM>
+
+@{
+    ViewBag.Title = "Index";
+}
+<div class="headrow">
+    <button type="button" title="Add New Attendance Roster" data-url="/Common/AttendanceRosterAll/CreateDetail" id="" class="btnCreate sym-btn-add">&nbsp;New</button>
+    <button type="button" title="Delete Attendance Roster" data-url="/Common/AttendanceRosterAll/Delete" onclick="deletedData(this, 'myDataTable');" id="" class="sym-btn-remove">&nbsp;Delete</button>
+    <label class="pull-right">Attendance Roster</label>
+</div>
+<div class="thinbox">
+    <div class="th_thinbox">
+        <p>Attendance Roster</p>
+    </div>
+    <table id="myDataTable" class="display">
+        <thead>
+            <tr>
+                <th class="center"></th>
+                <th>Name</th>
+                <th>Attendance Policy</th>
+                <th>Attendance Group</th>
+                <th>From Date</th>
+                <th>To Date</th>
+                <th>Remarks</th>
+            </tr>
+            <tr>
+                <th class="center">Actions</th>
+                <th>Name</th>
+                <th>Attendance Policy</th>
+                <th>Attendance Group</th>
+                <th>From Date</th>
+                <th>To Date</th>
+                <th>Remarks</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <br />
+</div>
+
+
+<div class="headrow">
+    <button type="button" title="Add New Attendance Roster" data-url="/Common/AttendanceRosterAll/CreateDetail" id="" class="btnCreate sym-btn-add">&nbsp;New</button>
+</div>
+<script>
+    $(function () {
+
+        $('#myDataTable').dataTable({
+            "bServerSide": true,
+            "sAjaxSource": "/Common/AttendanceRosterAll/_indexDetail",
+            "bProcessing": true,
+            "aLengthMenu": tablelength(),
+            "bJqueryUI": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+                {
+                    "sName": "Id",
+                    "bSearchable": false,
+                    "bSortable": false,
+                    "sWidth": "6%",
+                    "sClass": "center",
+                    "fnRender": function (oObj) {
+                        return '&nbsp; <a title="Click on for Delete" style="text-decoration:none;" data-url="/Common/AttendanceRosterAll/Delete" onclick="deletedData(this, myDataTable,\'' + oObj.aData[1] + '\');"  class="sym-btn-remove-row"></a>';
+                    }
+                }
+                , { "sName": "Name", "sWidth": "20%" }
+            , { "sName": "AttendanceStructure", "sWidth": "12%" }
+             , { "sName": "AttendanceGroup", "sWidth": "12%" }
+            , { "sName": "FromDate", "sWidth": "20%" }
+            , { "sName": "ToDate", "sWidth": "20%" }
+           , { "sName": "Remarks", "sWidth": "20%" }
+            ]
+        }).columnFilter({
+            sPlaceHolder: "head:after",
+            aoColumns: [""
+                       , { type: "text" }
+                       , { type: "text" }
+                       , { type: "text" }
+                       , { type: "date-range" }
+                       , { type: "date-range" }
+                       , { type: "text" }
+
+            ]
+
+        });
+        SelectAllForDelete();
+
+    });
+
+</script>
+

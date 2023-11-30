@@ -1,0 +1,231 @@
+﻿@{
+    ViewBag.Title = "Create";
+}
+
+@model VATViewModel.DTOs.HSCodeVM
+@using UIHelper.MVC
+@using (Html.BeginForm("CreateEdit", "HSCode", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmHSCodeMy" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.Operation)
+    @Html.HiddenFor(model => model.Code)
+    
+    <div class="headrow">
+        @if (Model.Operation == "add")
+        {
+            <button type="button" name="btnName" value="Save" title="Save Data" onclick="pageSubmit('frmHSCodeMy')" class="sym-btn-save">&nbsp;Save</button>
+            <label class="pull-right">HSCode > Create</label>
+        }
+        else
+        {
+            <button type="button" name="btnName" value="Update" title="Update Data" onclick="pageSubmit('frmHSCodeMy')" class="sym-btn-update">&nbsp;Update</button>
+            <label class="pull-right">HSCode > Edit</label>
+        }
+        <button type="button" title="Go To Index" data-url="/VMS/HSCode" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New HSCode" data-url="/VMS/HSCode/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+    </div>
+    
+     <div class="col-md-12 trkPX-0">        
+        <div class="thinbox animated zoomIn faster">
+            <div class="th_thinbox">
+                <p>Basic</p>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label for="Code" class="col-md-2 control-label text-right trkLabelMargin">Code</label>
+                    <div class="col-md-4">
+                        @Html.TextBoxFor(model => model.Code, new { @placeholder = "Code", @class = "   form-control" })
+                        @Html.ValidationMessageFor(model => model.Code)
+                    </div>
+                    <label for="HSCode" class="col-md-2 control-label text-right trkLabelMargin">HSCode</label>
+                    <div class="col-md-4">
+                        @Html.TextBoxFor(model => model.HSCode, new { @placeholder = "HSCode", @class = "required form-control" })
+                        @Html.ValidationMessageFor(model => model.HSCode)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="Description" class="col-md-2 control-label text-right trkLabelMargin">Description</label>
+                    <div class="col-md-4">
+                        @Html.TextBoxFor(model => model.Description, new { @placeholder = "Description", @class = " form-control" })
+                        @Html.ValidationMessageFor(model => model.Description)
+                    </div>
+                    <label for="Comments" class="col-md-2 control-label text-right trkLabelMargin">Comments</label>
+                    <div class="col-md-4">
+                        @Html.TextBoxFor(model => model.Comments, new { @placeholder = "Comments", @class = " form-control" })
+                        @Html.ValidationMessageFor(model => model.Comments)
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="FiscalYear" class="col-md-2 control-label text-right trkLabelMargin">Fiscal Year</label>
+                    <div class="col-md-4">
+                        @Html.SimpleDropDownFor(m => m.FiscalYear, "//", new { @class = "cFiscalYear form-control selectDropdown " })
+                    </div>
+                    
+                </div>
+
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 trkPX-0">        
+        <div class="thinbox animated zoomIn faster">
+            <div class="th_thinbox">
+                <p>Import</p>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label for="CD" class="col-md-2 control-label text-right trkLabelMargin">CD (%)</label>
+                    <div class="col-md-1">
+                        @Html.CheckBoxFor(model => model.IsFixedCDChecked, new { @class = "trCD form-control" })
+                    </div> 
+                    <div class="col-md-3">
+                        @Html.TextBoxFor(model => model.CD, new { @placeholder = "CD", @class = "form-control priceLen right" })
+                      
+                    </div>
+
+
+                    <label for="SD" class="col-md-2 control-label text-right trkLabelMargin">SD (%)</label>
+                    <div class="col-md-1">
+                        @Html.CheckBoxFor(model => model.IsFixedSDChecked, new { @class = "trSD form-control" })
+                    </div>
+                    <div class="col-md-3">
+                        @Html.TextBoxFor(model => model.SD, new { @placeholder = "SD", @class = "form-control priceLen right" })
+                        
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="VAT" class="col-md-2 control-label text-right trkLabelMargin">VAT (%)</label>
+                    <div class="col-md-1">
+                        @Html.CheckBoxFor(model => model.IsFixedVAT1Checked, new { @class = "trSD form-control" })
+                    </div>
+                    <div class="col-md-3">
+                        @Html.TextBoxFor(model => model.VAT, new { @placeholder = "VAT", @class = "form-control priceLen right" })
+                        
+                    </div>
+                    <label for="AIT" class="col-md-2 control-label text-right trkLabelMargin">AIT (%)</label>
+                    <div class="col-md-1">
+                        @Html.CheckBoxFor(model => model.IsFixedAITChecked, new { @class = "trSD form-control" })
+                    </div>
+                    <div class="col-md-3">
+                        @Html.TextBoxFor(model => model.AIT, new { @placeholder = "AIT", @class = "form-control priceLen right" })
+                       
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="RD" class="col-md-2 control-label text-right trkLabelMargin">RD (%)</label>
+                    <div class="col-md-1">
+                        @Html.CheckBoxFor(model => model.IsFixedRDChecked, new { @class = "trSD form-control" })
+                    </div>
+                    <div class="col-md-3">
+                        @Html.TextBoxFor(model => model.RD, new { @placeholder = "RD", @class = " form-control priceLen right" })
+                       
+                    </div>
+                    <label for="AT" class="col-md-2 control-label text-right trkLabelMargin">AT (%)</label>
+                    <div class="col-md-1">
+                        @Html.CheckBoxFor(model => model.IsFixedATChecked, new { @class = "trSD form-control" })
+                    </div>
+                    <div class="col-md-3">
+                        @Html.TextBoxFor(model => model.AT, new { @placeholder = "AT", @class = " form-control priceLen right" })
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 trkPX-0">        
+        <div class="thinbox animated zoomIn faster">
+            <div class="th_thinbox">
+                <p>Local</p>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label for="OtherSD" class="col-md-2 control-label text-right trkLabelMargin">SD (%)</label>
+                    
+                     <div class="col-md-4">
+                        @Html.TextBoxFor(model => model.OtherSD, new { @placeholder = "SD", @class = "form-control priceLen right" })
+                       
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label text-right trkLabelMargin">Fixed SD</label>
+                        <div class="form-group">
+                            <div class="col-md-2" style="margin-top:6px;">
+                                @Html.SimpleDropDownFor(m => m.IsFixedOtherSD, "/Config/DropDown/DecisionList", new { @class = " trNavigateMenu form-control" })
+                            </div>
+                        </div>
+                       
+                    </div>
+
+                    <label for="OtherVAT" class="col-md-2 control-label text-right trkLabelMargin">VAT (%)</label>
+                    
+                    <div class="col-md-4">
+                        @Html.TextBoxFor(model => model.OtherVAT, new { @placeholder = "VAT", @class = "form-control priceLen right" })
+                       
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 control-label text-right trkLabelMargin">Fixed VAT</label>
+                    <div class="form-group">
+                        <div class="col-md-2" style="margin-top:6px;">
+                            @Html.SimpleDropDownFor(m => m.IsFixedOtherVAT, "/Config/DropDown/DecisionList", new { @class = " trNavigateMenu form-control" })
+                        </div>
+                    </div>
+
+                    <label class="col-md-2 control-label text-right trkLabelMargin">VDS</label>
+                    <div class="form-group">
+                        <div class="col-md-2" style="margin-top:6px;">
+                            @Html.SimpleDropDownFor(m => m.IsVDS, "/Config/DropDown/DecisionList", new { @class = " cIsVDS form-control" })
+                        </div>
+                    </div>
+
+                    @*<div style="padding-bottom:72px;"></div>*@
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    
+    <div class="headrow">
+        @if (Model.Operation == "add")
+        {
+            <button type="button" name="btnName" value="Save" title="Save Data" onclick="pageSubmit('frmHSCodeMy')" class="sym-btn-save">&nbsp;Save</button>
+            <label class="pull-right">HSCode > Create</label>
+        }
+        else
+        {
+            <button type="button" name="btnName" value="Update" title="Update Data" onclick="pageSubmit('frmHSCodeMy')" class="sym-btn-update">&nbsp;Update</button>
+            <label class="pull-right">HSCode > Edit</label>
+        }
+        <button type="button" title="Go To Index" data-url="/VMS/HSCode" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New HSCode" data-url="/VMS/HSCode/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+    </div>
+    
+}
+<script>
+    $(function () {
+
+        DropdownLoad($('#FiscalYear'), "/Config/DropDown/FiscalYear", '@Model.FiscalYear')
+
+    });
+
+    $(function () {
+        valiDation("frmHSCodeMy");
+    });
+
+
+    var MinValue = parseFloat($('.trValue').val().replace(/\,/g, ''));
+
+    $('.trValue').val(MinValue);
+
+</script>
+
+<script>
+
+   
+
+</script>

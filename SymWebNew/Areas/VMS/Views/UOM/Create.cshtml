@@ -1,0 +1,111 @@
+﻿
+@model VATViewModel.DTOs.UOMNameVM
+@using UIHelper.MVC
+@{
+
+    ViewBag.Title = "Create";
+    ViewBag.Location = "Create"; 
+}
+
+@using (Html.BeginForm("CreateEdit", "UOM", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmUOM" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.UOMID)
+    @Html.HiddenFor(model => model.Operation)
+    <div class="thinbox">
+        <div class="th_thinbox">
+            <p>UOM Name</p>
+        </div>
+        <div class="UOM">
+            <div>
+
+                <div class="row">
+                    <div class="editor-label">
+                        @*@Html.LabelFor(model => model.UOMID)*@
+                        <label for="UOMID" class="col-md-2 control-label text-right trkLabelMargin">UOMID</label>
+
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.UOMID, new { @placeholder = "~~~ New ~~~", @class = "cUOMID form-control", @readonly = "readonly" })
+                        @Html.ValidationMessageFor(model => model.UOMID)
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="editor-label">
+                        @*@Html.LabelFor(model => model.UOMCode)*@
+                        <label for="UOMCode" class="col-md-2 control-label text-right trkLabelMargin">UOMCode</label>
+
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.UOMCode, new { @placeholder = "UOM Code", @class = " required form-control" })
+                        @Html.ValidationMessageFor(model => model.UOMCode)
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="editor-label">
+                        @*@Html.LabelFor(model => model.UOMName)*@
+                        <label for="UOMName" class="col-md-2 control-label text-right trkLabelMargin">UOMName</label>
+
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.UOMName, new { @placeholder = "UOM Name", @class = "required form-control" })
+                        @Html.ValidationMessageFor(model => model.UOMName)
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="row">
+                    <div class="editor-label">
+                        @*@Html.LabelFor(model => model.Comments)*@
+                        <label for="Comments" class="col-md-2 control-label text-right trkLabelMargin">Comments</label>
+
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextAreaFor(model => model.Comments, new { @placeholder = "Comments", @class = "  form-control" })
+                        @Html.ValidationMessageFor(model => model.Comments)
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="editor-label">
+                        @*<label>Is Active</label>*@
+                        <label for="ActiveStatus" class="col-md-2 control-label text-right trkLabelMargin">IsActive</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.SimpleDropDownFor(m => m.ActiveStatus, "/Config/DropDown/DecisionList", new { @class = " trNavigateMenu form-control required" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="headrow">
+        @if (Model.Operation == "add")
+        {
+            <label class="col-sm-3">
+                <button type="button" name="btnName" value="Save" title="Save Data" onclick="pageSubmit('frmUOM')" class="sym-btn-save">&nbsp;Save</button>
+            </label>
+            <label class="col-sm-4">
+                <button type="button" title="Cancel Data" class=" btncancel sym-btn-cancel">&nbsp;Cancel</button>
+            </label>
+        }
+        else
+        {
+            <label class="col-sm-3">
+                <button type="button" name="btnName" value="Update" title="Update Data" onclick="pageSubmit('frmUOM')" class="sym-btn-update">&nbsp;Update</button>
+            </label>
+            <label class="col-sm-4">
+                <button type="button" title="Cancel Data" class=" btncancel sym-btn-cancel">&nbsp;Cancel</button>
+            </label>
+        }
+    </div>
+    
+}
+<script>
+    $(function () {
+        valiDation("frmUOM");
+        InitDropDowns();
+    });
+
+</script>

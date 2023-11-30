@@ -1,0 +1,290 @@
+﻿
+@model VATViewModel.DTOs.CompanyProfileVM
+@using UIHelper.MVC
+@using (Html.BeginForm("CreateEdit", "CompanyProfile", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmCompanyMy" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.CompanyID)
+    @Html.HiddenFor(model => model.Operation)
+    @Html.HiddenFor(model => model.IsSymphonyUser)
+
+    <div class="headrow">
+        <button type="button" name="btnName" value="Update" title="Update Data" onclick="pageSubmit('frmCompanyMy')" class="sym-btn-update">&nbsp;Update</button>
+        <label class="pull-right">Company > Edit</label>
+        @*<button type="button" title="Go To Index" data-url="/VMS/CompanyProfile" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>*@
+    </div>
+    
+    <div class="col-md-6 trkPL-0 trkPR-2">
+        <div class="thinbox animated zoomIn faster">
+            <div class="th_thinbox">
+                <p>Basic</p>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label for="CompanyName" class="col-md-4 control-label text-right trkLabelMargin">Short Name</label>
+                    @if(Model.IsSymphonyUser==true){
+                    <div class="col-md-8">
+                        <div class="input-group col-md-6" style="margin-bottom:6px;">
+                            @Html.TextBoxFor(model => model.CompanyName, new { @placeholder = "Company Name", @class = " required form-control" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.CompanyName)
+                    </div>
+
+                    }
+                    else{
+                    <div class="col-md-8">
+                        <div class="input-group col-md-6" style="margin-bottom:6px;">
+                            @Html.TextBoxFor(model => model.CompanyName, new { @placeholder = "Company Name", @class = " required form-control", @readonly = "readonly" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.CompanyName)
+                    </div>
+
+                    }
+                    <label for="CompanyLegalName" class="col-md-4 control-label text-right trkLabelMargin">Legal Name</label>
+                     @if(Model.IsSymphonyUser==true){
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.CompanyLegalName, new { @placeholder = "Legal Name", @class = " form-control" })
+                        @Html.ValidationMessageFor(model => model.CompanyLegalName)
+                    </div>
+                     }
+                     else
+                     {
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.CompanyLegalName, new { @placeholder = "Legal Name", @class = " form-control", @readonly = "readonly" })
+                        @Html.ValidationMessageFor(model => model.CompanyLegalName)
+                    </div>
+                         
+                     }
+                    <label for="VatRegistrationNo" class="col-md-4 control-label text-right trkLabelMargin">BIN/Vat Reg. No</label>
+                      @if(Model.IsSymphonyUser==true){
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.VatRegistrationNo, new { @placeholder = "Registration No.", @class = " form-control" })
+                        @Html.ValidationMessageFor(model => model.VatRegistrationNo)
+                    </div>
+                       }
+                    else{
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.VatRegistrationNo, new { @placeholder = "Registration No.", @class = " form-control", @readonly = "readonly" })
+                        @Html.ValidationMessageFor(model => model.VatRegistrationNo)
+                    </div>
+                          
+                      }
+                </div>
+
+                <div class="form-group">
+                    <label for="TINNo" class="col-md-4 control-label text-right trkLabelMargin">TIN No</label>
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.TINNo, new { @placeholder = "TIN No.", @class = " form-control" })
+                        @Html.ValidationMessageFor(model => model.TINNo)
+                    </div>
+                    <label for="StartDateTime" class="col-md-4 control-label text-right trkLabelMargin">Start Date</label>
+                    <div class="col-md-8">
+                        <div class="input-group col-md-6" style="margin-bottom:6px;">
+                            @Html.TextBoxFor(model => model.StartDateTime, new { @class = " trDate customDatePicker required form-control", @readonly = "readonly" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.StartDateTime)
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="BusinessNature" class="col-md-4 control-label text-right trkLabelMargin">Business Nature</label>
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.BusinessNature, new { @placeholder = "Business Nature.", @class = " form-control" })
+                        @Html.ValidationMessageFor(model => model.BusinessNature)
+                    </div>
+                    <label for="AccountingNature" class="col-md-4 control-label text-right trkLabelMargin">Accounting Nature</label>
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.AccountingNature, new { @placeholder = "Accounting Nature.", @class = " form-control" })
+                        @Html.ValidationMessageFor(model => model.AccountingNature)
+                    </div>
+                   
+                </div>
+                <div class="form-group">
+                    <label for="BIN" class="col-md-4 control-label text-right trkLabelMargin">BIN</label>
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.BIN, new { @placeholder = "BIN.", @class = " form-control" })
+                        @Html.ValidationMessageFor(model => model.BIN)
+                    </div>
+                   
+
+                </div>
+
+            </div>
+        </div>
+        <div class="thinbox animated zoomIn faster">
+            <div class="th_thinbox">
+                <p>Fiscal Year</p>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label for="FYearStart" class="col-md-4 control-label text-right trkLabelMargin">Year Start</label>
+                    <div class="col-md-8">
+                        <div class="input-group col-md-6" style="margin-bottom:6px;">
+                            @Html.TextBoxFor(model => model.FYearStart, new { @class = " trDate customDatePicker required  form-control", @readonly = "readonly" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.FYearStart)
+                    </div>
+                    <div>&nbsp</div>
+                    <label for="FYearEnd" class="col-md-4 control-label text-right trkLabelMargin">Year End</label>
+                    <div class="col-md-8">
+                        <div class="input-group col-md-6" style="margin-bottom:6px;">
+                            @Html.TextBoxFor(model => model.FYearEnd, new { @class = " trDate customDatePicker required  form-control", @readonly = "readonly" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.FYearEnd)
+                    </div>
+                </div>
+            </div>
+            <div style="padding-bottom:16px;"></div>
+        </div>
+    </div>
+
+    <div class="col-md-6 trkPX-0">
+    <div class="thinbox animated zoomIn faster">
+        <div class="th_thinbox">
+            <p>Detail</p>
+        </div>
+        <div class="row">
+            <div class="form-group">
+              <label for="Address1" class="col-md-4 control-label text-right trkLabelMargin">Address1</label>
+              <div class="col-md-8">
+                  @Html.TextBoxFor(model => model.Address1, new { @placeholder = "Address 1", @class = "  form-control" })
+                  @Html.ValidationMessageFor(model => model.Address1)
+              </div>
+             
+            </div>
+            <div class="form-group">
+                <label for="Address2" class="col-md-4 control-label text-right trkLabelMargin">Address2</label>
+                <div class="col-md-8">
+                    @Html.TextBoxFor(model => model.Address2, new { @placeholder = "Address 2 ", @class = "  form-control" })
+                    @Html.ValidationMessageFor(model => model.Address2)
+                </div>
+                <label for="Address3" class="col-md-4 control-label text-right trkLabelMargin">Address3</label>
+                <div class="col-md-8">
+                    @Html.TextBoxFor(model => model.Address3, new { @placeholder = "Address 3 ", @class = "  form-control" })
+                    @Html.ValidationMessageFor(model => model.Address3)
+                </div>
+            </div>
+
+            <div class="form-group">
+             
+              <label for="City" class="col-md-4 control-label text-right trkLabelMargin">City</label>
+              <div class="col-md-8">
+                  @Html.TextBoxFor(model => model.City, new { @placeholder = "City", @class = " form-control" })
+                  @Html.ValidationMessageFor(model => model.City)
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="Email" class="col-md-4 control-label text-right trkLabelMargin">Email</label>
+              <div class="col-md-8">
+                  @Html.TextBoxFor(model => model.Email, new { @placeholder = "Email", @class = " form-control" })
+                  @Html.ValidationMessageFor(model => model.Email)
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="FaxNo" class="col-md-4 control-label text-right trkLabelMargin">FaxNo</label>
+              <div class="col-md-8">
+                  @Html.TextBoxFor(model => model.FaxNo, new { @placeholder = "Fax Number", @class = " form-control" })
+                  @Html.ValidationMessageFor(model => model.FaxNo)
+              </div>
+                <label for="ZipCode" class="col-md-4 control-label text-right trkLabelMargin">Zip Code</label>
+              <div class="col-md-8">
+                  @Html.TextBoxFor(model => model.ZipCode, new { @placeholder = "Zip Code.", @class = " form-control" })
+                  @Html.ValidationMessageFor(model => model.ZipCode)
+              </div>
+                <label for="TelephoneNo" class="col-md-4 control-label text-right trkLabelMargin">Telephone No</label>
+                <div class="col-md-8">
+                    @Html.TextBoxFor(model => model.TelephoneNo, new { @placeholder = "Telephone No.", @class = " form-control" })
+                    @Html.ValidationMessageFor(model => model.TelephoneNo)
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="Comments" class="col-md-4 control-label text-right trkLabelMargin">VAT Circle</label>
+                <div class="col-md-8">
+                    @Html.TextBoxFor(model => model.Comments, new { @placeholder = "VAT Circle", @class = " form-control" })
+                    @Html.ValidationMessageFor(model => model.Comments)
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-4 control-label text-right trkLabelMargin">Is Active</label>
+                <div class="form-group">
+                    <div class="col-md-2" style="margin-top:6px;">
+                        @Html.SimpleDropDownFor(m => m.ActiveStatus, "/Config/DropDown/DecisionList", new { @class = " trNavigateMenu form-control required" })
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+    </div>
+    <div class="col-md-6 trkPX-0">
+    <div class="thinbox animated zoomIn faster">
+       
+        <div class="row">
+           
+            <div class="form-group">
+                <label class="col-md-4 control-label text-right trkLabelMargin">Is VDSWith Holder</label>
+                <div class="form-group">
+                    <div class="col-md-2" style="margin-top:6px;">
+                        @Html.SimpleDropDownFor(m => m.ActiveStatus, "/Config/DropDown/DecisionList", new { @class = " trNavigateMenu form-control required" })
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    </div>
+    
+    
+    <div class="col-md-12 trkPX-0">
+    <div class="thinbox animated zoomIn faster">
+        <div class="th_thinbox">
+            <p>Contact Person</p>
+        </div>
+        <div class="row">
+            <div class="form-group">
+              <label for="ContactPerson" class="col-md-2 control-label text-right trkLabelMargin">Name</label>
+              <div class="col-md-4">
+                  @Html.TextBoxFor(model => model.ContactPerson, new { @placeholder = "Contact Person", @class = "   form-control" })
+                  @Html.ValidationMessageFor(model => model.ContactPerson)
+              </div>
+              <label for="ContactPersonDesignation" class="col-md-2 control-label text-right trkLabelMargin" >Designation</label>
+              <div class="col-md-4">
+                  @Html.TextBoxFor(model => model.ContactPersonDesignation, new { @placeholder = "Designation", @class = " form-control" })
+                  @Html.ValidationMessageFor(model => model.ContactPersonDesignation)
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="ContactPersonTelephone" class="col-md-2 control-label text-right trkLabelMargin">Telephone</label>
+              <div class="col-md-4">
+                  @Html.TextBoxFor(model => model.ContactPersonTelephone, new { @placeholder = "Telephone No.", @class = " form-control" })
+                  @Html.ValidationMessageFor(model => model.ContactPersonTelephone)
+              </div>
+              <label for="ContactPersonEmail" class="col-md-2 control-label text-right trkLabelMargin">Email</label>
+              <div class="col-md-4">
+                  @Html.TextBoxFor(model => model.ContactPersonEmail, new { @placeholder = "Email", @class = " form-control" })
+                  @Html.ValidationMessageFor(model => model.ContactPersonEmail)
+              </div>
+            </div>
+        </div>
+
+    </div>
+    </div>
+    
+    <div class="headrow">
+        <button type="button" name="btnName" value="Update" title="Update Data" onclick="pageSubmit('frmCompanyMy')" class="sym-btn-update">&nbsp;Update</button>
+        @*<button type="button" title="Go To Index" data-url="/VMS/CompanyProfile" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>*@
+    </div>
+}
+<script>
+    $(function () {
+        valiDation("frmCompanyMy");
+    });
+</script>

@@ -1,0 +1,82 @@
+﻿<div class="headrow">
+    <button type="button" title="Add New Zone Mapping" data-url="/VMS/MPLZoneBranchMapping/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+    <label class="pull-right">Zone Mapping Information</label>
+</div>
+<div class="thinbox animated slideInDown faster">
+    <div class="th_thinbox">
+        <p>Zone Mapping Information List</p>
+    </div>
+    <table id="myDataTable" class="display">
+        <thead>
+            <tr>
+                <th class="center">
+                    Action
+                </th>
+
+                <th>Zone Name</th>
+                <th>Branch Name</th>
+                
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <br />
+</div>
+
+<div class="headrow">
+    <button type="button" title="Add New Zone Mapping" data-url="/VMS/MPLZoneBranchMapping/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+</div>
+
+<div id="myModal" class="trkmodal"></div>
+<script language="javascript" type="text/javascript">
+    $(document).ready(function () {
+        SelectAllForDelete();
+        $.datepicker.regional[""].dateFormat = 'dd/M/y';
+        $.datepicker.setDefaults($.datepicker.regional['']);
+
+        function modalInit() {
+            var modal = document.getElementById('myModal');
+            $('.printBtn').click(function () {
+                var url = "/Vms/MPLZoneBranchMapping/Print";
+                $.ajax({
+                    url: url,
+                    cache: false,
+                    beforeSend: function () { $(".loading").show(); },
+                    complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                    success: function (html) {
+                        modal.style.display = "block";
+                        $("#myModal").html(html);
+                    }
+                });
+            });
+        }
+        modalInit();
+
+
+        var oTable = $('#myDataTable').dataTable({
+            "bServerSide": true,
+            "sAjaxSource": "/VMS/MPLZoneBranchMapping/_index",
+            "bProcessing": true,
+            "aLengthMenu": tablelength(),
+            "bJqueryUI": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+                            {
+                                "sName": "Id",
+                                "bSearchable": false,
+                                "bSortable": false,
+                                "sWidth": "8%",
+                                "sClass": "center",
+                                "fnRender": function (oObj) {
+                                    return ' <a id=""  title="Click on for Edit"  style="text-decoration:none;"   href=\"/VMS/MPLZoneBranchMapping/Edit/' + oObj.aData[0] + '\" class=" innerListLink sym-btn-edit-row"></a>'
+                                    ;
+                                }
+                            }
+                            , { "sName": "ZoneName", "sWidth": "45%" }
+                            , { "sName": "BranchName", "sWidth": "45%" }
+              
+
+            ]
+        });
+    });
+</script>

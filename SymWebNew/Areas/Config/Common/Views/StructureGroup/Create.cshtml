@@ -1,0 +1,71 @@
+﻿@model SymViewModel.Common.StructureGroupVM
+@using UIHelper.MVC
+@using (Html.BeginForm("Create", "StructureGroup", FormMethod.Post, new {  @Id = "frmStructureG" }))
+{
+    @Html.ValidationSummary(true)
+    <div class="thinbox">
+        <div class="EnumSection">
+            <div class="row">
+                <label class="col-sm-3">
+                    @Html.LabelFor(model => model.Name)
+                </label>
+                <div class="col-sm-9">
+                    @Html.TextBoxFor(model => model.Name, new {@placeholder = "Structure Group Name", @class ="required form-control" })
+                </div>
+            </div>
+            <div class="row">
+                <label class="col-sm-3">
+                    @Html.LabelFor(model => model.LeaveStructureId)
+                </label>
+                <div class="col-sm-9">
+                  @Html.SimpleDropDownFor(model => model.LeaveStructureId, "/Config/DropDown/LeaveStructure", new { @class = " form-control" })
+                </div>
+            </div>
+                        <div class="row">
+                <label class="col-sm-3">
+                    @Html.LabelFor(model => model.SalaryStructureId)
+                </label>
+                <div class="col-sm-9">
+                  @Html.SimpleDropDownFor(model => model.SalaryStructureId, "/Config/DropDown/SalaryStructureList", new { @class = " form-control" })
+                </div>
+            </div>
+                         
+            <div class="row">
+                <label class="col-sm-3">
+                    @Html.LabelFor(model => model.Remarks)
+                </label>
+                <div class="col-sm-9">
+                    @Html.TextAreaFor(model => model.Remarks, new {@placeholder = "Remarks", @class ="form-control" })
+                        @Html.ValidationMessageFor(model => model.Remarks)
+                </div>
+            </div>
+
+             <div class="row">
+                <label class="col-sm-3">
+                     <button type="submit"  title="Save Data" class="sym-btn-save" onclick="pageSubmit('frmStructureG');" >&nbsp;Save</button>
+                </label>
+
+                <label class="col-sm-4">
+                  <button type="button" title="Cancel Data" class="btncancel  sym-btn-cancel">&nbsp;Cancel</button>
+                </label>
+            </div>
+
+          @*  <div class="row">
+                <div class="col-sm-3">
+                    <input type="button" onclick="pageSubmit('frmStructureG');" value="Add" class=" Save btn btn-primary" />
+                </div>
+
+                <div class="col-sm-4">
+                    <input type="button" value="Cancel" class="btncancel btn btn-primary" />
+                </div>
+            </div>*@
+        </div>
+    </div>
+}
+    <script>
+        $(function () {
+            valiDation("frmStructureG");
+            InitDropDowns();
+        });
+
+    </script>

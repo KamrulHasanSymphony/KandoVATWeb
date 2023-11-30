@@ -1,0 +1,124 @@
+﻿@{
+    ViewBag.Title = "Report";
+}
+@using UIHelper.MVC
+<div class="thinbox">
+    <div class="th_thinbox">
+        <p>Daily Attendance</p>
+    </div>
+    <div class="row">
+
+      <div class="col-md-2"><div class="editor-label"><label>Emp Code(From)</label></div><div class="editor-field">@Html.SimpleDropDown("CodeFrom", "/Config/DropDown/EmployeeCodeName", new { @class = "codeFCom form-control selectDropdown" })</div></div>
+        <div class="col-md-2">
+            <div class="editor-label">
+                <label>Emp Code(To)</label>
+            </div>
+            <div class="editor-field">
+                @Html.SimpleDropDown("CodeTo", "/Config/DropDown/EmployeeCodeName", new { @class = "codeTCom form-control selectDropdown" })
+
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="editor-label">
+                <label>@Session["DepartmentLabel"]</label>
+            </div>
+            <div class="editor-field">
+                @Html.SimpleDropDown("DepartmentId", "/Config/DropDown/Department", new { @class = "departmentsCom form-control selectDropdown" })
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="editor-label">
+                <label>@Session["SectionLabel"]</label>
+            </div>
+            <div class="editor-field">
+                @Html.SimpleDropDown("SectionId", "/Config/DropDown/Section", new { @class = "sectionsCom form-control selectDropdown" })
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="editor-label">
+                <label>@Session["ProjectLabel"]</label>
+            </div>
+            <div class="editor-field">
+                @Html.SimpleDropDown("ProjectId", "/Config/DropDown/Project", new { @class = "projectsCom form-control selectDropdown" })
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            <div class="editor-label">
+                <label>Date From</label>
+            </div>
+            <div class="editor-field">
+                @Html.TextBox("Date From","", new { @placeholder = "Date From", @class = " dtFrom customDatePicker form-control" })
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="editor-label">
+                <label>Date To</label>
+            </div>
+            <div class="editor-field">
+                @Html.TextBox("Date To","", new { @placeholder = "Date To", @class = " dtTo customDatePicker form-control" })
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="editor-label">
+                <label>Attendance Status</label>
+            </div>
+            <div class="editor-field">
+                @Html.SimpleDropDown("AttendanceStatus", "/Config/DropDown/AttnStatusName", new { @class = "attnStatus form-control " })
+            </div>
+        </div>
+
+         <div class="col-md-2">
+            <div class="editor-label">
+                <label>Full OT</label>
+            </div>
+            <div class="editor-field">
+                @Html.CheckBox("FullOT", new { @class = "fullOT form-control " })
+            </div>
+        </div>
+    </div>
+</div>
+<div class="headrow">
+    <button type="button" title="Click for Report" data-url="/Common/DailyAttendanceProcess/ReportView" onclick="reportData(this);" id="" class="sym-btn-report">&nbsp;Report</button>
+    &nbsp;
+    <button title="Clear the Entries" id="Clear" onclick="window.location.reload()" class="sym-btn-clear">&nbsp;Clear</button>
+</div>
+
+<script>
+    $(function () {
+        InitDropdownsCommon();
+    });
+    function reportData(sender) {
+        var url = $(sender).attr("data-url");
+        
+        var codeFrom = $("#CodeFrom").val();
+        var codeTo = $("#CodeTo").val();
+        var departmentId = $("#DepartmentId :selected").val();
+        var sectionId = $("#SectionId :selected").val();
+        var projectId = $("#ProjectId :selected").val();
+        var dtFrom = $(".dtFrom").val();
+        var dtTo = $(".dtTo").val();
+        var attnStatus = $(".attnStatus :selected").val();
+        var fullOT = $(".fullOT").is(":checked") ? true : false;
+
+        rptObj = new Object();
+        rptObj.codeFrom = codeFrom;
+        rptObj.codeTo = codeTo;
+        rptObj.departmentId = departmentId;
+        rptObj.sectionId = sectionId;
+        rptObj.projectId = projectId;
+        rptObj.dtFrom = dtFrom;
+        rptObj.dtTo = dtTo;
+        rptObj.attnStatus = attnStatus;
+        rptObj.fullOT = fullOT;
+
+
+        var rptParam = $.param(rptObj);
+        url = url + "?" + rptParam;
+        var win = window.open(url, '_blank');
+    }
+</script>

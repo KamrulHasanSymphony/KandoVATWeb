@@ -1,0 +1,79 @@
+﻿    <div class="thinbox">
+        <div class="th_thinbox">
+        <p>Structure Group</p>   
+        </div>
+@*<div class="row">
+     <input type="button" style="width:65px;" data-url="/Common/StructureGroup/Create"  id="" class="btnCreate btn btn-info  " value="Add" />
+    <input type="button" style="width:65px;" data-url="/Common/StructureGroup/Delete" onclick="deletedData(this, 'myDataTable');" id="" class=" btn btn-info  " value="Delete" />
+
+</div>*@
+        <p></p>
+<div class="row">
+
+
+ 
+        <div id="container">
+            <div id="demo">
+                <table id="myDataTable" class="display">
+                    <thead>
+                        <tr>
+                            <th class="center"><input type="checkbox" class="chkAll" /> </th>
+                            <th>Name</th>
+                            <th>Leave Structure</th>
+                            <th>Salary Structure</th>
+                            <th>Attendance Structure</th>
+                        </tr>
+                    </thead>
+                    <tbody> 
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        </div>
+        </div>
+ 
+ 
+<script>
+
+    $(document).ready(function () {
+
+        var oTable = $('#myDataTable').dataTable({
+            "bServerSide": true,
+            "sAjaxSource": "/Common/StructureGroup/_index",
+            "bProcessing": true,
+            "aoColumns": [
+                            {
+                                "sName": "Name",
+                                "bSearchable": false,
+                                "bSortable": false,
+                                "sWidth": "12%",
+                                "sClass": "center",
+                                "fnRender": function (oObj) {
+                                    return ' <input onclick="CheckAll(this)" type="checkbox" data-Id="' + oObj.aData[1].split('~')[1] + '">'
+                                    ;
+                                }
+                            },
+                            {
+                                "sName": "Name",
+                                "bSearchable": false,
+                                "bSortable": false,
+                                "sWidth": "12%",
+                                "sClass": "center",
+                                "fnRender": function (oObj) {
+
+                                    //return '<a   class="lnkEdit btn btn-primary " href=\"/Common/Section/Edit/' + oObj.aData[3] + '\">Show</a>'
+                                    return '<a  id="lnkEdit1" class="lnkEdit innerListLink"  href=\"/Common/StructureGroup/Edit/' + oObj.aData[1].split('~')[1] + '\">' + oObj.aData[1].split('~')[0] + '</a>'
+                                    ;
+                                }
+                            },
+                            { "sName": "Leave Structure" },
+                            { "sName": "Salary Structure" },
+                            { "sName": "Attendance Structure" }
+
+            ]
+        });
+        SelectAllForDelete();
+    });
+
+    var topMenuActive = "StructureGroup";
+    </script>

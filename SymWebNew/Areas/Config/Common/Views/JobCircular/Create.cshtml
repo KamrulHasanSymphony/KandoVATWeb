@@ -1,0 +1,76 @@
+﻿@model SymViewModel.Common.JobCircularVM
+@using UIHelper.MVC
+@{
+    ViewBag.Title = "Index";
+      Layout = "~/Areas/Common/Views/Shared/_HomeLayout.cshtml";
+}
+@using (Html.BeginForm("Create", "JobCircular", FormMethod.Post, new { @Id = "frmJobCircular" }))
+{
+    @Html.ValidationSummary(true)
+<div class="thinbox">
+    <div class="th_thinbox">
+        <p>Job Circular</p>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="editor-label">
+                @Html.LabelFor(model => model.JobTitle)
+            </div>
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.JobTitle, new { @placeholder = "JobTitle ", @class ="required form-control" })
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="editor-label">
+                   @Html.LabelFor(model => model.DesignationName)
+            </div>
+            <div class="editor-field">
+                @Html.SimpleDropDown("DesignationId", "/Config/DropDown/Designation", new { @class = "Designation  form-control selectDropdown" })
+            </div>
+        </div>
+         <div class="col-md-2">
+            <div class="editor-label">
+                  @Html.LabelFor(model => model.Deadline)
+            </div>
+            <div class="editor-field">
+               @Html.TextBoxFor(model => model.Deadline, new { @placeholder = "Deadline ", @class =" customDatePicker required form-control" })
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="editor-label">
+             @Html.LabelFor(model => model.Expriance)
+            </div>
+            <div class="editor-field">
+                   @Html.TextBoxFor(model => model.Expriance, new { @placeholder = "Expriance ", @class ="required form-control" })
+            </div>
+        </div>
+         <div class="col-sm-9">
+            <div class="editor-label">
+             @Html.LabelFor(model => model.Description)
+            </div>
+            <div class="editor-field">
+              @Html.TextAreaFor(model => model.Description, new { @placeholder = "Description ", @class ="required form-control" })
+            </div>
+        </div>
+    </div>
+</div>
+    
+<div class="headrow">
+              <button type="button" title="Save Data" onclick="pageSubmit('frmJobCircular');" class="Save sym-btn-save">&nbsp;Save</button>
+				 <button type="button" title="Cancel Data" class=" btncancel sym-btn-cancel">&nbsp;Cancel</button>
+</div>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    
+<script>
+    $(function () {
+        valiDation("frmJobCircular");
+    });
+    $(function () {
+            InitDatePickers();
+            InitDropdownsCommon();
+        });
+  
+</script>
+}

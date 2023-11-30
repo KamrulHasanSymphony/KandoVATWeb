@@ -1,0 +1,79 @@
+﻿@model IEnumerable<VATViewModel.DTOs.PurchaseDetailVM>
+<div class="HigherModal-content">
+    <div class="HigherModal-header">
+        <span class="closeHigher">&times;</span>
+        <h2 class="text-center">Product Purchase Search</h2>
+    </div>
+    <div class="HigherModal-body formDesign">
+        <div class="row">
+            <div class="fixedParent">
+                <table class="trkFixTable" id="PopUpTable">
+                    <thead>
+                        <tr>
+                            <th>Product Code</th>
+                            <th>Product Name</th>
+                            <th>BE Number</th>
+                            <th>Purchase No</th>
+                            <th>Receive Date</th>
+                            <th>Invoice Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="popUpTbody">
+                        @foreach (var item in Model)
+                        {
+                            <tr class="trSelectPopUpRow">
+                                <td>@item.ProductCode</td>
+                                <td>@item.ProductName</td>
+                                <td>@item.BENumber</td>
+                                <td class="popUpPurchaseNo">@item.PurchaseInvoiceNo</td>
+                                <td>@item.ReceiveDate</td>
+                                <td>@item.InvoiceDateTime</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function callingFixedPopUpTable() {
+        var args = [100, 250, 100, 200, 200, 250];
+        trkFixedPopUpTable("PopUpTable", 2, args);
+    }
+    $(function () {
+        callingFixedPopUpTable();
+    })
+</script>
+<script>
+    ////closing higher modal
+    function closeHigherModal() {
+        $("#myHigherModal").html("");
+        trkmodal.style.display = "none";
+    }
+    var span = document.getElementsByClassName("closeHigher")[0];
+    var trkmodal = document.getElementById('myHigherModal');
+    //When the user clicks on <span> (x), close the trkmodal
+    span.onclick = function () {
+        closeHigherModal();
+    }
+</script>
+<script>
+    $(function () {
+        $(document).on('click', '.trSelectPopUpRow', function () {
+            var activeEl = $('tr.active');
+            activeEl.removeClass("active");
+            $(this).addClass(" active");
+        });
+
+        $(document).on('dblclick', '.trSelectPopUpRow', function () {
+            var purchaseNo = $(this).children('td.popUpPurchaseNo').text();
+            selectPopUpValue(purchaseNo);
+        });
+        function selectPopUpValue(purchaseNo) {
+            callbackFromProductPurchase(purchaseNo);
+            closeHigherModal();
+        }
+    })
+</script>
+<script src="~/assets/javascripts/custom.js"></script>

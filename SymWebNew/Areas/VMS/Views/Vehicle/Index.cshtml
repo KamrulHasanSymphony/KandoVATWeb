@@ -1,0 +1,232 @@
+﻿@model VATViewModel.DTOs.VehicleVM
+@using VATServer.Ordinary
+@using UIHelper.MVC
+
+<div class="headrow">
+    <button type="button" title="Add New Vehicle" data-url="/VMS/Vehicle/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+    @*<button type="button" title="Delete Vehicle" data-url="/VMS/Vehicle/Delete" onclick="deletedData(this, 'myDataTable');" id="" class="sym-btn-remove">&nbsp;Delete</button>*@
+    <label class="pull-right">Vehicle</label>
+</div>
+
+<div id="GroupIndex" class="tab-pane fade  in active">
+    <div class="thinbox animated slideInDown faster" id="VehicleIndex">
+        <div class="th_thinbox">
+            <p>Vehicle List</p>
+            <div style="display: none" id="formAppend"></div>
+        </div>
+
+        <div class="dtSearch formDesign">
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.Code)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.Code, new { @placeholder = "Vehicle Code", @class = "  form-control" })
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.Label("Vehicle No")
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.VehicleNo, new { @placeholder = "Vehicle No", @class = "  form-control" })
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.Label("Vehicle Type")
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.VehicleType, new { @placeholder = "Vehicle Type", @class = "  form-control" })
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.Label("Active Status")
+                    </div>
+                    <div class="editor-field">
+                        <select id="IsActive" class="form-control">
+                            <option value=""></option>
+                            <option value="Y">Y</option>
+                            <option value="N">N</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-1">
+                    <div class="editor-label">
+                        <label>Select Top</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.SimpleDropDownFor(model => model.SelectTop, "/Config/DropDown/RecordSelectList", new { @class = " cSelectTop form-control" })
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        <label>&nbsp;</label>
+                    </div>
+                    <div class="editor-field">
+                        <button type="button" title="Click to Search" id="btnDialog" class="sym-btn-search">&nbsp;Search</button>
+                        <button type="button" title="Clear Data" id="Clear" class=" sym-btn-clear">&nbsp;Clear</button>
+                    </div>
+                </div>
+                <br />
+                <br />
+                <br />
+
+                <div class="col-md-1">
+                    <div class="editor-label">
+                        &nbsp;
+                    </div>
+                    <div class="editor-field">
+                        <button type="button" title="Export Data" onclick="ExportExcel()" class="sym-btn-Excel-Export">&nbsp;Export</button>
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="editor-label">
+                        <label>Export All</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.CheckBox("ExportAll", new { id = "idExportAll", @class = "cExportAll form-control", @name = "att[]" })
+                    </div>
+                </div>
+            </div>
+            <p>&nbsp;</p>
+        </div>
+        <table id="myDataTable" class="display">
+            <thead>
+                <tr>
+                    <th class="center">
+                        <input type="checkbox" class="chkAll" />Select All
+                    </th>
+                    <th>Vehicle Code</th>
+                    <th>Vehicle Type</th>
+                    <th>Vehicle No</th>
+                    <th>Driver Name</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <br />
+    </div>
+</div>
+    <div class="headrow">
+        <button type="button" title="Add New Vehicle" data-url="/VMS/Vehicle/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+        @*<button type="button" title="Delete Vehicle" data-url="/VMS/Vehicle/Delete" onclick="deletedData(this, 'myDataTable');" id="" class="sym-btn-remove">&nbsp;Delete</button>*@
+    </div>
+    <script language="javascript" type="text/javascript">
+        $(document).ready(function () {
+            SelectAllForDelete();
+            $.datepicker.regional[""].dateFormat = 'dd/M/y';
+            $.datepicker.setDefaults($.datepicker.regional['']);
+
+            var oTable = $('#myDataTable').dataTable({
+                "bServerSide": true,
+                "sAjaxSource": "/VMS/Vehicle/_index",
+                "bProcessing": true,
+                "aLengthMenu": tablelength(),
+                "bJqueryUI": true,
+                "bAutoWidth": false,
+
+                "fnServerData": function (sSource, aoData, fnCallback) {
+                    $('.dtSearch :input').each(function () {
+                        var Name = $(this).attr("Id")
+                        var Value = $(this).val()
+                        aoData.push({ "name": Name, "value": Value });
+                    });
+                    $.getJSON(sSource, aoData, function (json) {
+                        fnCallback(json);
+                    });
+                },
+
+                "aoColumns": [
+                                {
+                                    "sName": "Id",
+                                    "bSearchable": false,
+                                    "bSortable": false,
+                                    "sWidth": "10%",
+                                    "sClass": "center",
+                                    "fnRender": function (oObj) {
+                                        return ' <input onclick="CheckAll(this)" type="checkbox" data-Id="' + oObj.aData[0] + '" class="dSelected">'
+                                            + '&nbsp; <a id=""  title="Click on for Edit"  style="text-decoration:none;"   href=\"/VMS/Vehicle/Edit/' + oObj.aData[0] + '\" class=" innerListLink sym-btn-edit-row"></a>'
+                                        ////+ '&nbsp; <a title="Click on for Delete"  data-url="/VMS/Vehicle/Delete" onclick="deletedData(this, myDataTable,\'' + oObj.aData[0] + '\');"  class="sym-btn-remove-row"></a>'
+                                        ;
+                                    }
+                                    //"sName": "Id", "sWidth": "12%"
+                                }
+                                , { "sName": "VehicleCode", "sWidth": "10%" }
+                                , { "sName": "VehicleType", "sWidth": "10%" }
+                                , { "sName": "VehicleNo", "sWidth": "10%" }
+                                , { "sName": "DriverName", "sWidth": "10%" }
+
+
+                ]
+            });
+            $('#btnDialog').click(function () {
+                var model = $('.dtSearch :input').serialize();
+                $.ajax({
+                    url: "/VMS/Vehicle/Index",
+                    cache: false,
+                    data: model,
+                    success: function (html) {
+                        oTable.fnDraw();
+                    }
+                });
+            });
+            ////clearing fields
+            $("#Clear").on('click', function () {
+                $(".Dropdown").select2("val", "");
+                $(".form-control").val("");
+            });
+        });
+
+        function ExportExcel() {
+            var questionMSG = "Are you sure to Export Excel!";
+            Ask(questionMSG, function () {
+                var ExportAll = $('#idExportAll').is(":checked");
+                console.log("TEST EXPORT");
+                var IDs = [];
+                var $Items = $("#VehicleIndex  .dSelected:input:checkbox:checked");
+
+                if (!ExportAll) {
+                    if ($Items == null || $Items.length == 0) {
+                        ShowResult("Fail", "You are requested to Select before Export!");
+                        return;
+                    }
+                }
+
+                $Items.each(function () {
+
+                    var ID = $(this).attr("data-Id");
+                    IDs.push(ID);
+                });
+
+                var model = {
+                    IDs: IDs,
+
+                }
+
+                var url = '/VMS/Vehicle/ExportExcell';
+                var form = $('<form action="' + url + '"></form>');
+
+                IDs.forEach(function (item) {
+                    form.append($('<input  value="' + item + '" name="VehicleIDs" />'))
+                })
+                form.append($('<input  value="' + ExportAll + '" name="ExportAll" />'))
+
+                console.log(form);
+
+                form.appendTo('#formAppend').submit()
+            });
+
+        }
+    </script>
+
+<script>
+    $("#VehicleIndex .chkAll").click(function () {
+        $('#VehicleIndex  .dSelected:input:checkbox').not(this).prop('checked', this.checked);
+    });
+
+</script>

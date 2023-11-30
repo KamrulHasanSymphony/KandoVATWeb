@@ -1,0 +1,1468 @@
+﻿@model VATViewModel.DTOs.ProductVM
+@using UIHelper.MVC
+@if (Model.Operation == "detail")
+{
+    Layout = null;
+}
+@using (Html.BeginForm("CreateEdit", "Product", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmProductMy" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.Operation)
+    @Html.HiddenFor(model => model.ItemNo)
+    @Html.HiddenFor(model => model.TransactionType)
+    @Html.HiddenFor(model => model.IsExpireDate)
+    if (Model.Operation != "detail")
+    {
+        <div class="headrow">
+            @if (Model.Operation == "add")
+            {
+                <button type="button" name="btnName" value="Save" title="Save Data" onclick="pageSubmit('frmProductMy')" class="sym-btn-save">&nbsp;Save</button>
+                <label class="pull-right">Product > Create(@Model.TransactionType)</label>
+            }
+            else
+            {
+                <button type="button" name="btnName" value="Update" title="Update Data" onclick="pageSubmit('frmProductMy')" class="sym-btn-update">&nbsp;Update</button>
+                <label class="pull-right">Product > Edit(@Model.TransactionType)</label>
+            }
+            <button type="button" title="Go To Index" data-url="/VMS/Product?TransactionType=@Model.TransactionType" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+            <button type="button" title="Add New Product" data-url="/VMS/Product/Create?TransactionType=@Model.TransactionType" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+
+        </div>
+        @*if (Model.Operation == "update") {
+            <div class="col-sm-12 col-md-12">
+                <div class="input-group   col-lg-8  col-md-8  col-sm-8 col-xs-12 text-color col-md-offset-2" style="">
+                    <a class="input-group-addon btn btn-primary hidden-xs changePage" data-pager-action='first' id="first"><i class="fa fa-angle-double-left"></i>First</a>
+                    <a class="input-group-addon btn btn-primary hidden-xs changePage" data-pager-action='previous' id="precode"><i class="fa fa-angle-left"></i>Previous</a>
+                    @Html.SimpleDropDown("", "/Config/DropDown/IdNameDropdown?tableName=Products&Id=ItemNo&Name=ProductName&AllData=no&code=ProductCode", new { @class = " trNavigateMenu form-control selectDropdown " })
+                    <a class="input-group-addon btn btn-primary changePage" data-pager-action='current' id="current"><i class="fa fa-search"></i></a>
+                    <a class="input-group-addon btn btn-primary hidden-xs changePage" data-pager-action='next' id="nextcode">Next <i class="fa  fa-angle-right"></i></a>
+                    <a class="input-group-addon btn btn-primary hidden-xs changePage" data-pager-action='last' id="last">Last <i class="fa  fa-angle-double-right"></i></a>
+                </div>
+            </div>
+            }*@
+    }
+    else
+    {
+        <div class="trkmodal-header">
+            <span class="close">&times;</span>
+            <h2 class="text-center">Product Details</h2>
+        </div>
+    }
+    <div class="mainDiv">
+
+        <div class="col-md-6 trkPX-0 trkPR-2">
+            <div class="thinbox animated zoomIn faster trkMY-0">
+                <div class="th_thinbox">
+                    <p>Basic</p>
+                </div>
+                <div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="ProductCode" class="col-md-4 control-label text-right trkLabelMargin">Product Code</label>
+                            <div class="col-md-8 trkPX-0">
+                                <div class="col-md-6 trkPX-0">
+                                    @if (Model.Operation == "update")
+                                    {
+                                        @Html.TextBoxFor(model => model.ProductCode, new { @placeholder = "Code", @class = " form-control", @readonly = "readonly" })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(model => model.ProductCode, new { @placeholder = "Code", @class = " form-control" })
+                                    }
+
+
+
+                                </div>
+                                @Html.ValidationMessageFor(model => model.ProductCode)
+                            </div>
+                            <label for="ProductName" class="col-md-4 control-label text-right trkLabelMargin">Product Name</label>
+                            <div class="col-md-8 trkPX-0">
+                                @Html.TextBoxFor(model => model.ProductName, new { @placeholder = "Name", @class = " required form-control" })
+                                @Html.ValidationMessageFor(model => model.ProductName)
+                            </div>
+                            <label for="CategoryID" class="col-md-4 control-label text-right trkLabelMargin">Product Group</label>
+                            <div class="col-md-6  trkPX-0">
+                                @Html.SimpleDropDownFor(model => model.CategoryID, "/Config/DropDown/ProductCategory", new { @class = "required form-control trkMT-0" })
+                                @Html.ValidationMessageFor(model => model.CategoryID)
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" onclick="refreshCategory()" class="sym-btn-refresh" style="margin-bottom: 6px;" title="Load category" name=""></button>
+                            </div>
+                            <label for="Type" class="col-md-2 control-label text-right trkLabelMargin">Type</label>
+                            <div class="col-md-4 trkPX-0">
+                                <div>
+                                    @Html.TextBoxFor(model => model.Type, new { @class = "cProductType form-control", @readonly = "readonly" })
+                                </div>
+                            </div>
+
+                            <label for="HSCodeNo" class="col-md-2 control-label text-right trkLabelMargin">HS Code</label>
+                            <div class="col-md-2 trkPX-0" style="margin-bottom: 6px;">
+                                <div>
+                                    @Html.TextBoxFor(model => model.HSCodeNo, new { @placeholder = "HS Code No", @class = "cHSCodeNo form-control trkMT-0 " })
+
+                                    @*@Html.SimpleDropDownFor(model => model.HSCodeNo, "/Config/DropDown/GetAllHSCode", new { @class = "form-control trkMT-0" })*@
+
+                                </div>
+
+                            </div>
+                            <div class="trk_5">
+                                <div class="editor-field">
+                                    <button type="button" title="Click to Search HSCodeNo " id="HSCodeNoBtn" class="sym-btn-search"></button>
+                                </div>
+                                <div class="editor-label">
+                                    <label>&nbsp;</label>
+                                </div>
+                            </div>
+
+
+                            <label for="TDSCode" class="col-md-2 control-label text-right trkLabelMargin">TDS Code</label>
+                            <div class="col-md-4 trkPX-0" style="margin-bottom: 6px;">
+                                <div>
+                                    @Html.SimpleDropDownFor(model => model.TDSCode, "/Config/DropDown/GetTDSCode", new { @class = "form-control trkMT-0" })
+                                </div>
+                            </div>
+
+                            <label class="col-md-2 control-label text-right trkLabelMargin">Banderol</label>
+                            <div class="col-md-4 trkPX-0" style="margin-bottom: 6px;">
+                                @Html.SimpleDropDownFor(m => m.Banderol, "/Config/DropDown/DecisionList", new { @class = " trNavigateMenu form-control required" })
+                            </div>
+
+                            <label class="col-md-2 control-label text-right trkLabelMargin">Toll</label>
+                            <div class="col-md-4 trkPX-0" style="margin-bottom: 6px;">
+                                @Html.SimpleDropDownFor(m => m.TollProduct, "/Config/DropDown/DecisionList", new { @class = "cTollProduct trNavigateMenu form-control required" })
+
+                            </div>
+
+                            <label class="col-md-2 control-label text-right trkLabelMargin">Transport</label>
+                            <div class="col-md-4 trkPX-0" style="margin-bottom: 6px;">
+                                @Html.SimpleDropDownFor(m => m.IsTransport, "/Config/DropDown/DecisionList", new { @class = "cIsTransport form-control required" })
+
+                            </div>
+
+                            <label class="col-md-2 control-label text-right trkLabelMargin">VDS</label>
+                            <div class="col-md-4 trkPX-0" style="margin-bottom: 6px;">
+                                @Html.SimpleDropDownFor(m => m.IsVDS, "/Config/DropDown/DecisionList", new { @class = "cIsTransport form-control required" })
+
+                            </div>
+
+                            <label class="col-md-2 control-label text-right trkLabelMargin">Is Confirmed</label>
+                            <div class="col-md-4 trkPX-0" style="margin-bottom: 6px;">
+                                @Html.SimpleDropDownFor(m => m.IsConfirmed, "/Config/DropDown/DecisionList", new { @class = "cIsConfirmed form-control required" })
+
+                            </div>
+
+
+                            @*<label for="VATRate" class="col-md-2 control-label text-right trkLabelMargin">VDS(%)</label>
+                                <div class="col-md-4 trkPX-0">
+                                    <div>
+                                        @Html.TextBoxFor(model => model.VDSRate, new { @class = "priceLen right form-control" })
+                                    </div>
+                                </div>*@
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="thinbox animated zoomIn faster trkMY-0">
+                <div class="th_thinbox">
+                    <p>Local Rates</p>
+                </div>
+                <div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="VATRate" class="col-md-2 control-label text-right trkLabelMargin">VAT(%) 1</label>
+                            <div class="col-md-4 trkPX-0">
+                                <div>
+                                    @Html.TextBoxFor(model => model.VATRate, new { @class = "priceLen right form-control" })
+                                </div>
+                            </div>
+
+                            <label for="VATRate" class="col-md-2 control-label text-right trkLabelMargin">VAT(%) 2</label>
+                            <div class="col-md-4 trkPX-0">
+
+                                @Html.TextBoxFor(model => model.VATRate2, new { @class = "priceLen right form-control" })
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label for="HPSRate" class="col-md-2 control-label text-right trkLabelMargin">HPS Rate(%)</label>
+                            <div class="col-md-4 trkPX-0">
+                                @Html.TextBoxFor(model => model.HPSRate, new { @class = "cHPSRate right form-control" })
+                            </div>
+                            <label for="FixedVat" class="col-md-2 control-label text-right trkLabelMargin">Fixed Vat</label>
+                            <div class="col-md-1">
+                                @Html.CheckBoxFor(model => model.IsFixedVatM, new { @class = " trNavigateMenu form-control required" })
+                            </div>
+                            <div class="col-md-3 trkPX-0">
+                                @Html.TextBoxFor(model => model.FixedVATAmount, new { @class = "priceLen right form-control" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="SDRat" class="col-md-2 control-label text-right trkLabelMargin">SD(%)</label>
+                            <div class="col-md-1">
+                                @*@Html.SimpleDropDownFor(m => m.IsFixedOtherSD, "/Config/DropDown/DecisionList", new { @class = "cIsFixedOtherSD trNavigateMenu form-control" })*@
+                                @*@Html.CheckBox("IsFixedOtherSD", new { @class = " cIsFixedOtherSD form-control required" })*@
+                            </div>
+                            <div class="col-md-3 trkPX-0">
+                                @Html.TextBoxFor(model => model.SD, new { id = "newSD", @class = "cnewSD priceLen right form-control" })
+
+                            </div>
+
+                            <label for="SDRat" class="col-md-2 control-label text-right trkLabelMargin">IsFixed SD</label>
+                            <div class="col-md-1">
+                                @*@Html.CheckBox("IsFixedOtherSD", new { @class = " cIsFixedOtherSD form-control required" })*@
+                            </div>
+                            <div class="col-md-3 trkPX-0">
+                                @Html.SimpleDropDownFor(m => m.IsFixedOtherSD, "/Config/DropDown/DecisionList", new { @class = "cIsFixedOtherSD trNavigateMenu form-control" })
+                            </div>
+
+                        </div>
+
+
+
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="IsFixedVATRebate" class="col-md-3 control-label trkLabelMargin">Fixed VAT Rebate</label>
+                            <div class="col-md-1">
+                            </div>
+                            <div class="col-md-2 trkPX-0">
+                                @Html.SimpleDropDownFor(m => m.IsFixedVATRebate, "/Config/DropDown/DecisionList", new { @class = "cIsFixedOtherSD form-control" })
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <!-- JUB AYER -->
+                    <!-- T.S.VAT/T.S.SD isFixedSD JUBAYER -->
+                    <div class="row" id="showSD">
+                        <div class="form-group">
+                            <label for="TSVAT" class="col-md-2 control-label text-right trkLabelMargin">T.S.VAT(%)</label>
+                            <div class="col-md-1">
+                            </div>
+                            <div class="col-md-3 trkPX-0">
+                                @Html.TextBoxFor(model => model.TradingSaleVATRate, new { @class = "cTradingSaleVATRate right form-control" })
+                            </div>
+                            <label for="TSSD" class="col-md-2 control-label text-right trkLabelMargin">T.S.SD(%)</label>
+                            <div class="col-md-1">
+                            </div>
+                            <div class="col-md-3 trkPX-0">
+                                @Html.TextBoxFor(model => model.TradingSaleSD, new { @class = "cTradingSaleSD right form-control" })
+                            </div>
+                        </div>
+                        <!-- T.S.VAT/T.S.SD  isFixedSD -->
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="thinbox animated zoomIn faster trkMY-0">
+                <div class="th_thinbox">
+                    <p>Import Rates</p>
+                </div>
+                <div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="CDRa" class="col-md-2 control-label text-right trkLabelMargin">CD(%)</label>
+                            <div class="col-md-1">
+                                @Html.CheckBoxFor(m => m.IsFixedCDChecked, new { id = "CDRat", @class = "trCDRate form-control" })
+                            </div>
+                            <div class="col-md-3 trkPX-0">
+                                @{
+                                    if (Model.TransactionType != null && Model.TransactionType != "")
+                                    {
+                                        if (Model.TransactionType.ToLower() == "other")
+                                        {
+                                            @Html.TextBoxFor(m => m.CDRate, new { @class = "form-control priceLen right" })
+                                        }
+                                    }
+                                }
+
+                            </div>
+
+                            <label for="SDRAT" class="col-md-2 control-label text-right trkLabelMargin">SD(%)</label>
+                            <div class="col-md-1">
+                                @Html.CheckBoxFor(m => m.IsFixedSDChecked, new { id = "SDRAT", @class = "trSD form-control" })
+                            </div>
+                            <div class="col-md-3 trkPX-0">
+                                @Html.TextBoxFor(m => m.SDRate, new { @class = "form-control priceLen right" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="RDRat" class="col-md-2 control-label text-right trkLabelMargin">RD(%)</label>
+                            <div class="col-md-1">
+                                @Html.CheckBoxFor(m => m.IsFixedRDChecked, new { id = "RDRat", @class = "trRDRate form-control" })
+                            </div>
+                            <div class="col-md-3 trkPX-0">
+                                @{
+                                    if (Model.TransactionType != null && Model.TransactionType != "")
+                                    {
+                                        if (Model.TransactionType.ToLower() == "other")
+                                        {
+                                            @Html.TextBoxFor(m => m.RDRate, new { @class = "form-control priceLen right" })
+                                        }
+                                    }
+                                }
+                            </div>
+                            @*<label for="TradingMarkUp" class="col-md-3 control-label text-right trkLabelMargin">Trading MarkUp(%)</label>
+                                <div class="col-md-3 trkPX-0">
+                                    @Html.TextBoxFor(m => m.TradingMarkUp, new { @class = "form-control priceLen right" })
+                                </div>*@
+                        </div>
+                        <div class="form-group">
+
+
+                            <label for="AIT" class="col-md-2 control-label text-right trkLabelMargin">AIT(%)</label>
+                            <div class="col-md-1">
+                                @Html.CheckBoxFor(m => m.IsFixedAITChecked, new { id = "AIT", @class = "trAIT form-control" })
+                            </div>
+                            <div class="col-md-3 trkPX-0">
+                                @Html.TextBoxFor(m => m.AITRate, new { @class = "form-control  priceLen right" })
+                            </div>
+
+                            <label for="newVat" class="col-md-2 control-label text-right trkLabelMargin">VAT (%)</label>
+                            <div class="col-md-1">
+                                @Html.CheckBoxFor(m => m.IsFixedVAT1Checked, new { id = "IsFixedVat1", @class = "trVATRate3 form-control" })
+                            </div>
+
+                            <div class="col-md-3 trkPX-0">
+                                @*<input type="text" id="newVat" class="form-control priceLen right" />*@
+                                @Html.TextBoxFor(m => m.VATRate3, new { id = "newVat", @class = "form-control  priceLen right" })
+                            </div>
+
+
+                            <label for="AT" class="col-md-2 control-label text-right trkLabelMargin">AT(%)</label>
+                            <div class="col-md-1">
+                                @Html.CheckBoxFor(m => m.IsFixedATChecked, new { id = "AT", @class = "trAT form-control" })
+                            </div>
+                            <div class="col-md-3 trkPX-0">
+                                @{
+                                    if (Model.TransactionType != null && Model.TransactionType != "")
+                                    {
+                                        if (Model.TransactionType.ToLower() == "other")
+                                        {
+                                            @Html.TextBoxFor(m => m.ATVRate, new { @class = "form-control priceLen right" })
+                                        }
+                                    }
+                                }
+                            </div>
+
+                            @*<label for="TVARate" class="col-md-2 control-label text-right trkLabelMargin">TVA(%)</label>
+                                <div class="col-md-1">*@
+                            @*@Html.CheckBox("TVARate", new { id = "TVARate", @class = "trTVARate form-control" })*@
+                            @*</div>*@
+                            @*<div class="col-md-3 trkPX-0">
+                                    @Html.TextBoxFor(m => m.TVARate, new { @class = "form-control priceLen right" })
+                                </div>*@
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-md-6 trkPX-0 trkMY-0">
+            @if (Model.TransactionType.ToLower() == "other")
+            {
+                <div class="thinbox animated zoomIn faster trkMY-0">
+                    <div class="th_thinbox">
+                        <p>Price</p>
+                    </div>
+                    <div>
+                        <div class="row">
+                            <div class="form-group">
+                                <label for="NBRPrice" class="col-md-4 control-label text-right trkLabelMargin">Vatable Price</label>
+                                <div class="col-md-8 trkPX-0">
+                                    <div class="col-md-6 trkPX-0">
+                                        @Html.TextBoxFor(model => model.NBRPrice, new { @placeholder = "NBR Price", @class = "priceLen form-control" })
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.NBRPrice)
+                                </div>
+
+                                <label for="UOM" class="col-md-4 control-label text-right trkLabelMargin">UOM</label>
+                                <div class="col-md-8 trkPX-0">
+                                    <div class=" trkPX-0 col-md-6" style="margin-bottom: 6px;">
+                                        @Html.SimpleDropDownFor(model => model.UOM, "/Config/DropDown/UOM", new { @class = "required form-control trkMT-0" })
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.UOM)
+                                </div>
+
+                                <label for="SerialNo" class="col-md-4 control-label text-right trkLabelMargin">Ref No</label>
+                                <div class="col-md-8 trkPX-0">
+                                    <div class=" trkPX-0 col-md-6">
+                                        @Html.TextBoxFor(model => model.SerialNo, new { @placeholder = "Serial No", @class = "   form-control" })
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.SerialNo)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="thinbox animated zoomIn faster trkMY-0">
+                    <div class="th_thinbox">
+                        <p>Opening Information</p>
+                    </div>
+                    <div>
+                        <div class="row">
+                            <div class="form-group">
+                                <label for="OpeningQuantity" class="col-md-4 control-label text-right trkLabelMargin">Total Cost</label>
+                                <div class="col-md-8 trkPX-0">
+                                    <div class=" col-md-6 trkPX-0">
+                                        @Html.TextBoxFor(m => m.OpeningTotalCost, new { @class = "form-control priceLen right " })
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.OpeningBalance)
+                                </div>
+                                <label for="OpeningBalance" class="col-md-4 control-label text-right trkLabelMargin">Opening Quantity</label>
+                                <div class="col-md-8 trkPX-0">
+                                    <div class="col-md-6  trkPX-0">
+                                        @Html.TextBoxFor(model => model.OpeningBalance, new { @placeholder = "Opening Balance", @class = "priceLen right  form-control" })
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.OpeningBalance)
+                                </div>
+
+                                <label for="OpeningDate" class="col-md-4 control-label text-right trkLabelMargin">Opening Date</label>
+                                <div class="col-md-8 trkPX-0">
+                                    <div class=" col-md-6 trkPX-0">
+                                        @Html.TextBoxFor(model => model.OpeningDate, new { @class = "dtFrom customDatePicker form-control" })
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.OpeningDate)
+                                </div>
+                                <label for="TollCharge" class="col-md-4 control-label text-right trkLabelMargin">TollCharge</label>
+                                <div class="col-md-8 trkPX-0">
+                                    <div class=" col-md-6 trkPX-0">
+                                        @Html.TextBoxFor(m => m.TollCharge, new { @class = "form-control priceLen right " })
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.TollCharge)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            }
+
+            <div class="thinbox animated zoomIn faster trkMY-0">
+                <div class="th_thinbox">
+                    <p>Other</p>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="ProductDescription" class="col-md-2 control-label text-right trkLabelMargin">Description</label>
+                        <div class="col-md-10" style="margin-bottom: 6px;">
+                            @Html.TextAreaFor(model => model.ProductDescription, new { @placeholder = "Description", @class = "  form-control" })
+                            @Html.ValidationMessageFor(model => model.ProductDescription)
+                        </div>
+                        <label for="Comments" class="col-md-2 control-label text-right trkLabelMargin">Comments</label>
+                        <div class="col-md-10" style="margin-bottom: 6px;">
+                            @Html.TextAreaFor(model => model.Comments, new { @placeholder = "Comments", @class = " form-control" })
+                            @Html.ValidationMessageFor(model => model.Comments)
+                        </div>
+
+                        <label for="Comments" class="col-md-2 control-label text-right trkLabelMargin">Short Name</label>
+                        <div class="col-md-10" style="margin-bottom: 6px;">
+                            @Html.TextAreaFor(model => model.ShortName, new { @placeholder = "Short Name", @class = " form-control" })
+                            @Html.ValidationMessageFor(model => model.ShortName)
+                        </div>
+
+                        <label class="col-md-2 control-label text-right trkLabelMargin">Is Active</label>
+                        <div class="col-md-4 trkPX-0" style="margin-bottom: 6px;">
+                            @Html.SimpleDropDownFor(m => m.ActiveStatus, "/Config/DropDown/DecisionList", new { @class = " trNavigateMenu form-control required" })
+                        </div>
+
+                        <label class="col-md-2 control-label text-right trkLabelMargin">Is Sample</label>
+                        <div class="col-md-4 trkPX-0" style="margin-bottom: 6px;">
+                            @Html.SimpleDropDownFor(m => m.IsSample, "/Config/DropDown/DecisionList", new { @class = " trNavigateMenu form-control required" })
+                        </div>
+
+                        <label class="col-md-2 control-label text-right trkLabelMargin">Trading MarkUp</label>
+                        <div class="col-md-4 trkPX-0" style="margin-bottom: 6px;">
+                            @Html.TextBoxFor(m => m.TradingMarkUp, new { @class = "form-control priceLen right " })
+                        </div>
+                        <label class="col-md-2 control-label text-right trkLabelMargin">Packet price</label>
+                        <div class="col-md-4 trkPX-0" style="margin-bottom: 6px;">
+                            @Html.TextBoxFor(m => m.Packetprice, new { @class = "form-control priceLen right " })
+                        </div>
+                       
+                        <label class="col-md-2 control-label text-right trkLabelMargin">Cost Price</label>
+                        <div class="col-md-4 trkPX-0" style="margin-bottom: 6px;">
+                            @Html.TextBoxFor(m => m.CostPrice, new { @class = "form-control priceLen right " })
+                        </div>
+                        <label class="col-md-2 control-label text-right trkLabelMargin">Volume</label>
+                        <div class="col-md-4 trkPX-0" style="margin-bottom: 6px;">
+                            @Html.TextBoxFor(m => m.Volume, new { @class = "form-control priceLen right " })
+                        </div>
+                        <label class="col-md-2 control-label text-right trkLabelMargin">Volume(Unit)</label>
+                        <div class="col-md-4 trkPX-0" style="margin-bottom: 6px;">
+                            @Html.TextBoxFor(model => model.VolumeUnit, new { @class = " form-control" })
+
+
+                        </div>
+
+
+                        @if (Convert.ToString(Session["CompanyCode"]).ToLower() == "smc" || Convert.ToString(Session["CompanyCode"]).ToLower() == "smcholding")
+                        {
+                            <label class="col-md-2 control-label text-right trkLabelMargin">Type</label>
+                            <div class="col-md-4 trkPX-0" style="margin-bottom: 6px;">
+                                @Html.SimpleDropDownFor(m => m.Option1, "/Config/DropDown/PurchaseVATType", new { @class = " notClearing form-control trType" })
+                            </div>
+
+                        }
+
+
+                        <label for="Comments" class="col-md-2 control-label text-right trkLabelMargin">&nbsp;</label>
+                        <div class="col-md-10" style="margin-bottom: 6px;">
+
+                        </div>
+
+                        @if (Model.IsExpireDate.ToLower() == "y")
+                        {
+                            <label for="Comments" class="col-md-3 control-label text-right trkLabelMargin">Transaction Hold Date</label>
+                            <div class="col-md-4" style="margin-bottom: 6px;">
+                                @Html.TextBoxFor(model => model.TransactionHoldDate, new { @placeholder = "Transaction Hold Date", @class = "cTransactionHoldDate form-control" })
+                                @Html.ValidationMessageFor(model => model.TransactionHoldDate)
+                            </div>
+                        }
+
+
+                    </div>
+                </div>
+                <div style="padding-bottom:45px;">
+                </div>
+            </div>
+
+        </div>
+        @if (Model.Operation.ToLower() == "update")
+        {
+            <div class="col-md-12 trkPX-0 trkPR-2">
+
+                <div class="thinbox animated zoomIn faster trkMY-0">
+                    <div class="th_thinbox">
+                        <p>Product Details</p>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="ProductName" class="col-md-2 control-label text-right trkLabelMargin">Product Name</label>
+                            <div class="col-md-6" style="margin-bottom: 6px;">
+                                @Html.TextBoxFor(model => model.ProductName, new { @placeholder = "ProductName", @class = "trProductName  form-control" })
+                                @Html.ValidationMessageFor(model => model.ProductName)
+                            </div>
+                            <label class="col-md-1"></label>
+                            <button type="button" id="ItemExist" data-url="/VMS/Product/BlankItem" title="Add Detail" name="btnName" value="Save" class="sym-btn-add-row AddRow" data-container="editorItemRows4">&nbsp;Add</button>
+
+
+                        </div>
+
+
+                        <div>
+                            <style>
+                                table {
+                                    font-family: arial, sans-serif;
+                                    border-collapse: collapse;
+                                    width: 100%;
+                                }
+
+                                td, th {
+                                    border: 1px solid #dddddd;
+                                    text-align: left;
+                                    padding: 8px;
+                                    background-color: #B4E391;
+                                }
+
+                                tr:nth-child(even) {
+                                    background-color: #dddddd;
+                                }
+                            </style>
+                            <table>
+                                <tr>
+                                    <th style="width:08%"> Action</th>
+                                    <th>ProductName</th>
+
+                                </tr>
+                                <tbody id="editorItemRows4">
+                                    @if (Model.Details != null)
+                                    {
+                                        foreach (var item in Model.Details)
+                                        {
+                                            Html.RenderPartial("_detail", item);
+                                        }
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                    <div style="padding-bottom:15px;">
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-md-12 trkPX-0 trkPR-2">
+
+                <div class="thinbox animated zoomIn faster trkMY-0">
+                    <div class="th_thinbox">
+                        <p>Product Stocks</p>
+                    </div>
+                    <div class="row">
+                        @Html.Hidden("StockId", "", new { @class = " cStockId" })
+
+
+                        <div class="form-group">
+
+                            <label for="Branch" class="col-md-2 control-label text-right trkLabelMargin">Branch</label>
+                            <div class="col-md-2" style="margin-bottom: 6px;">
+                                @Html.SimpleDropDownFor(m => m.BranchId, "/Config/DropDown/BranchProfile", new { @class = "cBranchId form-control selectDropdown" })
+                                @Html.ValidationMessageFor(model => model.BranchId)
+                            </div>
+
+
+
+                            <label for="StockQuantity" class="col-md-2 control-label text-right trkLabelMargin">Stock Quantity</label>
+                            <div class="col-md-2" style="margin-bottom: 6px;">
+                                @Html.TextBox("StockQuantity", "", new { @placeholder = "Stock Quantity", @class = "cStockQuantity  form-control" })
+                                @Html.ValidationMessageFor(model => model.ProductName)
+                            </div>
+
+                            <label for="StockValue" class="col-md-2 control-label text-right trkLabelMargin">Stock Value</label>
+                            <div class="col-md-2" style="margin-bottom: 6px;">
+                                @Html.TextBox("StockValue", "", new { @placeholder = "Stock Value", @class = "cStockValue  form-control" })
+                                @Html.ValidationMessageFor(model => model.ProductName)
+                            </div>
+                            <label for="Comments" class="col-md-2 control-label text-right trkLabelMargin">Comments</label>
+                            <div class="col-md-2" style="margin-bottom: 6px;">
+                                @Html.TextBox("Comments", "", new { @placeholder = "Comments", @class = "cComments  form-control" })
+                                @Html.ValidationMessageFor(model => model.ProductName)
+                            </div>
+
+                            <label class="col-md-1"></label>
+                            <button type="button" id="StockItemExist" data-url="/VMS/Product/BlankItems" title="Add Stock" name="btnName" value="Save" class="sym-btn-add-row AddRowStock" data-container="editorItemRows5">&nbsp;Add</button>
+
+
+                        </div>
+
+
+                        <div>
+                            <style>
+                                table {
+                                    font-family: arial, sans-serif;
+                                    border-collapse: collapse;
+                                    width: 100%;
+                                }
+
+                                td, th {
+                                    border: 1px solid #dddddd;
+                                    text-align: left;
+                                    padding: 8px;
+                                    background-color: #B4E391;
+                                }
+
+                                tr:nth-child(even) {
+                                    background-color: #dddddd;
+                                }
+                            </style>
+                            <table>
+                                <tr>
+                                    <th style="width:08%"> Action</th>
+                                    @*<th>Branch</th>*@
+                                    <th>Branch Name</th>
+                                    <th>Stock Quantity</th>
+                                    <th>Stock Value</th>
+                                    <th>Comments</th>
+
+                                </tr>
+                                <tbody id="editorItemRows5">
+
+
+                                    @if (Model.ProductStocks != null)
+                                    {
+                                        foreach (var item in Model.ProductStocks)
+                                        {
+                                            Html.RenderPartial("_detailStock", item);
+                                        }
+                                    }
+
+
+
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                    @*@Html.HiddenFor(model => model, new { @class = "cCustomCode" })*@
+
+                    <div style="padding-bottom:15px;">
+                    </div>
+                </div>
+
+            </div>
+        }
+    </div>
+
+    <div class="clearfix"></div>
+
+    if (Model.Operation != "detail")
+    {
+        <div class="headrow">
+            @if (Model.Operation == "add")
+            {
+                <button type="button" name="btnName" value="Save" title="Save Data" onclick="pageSubmit('frmProductMy')" class="sym-btn-save">&nbsp;Save</button>
+            }
+            else
+            {
+                <button type="button" name="btnName" value="Update" title="Update Data" onclick="pageSubmit('frmProductMy')" class="sym-btn-update">&nbsp;Update</button>
+            }
+            <button type="button" title="Go To Index" data-url="/VMS/Product" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+            <button type="button" title="Add New Product" data-url="/VMS/Product/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+
+        </div>
+    }
+
+}
+<div id="myModal" class="trkmodal"></div>
+<div id="productDetails" class="trkmodal">
+    <div class="trkmodal-content">
+    </div>
+</div>
+<div id="myHigherModal" class="HigherModal"></div>
+
+@section Scripts {
+
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+
+        $(function () {
+
+            if ('@Model.Type'.toLowerCase() === "trading") {
+
+                $('#showSD').show();
+
+            }
+            else {
+
+                $('#showSD').hide();
+
+            }
+
+        });
+
+        $('.AddRowStock').on("click", function () {
+            let StockQuantity = $('.cStockQuantity').val();
+            let StockValue = $('.cStockValue').val();
+            let Operation = '@Model.Operation';
+
+
+            if (Operation === "add") {
+                ShowResult("Fail", "Please Add/ Search Product first !");
+                return;
+            }
+
+            if (StockQuantity == "0" || StockQuantity == "") {
+                ShowResult("Fail", "Enter a Stock Quantity first!");
+                return;
+            }
+            if (StockValue == "0" || StockValue == "") {
+                ShowResult("Fail", "Enter a Stock Value first!");
+                return;
+            }
+
+            var container = $(this).attr('data-container');
+            var url = $(this).attr('data-url');
+            AddRowStock(container, url)
+            return false;
+        });
+
+
+        ////add row method
+        function AddRowStock(container, url) {
+
+            let StockQuantity = $('.cStockQuantity').val();
+            let StockValue = $('.cStockValue').val();
+            let BranchId = $(".cBranchId :selected").val();
+            let Comments = $('.cComments').val();
+            let ItemNo = $('#ItemNo').val();
+            let StockId = $('.cStockId').val();
+
+            var model = {
+
+                BranchId: BranchId,
+                StockQuantity: StockQuantity,
+                StockValue: StockValue,
+                Comments: Comments,
+                ItemNo: ItemNo,
+                StockId: StockId,
+
+
+            };
+
+            $.ajax({
+
+                data: model,
+                url: url,
+                cache: false,
+                success: function (html) {
+
+                    if ('@Session["result"]' === "Fail") {
+
+                        ShowResult("Fail", "Requested Product Stocks Already Exit");
+                        return;
+
+                    }
+
+                    if ('@Session["result"]' === "Success") {
+
+
+                    }
+
+                    $("#editorItemRows5").append(html);
+
+                    $('.detailHeadRow :input').val("");
+
+                    //if (!success) {
+                    //    alert(Session["result"]);
+
+                    //    ShowResult(Session["result"]);
+                    //    return;
+
+                    //}
+
+                }
+            });
+
+            $('.cStockQuantity').val("");
+            $('.cStockValue').val("");
+            $('.cComments').val("");
+        }
+
+
+    </script>
+
+
+    @*for setting vat & sd rate*@
+    <script>
+        $(function () {
+            $('#CategoryID').change(function () {
+                var categoryVal = $(this).val();
+
+                if (categoryVal == "" || categoryVal == null) {
+                    return;
+                }
+
+                var url = "/VMS/ProductCategory/GetProductGroupVM?id=" + categoryVal;
+                $.ajax({
+                    url: url,
+                    cache: false,
+                    beforeSend: function () { $(".loading").show(); },
+                    success: function (vm) {
+                        $('#VATRate').val(vm.VATRate);
+                        $('#SD').val(vm.SD);
+                        $('#Type').val(vm.IsRaw);
+
+                        if (vm.IsRaw.toLowerCase() == "trading") {
+                            $('.cTradingSaleVATRate').val(0);
+                            $('.cTradingSaleSD').val(0);
+                            $('#showSD').show();
+                        } else {
+                            $('.cTradingSaleVATRate').val(0);
+                            $('.cTradingSaleSD').val(0);
+                            $('#showSD').hide();
+                        }
+                    },
+                    complete: function () { $(".loading").fadeOut(200).hide("slow") }
+
+                });
+            });
+        });
+    </script>
+
+    <script>
+        function refreshCategory() {
+            var targetEl = $('#CategoryID');
+            var url = "/Config/DropDown/ProductCategory";
+            $.ajax({
+                url: url,
+                cache: false,
+                beforeSend: function () { $(".loading").show(); },
+                success: function (data) {
+                    var categoryIdDropdown = "<option value=''>Select</option>";
+                    $.each(data, function (i, state) {
+                        categoryIdDropdown += "<option value='" + state.Value + "'>" + state.Text + "</option>";
+                    });
+                    $(targetEl).html(categoryIdDropdown);
+                },
+                complete: function () { $(".loading").fadeOut(200).hide("slow") }
+
+            });
+        }
+        $(function () {
+            InitDropDowns();
+            valiDation("frmProductMy");
+            var operation = '@Model.Operation';
+            if (operation == "update") {
+                navigatePage();
+            }
+        });
+        var operation = '@Model.Operation';
+        if (operation == "detail") {
+            fnReadOnly("mainDiv");
+        }
+
+        var span = document.getElementsByClassName("close")[0];
+        var productDetail = document.getElementById('productDetails');
+        ////////When the user clicks on <span> (x), close the trkmodal
+        span.onclick = function () {
+            productDetail.style.display = "none";
+        }
+
+        function navigatePage() {
+            var interval = setInterval(function () {
+                if (document.querySelectorAll('.trNavigateMenu option').length > 0) {
+                    var id = '@Model.ItemNo';
+                    $('.trNavigateMenu').select2("val", id);
+                    clearInterval(interval);
+                }
+            }, 200);
+            ////navigating previous-next
+            $('.changePage').click(function () {
+                var id = '@Model.ItemNo';
+                var btn = $(this).attr("data-pager-action");
+                if (btn.toLocaleLowerCase() == "current") {
+                    var targetId = $('.trNavigateMenu').val();
+                    if (id == targetId) {
+                        return;
+                    }
+                    id = targetId;
+                }
+                window.location = "/VMS/Product/Navigate?id=" + id + "&btn=" + btn;
+            });
+        }
+
+    </script>
+
+    @*--------------------------fixed header column table--------------------------*@
+    <script>
+        function fixedScrolltrkFixedTable(tableId, leftTotal) {
+            $('#' + tableId + ' tbody').scroll(function (e) {
+                var i;
+                var j = 2;
+                for (i = 1; i <= leftTotal; i++) {
+                    $('#' + tableId + ' tbody td:nth-child(' + i + ')').css("z-index", "1");
+                    $('#' + tableId + ' thead th:nth-child(' + i + ')').css("left", $("#" + tableId + " tbody").scrollLeft());
+
+                    $('#' + tableId + ' tbody td:nth-child(' + j + ')').css("z-index", "1");
+                    $('#' + tableId + ' tbody td:nth-child(' + j + ')').css("left", $("#" + tableId + " tbody").scrollLeft());
+                    $('#' + tableId + ' tbody td:nth-child(' + j + ')').css("left", $("#" + tableId + " tbody").scrollLeft());
+                    j++;
+                }
+                $('#' + tableId + ' thead').css("left", -$("#" + tableId + " tbody").scrollLeft());
+                //$('#' + tableId + ' thead th:nth-child(2)').css("left", $("#" + tableId + " tbody").scrollLeft());
+
+            });
+        }
+        function settingtrkFixedColumnWidth(tableId, widthArgs) {
+            if (widthArgs == null) {
+                return;
+            }
+            var i;
+            var j = 2;
+            for (i = 1; i <= widthArgs.length; i++) {
+                $('#' + tableId + ' tr td:nth-child(' + j + ')').css("min-width", widthArgs[i - 1] + "px");
+                $('#' + tableId + ' tr th:nth-child(' + i + ')').css("min-width", widthArgs[i - 1] + "px");
+                j++;
+            }
+        }
+        function fixLeftColumns(tableId, leftTotal) {
+            var i;
+            var j = 2;
+            for (i = 1; i <= leftTotal; i++) {
+                //fixed column header style
+                $('#' + tableId + ' thead th:nth-child(' + i + ')').css("height", "30px");
+                $('#' + tableId + ' thead th:nth-child(' + i + ')').css("position", "relative");
+                $('#' + tableId + ' thead th:nth-child(' + i + ')').css("z-index", "2");
+                //fixed column rows style
+                $('#' + tableId + ' tbody tr td:nth-child(' + j + ')').css("height", "30px");
+                $('#' + tableId + ' tbody tr td:nth-child(' + j + ')').css("position", "relative");
+                j++;
+            }
+        }
+        function settingWidth(tableId) {
+            //var parentWidth = $('.fixedParent').width();
+            var parentWidth = $('#' + tableId).closest('.fixedParent').width();
+            $('#' + tableId + ' thead').width(parentWidth);
+            $('#' + tableId + ' tbody').width(parentWidth);
+        }
+        function trkFixedTable(tableId, leftTotal, args) {
+            settingWidth(tableId);
+            fixLeftColumns(tableId, leftTotal);
+            fixedScrolltrkFixedTable(tableId, leftTotal);
+            settingtrkFixedColumnWidth(tableId, args);
+        }
+        function callingFixedTable() {
+            var args = [100, 100, 200, 100, 150, 100, 100, 150, 100, 100, 100, 150, 150, 150, 100, 100, 150, 150, 100, 100, 150, 100, 100, 100, 100, 100, 100, 100, 100, 150];
+            trkFixedTable("itemTable", 3, args);
+        }
+        $(function () {
+            callingFixedTable();
+        })
+    </script>
+
+    @*for showing product details and toggle accordion*@
+    <script>
+        function showProductDetail() {
+            var productDetail = document.getElementById('productDetails');
+            $(document).on("dblclick", '.tablerow', function () {
+                var code = $(this).find('input.dItemNo').val();
+                var url = "/Vms/Product/ShowProduct?code=" + code;
+                $.ajax({
+                    url: url,
+                    cache: false,
+                    beforeSend: function () { $(".loading").show(); },
+                    complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                    success: function (html) {
+                        productDetail.style.display = "block";
+                        $(".trkmodal-content").html(html);
+                    }
+                });
+            });
+        }
+    </script>
+
+    <script>
+        ////Clicking add button
+        $('.AddRow').on("click", function () {
+            var ProductName = $('.trProductName').val();
+            if (ProductName == "0" || ProductName == "") {
+                ShowResult("Fail", "Enter a product Name first!");
+                return;
+            }
+
+
+            var itemNo = $('.trProductName').val();
+            var count = 0;
+
+            $('.dProductName').each(function () {
+                var existing = $(this).val();
+                if (itemNo == existing) {
+                    count++;
+                }
+            });
+
+            if (count > 0) {
+                ShowResult("Fail", "Product Name already exists!");
+                return;
+            }
+
+            var container = $(this).attr('data-container');
+            var url = $(this).attr('data-url');
+            AddRow(container, url)
+            return false;
+        });
+
+
+        $(function () {
+            $('.trProduct').change(function () {
+                var productCode = $(this).val();
+                if (productCode == "") {
+                    return;
+                }
+                ProductNameChange(productCode);
+                $(function () {
+                    var interval = setInterval(function () {
+                        if ($('.trUOM').val() != "") {
+                            UomOptions();
+
+                            clearInterval(interval);
+                        }
+                    }, 200);
+                });
+
+            });
+
+
+        })
+        ///Hscode search
+        $('#HSCodeNoBtn').click(function () {
+            //var customerName = $('.trCustomerId option:selected').text();
+            //var customerId = $('.trCustomerId option:selected').val();
+            // var url = "/Vms/Customer/GetCustomerAddressPopUp?CustomerName=" + customerName + "&CustomerId=" + customerId;
+            var url = "/Vms/HSCode/GetHSCodeNoPopUp";
+            var modal = document.getElementById('myHigherModal');
+            $.ajax({
+                url: url,
+                cache: false,
+                beforeSend: function () { $(".loading").show(); },
+                success: function (html) {
+                    modal.style.display = "block";
+                    $("#myHigherModal").html(html);
+                }
+            , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+            });
+        });
+
+
+        function callbackFromHSCodeModal(sender) {
+            var HSCode = $(sender).children('td.popUpHSCode').text();
+            $('.cHSCodeNo').val(HSCode);
+
+        }
+        ////add row method
+        function AddRow(container, url) {
+
+            var ProductName = $('.trProductName').val();
+            let ItemNo = $('#ItemNo').val();
+
+            var model = {
+                ItemNo: ItemNo,
+                ProductName: ProductName
+            };
+
+            $.ajax({
+                data: model,
+                url: url,
+                cache: false,
+                success: function (html) {
+
+                    $("#editorItemRows4").append(html);
+
+                    $('.detailHeadRow :input').val("");
+
+
+                }
+            });
+
+            $('.trProductName').val("");
+        }
+    </script>
+
+    @*for editing and removing a product row*@
+    <script>
+        ////removing all selected row
+        function RemoveMultiple() {
+            var rows = $('.deleteCheckBox:checkbox:checked');
+            if (rows.length == 0) {
+                ShowResult("Fail", "Select a row first!");
+                return;
+            }
+            Ask("Are you sure to Delete the item!", function () {
+                rows.each(function () {
+                    $(this).parents("tr:first").remove();
+                });
+            });
+        }
+
+        $(".chkAll").click(function () {
+            $('input:checkbox').not(this).prop('checked', this.checked);
+        });
+
+        ////edit a row
+        function EditItem(sender) {
+            ////setting the product value
+            $tablerow = $(sender).closest('.tablerow');
+
+
+            var ProductName = $tablerow.find('.dProductName').val();
+            var itemNo = $tablerow.find('.dItemNo').val();
+
+            //console.log(ProductName);
+
+            $('.trProductName').val(ProductName);
+
+
+            $(sender).parents("tr:first").remove();
+            SubTotal();
+            //////ShowHide();
+
+
+        }
+
+
+        function EditItem1(sender) {
+            ////setting the product value
+            $tablerow = $(sender).closest('.tablerow');
+
+
+            var BranchName = $tablerow.find('.dBranchName').val();
+            var StockQuantity = $tablerow.find('.dStockQuantity').val();
+            var StockValue = $tablerow.find('.dStockValue').val();
+            var Comments = $tablerow.find('.dComments').val();
+            var BranchId = $tablerow.find('.dBranchId').val();
+            var StockId = $tablerow.find('.dStockId').val();
+
+            console.log(StockId);
+
+            //console.log(ProductName);
+
+            //$('.cBranchId').val(BranchName);
+            $('.cStockQuantity').val(StockQuantity);
+            $('.cStockValue').val(StockValue);
+            $('.cComments').val(Comments);
+            $(".cBranchId").select2("val", BranchId);
+            $('.cStockId').val(StockId);
+
+
+
+            $(sender).parents("tr:first").remove();
+            //SubTotal();
+            //////ShowHide();
+
+
+        }
+
+
+        ////removing a row
+        function RemoveItem(sender) {
+            Ask("Are you sure to Delete the item!", function () {
+                $(sender).parents("tr:first").remove();
+                SubTotal();
+                //////ShowHide();
+            });
+        }
+
+        function RemoveData(sender) {
+            Ask("Are you sure to Delete the item!", function () {
+
+                $tablerow = $(sender).closest('.tablerow');
+
+
+                var BranchId = $tablerow.find('.dBranchId').val();
+                var itemNo = $tablerow.find('.dItemNo').val();
+                var StockId = $tablerow.find('.dStockId').val();
+
+                //var url = "/Vms/Product/DeleteData?targetId=BranchName&BranchId=" + BranchId;
+                var url = "/Vms/Product/DeleteData?BranchId=" + BranchId + "&ItemNo=" + itemNo + "&StockId=" + StockId;
+                $.getJSON(url, function (data) {
+
+                    //alert(data.Address1);
+
+                    //$('.trNBRPrice').val(data.NBRPrice);
+                    //$('.cBOMId').val(data.BOMId);
+
+                });
+
+
+
+                $(sender).parents("tr:first").remove();
+                //SubTotal();
+                //////ShowHide();
+            });
+        }
+
+
+        function modalInitHigher(url) {
+
+            //var ItemNo = $(".cProductType :selected").val();
+            //var ProductCategoryId = $(".cProductCategoryId :selected").val();
+            //var ProductCategory = $(".cProductCategoryId :selected").text();
+
+            //url = url
+            //+ "&ItemNo=" + ItemNo
+            //+ "&ProductCategoryId=" + ProductCategoryId
+            //+ "&ProductCategory=" + ProductCategory
+            //;
+
+            //var modal = document.getElementById('myHigherModal');
+            $.ajax({
+                url: url,
+                cache: false,
+                beforeSend: function () { $(".loading").show(); },
+                success: function (html) {
+                    //modal.style.display = "block";
+                    //$("#myHigherModal").html(html);
+                }
+            , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+            });
+        }
+
+    </script>
+
+
+    @*HS Code Change*@
+
+    <script>
+
+
+        $("#HSCodeNo").on("change", function (e) {
+
+            var hsCode = $(this).val();
+
+
+            if (!hsCode) {
+
+                return;
+            }
+
+
+            $.ajax({
+                url: "/Product/GetHsCode/" + hsCode,
+
+                method: "GET"
+            })
+                .done(function (hsCode) {
+
+                    if (!hsCode) {
+                        return;
+                    }
+
+                    PopulateForm(hsCode);
+
+                })
+                .fail(function () {
+
+                });
+
+
+        })
+
+
+        function PopulateForm(hsCode) {
+
+            $("#CDRate").val(hsCode.CD);
+            $("#SD").val(hsCode.SD);
+            $("#RDRate").val(hsCode.RD);
+            $("#ATVRate").val(hsCode.AT);
+            $("#newSD").val(hsCode.OtherSD);
+            $("#AITRate").val(hsCode.AIT);
+            $("#newVat").val(hsCode.VAT);
+
+            var fixedVat = hsCode.IsFixedVAT;
+
+            if (fixedVat === "N") {
+
+                $("#VATRate").val(hsCode.OtherVAT);
+                var checkBox = $("#IsFixedVatM")
+                checkBox.attr("checked", false);
+
+                $("#FixedVATAmount").val("");
+
+
+
+            } else if (fixedVat === "Y") {
+
+                var checkBox = $("#IsFixedVatM")
+                $("#FixedVATAmount").val(hsCode.OtherVAT);
+                $("#VATRate").val("");
+
+                checkBox.attr("checked", true);
+
+            }
+
+            var CDRate = hsCode.IsFixedCD;
+            console.log(CDRate)
+
+            if (CDRate === "N") {
+
+                var checkBox = $("#CDRat")
+                checkBox.attr("checked", false);
+
+            }
+            else if (CDRate === "Y") {
+
+                var checkBox = $("#CDRat")
+
+                checkBox.attr("checked", true);
+
+            }
+
+            var SD = hsCode.IsFixedSD;
+
+            if (SD === "N") {
+
+                var checkBox = $("#SDRAT")
+                checkBox.attr("checked", false);
+
+
+            }
+            else if (SD === "Y") {
+
+                var checkBox = $("#SDRAT")
+
+                checkBox.attr("checked", true);
+
+            }
+
+            var RDRate = hsCode.IsFixedRD;
+
+            if (RDRate === "N") {
+
+                var checkBox = $("#RDRat")
+                checkBox.attr("checked", false);
+
+
+            }
+            else if (RDRate === "Y") {
+
+                var checkBox = $("#RDRat")
+
+                checkBox.attr("checked", true);
+
+            }
+
+            var ATVRate = hsCode.IsFixedAT;
+
+            if (ATVRate === "N") {
+
+                var checkBox = $("#AT")
+                checkBox.attr("checked", false);
+
+            }
+            else if (ATVRate === "Y") {
+
+                var checkBox = $("#AT")
+
+                checkBox.attr("checked", true);
+
+            }
+
+            var AITRate = hsCode.IsFixedAIT;
+
+            if (AITRate === "N") {
+
+                var checkBox = $("#AIT")
+                checkBox.attr("checked", false);
+
+            }
+            else if (AITRate === "Y") {
+
+                var checkBox = $("#AIT")
+
+                checkBox.attr("checked", true);
+
+            }
+
+
+            var FixedVat1 = hsCode.IsFixedVAT1;
+
+            //console.log(FixedVat1);
+
+            if (FixedVat1 === "N") {
+
+                var checkBox = $("#IsFixedVat1")
+
+                checkBox.attr("checked", false);
+
+            }
+            else if (FixedVat1 === "Y") {
+
+                var checkBox = $("#IsFixedVat1")
+                //console.log(checkBox);
+                checkBox.attr("checked", true);
+            }
+
+
+
+        }
+
+    </script>
+}

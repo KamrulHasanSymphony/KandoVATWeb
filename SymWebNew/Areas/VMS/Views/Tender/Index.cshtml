@@ -1,0 +1,74 @@
+﻿<div class="headrow">
+    <button type="button" title="Add New Product" data-url="/VMS/Tender/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+    <button type="button" title="View Report" class=" sym-btn-report printBtn">&nbsp;Print</button>
+    <button type="button" title="Delete Product" data-url="/VMS/Tender/Delete" onclick="deletedData(this, 'myDataTable');" id="" class="sym-btn-remove">&nbsp;Delete</button>
+    <label class="pull-right">Tender </label>
+</div>
+<div class="thinbox animated slideInDown faster">
+    <div class="th_thinbox">
+        <p>Tender List</p>
+    </div>
+    <table id="myDataTable" class="display" style="width:100%">
+        <thead>
+            <tr>
+                <th class="center">
+                    <input type="checkbox" class="chkAll" />Select All
+                </th>
+                <th>Ref No</th>
+                <th>Group Name</th>
+                <th>Customer Name </th>
+                <th>Tender Date</th>
+                <th>Delivery Date</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <br />
+</div>
+<div class="headrow">
+    <button type="button" title="Add New Product" data-url="/VMS/Tender/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+    <button type="button" title="View Report" class=" sym-btn-report printBtn">&nbsp;Print</button>
+    <button type="button" title="Delete Product" data-url="/VMS/Tender/Delete" onclick="deletedData(this, 'myDataTable');" id="" class="sym-btn-remove">&nbsp;Delete</button>
+</div>
+
+<script language="javascript" type="text/javascript">
+    $(document).ready(function () {
+        SelectAllForDelete();
+        $.datepicker.regional[""].dateFormat = 'dd/M/y';
+        $.datepicker.setDefaults($.datepicker.regional['']);
+
+        var oTable = $('#myDataTable').dataTable({
+            "bServerSide": true,
+            "sAjaxSource": "/VMS/Tender/_index",
+            "bProcessing": true,
+            "aLengthMenu": tablelength(),
+            "bJqueryUI": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+                            {
+                                "sName": "Id",
+                                "bSearchable": false,
+                                "bSortable": false,
+                                "sWidth": "8%",
+                                "sClass": "center",
+                                "fnRender": function (oObj) {
+                                    return ' <input onclick="CheckAll(this)" type="checkbox" data-Id="' + oObj.aData[0].split('~')[0] + '">'
+                                        + '&nbsp; <a id=""  title="Click on for Edit"  style="text-decoration:none;"   href=\"/VMS/Tender/Edit/' + oObj.aData[0].split('~')[0] + '\" class=" innerListLink sym-btn-edit-row"></a>'
+                                        + '&nbsp; <a title="Click on for Delete"  data-url="/VMS/Tender/Delete" onclick="deletedData(this, myDataTable,\'' + oObj.aData[0] + '\');"  class="sym-btn-remove-row"></a>'
+                                    ;
+                                }
+                            }
+                            , { "sName": "RefNo", "sWidth": "10%" }
+                            , { "sName": "GroupName", "sWidth": "10%" }
+                            , { "sName": "CustomerName", "sWidth": "10%" }
+                            , { "sName": "TenderDate", "sWidth": "10%" }
+                            , { "sName": "DeliveryDate", "sWidth": "10%" }
+
+
+            ]
+        });
+
+    });
+</script>
+
+

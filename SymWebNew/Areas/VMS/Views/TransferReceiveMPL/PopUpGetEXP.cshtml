@@ -1,0 +1,259 @@
+﻿@model VATViewModel.DTOs.SaleMasterVM
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+
+<style>
+
+    table.trkFixTable tr.trSelectPopUpExp td {
+        overflow-x: hidden;
+    }
+
+    .trkMT10 {
+        margin-top: 10px;
+    }
+
+    .sortableHeader {
+        cursor: pointer;
+    }
+
+
+    .trkmodal {
+        padding-top: 10%;
+    }
+
+    .trkmodal-content {
+        width: 99%;
+        padding-bottom: 10px;
+    }
+
+    .customDatePicker {
+        background: #fefede url(/Images/calendar.jpg) no-repeat 98% !important;
+    }
+    /*no padding with little margin bttom*/
+    div.trkmodal-body div.npForm {
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+        padding-bottom: 0px !important;
+        margin-bottom: 10px;
+    }
+
+        div.trkmodal-body div.npForm div.npForm {
+            margin-bottom: 0px !important;
+        }
+
+
+    .ParentExp {
+        margin-left: 10px !important;
+    }
+
+
+</style>
+
+
+<div class="trkmodal-content">
+    <div class="trkmodal-header">
+        <span class="close">&times;</span>
+        <h2 class="text-center">Search Exp No.</h2>
+    </div>
+    <div class="trkmodal-body">
+        @using (Html.BeginForm("PopUpGetEXP", "ExpFromNo", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmGetEXP" }))
+        {
+            
+            <div class="row">
+
+                <div class="col-md-1">
+                    <label>&nbsp;</label>
+                    <div class="editor-field">
+                        <button type="button" title="Click to Search" id="searchBtn" class="sym-btn-search btnPopUpSearch">&nbsp;Search</button>
+                    </div>
+                </div>
+
+
+            </div>
+            
+            <div class="row">
+                <div class="fixedParent ParentExp">
+                    <table class="trkFixTable" id="PopUpTable">
+                        <thead>
+                            <tr>
+                               
+                                @*<th>Id</th>*@
+                                <th>SerialNo</th>
+                                <th>EXPFormDate</th>
+                                <th>LCNumber</th>
+                                <th>LCBank</th>
+                                <th>LCDate</th>
+                                <th>PINo</th>
+                                <th>PIDate</th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody id="popUpTbody"></tbody>
+                    </table>
+                </div>
+        </div>
+            
+        }
+    </div>
+</div>
+
+
+<script src="~/assets/javascripts/custom.js"></script>
+<script>
+    $(function () {
+
+        $('.btnPopUpSearch').click(function () {
+           
+            type = "";
+            var model = {
+                LCNumber: type,
+            }
+            $.ajax({
+                data: model,
+                url: "/Vms/SaleInvoice/GetFilteredExp",
+                cache: false,
+                beforeSend: function () { $(".loading").show(); },
+                complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                success: function (html) {
+                    $("#popUpTbody").html("");
+                    $("#popUpTbody").html(html);
+                    callingFixedPopUpTable();
+                }
+            });
+
+        });
+    });
+</script>
+
+
+<script>
+
+    function closeModal() {
+        $("#myHigherModal").html("");
+        trkmodal.style.display = "none";
+    }
+
+    var span = document.getElementsByClassName("close")[0];
+    var trkmodal = document.getElementById('myHigherModal');
+    //When the user clicks on <span> (x), close the trkmodal
+    span.onclick = function () {
+        closeModal();
+    }
+
+    $(document).ready(function () {
+        //$('#frmExpFromNo').submit();
+
+       
+
+    });
+
+
+
+    $(function () {
+        
+        $(document).on('click', '.trSelectPopUpExp', function () {
+            var activeEl = $('tr.active');
+            activeEl.removeClass("active");
+            $(this).addClass(" active");
+            
+        });
+
+        $(document).off().on('dblclick', '.trSelectPopUpExp', function () {
+            var SerialNo = $(this).children('td.SerialNo').text();
+            var EXPFormDate = $(this).children('td.EXPFormDate').text();
+            var LCNumber = $(this).children('td.LCNumber').text();
+            var LCBank = $(this).children('td.LCBank').text();
+            var LCDate = $(this).children('td.LCDate').text();
+            var PINo = $(this).children('td.PINo').text();
+            var PIDate = $(this).children('td.PIDate').text();
+            selectPopUpValue(SerialNo, EXPFormDate, LCNumber, LCBank, LCDate, PINo, PIDate, this);
+            
+        });
+
+        function selectPopUpValue(SerialNo, EXPFormDate, LCNumber, LCBank, LCDate, PINo, PIDate, sender) {
+            
+            $('.cEXPFormNo').val(SerialNo);
+            $('#EXPFormDate').val(EXPFormDate);
+            $('#LCNumber').val(LCNumber);
+            $('#LCBank').val(LCBank);
+            $('#LCDate').val(LCDate);
+            $('#PINo').val(PINo);
+            $('#PIDate').val(PIDate);
+            //callbackFromSaleModal(SerialNo, EXPFormDate, LCNumber, LCBank, LCDate, PINo, PIDate, sender);
+            
+            closeModal();
+        }
+    })
+
+
+
+</script>
+
+<script>
+
+
+
+    function fixedScrollPopUpFixedTable(tableId, leftTotal) {
+        $('#' + tableId + ' tbody').scroll(function (e) {
+            var i;
+            for (i = 1; i <= leftTotal; i++) {
+                $('#' + tableId + ' thead th:nth-child(' + i + ')').css("left", $("#" + tableId + " tbody").scrollLeft());
+                $('#' + tableId + ' tbody td:nth-child(' + i + ')').css("z-index", "1");
+                $('#' + tableId + ' tbody td:nth-child(' + i + ')').css("left", $("#" + tableId + " tbody").scrollLeft());
+            }
+            $('#' + tableId + ' thead').css("left", -$("#" + tableId + " tbody").scrollLeft());
+
+        });
+    }
+    function settingPopUpFixedColumnWidth(tableId, widthArgs) {
+        if (widthArgs == null) {
+            return;
+        }
+        var i;
+        for (i = 1; i <= widthArgs.length; i++) {
+            $('#' + tableId + ' tr td:nth-child(' + i + ')').css("min-width", widthArgs[i - 1] + "px");
+            $('#' + tableId + ' tr td:nth-child(' + i + ')').css("max-width", widthArgs[i - 1] + "px");
+
+            $('#' + tableId + ' tr th:nth-child(' + i + ')').css("min-width", widthArgs[i - 1] + "px");
+        }
+    }
+    function fixLeftPopUpColumns(tableId, leftTotal) {
+        var i;
+        for (i = 1; i <= leftTotal; i++) {
+            //fixed column header style
+            $('#' + tableId + ' thead th:nth-child(' + i + ')').css("height", "30px");
+            $('#' + tableId + ' thead th:nth-child(' + i + ')').css("position", "relative");
+            $('#' + tableId + ' thead th:nth-child(' + i + ')').css("z-index", "2");
+            //fixed column rows style
+            $('#' + tableId + ' tbody tr td:nth-child(' + i + ')').css("height", "30px");
+            $('#' + tableId + ' tbody tr td:nth-child(' + i + ')').css("position", "relative");
+        }
+    }
+    function settingFixedPopUpWidth(tableId) {
+        //var parentWidth = $('.fixedParent').width();
+        var parentWidth = $('#' + tableId).closest('.fixedParent').width();
+        $('#' + tableId + ' thead').width(parentWidth);
+        $('#' + tableId + ' tbody').width(parentWidth);
+    }
+    function trkFixedPopUpTable(tableId, leftTotal, args) {
+        settingFixedPopUpWidth(tableId);
+        fixLeftPopUpColumns(tableId, leftTotal);
+        fixedScrollPopUpFixedTable(tableId, leftTotal);
+        settingPopUpFixedColumnWidth(tableId, args);
+    }
+    function callingFixedPopUpTable() {
+        var args = [ 150, 200, 150, 200, 200, 200, 200];
+        trkFixedPopUpTable("PopUpTable", 2, args);
+    }
+
+
+</script>
+
+
+
+
+
+
+

@@ -1,0 +1,40 @@
+﻿@model VATViewModel.DTOs.ImportVM
+@using UIHelper.MVC
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="thinbox row">
+    <div class="th_thinbox">
+        <p>Excel Import</p>
+    </div>
+    @using (Ajax.BeginForm("ImportExcel", "Import", null, new AjaxOptions { }, new { enctype = "multipart/form-data", @Id = "frmMasterImport" }))
+    {
+        <div class="col-md-2">
+            @Html.SimpleDropDownFor(m => m.TableName, "/Config/DropDown/MasterTableList", new { @class = " form-control selectDropdown " })
+        </div>
+        <div class="col-md-offset-6 col-md-6 verticalLine">
+            <div class="col-md-6">
+                <label>File</label>
+                @Html.TextBoxFor(model => model.File, new { @type = "file", @accept = ".xlsx,.xls", @class = " form-control" })
+            </div>
+            <div class="col-md-6">
+                <label>&nbsp;</label>
+                <button type="button" onclick="uploadExcel()" class="sym-btn-file-upload">&nbsp;Upload</button>
+            </div>
+        </div>
+    }
+</div>
+<script>
+    function uploadExcel() {
+        var selectedTable = $('#TableName').val();
+        if (selectedTable == "") {
+            ShowResult("Fail", "select a table first");
+            return;
+        }
+        pageSubmit('frmMasterImport');
+    }
+    $(function () {
+        
+    })
+</script>

@@ -1,0 +1,87 @@
+﻿@model System.Data.DataTable
+@using UIHelper.MVC
+@*@{
+        Layout = null;
+    }*@
+
+@{
+    Layout = "~/Areas/VMS/Views/Shared/_ModalLayout.cshtml";
+}
+
+
+
+<div class="HigherModal-content">
+    <div class="HigherModal-header">
+        <span class="close">&times;</span>
+        @*<span class="closeHigher" onclick="closeModal()">&times;</span>*@
+        <h2 class="text-center">Engine Chassis</h2>
+    </div>
+    <div class="HigherModal-body formDesign">
+        <div class="row">
+            <div class="fixedParent">
+                <table class="trkFixTable" id="productPopUpTable_Detail">
+                    <thead>
+                        <tr>
+                            <th>ID              </th>
+                            <th>Item Code       </th>
+                            <th>Engine Number </th>
+                            <th>Chassis Number   </th>
+                        </tr>
+                    </thead>
+                    <tbody id="popUpTbody_Detail">
+                        @foreach (System.Data.DataRow dr in Model.Rows)
+                        {
+                            <tr>
+                               
+                                <td>@dr["ID"]</td>
+                                <td>@dr["ProductCode"]</td>
+                                <td>@dr["EngineNumber"]</td>
+                                <td>@dr["ChassisNumber"]</td>
+                                
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script language="javascript" type="text/javascript">
+
+    function callingFixedPopUpTable_Detail() {
+
+        var args = [200, 200, 200, 150, 100, 150, 100, 150, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100];
+        trkFixedPopUpTable("productPopUpTable_Detail", 3, args);
+    }
+
+
+    $(function () {
+        callingFixedPopUpTable_Detail();
+    })
+</script>
+
+
+<script>
+
+    $(document).ready(function () {
+
+        function closeModal() {
+            $("#EngineModal").html("");
+            trkmodal.style.display = "none";
+        }
+
+        var span = document.getElementsByClassName("close")[0];
+        var trkmodal = document.getElementById('EngineModal');
+        //When the user clicks on <span> (x), close the trkmodal
+        span.onclick = function () {
+            closeModal();
+
+        }
+
+    });
+</script>
+
+
+

@@ -1,0 +1,99 @@
+﻿@model SymViewModel.Attendance.AttendanceMigrationVM
+@{
+    ViewBag.Title = "SelectFromDownloadData";
+}
+
+@using UIHelper.MVC
+<div class="thinbox">
+    <div class="th_thinbox">
+        <p>Attendance Migration</p>
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            <div class="editor-label">
+                @Html.Label("Attendance Date From")
+            </div>
+            <div class="editor-field">
+                <div>
+                    @Html.TextBoxFor(model => model.AttendanceDateFrom, null, new { @placeholder = "Attendance Date From", @class = "attnDateFrom customDatePicker form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="editor-label">
+                @Html.Label("Attendance Date To")
+            </div>
+            <div class="editor-field">
+                <div>
+                    @Html.TextBoxFor(model => model.AttendanceDateTo, null, new { @placeholder = "Attendance Date To", @class = "attnDateTo customDatePicker form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="editor-label">
+                <label>Emp Code(From)</label>
+            </div>
+            <div class="editor-field">
+                @Html.TextBox("EmployeeCode", "", new { @placeholder = "Employee Code", @class = "employeeCode form-control" })
+            </div>
+        </div>
+    </div>
+
+
+</div>
+<div class="headrow">
+    <button type="button" title="Click for Migration" data-url="/Common/AttendanceMigration/SelectFromDownloadDataProcess" onclick="selectData(this);" id="" class="sym-btn-save">&nbsp;Migration (From M/C)</button>
+    &nbsp;
+    <button type="button" title="Click for Delete Migration" data-url="/Common/AttendanceMigration/DeleteProcess" onclick="selectData(this);" id="" class="sym-btn-remove">&nbsp;Delete Migration</button>
+    &nbsp;
+@*     <button type="button" title="Click for Start Auto Attendance Migration" data-url="/Common/AttendanceMigration/StartAutoMigration" onclick="selectData(this);" id="" class="sym-btn-save">&nbsp;Start Auto Migration</button>
+    &nbsp;
+    <button type="button" title="Click for Stop Auto Attendance Migration" data-url="/Common/AttendanceMigration/StopAutoMigration" onclick="selectData(this);" id="" class="sym-btn-edit">&nbsp;Stop Auto Migration</button>
+    &nbsp;*@
+    <button type="button" title="Clear the Entries" id="Clear" class="sym-btn-clear">&nbsp;Clear</button>
+</div>
+
+<script>
+    $(function () {
+        $('#EmployeeCode').autocomplete({ source: '@Url.Action("EmployeeCodeAll", "Autocomplete", new { area = "Config" })', minLength: 2 });
+
+    });
+
+
+    $('#Clear').click(function () {
+        $(".form-control").val("");
+    });
+
+    function selectData(sender) {
+
+        var url = $(sender).attr("data-url");
+
+        var attnDateFrom = $(".attnDateFrom").val();
+        var attnDateTo = $(".attnDateTo").val();
+        var employeeCode = $(".employeeCode").val();
+
+        selectObj = new Object();
+        selectObj.attnDateFrom = attnDateFrom;
+        selectObj.attnDateTo = attnDateTo;
+        selectObj.employeeCode = employeeCode;
+
+
+        var selectParam = $.param(selectObj);
+        url = url + "?" + selectParam;
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            beforeSend: function () { $(".loading").show(); },
+            complete: function () { $(".loading").fadeOut(200).hide("slow") },
+            success: function (data) {
+                ShowResultProcess("Success", data);
+            },
+        });
+
+    }
+
+
+</script>
+
+

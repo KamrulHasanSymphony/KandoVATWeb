@@ -1,0 +1,25 @@
+﻿@model List<VATViewModel.DTOs.Toll6_3InvoiceDetailVM>
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+
+@for (int i = 0; i < Model.Count(); i++)
+{
+    <tr class="tablerow">
+
+        @using (Html.BeginCollectionItem("Details"))
+        {
+
+            <td>
+                @Html.TextBox("TollLineNo", Model[i].TollLineNo, new { @class = "  dTollLineNo   form-control", @readonly = "readonly" })
+            </td>
+            <td>
+                @Html.TextBox("SalesInvoiceNo", Model[i].SalesInvoiceNo, new { @class = "  dSalesInvoiceNo   form-control", @readonly = "readonly" })
+            </td>
+            <td>
+                @Html.TextBox("InvoiceDateTime", Model[i].InvoiceDateTime, new { @class = "  dInvoiceDateTime   form-control", @readonly = "readonly" })
+            </td>
+        }
+    </tr>
+}

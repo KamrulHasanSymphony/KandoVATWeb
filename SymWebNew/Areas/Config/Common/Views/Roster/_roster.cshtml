@@ -1,0 +1,77 @@
+﻿@model SymViewModel.Attendance.AttendanceRosterDetailVM
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+<div class="row dateColl">
+    @using (Html.BeginCollectionItem("attendanceRosterDetails"))
+    {
+        @Html.HiddenFor(model => model.Id)
+        <div class="col-md-2">
+            <div class="editor-field">
+                @Html.HiddenFor(model => model.AttendanceGroupId)
+                @Html.DisplayFor(model => model.AttendanceGroupName, new { @class = " form-control" })
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="editor-field">
+                @Html.SimpleDropDownFor(model => model.AttendanceStructureId1, "/Config/DropDown/LeaveStructure", new { @class = " form-control" })
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="editor-field">
+                @Html.SimpleDropDownFor(model => model.AttendanceStructureId2, "/Config/DropDown/LeaveStructure", new { @class = " form-control" })
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="editor-field">
+                @Html.SimpleDropDownFor(model => model.AttendanceStructureId3, "/Config/DropDown/LeaveStructure", new { @class = " form-control" })
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="editor-field">
+                @Html.SimpleDropDownFor(model => model.AttendanceStructureId4, "/Config/DropDown/LeaveStructure", new { @class = " form-control" })
+            </div>
+        </div>
+                <div class="col-md-2">
+            <div class="editor-field">
+                @Html.SimpleDropDownFor(model => model.AttendanceStructureId5, "/Config/DropDown/LeaveStructure", new { @class = " form-control" })
+            </div>
+        </div>
+                <div class="col-md-2">
+            <div class="editor-field">
+                @Html.SimpleDropDownFor(model => model.AttendanceStructureId6, "/Config/DropDown/LeaveStructure", new { @class = " form-control" })
+            </div>
+        </div>
+                <div class="col-md-2">
+            <div class="editor-field">
+                @Html.SimpleDropDownFor(model => model.AttendanceStructureId7, "/Config/DropDown/LeaveStructure", new { @class = " form-control" })
+            </div>
+        </div>
+                <div class="col-md-2">
+            <div class="editor-field">
+                @Html.SimpleDropDownFor(model => model.AttendanceStructureId8, "/Config/DropDown/LeaveStructure", new { @class = " form-control" })
+            </div>
+        </div>
+                        <div class="col-md-2">
+            <div class="editor-field">
+                @Html.SimpleDropDownFor(model => model.AttendanceStructureId9, "/Config/DropDown/LeaveStructure", new { @class = " form-control" })
+            </div>
+        </div>
+                        <div class="col-md-2">
+            <div class="editor-field">
+                @Html.SimpleDropDownFor(model => model.AttendanceStructureId10, "/Config/DropDown/LeaveStructure", new { @class = " form-control" })
+            </div>
+        </div>
+                        <div class="col-md-2">
+            <div class="editor-field">
+                @Html.SimpleDropDownFor(model => model.AttendanceStructureId11, "/Config/DropDown/LeaveStructure", new { @class = " form-control" })
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.Remarks, new { @class = " form-control" })
+            </div>
+        </div>
+    }
+</div>

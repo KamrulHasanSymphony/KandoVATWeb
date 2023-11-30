@@ -1,0 +1,135 @@
+﻿@model SymVATWebUI.Areas.VMS.Models.Vat16ViewModel
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+
+<style>
+    .trkmodal{
+        padding-top:10%;
+    }
+    .trkmodal-content {
+        width: 50%;
+        padding-bottom: 10px;
+    }
+    .customDatePicker {
+        background: #fefede url(/Images/calendar.jpg) no-repeat 98% !important;
+    }
+    /*no padding with little margin bttom*/
+    div.trkmodal-body div.npForm {
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+        padding-bottom: 0px !important;
+        margin-bottom: 10px;
+    }
+
+        div.trkmodal-body div.npForm div.npForm {
+            margin-bottom: 0px !important;
+        }
+</style>
+<div class="trkmodal-content">
+    <div class="trkmodal-header">
+        <span class="close">&times;</span>
+        <h2 class="text-center">VAT Current Account</h2>
+    </div>
+    <div class="trkmodal-body">
+    @using (Html.BeginForm("ReportVAT18Summery", "NBRReport", FormMethod.Post, new { enctype = "multipart/form-data", @target = "_blank", @Id = "frmVAT18Summery" }))
+    {
+        <div class="npForm col-md-12">
+            <div class="col-md-1">
+                <label class="right" style="margin-top:5px">Year</label>
+            </div>
+            <div class="npForm col-md-5">
+                @Html.SimpleDropDownFor(m => m.FiscalYear, "/Config/DropDown/FiscalYear", new { @class = " trFiscalYearVAT18 form-control selectDropdown" })
+            </div>
+            <div class="col-md-6"></div>
+        </div>
+    <div class="npForm col-md-6">
+        <label>Date From</label>
+        @Html.TextBoxFor(m => m.StartDate, new { @placeholder = "Start Date", @class = "trStartDate customDatePicker form-control" })
+    </div>
+    <div class="npForm col-md-6">
+        <label>Date To</label>
+        @Html.TextBoxFor(m => m.EndDate, new { @placeholder = "End Date", @class = "trEndDate customDatePicker form-control" })
+    </div>
+        @Html.HiddenFor(m => m.PreviewOnly);
+        <button type="button" class=" btn sym-btn-report trVATPrint"> Print</button>
+        <button type="button" class=" btn sym-btn-report trPreview"> Preview</button>
+        <button type="button" class="sym-btn-close closeBtn pull-right"> Close</button>
+    }
+    </div>
+</div>
+<script src="~/assets/javascripts/custom.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.trFiscalYearVAT18').change(function () {
+            var year = $(this).val();
+            if (year == null||year=="") {
+                return;
+            }
+            var url = "/Vms/NBRReport/GetSartEndPeriod?year=" + year ;
+            $.getJSON(url, function (data) {
+                var start = data.split('~')[0];
+                var end = data.split('~')[1];
+
+                $('.trStartDate').val(start);
+                $('.trEndDate').val(end);
+            });
+        });
+    });
+</script>
+<script>
+    function checkValidation() {
+        var fyear = $('.trFiscalYearVAT18').val();
+        if (fyear == null || fyear == "") {
+            ShowResult("Fail", "Select year");
+            return false;
+        }
+        return true;
+    }
+    $(document).ready(function () {
+        ////clicking preview button
+        $('.trPreview').click(function () {
+            var valid = checkValidation();
+            if (valid == false) {
+                return;
+            }
+            $("#PreviewOnly").val("true");
+            $('#frmVAT18Summery').submit();
+            //pageSubmit('frmVAT18Summery');
+        });
+        ////clicking Print button
+        $('.trVATPrint').click(function () {
+            var valid = checkValidation();
+            if (valid == false) {
+                return;
+            }
+            $("#PreviewOnly").val("false");
+            $('#frmVAT18Summery').submit();
+            //pageSubmit('frmVAT18Summery');
+        });
+        ////for dropdown
+        InitDropDowns();
+        ////for select2 dropdown
+        $(".selectDropdown").select2();
+        $(".selectDropdown").trigger('change');
+        $(".selectDropdown").removeClass('form-control');
+
+        function closeModal() {
+            $("#myModal").html("");
+            trkmodal.style.display = "none";
+        }
+
+        var span = document.getElementsByClassName("close")[0];
+        var trkmodal = document.getElementById('myModal');
+        //When the user clicks on <span> (x), close the trkmodal
+        span.onclick = function () {
+            closeModal();
+        }
+
+        $('.closeBtn').click(function () {
+            closeModal();
+        });
+        
+    });
+</script>

@@ -1,0 +1,31 @@
+﻿@model IEnumerable<VATViewModel.DTOs.SaleEngineChassisVM>
+@using UIHelper.MVC
+
+@{
+    Layout = null;
+    var sl = 1;
+}
+
+@foreach (var Eng in Model)
+{
+
+    <tr class="trSelectPopUpExp">
+        <td>
+            @Html.CheckBox("Selected",false, new { @style = "margin: auto", @class = "dSelected form-control" })
+        </td>
+        <td style="width:10px" class="sl">@sl</td>
+
+        <td style="width:150px" class="SalesInvoiceNo" title="SalesInvoiceNo">@Eng.SalesInvoiceNo</td>
+        <td style="width:250px" class="ProductName" title="SalesInvoiceNo">@Eng.ProductName</td>
+        <td style="width:90px" class="ProductCode" title="ProductCode">@Eng.ProductCode</td>
+        <td style="width:200px; " class="EngineNumber" title="EngineNumber">@Eng.EngineNumber</td>
+        <td style="width:200px" class="ChassisNumber" title="ChassisNumber">@Eng.ChassisNumber</td>
+        <td style="width:90px" class="BranchCode" title="BranchCode">@Eng.BranchCode</td>
+        <td style="width: 90px ;display:none" class="ItemNo" title="ItemNo">@Eng.ItemNo</td>
+
+
+            @{
+            sl++;
+                }
+</tr>
+}

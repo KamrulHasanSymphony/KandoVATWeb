@@ -1,0 +1,205 @@
+﻿<style>
+    .npForm {
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+</style>
+@model VATViewModel.DTOs.AdjustmentHistoryVM
+@using UIHelper.MVC
+@using (Html.BeginForm("CreateEdit", "AdjustmentHistory", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmAdjHistory" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.Operation)
+    @Html.HiddenFor(m=>m.AdjHistoryID)
+    @*@Html.HiddenFor(m=>m.AdjId)*@
+    @Html.HiddenFor(m => m.Post)
+    <div class="headrow">
+        @if (Model.Operation == "add")
+        {
+        <button type="button" name="btnName" value="Save" title="Save Data" onclick="pageSubmit('frmAdjHistory')" class="sym-btn-save">&nbsp;Save</button>
+        <label class="pull-right">Adjustment Head > Create</label>
+        }
+        else
+        {
+        <button type="button" name="btnName" value="Update" title="Update Data" onclick="pageSubmit('frmAdjHistory')" class="sym-btn-update">&nbsp;Update</button>
+        <button type="button" title="Post Data" onclick="PostData(this)" class="sym-btn-post">&nbsp;Post</button>
+        <label class="pull-right">Adjustment Head > Edit</label>
+        }
+        <button type="button" title="Go To Index" data-url="/VMS/AdjustmentHistory" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New Currency" data-url="/VMS/AdjustmentHistory/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+    </div>
+
+    <div class="col-md-12 trkPX-0" style="padding:0px;">
+        <div class="thinbox animated zoomIn faster">
+            <div class="th_thinbox">
+                <p>Transaction</p>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label for="AdjHistoryNo" class="col-md-2 control-label text-right trkLabelMargin">Code</label>
+                    <div class="col-md-4">
+                        <div class="col-md-6">
+                            @Html.TextBoxFor(model => model.AdjHistoryNo, new { @placeholder = "~New~", @class = " form-control", @readonly = "readonly" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.AdjHistoryNo)
+                    </div>
+                    <label for="AdjId" class="col-md-2 control-label text-right trkLabelMargin">Name</label>
+                    <div class="col-md-4">
+                        <div class="col-md-6" style="margin-bottom:6px;">
+                            @Html.SimpleDropDownFor(model => model.AdjId, "/Config/DropDown/AdjustmentName", new { @placeholder = "Head name", @class = " required form-control" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="AdjDate" class="col-md-2 control-label text-right trkLabelMargin">Adj Date</label>
+                    <div class="col-md-4">
+                        <div class="col-md-6">
+                            @Html.TextBoxFor(model => model.AdjDate, new { @class = "required customDatePicker defaultDate form-control" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.AdjDate)
+                    </div>
+
+                    <label for="AdjType" class="col-md-2 control-label text-right trkLabelMargin">Adj Type</label>
+                    <div class="col-md-4" style="margin-bottom:6px;">
+                        <div class="col-md-6">
+                            @Html.SimpleDropDownFor(model => model.AdjType, "/Config/DropDown/AdjTypeList", new { @placeholder = "Adj Type", @class = " required form-control" })
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="AdjInputAmount" class="col-md-2 control-label text-right trkLabelMargin">Input Amount</label>
+                    <div class="col-md-4">
+                        <div class=" col-md-6">
+                            @Html.TextBoxFor(model => model.AdjInputAmount, new { @class = " priceLen right form-control" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.AdjInputAmount)
+                    </div>
+                    <label class="col-md-2 control-label text-right trkLabelMargin">Input Percent(%)</label>
+                    <div class="col-md-4" style="margin-bottom:6px;">
+                        <div class="input-group col-md-6">
+                            @Html.TextBoxFor(model => model.AdjInputPercent, new { @class = " priceLen right form-control" })
+                            <span class="input-group-addon">%</span>
+                        </div>
+                        @Html.ValidationMessageFor(model => model.AdjInputPercent)
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="AdjAmount" class="col-md-2 control-label text-right trkLabelMargin">Adj Amount</label>
+                    <div class="col-md-4">
+                        <div class=" col-md-6">
+                            @Html.TextBoxFor(model => model.AdjAmount, new { @class = " priceLen right form-control", @readonly = "readonly" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.AdjAmount)
+                    </div>
+                    <label class="col-md-2 control-label text-right trkLabelMargin">Reference</label>
+                    <div class="col-md-4">
+                        <div class="col-md-8 npForm">
+                            @Html.TextBoxFor(model => model.AdjReferance, new { @class = " form-control" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.AdjInputPercent)
+                    </div>
+                </div>
+                <div class="form-group">
+
+                    <label for="AdjType" class="col-md-2 control-label text-right trkLabelMargin">Adj SD</label>
+                    <div class="col-md-4" style="margin-bottom:6px;">
+                        <div class="col-md-6">
+                            @Html.SimpleDropDownFor(model => model.IsAdjSD, "/Config/DropDown/DecisionList", new { @placeholder = "Adj SD", @class = " required form-control" })
+
+                        </div>
+                    </div>
+                    @*<label for="AdjAmount" class="col-md-2 control-label text-right trkLabelMargin">Adj Amount</label>
+            <div class="col-md-4">
+                <div class=" col-md-6">
+                    @Html.TextBoxFor(model => model.AdjAmount, new { @class = " priceLen right form-control", @readonly = "readonly" })
+                </div>
+                @Html.ValidationMessageFor(model => model.AdjAmount)
+            </div>
+            <label class="col-md-2 control-label text-right trkLabelMargin">Reference</label>
+            <div class="col-md-4">
+                <div class="col-md-8 npForm">
+                    @Html.TextBoxFor(model => model.AdjReferance, new { @class = " form-control" })
+                </div>
+                @Html.ValidationMessageFor(model => model.AdjInputPercent)
+            </div>*@
+                </div>
+
+
+                    @*<label for="AdjAmount" class="col-md-2 control-label text-right trkLabelMargin">Adj Amount</label>
+                    <div class="col-md-4">
+                        <div class=" col-md-6">
+                            @Html.TextBoxFor(model => model.AdjAmount, new { @class = " priceLen right form-control", @readonly = "readonly" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.AdjAmount)
+                    </div>
+                    <label class="col-md-2 control-label text-right trkLabelMargin">Reference</label>
+                    <div class="col-md-4">
+                        <div class="col-md-8 npForm">
+                            @Html.TextBoxFor(model => model.AdjReferance, new { @class = " form-control" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.AdjInputPercent)
+                    </div>*@
+                </div>
+
+            </div>
+        </div>
+    
+
+    <div class="headrow">
+        @if (Model.Operation == "add")
+        {
+            <button type="button" name="btnName" value="Save" title="Save Data" onclick="pageSubmit('frmAdjHistory')" class="sym-btn-save">&nbsp;Save</button>
+            <label class="pull-right">Adjustment Head > Create</label>
+        }
+        else
+        {
+            <button type="button" name="btnName" value="Update" title="Update Data" onclick="pageSubmit('frmAdjHistory')" class="sym-btn-update">&nbsp;Update</button>
+            <button type="button" title="Post Data" onclick="PostData(this)" class="sym-btn-post">&nbsp;Post</button>
+            <label class="pull-right">Adjustment Head > Edit</label>
+        }
+        <button type="button" title="Go To Index" data-url="/VMS/AdjustmentHistory" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New Currency" data-url="/VMS/AdjustmentHistory/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+    </div>
+    
+}
+<script>
+    $(function () {
+        valiDation("frmAdjHistory");
+        var operation = '@Model.Operation';
+
+        ////changing input percent
+        $('#AdjInputPercent').blur(function () {
+            calcAdjAmount();
+        });
+
+        ////calculating adj amount
+        function calcAdjAmount() {
+            var inputAmount = parseFloat($('#AdjInputAmount').val());
+            var percentVal = parseFloat($('#AdjInputPercent').val());
+            var adjAmount = inputAmount * percentVal / 100;
+            $('#AdjAmount').val(adjAmount);
+        }
+    });
+
+</script>
+<script>
+        function PostData(sender) {
+            var AdjId = $("#AdjId").val();
+            var AdjHistoryID = $("#AdjHistoryID").val();
+            var AdjHistoryNo = $("#AdjHistoryNo").val();
+            var Post = $("#Post").val();
+            if (Post.toLowerCase() == 'true' || Post.toLowerCase() == 'y') {
+                ShowResult("Fail", "Data Already Posted!");
+                return;
+            }
+          
+            var url = '/Vms/AdjustmentHistory/Post?ids=' + AdjHistoryID + '&AdjId=' + AdjId + '&AdjHistoryNo=' + AdjHistoryNo;
+            var questionMSG = "Are you sure to Post Data!";
+            singlePostDlete(questionMSG, url);
+        }
+
+</script>

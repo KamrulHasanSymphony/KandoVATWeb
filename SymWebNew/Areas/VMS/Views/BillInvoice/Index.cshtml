@@ -1,0 +1,240 @@
+﻿@model VATViewModel.DTOs.BillInvoiceMasterVM
+@using UIHelper.MVC
+@using SymOrdinary
+@using System.Threading;
+@{
+    ShampanIdentity identity = null;
+    try
+    {
+        identity = (ShampanIdentity)Thread.CurrentPrincipal.Identity;
+    }
+    catch (Exception)
+    {
+        Response.Redirect("/VMS/Home/Login");
+        return;
+    }
+    @Html.HiddenFor(model => model.TransactionType)
+}
+
+@{
+    ViewBag.Title = "Index";
+}
+<div class="headrow">
+    <div style="display: none" id="formAppend"></div>
+    <button type="button" title="Add New Deposit" data-url="/VMS/BillInvoice/Create?TransactionType=@Model.TransactionType" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+    <label class="pull-right">Bill Invoice</label>
+</div>
+
+<div class=" tabMenu">
+    <ul style="font-size: 1.4em;" class="tabDesign nav nav-tabs">
+   
+        <li class="tabDefault active"><a data-toggle="tab" href="#BillInvoiceIndex">Index</a></li>
+
+        @*<li class="tabDefault"><a data-toggle="tab" href="#Excel" class="vdsInfoTab">Excel Upload</a></li>*@
+
+    </ul>
+</div>
+
+
+<div class="tab-content">
+
+    <div id="BillInvoiceIndex" class="tab-pane fade  in active">
+
+        <div class="thinbox  animated zoomIn faster">
+            <div class="th_thinbox">
+                <p>@Model.TransactionType Bill Invoice</p>
+            </div>
+
+            <div class="dtSearch formDesign">
+
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.BillNo)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.BillNo, new { @placeholder = "Bill No", @class = "  form-control" })
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.ChallanNo)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.ChallanNo, new { @placeholder = "Challan No", @class = "  form-control" })
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.BillDateTimeFrom)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.BillDateTimeFrom, new { @placeholder = "Bill Date From", @class = "customDatePicker defaultDate  form-control" })
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.BillDateTimeTo)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.BillDateTimeTo, new { @placeholder = "Bill Date To", @class = "customDatePicker defaultDate  form-control" })
+                    </div>
+                </div>
+
+                <div class="trk1_5">
+                    <div class="editor-label">
+                        <label>Branch Name</label>
+                    </div>
+                    <div class="editor-field">
+                        @*@Html.SimpleDropDownFor(model => model.BranchId, "/Config/DropDown/BranchProfile", new { @class = " selectDropdown  form-control" })*@
+                        @*@Html.SimpleDropDownFor(model => model.BranchId, "/Config/DropDown/BranchProfile", new { @class = " form-control" })*@
+                        @Html.SimpleDropDownFor(model => model.BranchId, "/Config/DropDown/UserBranchProfile", new { @class = " form-control" })
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="editor-label">
+                        <label>&nbsp;</label>
+                    </div>
+                    <div class="editor-field">
+                        <button type="button" title="Click to Search" id="btnDialog" class="sym-btn-search">&nbsp;Search</button>
+                        <button type="button" onclick="ReportPreview()" class=" sym-btn-report ">&nbsp;BillInvoice(Preview)</button>
+                        <button type="button" title="Clear Data" id="Clear" class=" sym-btn-clear">&nbsp;Clear</button>
+                        @*<button type="button" title="Post Data" onclick="PostData()" class="sym-btn-post">&nbsp;Post</button>
+                            <button type="button" title="Export Data" onclick="ExportExcel()" class="sym-btn-Excel-Export">&nbsp;Export</button>*@
+
+
+                    </div>
+                    <br />
+                </div>
+
+
+            </div>
+
+            <p>&nbsp;</p>
+            <table id="myDataTable" class="display">
+                <thead>
+                    <tr>
+                        <th class="center"><input type="checkbox" class="chkAll" />Action</th>
+                        <th>Bill No</th>
+                        <th>Bill Date</th>
+                        <th>PO. No</th>
+                        <th>Challan No</th>
+                        @*<th>Post</th>*@
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <br />
+        </div>
+
+        <div class="headrow">
+            <button type="button" title="Add New Deposit" data-url="/VMS/BillInvoice/Create?TransactionType=@Model.TransactionType" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+        </div>
+        <form id="ReportForm" method="post" target="_blank"></form>
+    </div>
+
+   
+
+</div>
+
+   
+
+<script language="javascript" type="text/javascript">
+
+            $(document).ready(function () {
+
+                SelectAllForDelete();
+                $.datepicker.regional[""].dateFormat = 'dd/M/y';
+                $.datepicker.setDefaults($.datepicker.regional['']);
+                var oTable = $('#myDataTable').dataTable({
+                    "bServerSide": true,
+                    "sAjaxSource": "/VMS/BillInvoice/_index?TransactionType=@Model.TransactionType",
+                    "bProcessing": true,
+                    "aLengthMenu": tablelength(),
+                    "bJqueryUI": true,
+                    "bAutoWidth": false,
+
+                    "fnServerData": function (sSource, aoData, fnCallback) {
+                        $('.dtSearch :input').each(function () {
+                            var Name = $(this).attr("Id")
+                            var Value = $(this).val()
+                            aoData.push({ "name": Name, "value": Value });
+                        });
+                        $.getJSON(sSource, aoData, function (json) {
+                            fnCallback(json);
+                        });
+                    },
+
+                    "aoColumns": [
+                                    {
+                                        "sName": "Id",
+                                        "bSearchable": false,
+                                        "bSortable": false,
+                                        "sWidth": "20%",
+                                        "sClass": "center",
+                                        "fnRender": function (oObj) {
+                                            return ' <input onclick="CheckAll(this)" class="dSelected" type="checkbox" data-Id="' + oObj.aData[1] + '">'
+                                            + '&nbsp; <a title="Click on for Edit" href=\"/VMS/BillInvoice/Edit/' + oObj.aData[0].split('~')[0] + '?TransactionType=' + oObj.aData[5] + '\" class="sym-btn-edit-row"></a>'
+                                                //+ '&nbsp; <a title="Click on for Post" data-url="/VMS/Deposit/Post"  onclick=btnPost(this); data-Id="' + oObj.aData[0] + '\" class="sym-btn-post-row"></a>'
+                                            ;
+                                        }
+                                    }
+                                    , { "sName": "BillNo", "sWidth": "15%" }
+                                    , { "sName": "BillDate", "sWidth": "15%" }
+                                    , { "sName": "PONo", "sWidth": "15%" }
+                                    , { "sName": "ChallanNo", "sWidth": "15%" }
+                                    //, { "sName": "Post", "sWidth": "15%" }
+                    ]
+                });
+
+                $('#btnDialog').click(function () {
+
+                    var model = $('.dtSearch :input').serialize();
+                    $.ajax({
+                        url: "/VMS/BillInvoice/Index",
+                        cache: false,
+                        data: model,
+                        success: function (html) {
+                            oTable.fnDraw();
+                        }
+                    });
+                });
+
+                ////clearing fields
+                $("#Clear").on('click', function () {
+                    $(".Dropdown").select2("val", "");
+                    $(".form-control").val("");
+                });
+
+            });
+        </script>
+
+
+<script>
+
+    function ReportPreview() {
+
+        var $Items = $("#BillInvoiceIndex .dSelected:input:checkbox:checked");
+
+        if ($Items == null || $Items.length == 0) {
+            ShowResult("Fail", "You are requested to Select before Preview!");
+            return;
+        }
+
+        $("#BillInvoiceIndex #ReportForm").empty();
+        $Items.each(function () {
+
+            var ID;
+            ID = $(this).attr("data-Id");
+
+            $('<input type="hidden" name="IDs"/>').val(ID).appendTo('#BillInvoiceIndex #ReportForm');
+        });
+        var url = "/VMS/BillInvoice/PreviewReport_BillInvoice";
+
+        $('#BillInvoiceIndex #ReportForm').attr('action', url);
+        $("#BillInvoiceIndex #ReportForm").submit();
+
+    }
+
+</script>
+

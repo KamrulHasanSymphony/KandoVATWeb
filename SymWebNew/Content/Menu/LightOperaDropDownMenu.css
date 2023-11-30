@@ -1,0 +1,114 @@
+
+    #cssmenu {
+        line-height: 1;
+        border-radius: 5px 5px 0 0;
+        -moz-border-radius: 5px 5px 0 0;
+        -webkit-border-radius: 5px 5px 0 0;
+        background: #3399ff;
+        background: -moz-linear-gradient(top, #286090 0%, #286090 100%);
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #286090), color-stop(100%, #286090));
+        background: -webkit-linear-gradient(top, #286090 0%, #286090 100%);
+        background: -o-linear-gradient(top, #286090 0%, #286090 100%);
+        background: -ms-linear-gradient(top, #286090 0%, #286090 100%);
+        background: linear-gradient(to bottom, #286090 0%, #286090 100%);
+        border-bottom: 2px solid #286090;
+        width: auto;
+    }
+
+    #cssmenu a {
+        background: #286090;
+        background: -moz-linear-gradient(top, #286090 0%, #286090 100%);
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #286090), color-stop(100%, #286090));
+        background: -webkit-linear-gradient(top, #286090 0%, #286090 100%);
+        background: -o-linear-gradient(top, #286090 0%, #286090 100%);
+        background: -ms-linear-gradient(top, #286090 0%, #286090 100%);
+        background: linear-gradient(to bottom, #286090 0%, #286090 100%);
+        color: #ffffff;
+        display: block;
+        font-family: Helvetica, Arial, Verdana, sans-serif;
+        padding: 15px 15px;
+        text-decoration: none;
+    }
+
+    #cssmenu > ul > li > a {
+        color: #ffffff;
+        font-weight: bold;
+    }
+
+    #cssmenu > ul > li:hover:after {
+        content: '';
+        display: block;
+        width: 0;
+        height: 0;
+        position: absolute;
+        left: 40%;
+        bottom: 0;
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        margin-left: -10px;
+    }
+
+    #cssmenu > ul > li.active > a,
+    #cssmenu > ul > li:hover > a {
+        color: #003366;
+        font-weight: bold;
+        box-shadow: inset 0 0 3px #d9d9d9;
+        -moz-box-shadow: inset 0 0 3px #d9d9d9;
+        -webkit-box-shadow: inset 0 0 3px #d9d9d9;
+        background: #99ccff;
+        background: -moz-linear-gradient(top, #ffffff 0%, #f2f2f2 100%);
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #ffffff), color-stop(100%, #f2f2f2));
+        background: -webkit-linear-gradient(top, #ffffff 0%, #f2f2f2 100%);
+        background: -o-linear-gradient(top, #ffffff 0%, #f2f2f2 100%);
+        background: -ms-linear-gradient(top, #ffffff 0%, #f2f2f2 100%);
+        background: linear-gradient(to bottom, #ffffff 0%, #f2f2f2 100%);
+    }
+
+    #cssmenu .has-sub ul li a {
+        background: #286090;
+        border-bottom: 1px solid #4da6ff;
+        font-size: 11px;
+        filter: none;
+        display: block;
+        line-height: 120%;
+        padding: 10px;
+        color: #ffffff;
+        font-weight:bold;
+        min-width: 200px;
+    }
+
+  
+
+    #cssmenu .has-sub ul li:hover a {
+        background: #4da6ff;
+    }
+
+    #cssmenu ul ul li:hover > a {
+        color: #ffffff;
+    }
+
+    #cssmenu.align-right .has-sub .has-sub ul,
+    #cssmenu.align-right ul ul ul {
+        left: auto;
+        right: 100%;
+    }
+
+    #cssmenu .has-sub .has-sub  ul li a {
+        background: #286090;
+        border-bottom: 1px solid #4da6ff;
+    }
+
+    #cssmenu .has-sub .has-sub  ul li a:hover {
+            background: #4da6ff;
+    }
+
+    #cssmenu .k-menu .k-item, .k-widget.k-menu-horizontal>.k-item {
+        border: 0;
+    }
+
+    @media (max-width: 770px) {
+         .navbar-toggle {
+             float: left;
+         }
+    }
+    

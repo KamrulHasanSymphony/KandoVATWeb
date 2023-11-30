@@ -1,0 +1,308 @@
+﻿@model VATViewModel.DTOs.VATReturnVM
+@using System.Configuration
+@using UIHelper.MVC
+@{
+    ViewBag.Title = "ViewVAT9_1";
+}
+
+<style>
+    /*font-face { font-family: Delicious; src: url('~/fonts/SutonnyOMJ.ttf'); }*/
+
+    .trkReportSection {
+        background-color: #ffd800;
+    }
+
+    label {
+        min-height: 23px;
+    }
+</style>
+
+@{
+    string NBRAuth = "";
+
+    try
+    {
+        NBRAuth = new AppSettingsReader().GetValue("NBRAuth", typeof(string)).ToString();
+
+    }
+    catch (Exception e)
+    {
+        NBRAuth = "";
+
+    }
+
+
+}
+
+
+<div class="thinbox animated zoomIn faster formDesign ">
+    <div class="th_thinbox ">
+        <p>VAT 9.1</p>
+    </div>
+    @using (Html.BeginForm("ReportVAT9_1", "NBRReport", FormMethod.Post, new { enctype = "multipart/form-data", @target = "_blank", @Id = "frmVAT9_1" }))
+    {
+        <div class="row">
+            <div class="col-md-2">
+                <div class="editor-label">
+                    <label>Month - Year</label>
+                </div>
+                <div class="editor-field">
+                    @*@Html.TextBoxFor(m => m.PeriodName, new { @class = "customDatePicker form-control defaultDate" })*@
+                    @Html.SimpleDropDownFor(m => m.PeriodName, "//", new { @class = " form-control selectDropdown" })
+
+
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="editor-label">
+                    <label>Branch</label>
+                </div>
+                <div class="editor-field">
+                    @*@Html.SimpleDropDownFor(m => m.BranchId, "/Config/DropDown/BranchProfile", new { @class = " form-control selectDropdown" })*@
+                    @*@Html.SimpleDropDownFor(m => m.BranchId, "/Config/DropDown/UserBranchProfile", new { @class = " form-control" })*@
+                    @Html.DropDownListFor(model => model.BranchId, new SelectList(Model.BranchList, "BranchID", "BranchName", Model.BranchId), new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <div class="editor-label">
+                    @Html.Label("", "Submission Date")
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(m => m.varVATReturnHeaderVM.DateOfSubmission, new { @Id = "DateOfSubmission", @class = "customDatePicker form-control defaultDate" })
+                </div>
+            </div>
+            @if (string.IsNullOrEmpty(NBRAuth) || NBRAuth.ToLower() == "all")
+            {
+                <div class="col-md-1 center">
+                    <div class="editor-label">
+                        @Html.Label("", "Orginal Return")
+                    </div>
+                    <div class="editor-field" style="margin-left: 50%">
+                        @Html.CheckBoxFor(m => m.varVATReturnHeaderVM.MainOrginalReturn, new {@Id = "MainOrginalReturn", @class = " form-control "})
+                    </div>
+                </div>
+                <div class="col-md-1  center">
+                    <div class="editor-label">
+                        @Html.Label("", "Late Return")
+                    </div>
+                    <div class="editor-field" style="margin-left: 50%">
+                        @Html.CheckBoxFor(m => m.varVATReturnHeaderVM.LateReturn, new {@Id = "LateReturn", @class = " form-control "})
+                    </div>
+                </div>
+                <div class="col-md-1 center">
+                    <div class="editor-label">
+                        @Html.Label("", "Amend Return")
+                    </div>
+                    <div class="editor-field" style="margin-left: 50%">
+                        @Html.CheckBoxFor(m => m.varVATReturnHeaderVM.AmendReturn, new {@Id = "AmendReturn", @class = " form-control "})
+                    </div>
+                </div>
+                <div class="col-md-2 center">
+                    <div class="editor-label">
+                        @Html.Label("", "Alternative Return")
+                    </div>
+                    <div class="editor-field" style="margin-left: 50%">
+                        @Html.CheckBoxFor(m => m.varVATReturnHeaderVM.AlternativeReturn, new {@Id = "AlternativeReturn", @class = " form-control "})
+                    </div>
+                </div>
+                <div class="col-md-1 center">
+                    <div class="editor-label">
+                        @Html.Label("", "No Activites")
+                    </div>
+                    <div class="editor-field" style="margin-left: 50%">
+                        @Html.CheckBoxFor(m => m.varVATReturnHeaderVM.NoActivites, new {@Id = "NoActivites", @class = " form-control "})
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="editor-label">
+                        @Html.Label("", "No Activity Details")
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextAreaFor(m => m.varVATReturnHeaderVM.NoActivitesDetails, new {@Id = "NoActivitesDetails", @class = " form-control "})
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="editor-label">
+                        <label for="Post">Post</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.SimpleDropDownFor(m => m.Post, "/Config/DropDown/DecisionList", new { @class = "cPost form-control" })
+
+                        @*<select class="form-control" id="PostStatus" name="Post">
+                            <option selected>Y</option>
+                            <option>N</option>
+                            <option>All</option>
+                        </select>*@
+                    </div>
+                </div>
+            }
+
+        </div>
+
+    }
+</div>
+<div class="headrow">
+    @if (string.IsNullOrEmpty(NBRAuth) || NBRAuth.ToLower() == "all")
+    {
+    <button type="button" name="Save" class=" sym-btn-save cSave"> Save</button>
+       <button type="button" name="Load" class=" sym-btn-refresh rLoad"> Load</button>
+    }
+    &nbsp;<button type="button" class=" sym-btn-report trPrint"> Print</button>
+   <button type="button" title="Post Data" onclick="PostData()" class="sym-btn-post">&nbsp;Post</button>
+
+</div>
+<p>&nbsp;</p>
+<br />
+<div id="VAT9_1Container">
+</div>
+
+<style>
+    table {
+        border-collapse: collapse;
+    }
+
+    table, th, td {
+        border: 1px solid black;
+    }
+</style>
+
+
+<script>
+
+
+    $(function () {
+
+        DropdownLoad($('#PeriodName'), "/Config/DropDown/FiscalPeriod", '@Model.PeriodName')
+        SetVATReturnHeader('@Model.PeriodName', '@Model.BranchId')
+
+        $('#PeriodName').change(function () {
+
+            var PeriodName = $('#PeriodName').val();
+            var BranchId = $('#BranchId').val();
+            SetVATReturnHeader(PeriodName, BranchId);
+
+        });
+
+    });
+
+    function SetVATReturnHeader(PeriodName, BranchId) {
+        var url = "/VMS/NBRReport/Get_VATReturnHeader/";
+        url = url + "?" + "BranchId=" + BranchId + "&PeriodName=" + PeriodName;
+
+        $.getJSON(url, function (vm) {
+
+            $('#MainOrginalReturn').prop('checked', vm.MainOrginalReturn);
+            $('#LateReturn').prop('checked', vm.LateReturn);
+            $('#AmendReturn').prop('checked', vm.AmendReturn);
+            $('#AlternativeReturn').prop('checked', vm.AlternativeReturn);
+            $('#NoActivites').prop('checked', vm.NoActivites);
+            $('#NoActivitesDetails').val(vm.NoActivitesDetails);
+            if (vm.DateOfSubmission != null && vm.DateOfSubmission != "") {
+                $('#DateOfSubmission').val(vm.DateOfSubmission);
+            }
+            $('#PostStatus').val(vm.PostStatus);
+
+        });
+
+    }
+
+
+</script>
+
+
+<script>
+    $(function () {
+
+        $('.cSave, .rLoad').click(function () {
+
+            var Operation = $(this).attr("name");
+
+            if (Operation == "Save") {
+
+                var model = $("#frmVAT9_1").serialize();
+                var url = "/Vms/NBRReport/FiscalPeriodCheck";
+                $.ajax({
+                    data: model,
+                    url: url,
+                    cache: false,
+                    success: function (rVM) {
+
+                        if (rVM.Status == "Fail" && rVM.Status != "") {
+                            MsgAskOk(rVM.Message, rVM.Status);
+                        }
+                        else {
+                            LoadVAT9_1(Operation);
+                        }
+
+                    }
+                });
+            }
+            else {
+
+                LoadVAT9_1(Operation);
+
+            }
+
+        });
+
+
+        $('.trPrint').click(function () {
+
+            pageSubmit('frmVAT9_1');
+        });
+
+    });
+
+    function LoadVAT9_1(Operation) {
+
+        var model = $("#frmVAT9_1").serialize();
+        model = model + "&Operation=" + Operation;
+
+        var url = "/Vms/NBRReport/VAT9_1Load";
+        $.ajax({
+            data: model,
+            url: url,
+            cache: false,
+            success: function (partialHtml) {
+                $("#VAT9_1Container").html(partialHtml);               
+                
+                SetVATReturnHeader($("#PeriodName").val(), $("#BranchId").val());
+            }
+        });
+
+    }
+
+    function PostData() {
+
+        var questionMSG = "Do you want to post this transction? After posted no changes will be performed!";
+
+        Ask(questionMSG, function () {
+            debugger
+            var PeriodName = $('#PeriodName').val();
+           
+            var url = '/VMS/NBRReport/Post?PeriodName=' + PeriodName;
+
+            $.ajax({
+                url: url
+                //, data: model
+                , type: 'Post'
+                , traditional: true
+                , beforeSend: function () { $(".loading").show(); }
+                , success: function (rVM) {
+                    ShowResult(rVM.Status, rVM.Message);
+                }
+                , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+
+            });
+        });
+
+    }
+
+</script>
+
+
+
+
+

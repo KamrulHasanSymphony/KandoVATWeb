@@ -1,0 +1,802 @@
+﻿@model VATViewModel.DTOs.BillInvoiceMasterVM
+@using UIHelper.MVC
+@using (Html.BeginForm("CreateEdit", "BillInvoice", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmBillInvoice" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.Id)
+    @*@Html.HiddenFor(model => model.DepositId)*@
+    @Html.HiddenFor(model => model.Post)
+    @Html.HiddenFor(model => model.Operation)
+    @Html.HiddenFor(model => model.TransactionType)
+    @Html.HiddenFor(model => model.BranchId)
+    @Html.Hidden("ItemNo", "", new { @class = " trItemNo" })
+    @Html.Hidden("NBRPrice", "", new { @class = " trNBRPrice" })
+    
+  
+
+    <input id="ConvFactor" type="hidden" />
+
+    <div class="headrow">
+        @if (Model.Operation == "update")
+        {
+            <button type="button" title="Update Data" onclick="SaveData()" class="sym-btn-update">&nbsp;Update</button>
+            @*<button type="button" title="Post Data" onclick="PostData(this)" class="sym-btn-post">&nbsp;Post</button>*@
+            <label class="pull-right">BillInvoice > Edit(@Model.TransactionType)</label>
+        }
+        else if (Model.Operation == "add")
+        {
+            <button type="button" title="Save Data" onclick="SaveData()" class="sym-btn-save">&nbsp;Save</button>
+            <label class="pull-right">BillInvoice  > Create(@Model.TransactionType)</label>
+        }
+
+        <button type="button" title="Go To Index" data-url="/VMS/BillInvoice?TransactionType=@Model.TransactionType" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        @*<button type="button" title="Add New Deposit" data-url="/VMS/Deposit/Create?TransactionType=@Model.TransactionType" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>*@
+        <button type="button" title="Add New BillInvoice" data-url="/VMS/BillInvoice/Create?TransactionType=@Model.TransactionType" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+        <button type="button" onclick="window.open('/VMS/BillInvoice/PreviewReport_BillInvoice?BillNo=@Model.BillNo')" class=" sym-btn-report ">&nbsp;BillInvoice (Preview)</button>
+
+    </div>
+    if (Model.Operation == "update")
+    {
+        <div class="col-sm-12 col-md-12">
+            <div class="input-group   col-lg-8  col-md-8  col-sm-8 col-xs-12 text-color col-md-offset-2" style="">
+                <a class="input-group-addon btn btn-primary hidden-xs changePage" data-pager-action='first' id="first"><i class="fa fa-angle-double-left"></i>First</a>
+                <a class="input-group-addon btn btn-primary hidden-xs changePage" data-pager-action='previous' id="precode"><i class="fa fa-angle-left"></i>Previous</a>
+                @Html.SimpleDropDown("", "/Config/DropDown/IdNameTtype?tableName=BillInvoice&Id=Id&Name=BillNo&type=" + Model.TransactionType + "&code=BillNo", new { @class = " trNavigateMenu form-control selectDropdown " })
+                <a class="input-group-addon btn btn-primary changePage" data-pager-action='current' id="current"><i class="fa fa-search"></i></a>
+                <a class="input-group-addon btn btn-primary hidden-xs changePage" data-pager-action='next' id="nextcode">Next <i class="fa  fa-angle-right"></i></a>
+                <a class="input-group-addon btn btn-primary hidden-xs changePage" data-pager-action='last' id="last">Last <i class="fa  fa-angle-double-right"></i></a>
+            </div>
+        </div>
+    }
+
+    <div class="tab-content">
+        @*<div id="VDS" class="tab-pane fade">*@
+            <div class="thinbox col-md-12 formDesign animated slideInUp faster" style="margin-top: 0px; margin-bottom: 0px;">
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="editor-label">
+                            @*<label for="VDSId">Auto No</label>*@
+                            <label for="BillNo">Bill No.</label>
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(m => m.BillNo, new { @placeholder = "New", @class = " cBillNo form-control", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="editor-label">
+                            <label id="PurchaseLabel">Sale No</label>
+                        </div>
+                        <div class="editor-field">
+                            @*@Html.TextBox("DPurchaseNo", null, new { @class = "trPurchaseNo  form-control", @readonly = "readonly" })*@
+                            @Html.TextBox("ChallanNo", null, new { @class = "trChallanNo  form-control", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="trk_5">
+                        <div class="editor-label">
+                            <label>&nbsp;</label>
+                        </div>
+                        <div class="editor-field">
+                            <button class=" sym-btn-search" type="button" id="saleBtn"></button>
+                        </div>
+                    </div>
+               
+                    @*<div class="trk1_5">
+                        <div class="editor-label">
+                            <label for="BillNo">Bill No</label>
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBox("BillNo", null, new { @class = " trBillNo  form-control" })
+                        </div>
+                    </div>*@
+
+                    <div class="trk1_5">
+                        <div class="editor-label">
+                            <label for="BillNo">Bill Date</label>
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(m => m.BillDate, new { @class = " trBillDate customDatePicker defaultDate  form-control" })
+
+                        </div>
+                    </div>
+
+                    @*<div class="col-md-2">
+                        <div class="editor-label">
+                            <label >ChallanNo</label>
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBox("ChallanNo", null, new { @class = "trChallanNo  form-control", @readonly = "readonly" })
+                        </div>
+                    </div>*@
+
+                    <div class="col-md-2">
+                        <div class="editor-label">
+                            <label for="VehicleID">PO No</label>
+                        </div>
+                        <div class="editor-field">
+                            @Html.HiddenFor(m => m.PONo, new { @class = "trPONo" })
+                            @Html.TextBoxFor(m => m.PONo, null, new { @placeholder = "PO.No", @class = "trPONo  form-control", @readonly = "readonly" })
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-2">
+                        <div class="editor-label">
+                            <label for="VehicleID">Customer Name</label>
+                        </div>
+                        <div class="editor-field">
+                            @Html.HiddenFor(m => m.CustomerID, new { @class = "trCustomerID" })
+                            @Html.TextBox("CustomerName", null, new { @class = "trCustomerName  form-control", @readonly = "readonly" })
+
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="editor-label">
+                            <label for="VehicleID">Customer Address</label>
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBox("DeliveryAddress1", null, new { @class = "trDeliveryAddress1  form-control", @readonly = "readonly" })
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-1">
+                        <div class="editor-label">
+                            <label>&nbsp;</label>
+                        </div>
+                        <div class="editor-field">
+                            @*<div id="ItemExist" title="Add Detail" data-url="/Vms/BillInvoice/BlankItem" class="sym-btn-add-row AddRow" data-container="editorItemRows4">&nbsp;Add</div>*@
+                            <div id="ItemExist" title="Add Detail" data-url="/Vms/BillInvoice/BlankItem"  data-container="editorItemRows4">&nbsp;</div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div>
+                    <div class="fixedParent">
+
+                        @if (Model.Details != null)
+                        {
+                            <table class="trkFixTable" id="itemTable">
+                                <thead>
+                                    <tr>
+                                        @*<th>Action</th>*@
+                                        <th>Quantity</th>
+                                        <th>SubTotal</th>
+                                        <th>VATAmount</th>
+                                        <th>VATRate</th>
+                                        @*<th>Post</th>*@
+                                        @*<th>Is percent</th>
+                                        <th>Is Purchase</th>*@
+                                    </tr>
+                                </thead>
+
+                                <tbody id="editorItemRows4">
+                                    @*@foreach (var item in Model.Details)
+                                    {
+                                        Html.RenderPartial("_detail", item);
+                                    }*@
+                                    @if (Model.Details.Count > 0)
+                                    {
+                                        @Html.Partial("_detail", Model.Details);
+                                    }
+                                </tbody>
+                            </table>
+
+                        }
+                    </div>
+
+                </div>
+            </div>
+
+        @*</div>*@
+    </div>
+
+    <div class="headrow">
+
+        @if (Model.Operation == "update")
+        {
+            <button type="button" title="Update Data" onclick="SaveData()" class="sym-btn-update">&nbsp;Update</button>
+            @*<button type="button" title="Post Data" onclick="PostData(this)" class="sym-btn-post">&nbsp;Post</button>*@
+        }
+        else if (Model.Operation == "add")
+        {
+            <button type="button" title="Save Data" onclick="SaveData()" class="sym-btn-save">&nbsp;Save</button>
+        }
+
+        <button type="button" title="Go To Index" data-url="/VMS/BillInvoice?TransactionType=@Model.TransactionType" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New BillInvoice" data-url="/VMS/BillInvoice/Create?TransactionType=@Model.TransactionType" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+        <button type="button" onclick="window.open('/VMS/BillInvoice/PreviewReport_BillInvoice?BillNo=@Model.BillNo')" class=" sym-btn-report ">&nbsp;BillInvoice (Preview)</button>
+
+    </div>
+}
+<div id="myModal" class="trkmodal"></div>
+<div id="myHigherModal" class="HigherModal"></div>
+<div id="purchaseDetails" class="trkmodal">
+    <div class="trkmodal-content">
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+<script>
+    $(document).ready(function () {
+
+        callingFixedTable();
+
+    })
+
+    @*------------------------------Commonn Methods------------------------------*@
+
+
+
+
+
+        ////clicking add row
+        $('.AddRow').on("click", function () {
+            var PurchaseNo = $('.trPurchaseNo').val();
+
+
+            //if (PurchaseNo == "0" || PurchaseNo == "") {
+            //    ShowResult("Fail", "Select a Purchase No first!");
+            //    $('.trPurchaseNo').css('background-color', 'yellow');
+            //    return;
+            //}
+
+
+            var container = $(this).attr('data-container');
+            var url = $(this).attr('data-url');
+            AddRow(container, url)
+            return false;
+        });
+
+    ////add row method
+    function AddRow(container, url) {
+        //form fields
+        var vendorName = $('.trVendorName').val();
+
+
+        var vendorId = $('.trVendorId').val();
+
+        var BillNo = $('.trBillNo').val();
+        var billAmount = $('.trBillAmount').val();
+        //////var vdsPercent = parseFloat($('.trVDS').val().replace(/\,/g, ''));
+        var vdsAmount = parseFloat($('.trVDSAmount').val().replace(/\,/g, ''));
+        var purchaseDate = $('.trPurDate').val();
+        var issueDate = $('.trIssueDate').val();
+        var remarks = $('.trComment').val();
+        var purchaseNumber = $('.trPurchaseNo').val();
+
+        var isPercent = "N";
+
+        if ($('#IsPercent').val() == "True") {
+            isPercent = "Y";
+        }
+        var isPurchase = $('#IsPurchase').val();//// == 'Y' ? 'True' : 'False';
+
+        ////if ($('#IsPurchase').val() == "True") {
+        ////    isPurchase = "Y";
+        ////}
+
+        ////the detail view Model
+        var model = {
+            VendorId: vendorId,
+            VendorName: vendorName,
+            BillNo: BillNo,
+            BillAmount: billAmount,
+            BillDate: purchaseDate,
+            BillDeductedAmount: vdsAmount,
+            IssueDate: issueDate,
+            Remarks: remarks,
+            PurchaseNumber: purchaseNumber,
+            ////VDSPercent: vdsPercent,
+            //////VDSAmount: vdsAmount,
+            IsPercent: isPercent,
+            IsPurchase: isPurchase
+        }
+        ////calling blank item function
+        $.ajax({
+            data: model,
+            url: url,
+            cache: false,
+            success: function (html) {
+                $("#" + container).append(html);
+                callingFixedTable();
+                SubTotal();
+            }
+        });
+        ////reseting values
+        $('.trPurchaseNo').val("");
+        $('.trVendorName').val("");
+        $('.trBillNo').val("");
+        $('.trBillAmount').val("");
+        ////$('.trVDS').val("");
+        $('.trVDSAmount').val("");
+        $('.trPurDate').val("");
+        $('.trComment').val("");
+
+    }
+
+    ////posting method
+    function PostData(sender) {
+        var Id = $("#Id").val();
+        var Post = $("#Post").val();
+        if (Post.toLowerCase() == 'true' || Post.toLowerCase() == 'y') {
+            ShowResult("Fail", "Data Already Posted!");
+            return;
+        }
+        var url = '/Vms/Deposit/Post?ids=' + Id + '~';
+        var questionMSG = "Are you sure to Post Data!";
+        singlePostDlete(questionMSG, url);
+    }
+
+    ////form posting method
+    function SaveData() {
+
+
+        ////alert("Save");
+        pageSubmit('frmBillInvoice');
+        ////$("#frmDeposits").submit();
+    }
+
+    ////Edit a row
+
+    ////removing a row
+    function RemoveItem(sender) {
+        Ask("Are you sure to Delete the item!", function () {
+            $(sender).parents("tr:first").remove();
+            SubTotal();
+        });
+    }
+</script>
+
+
+
+
+
+
+
+    @*------------------------------Table Scrolling/Freezing------------------------------*@
+
+    <script>
+        ////fixed header column table
+        function fixedScrolltrkFixedTable(tableId, leftTotal) {
+            $('#' + tableId + ' tbody').scroll(function (e) {
+                var i;
+                var j = 2;
+                for (i = 1; i <= leftTotal; i++) {
+                    $('#' + tableId + ' tbody td:nth-child(' + i + ')').css("z-index", "1");
+                    $('#' + tableId + ' thead th:nth-child(' + i + ')').css("left", $("#" + tableId + " tbody").scrollLeft());
+
+                    $('#' + tableId + ' tbody td:nth-child(' + j + ')').css("z-index", "1");
+                    $('#' + tableId + ' tbody td:nth-child(' + j + ')').css("left", $("#" + tableId + " tbody").scrollLeft());
+                    $('#' + tableId + ' tbody td:nth-child(' + j + ')').css("left", $("#" + tableId + " tbody").scrollLeft());
+                    j++;
+                }
+                $('#' + tableId + ' thead').css("left", -$("#" + tableId + " tbody").scrollLeft());
+                //$('#' + tableId + ' thead th:nth-child(2)').css("left", $("#" + tableId + " tbody").scrollLeft());
+
+            });
+        }
+
+        function settingtrkFixedColumnWidth(tableId, widthArgs) {
+            if (widthArgs == null) {
+                return;
+            }
+            var i;
+            var j = 2;
+            for (i = 1; i <= widthArgs.length; i++) {
+                $('#' + tableId + ' tr td:nth-child(' + j + ')').css("min-width", widthArgs[i - 1] + "px");
+                $('#' + tableId + ' tr th:nth-child(' + i + ')').css("min-width", widthArgs[i - 1] + "px");
+                j++;
+            }
+        }
+
+        function fixLeftColumns(tableId, leftTotal) {
+            var i;
+            var j = 2;
+            for (i = 1; i <= leftTotal; i++) {
+                //fixed column header style
+                $('#' + tableId + ' thead th:nth-child(' + i + ')').css("height", "30px");
+                $('#' + tableId + ' thead th:nth-child(' + i + ')').css("position", "relative");
+                $('#' + tableId + ' thead th:nth-child(' + i + ')').css("z-index", "2");
+                //fixed column rows style
+                $('#' + tableId + ' tbody tr td:nth-child(' + j + ')').css("height", "30px");
+                $('#' + tableId + ' tbody tr td:nth-child(' + j + ')').css("position", "relative");
+                j++;
+            }
+        }
+
+        function settingWidth(tableId) {
+            var parentWidth = $('#' + tableId).closest('.fixedParent').width();
+            $('#' + tableId + ' thead').width(parentWidth);
+            $('#' + tableId + ' tbody').width(parentWidth);
+        }
+
+        function trkFixedTable(tableId, leftTotal, args) {
+            settingWidth(tableId);
+            fixLeftColumns(tableId, leftTotal);
+            fixedScrolltrkFixedTable(tableId, leftTotal);
+            settingtrkFixedColumnWidth(tableId, args);
+        }
+
+        function callingFixedTable() {
+            var args = [153, 153, 153, 153, 150, 150, 150, 150, 150, 150, 150, 150];
+            trkFixedTable("itemTable", 2, args);
+        }
+
+        $(function () {
+            $('.vdsInfoTab').click(function () {
+                setTimeout(function () {
+                    callingFixedTable();
+                }, 200);
+            });
+        })
+
+        function navigatePage() {
+            var interval = setInterval(function () {
+                if (document.querySelectorAll('.trNavigateMenu option').length > 0) {
+                    var id = '@Model.Id';
+                    $('.trNavigateMenu').select2("val", id);
+                    clearInterval(interval);
+                }
+            }, 200);
+
+
+            ////navigating previous-next
+            $('.changePage').click(function () {
+                var id = '@Model.Id';
+                var ttype = '@Model.TransactionType';
+                var btn = $(this).attr("data-pager-action");
+                if (btn.toLocaleLowerCase() == "current") {
+                    var targetId = $('.trNavigateMenu').val();
+                    if (id == targetId) {
+                        return;
+                    }
+                    id = targetId;
+                }
+                window.location = "/VMS/Deposit/Navigate?id=" + id + "&btn=" + btn + "&ttype=" + ttype;
+            });
+        }
+    </script>
+
+    @*for clicking purchase search*@
+    <script>
+        function modalInitHigher(url) {
+            var modal = document.getElementById('myHigherModal');
+            $.ajax({
+                url: url,
+                cache: false,
+                beforeSend: function () { $(".loading").show(); },
+                complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                success: function (html) {
+                    modal.style.display = "block";
+                    $("#myHigherModal").html(html);
+
+                }
+            });
+        }
+
+        function callbackFromCustomerModal(sender) {
+            var id = $(sender).children('td.popUpCustomerId').text();
+
+            $('.trVendorId').select2('val', id);//robin
+
+        }
+
+        function callbackFromVendorModal(sender) {
+            var id = $(sender).children('td.popUpVendorId').text();
+            $('.trVendorId').select2('val', id);//robin
+        }
+
+        //function callbackFromModal(returnId) {
+        //    $('.trPurchaseNo').val(returnId);
+        //    PurchaseChange(returnId);
+        //}
+
+        $(function () {
+            $('#saleBtn').click(function () {
+                //var isPurchase = $('#IsPurchase').val() == 'Y' ? 'True' : 'False';
+                var url;
+                
+                url = "/Vms/BillInvoice/GetItemPopUpBillInvoice?targetId=VendorName" + "&TransactionType=" + '@Model.TransactionType';
+                @*if (isPurchase.toLocaleLowerCase() == "true") {
+                    url = "/Vms/Purchase/GetItemPopUp?targetId=VendorName" + "&TransactionType=" + '@Model.TransactionType';
+                }*@
+
+                modalInitHigher(url);
+            });
+        })
+    </script>
+
+
+
+    <script>
+        $(function () {
+            valiDation("frmBillInvoice");
+            $('.customDatePicker').prop("readonly", false);
+            callingFixedTable();
+
+            @*if ('@Model.TransactionType' == 'VDS') {
+                $('#IsPurchase').val('Y');
+            }
+            else {
+                $('#IsPurchase').val('N');
+
+            }*@
+
+            ////for navigation
+            var operation = '@Model.Operation';
+            if (operation == "update") {
+                navigatePage();
+            }
+
+            ////for counting discount amount based on % symbol
+            MyToggleBox('IsPercent', "", "Amt");
+
+            ////for selecting Is purchase checkbox
+            MyToggleBoxWithLabel('IsPurchase', 'Purchase', 'Sale');
+            //MyToggleBoxWithLabel('SingleTR6', 'Single TR6', 'All TR6');
+
+            ////clicking on percent and Purchase
+            $('.IsPercent').click(function () {
+                setTimeout(function () {
+                    calculateVDS();
+                }, 500);
+            });
+
+
+            $('.IsPurchase').click(function () {
+                var status = $('#IsPurchase').val() == 'Y' ? 'True' : 'False';
+                ////var status = $('#IsPurchase').val();
+                if (status == "True") {
+                    $('#PurchaseLabel').html("Pur No");
+                    $('#VendorLabel').html("Vendor Name");
+                }
+                else {
+                    $('#PurchaseLabel').html("Sale No");
+                    $('#VendorLabel').html("Customer Name");
+                }
+
+            });
+
+            SubTotal();
+
+        });
+
+        ////Changing bank
+        $('.trBankId').change(function () {
+            ChangeBank();
+        });
+        function ChangeBank() {
+            var bankId = $('.trBankId').val();
+            var url = "/Vms/Deposit/GetBankInformation?bankId=" + bankId;
+            $.getJSON(url, function (data) {
+                var branchName = data.split('~')[0];
+                var accountNo = data.split('~')[1];
+                var district = data.split('~')[2];
+                var depositPersonContactNo = data.split('~')[3];
+                var depositPersonAddress = data.split('~')[4];
+
+                $('.trBranchName').val(branchName);
+                $('.trAccountNo').val(accountNo);
+                $('.trDistrict').val(district);
+                $('.trDepositPersonContactNo').val(depositPersonContactNo);
+                $('.trDepositPersonAddress').val(depositPersonAddress);
+
+            });
+        }
+
+
+    </script>
+
+    @*------------------------------form maker------------------------------*@
+    <script>
+        $(function () {
+            if ('@Model.TransactionType'.toLowerCase() == "vds" || '@Model.TransactionType'.toLowerCase() == "SaleVDS".toLowerCase()) {
+                $('.tabMenu').show();
+                if ('@Model.TransactionType'.toLowerCase() == "SaleVDS".toLowerCase()) {
+                    document.getElementById("PurchaseLabel").innerHTML = "Sale No"; /////JBR///////
+                }
+            }
+            //MyCheckBox('True', 'input-3', 'SingleTR6');
+        })
+    </script>
+
+    @*for reporting*@
+    <script>
+        function modalInit(url) {
+            var modal = document.getElementById('myModal');
+            $.ajax({
+                url: url,
+                cache: false,
+                beforeSend: function () { $(".loading").show(); },
+                complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                success: function (html) {
+                    modal.style.display = "block";
+                    $("#myModal").html(html);
+                }
+            });
+        }
+        $(function () {
+
+            $('#vendorBtn').click(function () {
+                var vendorName = $('.trVendorId option:selected').text();
+
+                var url = "";
+
+                if ('@Model.TransactionType' == "SaleVDS") {
+                    url = "/Vms/Customer/GetCustomerPopUp?CustomerName=" + vendorName;
+
+                }
+                else {
+                    url = "/Vms/Vendor/GetVendorPopUp?VendorName=" + vendorName;
+                }
+
+
+
+                var modal = document.getElementById('myHigherModal');
+                $.ajax({
+                    url: url,
+                    cache: false,
+                    beforeSend: function () { $(".loading").show(); },
+                    success: function (html) {
+                        modal.style.display = "block";
+                        $("#myHigherModal").html(html);
+                    }
+                    , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+                });
+            });
+
+            @*
+            ///JBR/////
+            var vendor = $('.trVendorId').val();
+            if (vendor == "" || vendor == "0") {
+                ShowResult("Fail", "Please Select a Vendor");
+                return;
+            }
+                *@
+
+
+
+            $('.depoMIS').click(function () {
+                var url = "/Vms/MISReport/PrintDeposit";
+                modalInit(url);
+            });
+            $('#DepositBtn').click(function () {
+
+                var url = "/Vms/Deposit/GetUserInformationPopUp";
+
+                modalInitHigher(url);
+            });
+
+            $('.depoTR').click(function () {
+                //alert("Report Opening");
+
+
+                var $depoForm = $('#frmDeposits');
+                $depoForm.attr("target", "_blank");  //_self
+                $depoForm.attr("action", "/VMS/Deposit/ReportTR").submit();
+
+
+                //$depoForm.attr("target", "_self");
+
+                //  var url = "/VMS/Deposit/ReportTR";
+                //  modalInit(url);ReportDeposit", "MISReport
+                // var url = "/Vms/Deposit/ReportTRTEST";
+                // var url = "/Vms/MISReport/ReportDeposit";
+                // modalInitHigher(url);
+            });
+
+            $('.VAT6_6R').click(function () {
+                var DepositId = $('.cDepositId').val();
+                var TreasuryN = $('#TreasuryN').val();
+                if (TreasuryN == null || TreasuryN == "") {
+                    ShowResult("Fail", "Please Input Treasury ChallaNo!");
+                    return;
+                }
+                var url = "/Vms/Deposit/PrintVAT6_6?DepositNo=" + DepositId + "&TransactionType=" + '@Model.TransactionType';
+                modalInit(url);
+
+            });
+
+        })
+
+
+
+
+        function CustomerSelect(CustomerID) {
+
+            $('.trCustomerId').val("");
+
+          @*var value = '@Model.CustomerID';*@
+
+          var value = CustomerID;
+
+            var CustomerNames = "";
+
+            var url = "/Config/DropDown/DropDownByCustomerID/?CustomerID=" + value;
+            CustomerNames += "<option value=0>Select</option>";
+            $.getJSON(url, function (data) {
+                $.each(data, function (i, state) {
+                    CustomerNames += "<option value='" + state.Value + "'>" + state.Text + "</option>";
+                });
+
+                $('.trCustomerId').html(CustomerNames);
+
+                $('.trCustomerId').select2('val', CustomerID);
+                ////////alert(2022);
+                CustomerChange();
+                //var CustomerId = $('.trCustomerId :selected').val();
+
+                //console.log(CustomerId);
+
+            });
+        }
+
+
+
+
+        function GetSaleMaster(returnId) {
+            var url = "/Vms/SaleInvoice/GetSaleMaster?saleNo=" + returnId;
+            $.getJSON(url, function (vm) {
+                ////var vehicleId = data.split('~')[0];
+                ////var vehicleNo = data.split('~')[1];
+                ////var customerId = data.split('~')[2];
+                ////var customerName = data.split('~')[3];
+
+                ////$('.trInvoiceDate').val(vm.InvoiceDateTime);
+
+                //$('.trVehicle').val(vm.VehicleID);
+                //$('.trVehicleNo').val(vm.VehicleNo);
+                $('.trChallanNo').val(vm.SalesInvoiceNo);
+                $('.trPONo').val(vm.PONo);
+                $('.trCustomerID').val(vm.CustomerID);
+                $('.trCustomerName').val(vm.CustomerName);
+                $('.trDeliveryAddress1').val(vm.DeliveryAddress1);
+
+                CustomerSelect(vm.CustomerID);
+
+                //$('.trCustomerId').val(vm.CustomerID);
+                //$('.trCustomerName').val(vm.CustomerName);
+                //$('.cDeliveryAddress1').val(vm.DeliveryAddress1);
+
+                //$('.trCustomerId').select2('data', { id: vm.CustomerID, text: vm.CustomerName});
+
+                //////vehicleChange();
+
+            });
+        }
+
+
+        function callbackFromModal(returnId, pInvoiceDate) {
+            ////var post = $(sender).children('td.popUpPost').text();
+            ////if (post == "N") {
+            ////    ShowResult("Fail", "This transaction was not posted");
+            ////    return;
+            ////}
+
+            $("#editorItemRows4").html("");
+
+            //var InvoiceDate = $('.cpInvDateTime').val();
+
+            GetSaleMaster(returnId);
+
+            var InvoiceDate = pInvoiceDate;
+
+            $.ajax({
+                url: "/VMS/BillInvoice/BlankItems?saleNo=" + returnId + "&InvoiceDate=" + InvoiceDate + "&SearchPreviousForCNDN=" + true,
+                cache: false,
+                success: function (html) {
+
+                    $("#editorItemRows4").append(html);
+                    callingFixedTable();
+                    SubTotal();
+                }
+            });
+        }
+
+    </script>
+
+}

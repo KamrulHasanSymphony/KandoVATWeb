@@ -1,0 +1,30 @@
+﻿@model System.Data.DataTable
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+
+@foreach (System.Data.DataRow dr in Model.Rows)
+{
+    <tr class="trSelectPopUpProduct">
+
+        <td>
+            &nbsp; <button title="Click on for Save" onclick="IntegrationSave(this)" class="sym-btn-save-row"></button>
+            &nbsp; <button title="Click on for Detail" onclick="IntegrationShowDetail(this)" class="sym-btn-detail-row"></button>
+            &nbsp;
+            @if (dr["Status"].ToString().ToLower() == "saved")
+            {
+                <a title="Click on for Edit" href="/VMS/Purchase/UnileverIntegrationEdit/@dr["ID"]" target="_blank" class="sym-btn-edit-row"></a>
+            }
+        </td>
+
+        <td class="dID">@dr["ID"]</td>
+        <td>@dr["Vendor_Name"]</td>
+        <td>@dr["Receive_Date"]</td>
+        <td>@dr["UOM"]</td>
+        <td>@dr["Quantity"]</td>
+        <td>@dr["Total_Price"]</td>
+        <td>@dr["VAT_Amount"]</td>
+        <td class="dStatus">@dr["Status"]</td>
+    </tr>
+}

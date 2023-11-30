@@ -1,0 +1,118 @@
+﻿@model SymVATWebUI.Areas.VMS.Models.Vat16ViewModel
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+
+<style>
+    .trkmodal{
+        padding-top:10%;
+    }
+    .trkmodal-content {
+        width: 50%;
+        padding-bottom: 10px;
+    }
+    .customDatePicker {
+        background: #fefede url(/Images/calendar.jpg) no-repeat 98% !important;
+    }
+</style>
+<div class="trkmodal-content">
+    <div class="trkmodal-header">
+        <span class="close">&times;</span>
+        <h2 class="text-center">Report(VAT 6.1) Purchase Register</h2>
+    </div>
+    <div class="trkmodal-body">
+    @using (Html.BeginForm("ReportVAT16", "Purchase", FormMethod.Post, new { enctype = "multipart/form-data", @target = "_blank", @Id = "frmVAT16" }))
+    {
+        <div class="form-group">
+            <label>Product Name</label>
+            @Html.SimpleDropDownFor(m=>m.ItemNo, "/Config/DropDown/Product", new { @class = " form-control selectDropdown trItemNo" })
+        </div>
+        <div class="form-group col-md-6">
+            <label>Date From</label>
+            @Html.TextBoxFor(m => m.StartDate, new { @placeholder = "Start Date", @class = "customDatePicker form-control" })
+        </div>
+    <div class="form-group col-md-6">
+        <label>Date To</label>
+        @Html.TextBoxFor(m => m.EndDate, new { @placeholder = "End Date", @class = "customDatePicker form-control" })
+    </div>
+        @Html.HiddenFor(m => m.PreviewOnly);
+        <button type="button" class=" btn sym-btn-report trVAT16"> VAT 6.1</button>
+        <button type="button" class=" btn sym-btn-report trPreview"> Preview</button>
+        <button type="button" class="btn btn-danger closeBtn pull-right">Close</button>
+    }
+    </div>
+</div>
+<script src="~/assets/javascripts/custom.js"></script>
+<script>
+    $(document).ready(function () {
+        ////setting first item
+        var interval = setInterval(function () {
+            if (document.querySelectorAll('.trItemNo option').length > 0) {
+                var id = '@Model.ItemNo';
+                $('.trItemNo').select2("val", id);
+                clearInterval(interval);
+            }
+        }, 200);
+        ////clicking preview button
+        $('.trPreview').click(function () {
+            var product = $('.trItemNo :selected').val();
+            if (product == "") {
+                ShowResult("Fail", "Select a product first!");
+                return;
+            }
+            $("#PreviewOnly").val("true");
+            pageSubmit('frmVAT16');
+        });
+        ////clicking vat16 button
+        $('.trVAT16').click(function () {
+            var product = $('.trItemNo :selected').val();
+            if (product == "") {
+                ShowResult("Fail", "Select a product first!");
+                return;
+            }
+            $("#PreviewOnly").val("false");
+            pageSubmit('frmVAT16');
+        });
+        ////for dropdown
+        InitDropDowns();
+        ////for select2 dropdown
+        $(".selectDropdown").select2();
+        $(".selectDropdown").trigger('change');
+        $(".selectDropdown").removeClass('form-control');
+
+        function ItemChange() {
+            var value = $('.trName').val().toString();
+            if (value == 0) {
+                $('.trBranch').val("");
+                return;
+            }
+            var url = "/Vms/BankInformation/GetItemInfo?ItemId=" + value;
+
+            $.getJSON(url, function (data) {
+                $('.trBranch').val(data);
+            });
+        }
+        ////changing item
+        $('.trName').change(function () {
+            ItemChange();
+        });
+
+        function closeModal() {
+            $("#myModal").html("");
+            trkmodal.style.display = "none";
+        }
+
+        var span = document.getElementsByClassName("close")[0];
+        var trkmodal = document.getElementById('myModal');
+        //When the user clicks on <span> (x), close the trkmodal
+        span.onclick = function () {
+            closeModal();
+        }
+
+        $('.closeBtn').click(function () {
+            closeModal();
+        });
+        
+    });
+</script>

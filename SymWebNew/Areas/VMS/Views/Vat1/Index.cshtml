@@ -1,0 +1,381 @@
+﻿@model VATViewModel.DTOs.BOMNBRVM
+@using UIHelper.MVC
+@using SymOrdinary
+@using System.Threading;
+@{ 
+    ShampanIdentity identity = null;
+    try
+    {
+        identity = (ShampanIdentity)Thread.CurrentPrincipal.Identity;
+    }
+    catch (Exception)
+    {
+        Response.Redirect("/VMS/Home/Login");
+        return;
+    }
+}
+
+@{
+    ViewBag.Title = "Index";
+}
+<div class="headrow">
+    <div style="display: none" id="formAppend"></div>
+    <button type="button" title="Add Price Declaration" data-url="/VMS/Vat1/Create" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+    @*<button type="button" title="View Report" class=" sym-btn-report vat18">&nbsp;VAT 18</button>*@
+
+    @*<a href="/VMS/Vat1/FixedTable" class="btn btn-primary">Table</a>*@
+    <label class="pull-right">Price Declaration</label>
+</div>
+
+<div class="thinbox  animated zoomIn faster " id="Vat1Index">
+    <div class="th_thinbox">
+        <p>VAT 1</p>
+    </div>
+    <div class=" dtSearch formDesign">
+        <div class="row">
+            <div class="col-md-2">
+                <div class="editor-label">
+                    @Html.Label("Product Name")
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.FinishItemName, new { @placeholder = "Product Name", @class = "  form-control" })
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="editor-label">
+                    @Html.Label("Code")
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.FinishItemCode, new { @placeholder = "Product Code", @class = "  form-control" })
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="editor-label">
+                    @Html.Label("Effect Date from")
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.InvoiceDateTimeFrom, new { @placeholder = "Effect Date", @class = " customDatePicker  form-control defaultDate" })
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="editor-label">
+                    @*@Html.LabelFor(model => model.InvoiceDateTimeTo)*@
+                    @Html.Label("Effect Date To")
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.InvoiceDateTimeTo, new { @placeholder = "Effect Date To", @class = " customDatePicker  form-control defaultDate" })
+                </div>
+            </div>
+            <div class="col-md-2">
+                <label>Customer</label>
+                @Html.SimpleDropDownFor(m => m.CustomerID, "/Config/DropDown/Customer", new { @class = " form-control selectDropdown trVATName" })
+            </div>
+            <div class="col-md-2">
+                <label>VAT Name</label>
+                @Html.SimpleDropDownFor(m => m.VATName, "/Config/DropDown/PriceDeclaration", new { @class = " form-control selectDropdown trVATName" })
+            </div>
+
+            <div class="col-md-1">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.Post)
+                </div>
+                <div class="editor-field">
+                    <select id="Post" class="form-control">
+                        <option value=""></option>
+                        <option value="Y">Y</option>
+                        <option value="N">N</option>
+                    </select>
+                </div>
+            </div>
+
+
+            <div class="trk1_5">
+                <div class="editor-label">
+                    <label>Select Top</label>
+                </div>
+                <div class="editor-field">
+                    @Html.SimpleDropDownFor(model => model.SelectTop, "/Config/DropDown/RecordSelectList", new { @class = " cBranchId form-control" })
+                    &nbsp;
+                </div>
+            </div>
+
+
+
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-2">
+                <div class="editor-label">
+                    <label>&nbsp;</label>
+                </div>
+                <div class="editor-field">
+                    <button type="button" title="Click to Search" id="btnDialog" class="sym-btn-search">&nbsp;Search</button>
+                    <button type="button" title="Clear Data" id="Clear" class=" sym-btn-clear">&nbsp;Clear</button>
+                </div>
+                <div class="editor-label">
+                    <label>&nbsp;</label>
+
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="editor-label">
+                    <label>&nbsp;</label>
+                </div>
+                <div class="editor-field">
+                    <button type="button" title="Export Data" onclick="ExportExcel()" class="sym-btn-download-row">&nbsp;Export BOM</button>
+
+                    <button type="button" title="Export Data" onclick="CompareBOMExcel()" class="sym-btn-download-row">&nbsp;Compare BOM</button>
+                </div>
+                <div class="editor-label">
+                    <label>&nbsp;</label>
+
+                </div>
+                @*<div class="col-md-1">
+                    <div class="editor-label">
+                        <label>Export All</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.CheckBox("ExportAll", new { id = "idExportAll", @class = "cExportAll form-control", @name = "att[]" })
+                    </div>
+                </div>*@
+
+            </div>
+
+            <div class="col-md-1">
+                <div class="editor-label">
+                    <label>Export Overhead</label>
+                </div>
+                <div class="editor-field">
+                    @Html.CheckBox("ExportOverhead", new { id = "idExportOverhead", @class = "cExportOverhead form-control", @name = "att[]" })
+                </div>
+            </div>
+
+            @*<div class="col-md-1">
+                <div class="editor-label">
+                    &nbsp;
+                </div>
+                <div class="editor-field">
+                    <button type="button" title="Export Data" onclick="ExportExcel()" class="sym-btn-download-row">&nbsp;Export</button>
+                </div>
+            </div>
+
+            <div class="col-md-1">
+                <div class="editor-label">
+                    &nbsp;
+                </div>
+                <div class="editor-field">
+                    <button type="button" title="Export Data" onclick="ExportExcel()" class="sym-btn-Excel-Export">&nbsp;Export</button>
+                </div>
+            </div>*@
+
+        </div>
+    </div>
+    <table id="myDataTable" class="display">
+        <thead>
+            <tr>
+                <th class="center">
+                    <input type="checkbox" class="chkAll" />Select All
+                </th>
+                @*<th class="center">Action</th>*@
+                <th>Customer Name</th>
+                <th>Item Name</th>
+                <th>Vat Name</th>
+                <th>Sale Price</th>
+                <th>UOM</th>
+                <th>Is Posted</th>
+                <th>Effect Date</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <br />
+</div>
+
+<div class="headrow">
+    <button type="button" title="Add New Price Declaration" data-url="/VMS/Vat1/Create" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+    @*<button type="button" title="View Report" class=" sym-btn-report vat18">&nbsp;VAT 18</button>*@
+</div>
+<div id="myModal" class="trkmodal"></div>
+<script language="javascript" type="text/javascript">
+
+    $(document).ready(function () {
+        function modalInit() {
+            var modal = document.getElementById('myModal');
+            $('.vat18').click(function () {
+                var url = "/Vms/Purchase/PrintVAT18";
+                $.ajax({
+                    url: url,
+                    cache: false,
+                    beforeSend: function () { $(".loading").show(); },
+                    complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                    success: function (html) {
+                        modal.style.display = "block";
+                        $("#myModal").html(html);
+                    }
+                });
+            });
+        }
+        modalInit();
+
+        SelectAllForDelete();
+        $.datepicker.regional[""].dateFormat = 'dd/M/y';
+        $.datepicker.setDefaults($.datepicker.regional['']);
+        var oTable = $('#myDataTable').dataTable({
+            "bServerSide": true,
+            "sAjaxSource": "/VMS/Vat1/_index",
+            "bProcessing": true,
+            "aLengthMenu": tablelength(),
+            "bJqueryUI": true,
+            "bAutoWidth": false,
+
+            "fnServerData": function (sSource, aoData, fnCallback) {
+                $('.dtSearch :input').each(function () {
+                    var Name = $(this).attr("Id")
+                    var Value = $(this).val()
+                    aoData.push({ "name": Name, "value": Value });
+                });
+                $.getJSON(sSource, aoData, function (json) {
+                    fnCallback(json);
+                });
+            },
+
+            "aoColumns": [
+                            {
+                                "sName": "Id",
+                                "bSearchable": false,
+                                "bSortable": false,
+                                "sWidth": "20%",
+                                "sClass": "center",
+                                "fnRender": function (oObj) {
+                                    return ' <input onclick="CheckAll(this)" type="checkbox" data-Id="' + oObj.aData[0].split('~')[0] + '"class="dSelected">'
+                                        + '&nbsp; <a title="Click on for Edit" href=\"/VMS/Vat1/Edit/' + oObj.aData[0].split('~')[0] + '\" class="sym-btn-edit-row"></a>'
+                                        + '&nbsp; <a title="Click on for Post" data-url="/VMS/Vat1/Post"  onclick=btnPost(this); data-Id="' + oObj.aData[0] + '\" class="sym-btn-post-row"></a>'
+                                        + '&nbsp; <a title="Click on for download Submitted_VAT4_3" href=\"/VMS/Vat1/Submitted_VAT4_3_Download/' + oObj.aData[0].split('~')[0] + '\" class="sym-btn-download-row"></a>'
+                                        + '&nbsp; <a title="Click on for download Approved_VAT4_3" href=\"/VMS/Vat1/Approved_VAT4_3_Download/' + oObj.aData[0].split('~')[0] + '\" class="sym-btn-download-row"></a>'
+
+                                        //+ '&nbsp; <a title="Click on for Delete"  data-url="/VMS/Vat1/Delete" onclick="deletedData(this, myDataTable,\'' + oObj.aData[0] + '\');"  class="sym-btn-remove-row"></a>'
+                                    ;
+                                }
+                            }
+                            , { "sName": "CustomerName", "sWidth": "20%" }
+                            , { "sName": "ProductName", "sWidth": "10%" }
+                            , { "sName": "VatName", "sWidth": "8%" }
+                            , { "sName": "SalePrice", "sWidth": "10%" }
+                            , { "sName": "Uom", "sWidth": "9%" }
+                            , { "sName": "Post", "sWidth": "10%" }
+                            , { "sName": "EffectDate", "sWidth": "10%" }
+            ]
+        });
+
+       
+        $('#btnDialog').click(function () {
+            var model = $('.dtSearch :input').serialize();
+            $.ajax({
+                url: "/VMS/Vat1/Index",
+                cache: false,
+                data: model,
+                success: function (html) {
+                    oTable.fnDraw();
+                }
+            });
+        });
+        ////clearing fields
+        $("#Clear").on('click', function () {
+            $(".Dropdown").select2("val", "");
+            $(".form-control").val("");
+        });
+
+
+    });
+
+    function ExportExcel() {
+        var questionMSG = "Are you sure to Export Excel!";
+
+        Ask(questionMSG, function () {
+            var ExportAll = $('#idExportAll').is(":checked");
+
+            //console.log("TEST EXPORT");
+            // console.log(ExportAll);
+
+            var IDs = [];
+            var $Items = $("#Vat1Index  .dSelected:input:checkbox:checked");
+            if (!ExportAll) {
+                if ($Items == null || $Items.length == 0) {
+                    ShowResult("Fail", "You are requested to Select before Export!");
+                    return;
+                }
+            }
+            console.log($Items);
+
+            $Items.each(function () {
+
+                var ID = $(this).attr("data-Id");
+                console.log(ID);
+
+                IDs.push(ID);
+            });
+
+            var model = {
+                IDs: IDs,
+
+            }
+
+            var url = '/VMS/Vat1/ExportExcell';
+            var form = $('<form action="' + url + '"></form>');
+
+            IDs.forEach(function (item) {
+                form.append($('<input  value="' + item + '" name="IDs" />'))
+            })
+            form.append($('<input  value="' + ExportAll + '" name="ExportAll" />'))
+            form.appendTo('#formAppend').submit()
+        });
+
+    }
+
+    function CompareBOMExcel() {
+        var questionMSG = "Are you sure to Export Excel!";
+
+        Ask(questionMSG, function () {
+            var ExportOverhead = $('#idExportOverhead').is(":checked");
+
+            var IDs = [];
+            var $Items = $("#Vat1Index  .dSelected:input:checkbox:checked");
+         
+                if ($Items == null || $Items.length == 0) {
+                    ShowResult("Fail", "You are requested to Select before Export!");
+                    return;
+                }
+
+            $Items.each(function () {
+
+                var ID = $(this).attr("data-Id");
+                console.log(ID);
+
+                IDs.push(ID);
+            });
+            if (IDs.length > 1)
+            {
+                ShowResult("Fail", "Please Select only 1 Items!");
+                return;
+            }
+            
+            var model = {
+                IDs: IDs,
+
+            }
+            console.log(model)
+            var url = '/VMS/Vat1/CompareBOMExcel';
+            var form = $('<form action="' + url + '"></form>');
+
+            IDs.forEach(function (item) {
+                form.append($('<input  value="' + item + '" name="IDs" />'))
+            })
+            form.append($('<input  value="' + ExportOverhead + '" name="ExportOverhead" />'))
+
+            form.appendTo('#formAppend').submit()
+        });
+
+    }
+</script>
+

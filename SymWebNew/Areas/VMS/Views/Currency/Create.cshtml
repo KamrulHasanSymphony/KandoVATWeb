@@ -1,0 +1,171 @@
+﻿<style>
+    .NoPaddingLR{
+        padding-left:0px;
+        padding-right:0px;
+    }
+</style>
+@model VATViewModel.DTOs.CurrencyVM
+@using UIHelper.MVC
+@using (Html.BeginForm("CreateEdit", "Currency", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmCurrency" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.CurrencyId)
+    @Html.HiddenFor(model => model.Operation)
+    <div class="headrow">
+        @if (Model.Operation == "add")
+        {
+        <button type="button" name="btnName" value="Save" title="Save Data" onclick="pageSubmit('frmCurrency')" class="sym-btn-save">&nbsp;Save</button>
+        <label class="pull-right">Currency > Create</label>
+        }
+        else
+        {
+        <button type="button" name="btnName" value="Update" title="Update Data" onclick="pageSubmit('frmCurrency')" class="sym-btn-update">&nbsp;Update</button>
+        <label class="pull-right">Currency > Edit</label>
+        }
+        <button type="button" title="Go To Index" data-url="/VMS/Currency" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New Currency" data-url="/VMS/Currency/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+    </div>
+    
+    if (Model.Operation == "update") {
+    <div class="col-sm-12 col-md-12">
+        <div class="input-group   col-lg-8  col-md-8  col-sm-8 col-xs-12 text-color col-md-offset-2" style="">
+            <a class="input-group-addon btn btn-primary hidden-xs changePage" data-pager-action='first' id="first"><i class="fa fa-angle-double-left"></i>First</a>
+            <a class="input-group-addon btn btn-primary hidden-xs changePage" data-pager-action='previous' id="precode"><i class="fa fa-angle-left"></i>Previous</a>
+            @Html.SimpleDropDown("", "/Config/DropDown/IdNameDropdown?tableName=Currencies&Id=CurrencyId&Name=CurrencyName&AllData=no&code=CurrencyCode", new { @class = " trNavigateMenu form-control selectDropdown " })
+            <a class="input-group-addon btn btn-primary changePage" data-pager-action='current' id="current"><i class="fa fa-search"></i></a>
+            <a class="input-group-addon btn btn-primary hidden-xs changePage" data-pager-action='next' id="nextcode">Next <i class="fa  fa-angle-right"></i></a>
+            <a class="input-group-addon btn btn-primary hidden-xs changePage" data-pager-action='last' id="last">Last <i class="fa  fa-angle-double-right"></i></a>
+        </div>
+    </div>
+    }
+
+    <div class="col-md-12 NoPaddingLR">
+        <div class="thinbox animated zoomIn faster">
+            <div class="th_thinbox">
+                <p>Currency</p>
+            </div>
+            <div class="row">
+                <div class="col-md-6 trkPX-0">
+
+                    <div class="form-group">
+                        <label for="CurrencyID" class="col-md-4 control-label text-right trkLabelMargin">ID</label>
+                        <div class="col-md-8 ">
+                            <div class="col-md-6 ">
+                                @Html.TextBoxFor(model => model.CurrencyId, new { @placeholder = "~~~ New ~~~", @class = " form-control", @readonly = "readonly" })
+                            </div>
+                            @Html.ValidationMessageFor(model => model.CurrencyId)
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <label for="Name" class="col-md-4 control-label text-right trkLabelMargin">Name</label>
+                        <div class="col-md-8 ">
+                            <div class="col-md-6 ">
+                                @Html.TextBoxFor(model => model.CurrencyName, new { @placeholder = "Currency Name", @class = "required form-control" })
+                            </div>
+                            @Html.ValidationMessageFor(model => model.CurrencyName)
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <label for="CurrencyCode" class="col-md-4 control-label text-right trkLabelMargin">Code</label>
+                        <div class="col-md-8 ">
+                            <div class="col-md-6 ">
+                                @Html.TextBoxFor(model => model.CurrencyCode, new { @placeholder = "Currency Code", @class = " required form-control" })
+                            </div>
+                            @Html.ValidationMessageFor(model => model.CurrencyCode)
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <label for="Country" class="col-md-4 control-label text-right trkLabelMargin">Country</label>
+                        <div class="col-md-8">
+                            <div class="col-md-6 trkPX-0">
+                                @Html.TextBoxFor(model => model.Country, new { @placeholder = "Country", @class = "  form-control" })
+                            </div>
+                            @Html.ValidationMessageFor(model => model.Country)
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-md-4 trkPX-0">
+                    
+                    <div class="form-group">
+                        <label for="Comments" class="col-md-4 control-label text-right trkLabelMargin">Comments</label>
+                        <div class="col-md-8">
+                            @Html.TextAreaFor(model => model.Comments, new { @placeholder = "Comments", @class = "  form-control" })
+                            @Html.ValidationMessageFor(model => model.Comments)
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="col-md-4 control-label text-right trkLabelMargin">Is Active</label>
+                        <div class="col-md-8">
+                            <div class="col-md-4">
+                                @Html.SimpleDropDownFor(m => m.ActiveStatus, "/Config/DropDown/DecisionList", new { @class = " trNavigateMenu form-control required" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class="headrow">
+        @if (Model.Operation == "add")
+        {
+        <button type="button" name="btnName" value="Save" title="Save Data" onclick="pageSubmit('frmCurrency')" class="sym-btn-save">&nbsp;Save</button>
+        <label class="pull-right">Currency > Create</label>
+        }
+        else
+        {
+        <button type="button" name="btnName" value="Update" title="Update Data" onclick="pageSubmit('frmCurrency')" class="sym-btn-update">&nbsp;Update</button>
+        <label class="pull-right">Currency > Edit</label>
+        }
+    <button type="button" title="Go To Index" data-url="/VMS/Currency" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+    <button type="button" title="Add New Currency" data-url="/VMS/Currency/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+    </div>
+}
+<script>
+    function navigatePage() {
+        var interval = setInterval(function () {
+            if (document.querySelectorAll('.trNavigateMenu option').length > 0) {
+                var id = '@Model.CurrencyId';
+                    $('.trNavigateMenu').select2("val", id);
+                    clearInterval(interval);
+                }
+            }, 200);
+        ////navigating previous-next
+            $('.changePage').click(function () {
+                var id = '@Model.CurrencyId';
+                var btn = $(this).attr("data-pager-action");
+                if (btn.toLocaleLowerCase() == "current") {
+                    var targetId = $('.trNavigateMenu').val();
+                    if (id == targetId) {
+                        return;
+                    }
+                    id = targetId;
+                }
+                window.location = "/VMS/Currency/Navigate?id=" + id + "&btn=" + btn;
+            });
+        }
+
+    $(function () {
+        valiDation("frmCurrency");
+        var operation = '@Model.Operation';
+        if (operation == "update") {
+            navigatePage();
+        }
+    });
+
+</script>

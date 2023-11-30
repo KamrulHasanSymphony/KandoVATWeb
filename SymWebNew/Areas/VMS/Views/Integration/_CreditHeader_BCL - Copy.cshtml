@@ -1,0 +1,396 @@
+﻿@using UIHelper.MVC
+@{
+    Layout = "~/Areas/VMS/Views/Shared/_ModalLayout.cshtml";
+}
+<style>
+    .trkMT10 {
+        margin-top: 10px;
+    }
+
+    .sortableHeader {
+        cursor: pointer;
+    }
+
+    table.trkFixTable tr.trSelectPopUpProduct td {
+        overflow-x: hidden;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-2">
+        <div class="editor-label">
+            <label>Search Value</label>
+        </div>
+        <div class="editor-field">
+            @Html.TextBox("SearchValue", "", new { @class = " form-control" })
+        </div>
+    </div>
+
+    @if (false)
+    {
+        <div class="col-md-2">
+            <div class="editor-label">
+                <label for="DeliveryDate">From Date</label>
+            </div>
+            <div class="editor-field">
+                @Html.TextBox("FromDate", "", new { @placeholder = "From Date", @class = "  customDatePicker  form-control" })
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="editor-label">
+                <label for="DeliveryDate">To Date</label>
+            </div>
+            <div class="editor-field">
+                @Html.TextBox("ToDate", "", new { @placeholder = "To Date", @class = "  customDatePicker  form-control" })
+            </div>
+        </div>
+    }
+
+
+
+
+
+    <div class="col-md-1">
+        <label>&nbsp;</label>
+        <button type="button" title="Click to Search" id="searchBtn" class="sym-btn-search btnCreditSearch" style="width:100%">&nbsp;Search</button>
+    </div>
+    <div class="col-md-1">
+        <label>&nbsp;</label>
+        <button type="button" title="Click to Save" id="btnSaveCredit" class="sym-btn-save btnSaveCredit" style="width:100%">&nbsp;Save</button>
+    </div>
+    <div class="cSingleData">
+        <div class="col-md-2">
+            <div class="editor-label">
+                <label for="SalesInvoiceNo">Invoice No</label>
+            </div>
+            <div class="editor-field">
+                @Html.TextBox("SalesInvoiceNo", "", new { @placeholder = "Invoice No", @class = "   form-control", @readonly = "readonly" })
+            </div>
+        </div>
+        <div class="col-md-1">
+            <div class="editor-label">
+                <label for="Post">Post</label>
+            </div>
+            <div class="editor-field">
+                @Html.TextBox("Post", "", new { @placeholder = "Post", @class = "   form-control", @readonly = "readonly" })
+            </div>
+        </div>
+        <div class="col-md-1">
+            <label>&nbsp;</label>
+            <button type="button" class=" sym-btn-report btnReportPreview" style="width:100%">&nbsp;VAT 6.7</button>
+        </div>
+        <div class="col-md-1">
+            <label>&nbsp;</label>
+            <button type="button" title="Post Data" class="sym-btn-post btnPost" style="width:100%">&nbsp;Post</button>
+        </div>
+        @*<div class="col-md-1">
+                <label>&nbsp;</label>
+                <button type="button" title="Go to Page" onclick="GoToPage()" class="sym-btn-detail">&nbsp;Go</button>
+            </div>*@
+    </div>
+</div>
+
+<div class="row">
+    <div class="fixedParent">
+        <table class="trkFixTable" id="productPopUpTable">
+            <thead>
+                <tr>
+                    <th>ID                      </th>
+                    <th>Branch Code             </th>
+                    <th>Customer Name           </th>
+                    <th>Customer Code           </th>
+                    <th>Delivery Address        </th>
+                    <th>Vehicle No              </th>
+                    <th>Invoice Date Time       </th>
+                    <th>Delivery Date Time      </th>
+                    <th>Reference No            </th>
+                    <th>Comments                </th>
+                    <th>Sale Type               </th>
+                    <th>Previous Invoice No     </th>
+                    <th>Is Print                </th>
+                    <th>Tender Id               </th>
+                    <th>Post                    </th>
+                    <th>LC Number               </th>
+                    <th>Currency Code           </th>
+                    <th>Item Code               </th>
+                    <th>Item Name               </th>
+                    <th>UOM                     </th>
+                    <th>Quantity                </th>
+                    <th>NBR Price               </th>
+                    <th>VAT Rate                </th>
+                    <th>SD Rate                 </th>
+                    <th>TotalValue              </th>
+                    <th>SubTotal                </th>
+                    <th>VAT Amount              </th>
+                    <th>Non Stock               </th>
+                    <th>Trading MarkUp          </th>
+                    <th>Type                    </th>
+                    <th>Discount Amount         </th>
+                    <th>Promotional Quantity    </th>
+                    <th>VAT Name                </th>
+                    <th>Transaction Type        </th>
+                </tr>
+            </thead>
+            <tbody id="popUpTbody"></tbody>
+        </table>
+    </div>
+</div>
+
+
+<script>
+    function GoToPage() {
+        var SalesInvoiceNo = $("#Integration #SalesInvoiceNo").val();
+        if (SalesInvoiceNo == null || SalesInvoiceNo == "") {
+            ShowResult("Fail", "No Data Available!");
+            $("#Integration #SalesInvoiceNo").focus();
+            return;
+        }
+
+        var url = "/VMS/SaleInvoice/GetSaleMaster" + "?" + "SaleNo=" + SalesInvoiceNo;
+        $.getJSON(url, function (vm) {
+
+            var Id = vm.Id;
+
+            window.location = "/VMS/SaleInvoice/Edit/" + Id;
+
+        });
+
+
+    }
+
+    $(function () {
+
+         
+        $("#Integration .btnReportPreview").on("click", function () {
+
+        var SalesInvoiceNo = $("#Integration #SalesInvoiceNo").val();
+
+        if (SalesInvoiceNo == null || SalesInvoiceNo == "") {
+            ShowResult("Fail", "No Data Available!");
+            $("#Integration #SalesInvoiceNo").focus();
+            return;
+        }
+
+        var url = "/Vms/NBRReport/Report_VAT6_7" + "?" + "SalesInvoiceNo=" + SalesInvoiceNo;
+        window.open(url, "_blank");
+
+        });
+
+    $("#Integration .btnPost").on("click", function () {
+        var SalesInvoiceNo = $("#Integration #SalesInvoiceNo").val();
+        if (SalesInvoiceNo == null || SalesInvoiceNo == "") {
+            ShowResult("Fail", "No Data Available!");
+            $("#Integration #SalesInvoiceNo").focus();
+            return;
+        }
+
+
+        var url = "/VMS/SaleInvoice/GetSaleMaster" + "?" + "SaleNo=" + SalesInvoiceNo;
+        $.getJSON(url, function (vm) {
+
+            var Id = vm.Id;
+            var Post = vm.Post;
+
+            $("#Integration #Post").val(vm.Post);
+
+
+            if (Post.toLowerCase() == 'true' || Post.toLowerCase() == 'y') {
+                ShowResult("Fail", "Data Already Posted!");
+                return;
+            }
+
+            var branchId = '@Session["BranchId"]';
+            var searchBranchId = $('#BranchId').val();
+
+            ////if (branchId != searchBranchId) {
+            ////    ShowResult("Fail", "This Information not for this Branch!");
+            ////    return;
+            ////}
+
+            var url = '/Vms/SaleInvoice/Post?ids=' + Id + '~';
+            var questionMSG = "Are you sure to Post Data!";
+
+            Ask(questionMSG, function () {
+                $.ajax({
+                    url: url,
+                    type: 'Post',
+                    beforeSend: function () { $(".loading").show(); },
+                    success: function (result) {
+                        if (result.indexOf("~") > 0) {
+                            ShowResult(result.split("~")[0], result.split("~")[1]);
+
+                            if (result.split("~")[0] == "Fail") {
+                                return;
+                            }
+
+                        }
+                        else if (result.indexOf("fail") > 0) {
+                            ShowResult("Fail", result);
+                            return;
+                        }
+                        else {
+                            ShowResult("Success", result);
+                        }
+
+                        $("#Integration #Post").val("Y");
+
+                    }
+                    , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+
+                });
+            });
+
+        });
+    });
+
+    });
+
+</script>
+
+<script language="javascript" type="text/javascript">
+
+    function callingFixedPopUpTable() {
+        var args = [100, 100, 100, 100, 150, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100];
+        trkFixedPopUpTable("productPopUpTable", 3, args);
+    }
+
+
+    $(function () {
+        callingFixedPopUpTable();
+    })
+</script>
+
+<script>
+    $(function () {
+
+        $("#Integration #searchBtn").on("click", function () {
+
+            var model = {
+                RefNo: $("#Integration #SearchValue").val(),
+                ////FromDate: $("#Integration #FromDate").val(),
+                ////ToDate: $("#Integration #ToDate").val()
+            }
+
+            if (model.RefNo == null || model.RefNo == "") {
+
+                ShowResult("Fail", "Search Value is Mandatory!");
+                $("#Integration #SearchValue").focus();
+                return;
+            }
+
+            $.ajax({
+                data: model
+                , url: "/VMS/Integration/GetCreditData_BCL"
+                , cache: false
+                , beforeSend: function () { $(".loading").show(); }
+                , success: function (html) {
+                    $("#Integration #popUpTbody").html("");
+                    $("#Integration #popUpTbody").html(html);
+                    callingFixedPopUpTable();
+
+                    var SelectedItem = $("#Integration  .trSelectPopUpProduct");
+
+                    if (SelectedItem.length <= 0) {
+                        ShowResult("Fail", "This Transaction Already Integrated or Not Exist in Source!");
+                        return;
+                    }
+
+                }
+                , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+            });
+
+        })
+
+        $("#Integration #btnSaveCredit").on("click", function () {
+
+            ////var selectedItem = $(".trSelectPopUpProduct").length;
+
+            ////if (selectedItem <= 0) {
+            ////    ShowResult("Fail", "Select Item to Save!");
+            ////    return;
+            ////}
+
+
+
+            var model = {
+                RefNo: $("#Integration #SearchValue").val(),
+                ////FromDate: $("#FromDate").val(),
+                ////ToDate: $("#ToDate").val(),
+                TransactionType: $("#TransactionType").val()
+            }
+
+            if (model.RefNo == null || model.RefNo == "") {
+
+                ShowResult("Fail", "Search Value is Mandatory!");
+                $("#Integration #SearchValue").focus();
+                return;
+            }
+
+            $.ajax({
+                data: model
+                , url: "/VMS/Integration/SaveCredit_BCL"
+                , cache: false,
+                method: "POST"
+                , beforeSend: function () { $(".loading").show(); }
+                , success: function (rVM) {
+
+                    if (rVM.Status == "Success") {
+                        $("#Integration #Post").val(rVM.Post);
+                        $("#Integration #SalesInvoiceNo").val(rVM.InvoiceNo);
+                    }
+                   
+
+                    ShowResult(rVM.Status, rVM.Message);
+
+
+                },
+                error: function () {
+                    ShowResult("Fail", "Something gone wrong");
+                }
+                , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+            });
+
+        })
+
+    });
+</script>
+
+
+<script>
+
+    $(function () {
+        $('#productPopUpTable').unbind().on('dblclick', '.trSelectPopUpProduct', function () {
+            var refNo = $(this).children('td.refNo').text();
+
+            selectPopUpCredit(refNo, this);
+        });
+
+
+        function selectPopUpCredit(refNo, sender) {
+
+            window.location = "/VMS/SaleInvoice/SelectSale?refNo=" + refNo;
+        }
+
+
+        $(document).on('click', '.trSelectPopUpProduct', function () {
+            var activeEl = $('tr.active');
+            activeEl.removeClass("active");
+            $(this).addClass(" active");
+        });
+
+    });
+
+
+</script>
+
+<script>
+
+    $(function () {
+
+        $("#Clear").on('click', function () {
+            $(".HigherModal-body .Dropdown").select2("val", "");
+            $(".HigherModal-body .form-control").val("");
+        });
+    });
+</script>
+

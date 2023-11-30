@@ -1,0 +1,227 @@
+﻿@model SymVATWebUI.Areas.VMS.Models.Vat16ViewModel
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+
+<style>
+    .trkmodal {
+        padding-top: 10%;
+    }
+
+    .trkmodal-content {
+        width: 50%;
+        padding-bottom: 10px;
+    }
+
+    .customDatePicker {
+        background: #fefede url(/Images/calendar.jpg) no-repeat 98% !important;
+    }
+    /*no padding with little margin bttom*/
+    div.trkmodal-body div.npForm {
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+        padding-bottom: 0px !important;
+        margin-bottom: 10px;
+    }
+
+        div.trkmodal-body div.npForm div.npForm {
+            margin-bottom: 0px !important;
+        }
+</style>
+<div class="trkmodal-content">
+    <div class="trkmodal-header">
+        <span class="close">&times;</span>
+
+        <h2 class="text-center">Report(VAT 6.6)</h2>
+
+        @*@if (Model.TransactionTypes == "Credit")
+        {
+            <h2 class="text-center">Report(VAT 6.7)</h2>
+        }
+        else if (Model.TransactionTypes == "Debit")
+        {
+            <h2 class="text-center">Report(VAT 6.8)</h2>
+        }
+        else
+        {
+            <h2 class="text-center">Report(VAT 6.3)</h2>
+        }*@
+    </div>
+
+    @Html.HiddenFor(m => m.BranchId);
+
+    <div class="trkmodal-body">
+        @using (Html.BeginForm("Report_VAT6_6", "NBRReport", FormMethod.Post, new { enctype = "multipart/form-data", @target = "_blank", @Id = "frmReport_VAT6_6" }))
+        {
+            <div class="npForm col-md-12">
+                <div class="col-md-10 npForm">
+                    <label>Invoice No</label>
+                    @Html.TextBoxFor(m => m.DepositId, new { @class = "form-control trDepositId popUpItemNo" })
+                    @*@Html.TextBox("PopUpProductName",null, new { @class = " form-control trProductName", @readonly = "readonly" })*@
+                </div>
+                 @*@Html.HiddenFor(m => m.BranchId, new { @class = "form-control trBranchId popUpItemNo" })*@ 
+                <div class=" col-md-2 npForm">
+                    <label>&nbsp;</label>
+                    <button type="button" class=" sym-btn-search Vat6_6Btn">Search</button>
+                </div>
+            </div>
+
+       @*<div class="npForm col-md-12">
+        <label>Branch</label>
+        @Html.SimpleDropDownFor(m => m.Branch, "/Config/DropDown/BranchProfile", new { @class = " form-control selectDropdown" })
+       </div>*@
+            
+            <div class="npForm col-md-2">
+                @Html.SimpleDropDownFor(m => m.FontSize, "/Config/DropDown/Font", new { @class = " form-control selectDropdown" })
+            </div>
+
+            @*<div class="npForm col-md-6">
+                    <label>Date From</label>
+                    @Html.TextBoxFor(m => m.StartDate, new { @placeholder = "Start Date", @class = "customDatePicker form-control" })
+                </div>*@
+            @*<div class="npForm col-md-6">
+                    <label>Date To</label>
+                    @Html.TextBoxFor(m => m.EndDate, new { @placeholder = "End Date", @class = "customDatePicker form-control" })
+                </div>*@
+            @Html.HiddenFor(m => m.PreviewOnly);
+            @Html.HiddenFor(m => m.TransactionTypes);          
+            @Html.Hidden("TransactionType", "", new { @class = " cTransactionType" })
+
+
+            @*<button type="button" class=" btn sym-btn-report trVAT16"> VAT 6.1</button>*@
+            
+            <button type="button" class=" btn sym-btn-report trPreview"> Preview</button>
+            <button type="button" class="sym-btn-close closeBtn pull-right"> Close</button>
+        }
+    </div>
+</div>
+
+<div id="myHigherModal" class="HigherModal"></div>
+
+<script src="~/assets/javascripts/custom.js"></script>
+<script>
+    $(document).ready(function () {
+        ////setting first item
+        var interval = setInterval(function () {
+            if (document.querySelectorAll('.trItemNo option').length > 0) {
+                var id = '@Model.ItemNo';
+                $('.trItemNo').select2("val", id);
+                clearInterval(interval);
+            }
+        }, 200);
+        ////clicking preview button
+        $('.trPreview').click(function () {
+
+            var TType = $('#TransactionTypes').val();
+
+            //var product = $('.popUpItemNo').val();
+            //if (product == "") {
+            //    ShowResult("Fail", "Select a product first!");
+            //    return;
+            //}
+            $("#PreviewOnly").val("true");
+            $("#TransactionType").val(TType);
+            $('#frmReport_VAT6_6').submit();
+            //pageSubmit('frmVAT16');
+        });
+        ////clicking vat16 button
+        //$('.trVAT16').click(function () {
+        //    var product = $('#ItemNo').val();
+        //    if (product == "") {
+        //        ShowResult("Fail", "Select a product first!");
+        //        return;
+        //    }
+        //    $("#PreviewOnly").val("false");
+        //    $('#frmVAT16').submit();
+        //    //pageSubmit('frmVAT16');
+        //});
+        ////for dropdown
+        InitDropDowns();
+        ////for select2 dropdown
+        //$(".selectDropdown").select2();
+        //$(".selectDropdown").trigger('change');
+        //$(".selectDropdown").removeClass('form-control');
+
+        //function ItemChange() {
+        //    var value = $('.trName').val().toString();
+        //    if (value == 0) {
+        //        $('.trBranch').val("");
+        //        return;
+        //    }
+        //    var url = "/Vms/BankInformation/GetItemInfo?ItemId=" + value;
+
+        //    $.getJSON(url, function (data) {
+        //        $('.trBranch').val(data);
+        //    });
+        //}
+        ////changing item
+        $('.trName').change(function () {
+            ItemChange();
+        });
+
+        function closeModal() {
+            $("#myModal").html("");
+            trkmodal.style.display = "none";
+        }
+
+        var span = document.getElementsByClassName("close")[0];
+        var trkmodal = document.getElementById('myModal');
+        //When the user clicks on <span> (x), close the trkmodal
+        span.onclick = function () {
+            closeModal();
+        }
+
+        $('.closeBtn').click(function () {
+            closeModal();
+        });
+
+    });
+</script>
+
+<script>
+    function modalInitHigher(url) {
+        var modal = document.getElementById('myHigherModal');
+        $.ajax({
+            url: url,
+            cache: false,
+            beforeSend: function () { $(".loading").show(); },
+            complete: function () { $(".loading").fadeOut(200).hide("slow") },
+            success: function (html) {
+                modal.style.display = "block";
+                $("#myHigherModal").html(html);
+            }
+        });
+    }
+    function callbackFromProductModal(sender) {
+        var itemNo = $(sender).children('td.popUpItemNo').text();
+        $('.popUpItemNo').val(itemNo);
+    }
+    $(function () {
+        $('.Vat6_6Btn').click(function () {
+
+            var tType = $('#TransactionTypes').val();
+            var BranchId = $('#BranchId').val();
+            //var url = "/Vms/NBRReport/GetVAT6_6PopUp?TransactionType=" + tType + "&BranchId=" + BranchId;
+            var url = "/Vms/NBRReport/GetVAT6_6PopUp";
+            modalInitHigher(url);
+        });
+    });
+</script>
+
+@*<script>
+        $(function () {
+            var date = $('.trVAT16Date').val();
+            if (date != null && date != "") {
+                $('#StartDate').val(date);
+                $('#EndDate').val(date);
+            }
+            var productName = $('tr.active .dItemName').val();
+            if (productName == null || productName == "") {
+                return;
+            }
+            $('.trProductName').val(productName);
+            var itemNo = $('tr.active .dItemNo').val();
+            $('.popUpItemNo').val(itemNo);
+        })
+    </script>*@

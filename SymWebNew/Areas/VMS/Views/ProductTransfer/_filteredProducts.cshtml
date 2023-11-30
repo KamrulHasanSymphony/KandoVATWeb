@@ -1,0 +1,33 @@
+﻿@model IEnumerable<VATViewModel.DTOs.ProductVM>
+@using UIHelper.MVC
+@{
+    Layout = null;
+    var sl = 1;
+}
+@foreach (var product in Model)
+{
+    <tr class="trSelectPopUpProduct">
+        <td>@sl</td>
+        <td class="popUpItemNo">@product.ItemNo</td>
+        <td class="popUpItemName" title="@product.ProductName">@product.ProductName</td>
+        <td class="popUpItemCode">@product.ProductCode</td>
+        <td class="popUpUOM">@product.UOM</td>
+        <td>@product.ActiveStatus.ToString()</td>
+        <td class="popUpCategory" title="@product.CategoryName">@product.CategoryName</td>
+        <td>@product.CostPrice</td>
+        <td>@product.NBRPrice</td>
+        <td>@product.Stock</td>
+        <td class="popUpProductyType">@product.ProductType</td>
+        <td>@product.Trading</td>
+        <td>@product.NonStock</td>
+        <td>@product.HSCodeNo</td>
+        <td>@product.VATRate</td>
+        <td>@product.SD</td>
+        <td>@product.RebatePercent</td>
+        <td>@product.OpeningTotalCost</td>
+        <td>@product.TollProduct</td>
+        @{
+            sl++;
+        }
+    </tr>
+}

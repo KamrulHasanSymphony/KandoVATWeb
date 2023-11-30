@@ -1,0 +1,301 @@
+﻿    
+@model VATViewModel.DTOs.VendorVM
+@using UIHelper.MVC
+@using (Html.BeginForm("CreateEdit", "Vendor", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmVendorMy" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.VendorID)
+    @Html.HiddenFor(model => model.Operation)
+
+    <div class="headrow">
+        @if (Model.Operation == "add")
+        {
+            <button type="button" name="btnName" value="Save" title="Save Data" onclick="pageSubmit('frmVendorMy')" class="sym-btn-save">&nbsp;Save</button>
+            <label class="pull-right">Vendor > Create</label>
+        }
+        else
+        {
+            <button type="button" name="btnName" value="Update" title="Update Data" onclick="pageSubmit('frmVendorMy')" class="sym-btn-update">&nbsp;Update</button>
+            <label class="pull-right">Vendor > Edit</label>
+        }
+        <button type="button" title="Go To Index" data-url="/VMS/Vendor" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New Vendor" data-url="/VMS/Vendor/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+
+    </div>
+     <div class="thinbox">
+        <div class="th_thinbox">
+            <p>Basic</p>
+        </div>
+        <div class="Vendor">
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        <label>Vendor Code</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.VendorCode, new { @placeholder = "Vendor Code", @class = " required form-control" })
+                        @Html.ValidationMessageFor(model => model.VendorCode)
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="editor-label">
+                        <label>Vendor Name</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.VendorName, new { @placeholder = "Vendor Name ", @class = " required form-control md-textbox" })
+                        @Html.ValidationMessageFor(model => model.VendorName)
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.VendorGroupID)
+                    </div>
+                    <div class="editor-field">
+                        @Html.SimpleDropDownFor(model => model.VendorGroupID, "/Config/DropDown/VendorGroup", new { @class = "required form-control" })
+                        @Html.ValidationMessageFor(model => model.VendorGroupID)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.StartDateTime)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.StartDateTime, new { @class = " trDate customDatePickerChangeable required  form-control" })
+                        @Html.ValidationMessageFor(model => model.StartDateTime)
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.VATRegistrationNo)
+                    </div>
+                    <div class="editor-field ">
+                        @Html.TextBoxFor(model => model.VATRegistrationNo, new { @placeholder = "Registration No.", @class = " form-control" })
+                        @Html.ValidationMessageFor(model => model.VATRegistrationNo)
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.TINNo)
+                    </div>
+                    <div class="editor-field ">
+                        @Html.TextBoxFor(model => model.TINNo, new { @placeholder = "TIN No.", @class = " form-control" })
+                        @Html.ValidationMessageFor(model => model.TINNo)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+    <div class="thinbox">
+        <div class="th_thinbox">
+            <p>Contact Person</p>
+        </div>
+        <div class="Vendor">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.ContactPerson)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.ContactPerson, new { @placeholder = "Contact Person", @class = "   form-control" })
+                        @Html.ValidationMessageFor(model => model.ContactPerson)
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.ContactPersonDesignation)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.ContactPersonDesignation, new { @placeholder = "Designation", @class = " form-control" })
+                        @Html.ValidationMessageFor(model => model.ContactPersonDesignation)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.ContactPersonTelephone)
+                    </div>
+                    <div class="editor-field ">
+                        @Html.TextBoxFor(model => model.ContactPersonTelephone, new { @placeholder = "Telephone No.", @class = " form-control" })
+                        @Html.ValidationMessageFor(model => model.ContactPersonTelephone)
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.ContactPersonEmail)
+                    </div>
+                    <div class="editor-field ">
+                        @Html.TextBoxFor(model => model.ContactPersonEmail, new { @placeholder = "Email", @class = " form-control" })
+                        @Html.ValidationMessageFor(model => model.ContactPersonEmail)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+    <div class="thinbox">
+        <div class="th_thinbox">
+            <p>Business</p>
+        </div>
+        <div class="Vendor">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.BusinessType)
+                    </div>
+                    <div class="editor-field ">
+                        @Html.TextBoxFor(model => model.BusinessType, new { @placeholder = "Business Type", @class = " form-control" })
+                        @Html.ValidationMessageFor(model => model.BusinessType)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.BusinessCode)
+                    </div>
+                    <div class="editor-field ">
+                        @Html.TextBoxFor(model => model.BusinessCode, new { @placeholder = "Business Code", @class = " form-control" })
+                        @Html.ValidationMessageFor(model => model.BusinessCode)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="thinbox">
+        <div class="th_thinbox">
+            <p>Detail</p>
+        </div>
+        <div class="Vendor">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.Address1)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.Address1, new { @placeholder = "Address 1", @class = "  form-control" })
+                        @Html.ValidationMessageFor(model => model.Address1)
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.Address2)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.Address2, new { @placeholder = "Address 2", @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Address2)
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.Address3)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.Address3, new { @placeholder = "Address 3", @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Address2)
+                    </div>
+                </div>        
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.City)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.City, new { @placeholder = "City", @class = " form-control" })
+                        @Html.ValidationMessageFor(model => model.City)
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.Email)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.Email, new { @placeholder = "Email", @class = " form-control" })
+                        @Html.ValidationMessageFor(model => model.Email)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.Country)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.Country, new { @placeholder = "Country", @class = " form-control" })
+                        @Html.ValidationMessageFor(model => model.Country)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.FaxNo)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.FaxNo, new { @placeholder = "Fax Number", @class = " form-control" })
+                        @Html.ValidationMessageFor(model => model.FaxNo)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.TelephoneNo)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.TelephoneNo, new { @placeholder = "Telephone No.", @class = " form-control" })
+                        @Html.ValidationMessageFor(model => model.TelephoneNo)
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+               <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.VDSPercent)
+                    </div>
+                    <div class="editor-field input-group">
+                        @Html.TextBoxFor(model => model.VDSPercent, new { @placeholder = "VDS Percent", @class = "priceLen form-control" })
+                        <span class="input-group-addon form-control">%</span>  
+                        @Html.ValidationMessageFor(model => model.VDSPercent)
+                    </div>
+                </div>    
+               <div class="col-md-4">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.Comments)
+                    </div>
+                    <div class="editor-field ">
+                        @Html.TextAreaFor(model => model.Comments, new { @placeholder = "Business Code", @class = " form-control" })
+                        @Html.ValidationMessageFor(model => model.Comments)
+                    </div>
+                </div>
+               <div class="col-md-2">
+                    <div class="editor-label">
+                        <label>&nbsp;</label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            @Html.CheckBoxFor(model => model.ActiveStatus, null)<strong>Is Active?</strong>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="headrow">
+        @if (Model.Operation == "add")
+        {
+            <button type="button" name="btnName" value="Save" title="Save Data" onclick="pageSubmit('frmVendorMy')" class="sym-btn-save">&nbsp;Save</button>
+        }
+        else
+        {
+            <button type="button" name="btnName" value="Update" title="Update Data" onclick="pageSubmit('frmVendorMy')" class="sym-btn-update">&nbsp;Update</button>
+        }
+        <button type="button" title="Go To Index" data-url="/VMS/Vendor" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New Vendor" data-url="/VMS/Vendor/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+
+    </div>
+}
+<script>
+    $(function () {
+        valiDation("frmVendorMy");
+    });
+
+
+</script>

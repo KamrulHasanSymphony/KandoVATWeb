@@ -1,0 +1,133 @@
+﻿    <script type="text/javascript">
+        $(document).ready(function () {
+            SelectAllForDelete();
+            $.datepicker.regional[""].dateFormat = 'dd/M/y';
+            $.datepicker.setDefaults($.datepicker.regional['']);
+            var oTable = $('#myDataTable').dataTable({
+                "bServerSide": true,
+                "sAjaxSource": "/Common/EMJobOffer/_index",
+                "bProcessing": true,
+                "aLengthMenu": tablelength(),
+                "bJqueryUI": true,
+                "bAutoWidth": false,
+                "sScrollX": '160%',
+                "aoColumns": [
+                                {
+                                    "sName": "Id",
+                                    "bSearchable": false,
+                                    "bSortable": false,
+                                    "sWidth": "8%",
+                                    "sClass":"center",
+                                    "fnRender": function (oObj) {
+                                        return '<a title="Click on for Details" style="text-decoration:none;"    href=\"/Common/EMJobOffer/Edit?Id=' + oObj.aData[0] + '\"  class="sym-btn-edit-row"></a>';
+                                    }
+                                }
+                               , { "sName": "OfferType", "sWidth": "7%" }          //01 
+                               , { "sName": "FullName", "sWidth": "7%" }           //02 
+                               , { "sName": "PresentDistrictId", "sWidth": "7%" }  //03  
+                               , { "sName": "Gender", "sWidth": "7%" }             //04 
+                               , { "sName": "DOB", "sWidth": "10%" }                //05 
+                               , { "sName": "JobCategoryId", "sWidth": "7%" }      //06 
+                               , { "sName": "Mobile", "sWidth": "7%" }             //07 
+                               , { "sName": "Email", "sWidth": "7%" }              //08 
+                               , { "sName": "Designation", "sWidth": "7%" }        //09 
+                               , { "sName": "Department", "sWidth": "7%" }         //10 
+                               , { "sName": "Vacancy", "sWidth": "7%" }            //11 
+                               , { "sName": "RequiruitmentDate", "sWidth": "10%" }  //12  
+                              
+
+                ]
+            });
+            oTable.columnFilter({
+                sPlaceHolder: "head:after",
+                aoColumns: [{ type: "checkbox", "sClass": "chkAll" }              //00 
+                           , { type: "text" }                                     //01 
+                           , { type: "text" }                                     //02 
+                           , { type: "text" }                                     //03 
+                           , { type: "text" }                                     //04 
+                           , { type: "date-range" }                               //05 
+                           , { type: "text" }                                     //06 
+                           , { type: "text" }                                     //07 
+                           , { type: "text" }                                     //08 
+                           , { type: "text" }                                     //09 
+                           , { type: "text" }                                     //10 
+                           , { type: "text" }                                     //11 
+                           , { type: "date-range" }                                     //12 
+                ]
+            });
+        });
+    </script>
+@{
+    ViewBag.Title = "Index";
+    ViewBag.Location = "Common=>Info Job Offer=>Index"; 
+}
+<div class="headrow">
+        <button type="button" title="Add New Job Offer" data-url="/Common/EMJobOffer/Create" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+     <label class="pull-right">Job Offer Information</label>
+</div>
+    <div class="thinbox">
+        <div class="th_thinbox">
+        <p>Job Offer List</p>   
+        </div>
+<p></p>
+        <div id="container">
+            <div id="demo">
+                <table id="myDataTable" class="display">
+                    <thead>
+                         <tr>
+                             <th  class="center" >&nbsp;</th>
+                            <th>Offer Type</th>                        <!--  //01    -->  
+                            <th>Full Name</th>                         <!--  //02    -->
+                            <th>Present District</th>                  <!--  //03    -->
+                            <th>Gender</th>                            <!--  //04    -->
+                            <th>Date of Birth</th>                     <!--  //05    -->
+                            <th>Job Category</th>                      <!--  //06    -->
+                            <th>Mobile</th>                            <!--  //07    -->
+                            <th>Email</th>                             <!--  //08    -->
+                            <th>Designation</th>                       <!--  //09    -->
+                            <th>@Session["DepartmentLabel"]</th>                        <!--  //10    -->
+                            <th>Vacancy</th>                           <!--  //11    -->
+                            <th>Recruitment Date</th>                  <!--  //12    -->
+                        </tr>                                             
+                        <tr>
+                            <th  class="center" >Actions</th>
+                            <th>Offer Type</th>
+                            <th>Full Name</th>
+                            <th>Present District</th>
+                            <th>Gender</th>
+                            <th>Date of Birth</th>
+                            <th>Job Category</th>
+                            <th>Mobile</th>
+                            <th>Email</th>
+                            <th>Designation</th>
+                            <th>@Session["DepartmentLabel"]</th>
+                            <th>Vacancy</th>
+                            <th>Recruitment Date</th>
+                        </tr>
+
+@*
+                        //00  //Id
+                        //01  //OfferType
+                        //02  //FullName
+                        //03  //PresentDistrictId
+                        //04  //Gender
+                        //05  //DOB
+                        //06  //JobCategoryId
+                        //07  //Mobile
+                        //08  //Email
+                        //09  //Designation
+                        //10  //Department
+                        //11  //Vacancy
+                        //12  //RequiruitmentDate
+                        *@
+                    </thead>
+                    <tbody> 
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <br />
+        </div>
+<div class="headrow">
+        <button type="button" title="Add New Job Offer" data-url="/Common/EMJobOffer/Create" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+</div>

@@ -1,0 +1,21 @@
+﻿@model IEnumerable<VATViewModel.DTOs.MPLBankDepositSlipDetailVM>
+@using UIHelper.MVC
+@{
+    Layout = null;
+    var sl = 1;
+}
+@foreach (var item in Model)
+{
+    <tr class="trSelectPopUp">
+        <td>@sl</td>
+        <td hidden="">@item.SalesInvoiceMPLHeaderId</td>
+        <td>@item.SalesInvoiceNo</td>
+        <td hidden="">@item.BDBankId</td>
+        <td>@item.BDBankName</td>
+        <td>@item.ModeOfPayment</td>
+        <td>@item.InstrumentNo</td>
+        <td>@item.InstrumentDate</td>
+        <td>@item.Amount</td>
+    </tr>
+    sl++;
+}

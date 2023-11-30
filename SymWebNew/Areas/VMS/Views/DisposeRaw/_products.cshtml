@@ -1,0 +1,326 @@
+﻿@model VATViewModel.DTOs.PopUpViewModel
+@using UIHelper.MVC
+@{
+    Layout = "~/Areas/VMS/Views/Shared/_ModalLayout.cshtml";
+}
+<style>
+    .trkMT10 {
+        margin-top: 10px;
+    }
+
+    .sortableHeader {
+        cursor: pointer;
+    }
+    table.trkFixTable tr.trSelectPopUpProduct td {
+        overflow-x: hidden;
+    }
+
+</style>
+@Html.HiddenFor(model => model.Flag)
+
+
+<div class="HigherModal-content">
+    <div class="HigherModal-header">
+        <span class="closeHigher">&times;</span>
+        <h2 class="text-center">Product Search</h2>
+    </div>
+    <div class="HigherModal-body formDesign">
+        <div class="row">
+            <div class="col-md-2">
+                <label>Search Field</label>
+                @Html.SimpleDropDown("SearchField", "/Config/DropDown/ProductColumnSearch", new { @class = " form-control " })
+            </div>
+            <div class="col-md-2">
+                <label>Search Value</label>
+                @Html.TextBox("SearchValue", "", new { @class = " form-control" })
+            </div>
+            <div class="col-md-2">
+                <label>Product Type</label>
+                @Html.SimpleDropDownFor(model => model.ProductType, "/Config/DropDown/ProductTypes", new { @Id = "popUpProductType", @class = " form-control  trProductType" })
+            </div>
+            <div class="col-md-2">
+                <label>Product Group</label>
+                @Html.SimpleDropDownFor(model => model.ProductCategoryId, "/Config/DropDown/ProductCategory", new { @Id = "popUpProductGroup", @class = " form-control  trProductGroup" })
+            </div>
+            <div class="col-md-1 ">
+                <label>Acive</label>
+                <select id="activePopUp" class="form-control">
+                    <option value=""></option>
+                    <option value="Y">Y</option>
+                    <option value="N">N</option>
+                </select>
+            </div>
+            <div class="col-md-1">
+                <div class="editor-field">
+                    <label>&nbsp;</label>
+                    <button type="button" title="Click to Search" id="searchBtn" class="sym-btn-search btnPopUpSearch">&nbsp;Search</button>
+                </div>
+            </div>
+            <div class="col-md-1">
+                <label>&nbsp;</label>
+                <button type="button" title="Clear Data" id="Clear" class=" sym-btn-clear">&nbsp;Clear</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="fixedParent">
+                <table class="trkFixTable" id="productPopUpTable">
+                    <thead>
+                        <tr>
+                            <th>SL</th>
+                            <th>Item No</th>
+                            <th>Product Name</th>
+                            <th>Code</th>
+                            <th>UOM</th>
+                            <th>Active Status</th>
+                            <th>Category</th>
+                            <th>Cost Price</th>
+                            <th>NBR Price</th>
+                            <th>Stock</th>
+                            <th>Type</th>
+                            <th>Trading</th>
+                            <th>Non-stock</th>
+                            <th>HS Code</th>
+                            <th>Vat Rate</th>
+                            <th>SD</th>
+                            <th>Rebate</th>
+                            <th>Total Cost</th>
+                            <th>Toll Product</th>
+                        </tr>
+                    </thead>
+                    <tbody id="popUpTbody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*product group loading code*@
+<script>
+    function LoadProductGroup(productType) {
+        $DropDownProductCategory = $("#popUpProductGroup");
+        var url = "/Config/DropDown/ProductCategory?IsRaw=" + productType;
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            success: function (data) {
+                $DropDownProductCategory.html("");
+                $DropDownProductCategory.append($("<option />").val("").text("Select"));
+                $.each(data, function (i, state) {
+                    $DropDownProductCategory.append($("<option />").val(state.Value).text(state.Text));
+                });
+            }
+        });
+    }
+    ////if product type is selected but product group is not selected
+    $(function () {
+        var productType = '@Model.ProductType';
+        if (productType != null && productType != "0" && productType != "") {
+            var productgroup = '@Model.ProductCategoryId';
+            if (productgroup == null || productgroup == "0" || productgroup == "") {
+                ////waiting for getting default product categories
+                var interval = setInterval(function () {
+                    if (document.querySelectorAll('#popUpProductGroup option').length > 0) {
+                        LoadProductGroup(productType);
+                        clearInterval(interval);
+                    }
+                }, 200);
+            }
+        }
+    });
+
+    $('#popUpProductType').change(function () {
+        var productType = $(this).val();
+        if (productType != null && productType != "0" && productType != "") {
+            LoadProductGroup(productType);
+        }
+    });
+</script>
+
+@*fixed table*@
+<script language="javascript" type="text/javascript">
+
+
+    function callingFixedPopUpTable() {
+        var args = [50,100, 300, 100, 100, 100, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200];
+        trkFixedPopUpTable("productPopUpTable", 3, args);
+    }
+    $(function () {
+        callingFixedPopUpTable();
+    })
+</script>
+
+<script>
+    ////closing higher modal
+    function closeHigherModal() {
+        $("#myHigherModal").html("");
+        trkmodal.style.display = "none";
+    }
+    var span = document.getElementsByClassName("closeHigher")[0];
+    var trkmodal = document.getElementById('myHigherModal');
+    span.onclick = function () {
+        closeHigherModal();
+    }
+
+    $(function () {
+        $('#productPopUpTable').unbind().on('dblclick', '.trSelectPopUpProduct', function () {
+            var itemName = $(this).children('td.popUpItemName').text();
+            var itemNo = $(this).children('td.popUpItemNo').text();
+            var itemUom = $(this).children('td.popUpUOM').text();
+            selectPopUpProduct(itemName,itemNo,itemUom, this);
+        });
+        function selectPopUpProduct(itemName,itemNo,itemUom, sender) {
+            var target = '@Model.TargetId';
+
+            var flag = $('#Flag').val()
+            if (flag == "Y") {
+                $('.CToProduct').val(itemName);
+                $('.trToItemNo').val(itemNo);
+                $('.trToUOM').val(itemUom);
+                
+            }
+
+            else
+            {
+                $('.CFromProduct').val(itemName);
+                $('.trFromItemNo').val(itemNo);
+                $('.trFromUOM').val(itemUom);
+            }
+            
+            callbackFinishProductModal(sender, target);
+            closeHigherModal();
+        }
+        $(document).on('click', '.trSelectPopUpProduct', function () {
+            var activeEl = $('tr.active');
+            activeEl.removeClass("active");
+            $(this).addClass(" active");
+        });
+    })
+</script>
+
+<script>
+    function ShowSelectedProduct() {
+        var productCode = '@Model.ProductCode';
+        if (productCode == "" || productCode=="0") {
+            return;
+        }
+        var interval = setInterval(function () {
+            if (document.querySelectorAll('#SearchField option').length > 0) {
+                $('#SearchField').val("ProductCode");
+                $('#SearchValue').val(productCode);
+                SearchProducts();
+                clearInterval(interval);
+            }
+        }, 200);
+    }
+    function SearchProducts() {
+        var productGroup = $('#popUpProductGroup').val();
+        var type = $('#popUpProductType').val();
+        var activeStatus = $('#activePopUp').val().trim();
+        //var activeStatus = true;
+        //if (active == "N") {
+        //    activeStatus = false;
+        //}
+        var productName = $('#popUpProductName').val();
+        var code = $('#popUpProductCode').val();
+        var hsCode = $('#popUpHSCode').val();
+        var refNo = $('#popUpRefNo').val();
+
+        var SearchField = $('#SearchField').val();
+        var SearchValue = $('#SearchValue').val();
+
+        var model = {
+            SearchField: SearchField,
+            SearchValue: SearchValue,
+            CategoryID: productGroup,
+            ProductType: type,
+            ActiveStatus: activeStatus
+        }
+        console.log(model);
+        $.ajax({
+            data: model
+            , url: "/Vms/Product/GetFilteredProducts"
+            , cache: false
+            , beforeSend: function () { $(".loading").show(); }
+            , success: function (html) {
+                $("#popUpTbody").html("");
+                $("#popUpTbody").html(html);
+                callingFixedPopUpTable();
+            }
+            , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+        });
+
+    }
+    $(function () {
+        ShowSelectedProduct();
+        $('.btnPopUpSearch').click(function () {
+            SearchProducts();
+        });
+        $("#Clear").on('click', function () {
+            $(".HigherModal-body .Dropdown").select2("val", "");
+            $(".HigherModal-body .form-control").val("");
+        });
+    });
+</script>
+
+@*for sorting column*@
+<script>
+    function sortTable(n) {
+        var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+        table = document.getElementById("productPopUpTable");
+        switching = true;
+        //Set the sorting direction to ascending:
+        dir = "asc";
+        /*Make a loop that will continue until
+        no switching has been done:*/
+        while (switching) {
+            //start by saying: no switching is done:
+            switching = false;
+            rows = table.rows;
+            if (rows.length > 150) {
+                ShowResult("Fail", "There is too much data to sort");
+                return;
+            }
+            /*Loop through all table rows (except the
+            first, which contains table headers):*/
+            for (i = 1; i < (rows.length - 1) ; i++) {
+                //start by saying there should be no switching:
+                shouldSwitch = false;
+                /*Get the two elements you want to compare,
+                one from current row and one from the next:*/
+                x = rows[i].getElementsByTagName("TD")[n];
+                y = rows[i + 1].getElementsByTagName("TD")[n];
+                /*check if the two rows should switch place,
+                based on the direction, asc or desc:*/
+                if (dir == "asc") {
+                    if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                        //if so, mark as a switch and break the loop:
+                        shouldSwitch = true;
+                        break;
+                    }
+                } else if (dir == "desc") {
+                    if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                        //if so, mark as a switch and break the loop:
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+            }
+            if (shouldSwitch) {
+                /*If a switch has been marked, make the switch
+                and mark that a switch has been done:*/
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+                //Each time a switch is done, increase this count by 1:
+                switchcount++;
+            } else {
+                /*If no switching has been done AND the direction is "asc",
+                set the direction to "desc" and run the while loop again.*/
+                if (switchcount == 0 && dir == "asc") {
+                    dir = "desc";
+                    switching = true;
+                }
+            }
+        }
+    }
+</script>

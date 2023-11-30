@@ -1,0 +1,47 @@
+﻿@model VATViewModel.DTOs.SalesInvoiceMPLBankPaymentVM
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+<tr class="Banktablerow ">
+    @using (Html.BeginCollectionItem("SalesInvoiceMPLBankPaymentVMs"))
+    {
+        <td>
+            <a id="" title="Click to Remove" onclick="RemoveBankItem(this);" class="sym-btn-remove-row "></a>
+            <a id="" title="Click to Edit" onclick="EditBankItem(this);" class="sym-btn-edit-row btnSize"></a>
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.BankCode, new { @class = "  dBankCode   form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.BankName, new { @class = "  dBankName   form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.ModeOfPayment, new { @class = "  dModeOfPayment   form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.InstrumentNo, new { @class = "  dInstrumentNo   form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.InstrumentDate, new { @class = "  dInstrumentDate   form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.Amount, new { @class = "  dAmount NumberCheck right  form-control", @readonly = "readonly" })
+        </td>
+       
+
+        @Html.HiddenFor(m => m.Id, new { @class = "dId" })
+        @Html.HiddenFor(m => m.SalesInvoiceMPLHeaderId, new { @class = "dSalesInvoiceMPLHeaderId" })
+        @Html.HiddenFor(m => m.BranchId, new { @class = "dBranchId" })
+        @Html.HiddenFor(m => m.BankId, new { @class = "dBankId" })
+
+    }
+</tr>
+
+<style>
+    .btnSize {
+        font-size: 1em !important;
+    }
+</style>
+
+

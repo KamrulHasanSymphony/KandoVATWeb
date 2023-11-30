@@ -1,0 +1,136 @@
+﻿    <script language="javascript" type="text/javascript">
+        $(document).ready(function () {
+
+            SelectAllForDelete();
+            $.datepicker.regional[""].dateFormat = 'dd/M/y';
+            $.datepicker.setDefaults($.datepicker.regional['']);
+            var oTable = $('#myDataTable').dataTable({
+                "bServerSide": true,
+                "sAjaxSource": "/Common/HoliDay/_index",
+                "bProcessing": true,
+                "aLengthMenu": tablelength(),
+                "bJqueryUI": true,
+                "bAutoWidth": false,
+                "aoColumns": [
+                                {
+                                    "sName": "Id",
+                                    "bSearchable": false,
+                                    "bSortable": false,
+                                    "sWidth": "12%",
+                                    "sClass": "center",
+                                    "fnRender": function (oObj) {
+                                        return ' <input onclick="CheckAll(this)" type="checkbox" data-Id="' + oObj.aData[0] + '">&nbsp; <a title="Click on for Edit" style="text-decoration:none;" class=" sym-btn-edit-row"   href=\"/Common/HoliDay/Edit/' + oObj.aData[0] + '\"></a>' +
+                                        '&nbsp; <a title="Click on for Delete" style="text-decoration:none;" data-url="/Common/HoliDay/HoliDayDelete" onclick="deletedData(this, myDataTable,' + oObj.aData[0] + ');"  class="sym-btn-remove-row"></a>';
+                                    }
+                                }
+                                , { "sName": "HoliDay", "sWidth": "20%" }
+                                , { "sName": "HoliDayType", "sWidth": "30%" }
+                                , { "sName": "Remarks", "sWidth": "35%" }
+                                //Holiday
+                                //Type
+
+                ]
+            });
+            oTable.columnFilter({
+                sPlaceHolder: "head:after",
+                aoColumns: [{ type: "checkbox", "sClass": "chkAll" }
+                           , { type: "text" }
+                           , { type: "text" }
+                           , { type: "text" }
+                           //, { type: "date-range" }
+
+                ]
+
+            });
+
+        });
+    </script>
+    
+<div class="headrow">
+        <button type="button" title="Add New Holiday" data-url="/Common/HoliDay/Create" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+        <button type="button" title="Delete Holiday" data-url="/Common/HoliDay/HoliDayDelete" onclick="deletedData(this, 'myDataTable');" id="" class="sym-btn-remove">&nbsp;Delete</button>
+ <label class="pull-right"> Holiday</label>
+</div>
+
+
+<div class="thinbox">
+        <div class="th_thinbox">
+        <p>Holiday List</p>   
+        </div>
+<p>
+            @* <input type="button" style="width:65px;" data-url="/Common/HoliDay/Create" onclick="GoTo(this)"   id="" class=" btn btn-info  " value="Add" />
+            <input type="button" style="width:65px;" data-url="/Common/HoliDay/HoliDayDelete" onclick="deletedData(this, 'myDataTable');" id="" class=" btn btn-info  " value="Delete" />*@
+
+</p>
+<table id="myDataTable" class="display">
+    <thead>
+
+        <tr>
+            <th class="center">
+                <input type="checkbox" class="chkAll" />Select All</th>
+            <th>Holiday</th>
+            <th>Type</th>
+            <th>Remarks</th>
+        </tr>
+
+        <tr>
+            <th class="center">Actions</th>
+           <th>Holiday</th>
+            <th>Type</th>
+            <th>Remarks</th>
+        </tr>
+
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+        <br />
+        </div>
+
+<div class="headrow">
+    <div class="pull-left">
+        <button type="button" title="Add New Holiday" data-url="/Common/HoliDay/Create" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+        <button type="button" title="Delete Holiday"  data-url="/Common/HoliDay/HoliDayDelete" onclick="deletedData(this, 'myDataTable');" id="" class="sym-btn-remove">&nbsp;Delete</button>
+    </div>
+</div>
+
+
+
+@*<script>
+
+    $(document).ready(function () {
+
+        var oTable = $('#myDataTable').dataTable({
+            "bServerSide": true,
+            "sAjaxSource": "/Common/HoliDay/_index",
+            "bProcessing": true,
+            "aoColumns": [
+
+                            {
+                                "sName": "Name",
+                                "bSearchable": false,
+                                "bSortable": false,
+                                "fnRender": function (oObj) {
+                                    return ' <input onclick="CheckAll(this)" type="checkbox" data-Id="' + oObj.aData[1].split('~')[1] + '">'
+                                    ;
+                                }
+                            },
+                            {
+                                "sName": "Name",
+                                "bSearchable": false,
+                                "bSortable": false,
+                                "fnRender": function (oObj) {
+                                    //return '<a  class="" href=\"/Common/HoliDay/Edit/' + oObj.aData[0].split('~')[1] + '\">' + oObj.aData[0].split('~')[0] + '</a>'
+                                    return '<a  class="innerListLink"  href=\"/Common/HoliDay/Edit/' + oObj.aData[1].split('~')[1] + '\">' + oObj.aData[1].split('~')[0] + '</a>'
+                                    ;
+                                }
+                            },
+                            { "sName": "HoliDay" },
+                            { "sName": "Type" }
+        ]
+        });
+        SelectAllForDelete();
+    });
+
+
+</script>*@

@@ -1,0 +1,21 @@
+﻿@model IEnumerable<VATViewModel.DTOs.ReceiveMasterVM>
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+    @foreach (var item in Model)
+    {
+        <tr class="trSelectPopUpIssue">
+            <td class="popUpItemNo">@item.ReceiveNo</td>
+            <td>Batch</td>
+            <td>@item.ReceiveDateTime</td>
+            <td>@item.TotalVATAmount</td>
+            <td>@item.TotalAmount</td>
+            <td>@item.ReturnId</td>
+            <td>@item.ReferenceNo</td>
+            <td>@item.CustomerID</td>
+            <td>@item.CustomerName</td>
+            <td>@item.WithToll</td>
+        </tr>
+    }
+

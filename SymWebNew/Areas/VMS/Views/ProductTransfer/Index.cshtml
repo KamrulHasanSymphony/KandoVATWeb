@@ -1,0 +1,275 @@
+﻿@model VATViewModel.DTOs.ProductTransfersVM
+@using UIHelper.MVC
+@using SymOrdinary
+@using System.Threading;
+@using VATServer.Ordinary
+
+@{ 
+    ShampanIdentity identity = null;
+    try
+    {
+        identity = (ShampanIdentity)Thread.CurrentPrincipal.Identity;
+    }
+    catch (Exception)
+    {
+        Response.Redirect("/VMS/Home/Login");
+        return;
+    }
+}
+
+@{
+    ViewBag.Title = "Index";
+}
+
+@Html.HiddenFor(model => model.TransactionType, new { @class = " cTransactionType" })
+
+<div class="headrow">
+    @*<button type="button" title="Add New Issue" data-url="/VMS/ProductTransfer/Create?tType=@Model.TransactionType"  id="" class="sym-btn-add ">&nbsp;New</button>*@
+    <button type="button" title="Add New Issue" data-url="/VMS/ProductTransfer/Create?tType=@Model.TransactionType" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+
+    @*<label class="pull-right">Issue (@Model.transactionType)</label>*@
+
+    @if (Model.TransactionType == "RawCTC")
+    {
+        <label class="pull-right">Issue Raw (@Model.TransactionType)</label>
+    }
+    else if (Model.TransactionType == "WastageCTC")
+    {
+        <label class="pull-right">Issue Wastage (@Model.TransactionType)</label>
+
+    }
+    else if (Model.TransactionType == "FinishCTC")
+    {
+        <label class="pull-right">Issue Finish (@Model.TransactionType)</label>
+    }
+   
+    else
+    {
+        <label class="pull-right">Issue (@Model.TransactionType)</label>
+    }
+
+</div>
+
+<div class=" tabMenu">
+    <ul style="font-size: 1.4em;" class="tabDesign nav nav-tabs">
+        <li class="tabDefault active"><a data-toggle="tab" href="#IssueIndex">Transfer Index</a></li>
+    </ul>
+</div>
+<div class="tab-content">
+    <div id="IssueIndex" class="tab-pane fade  in active">
+        <div class="thinbox  animated zoomIn faster">
+            <div class="th_thinbox">
+                <p>Transfer List</p>
+            </div>
+            <div class="dtSearch formDesign">
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.TransferCode)
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(model => model.TransferCode, new { @placeholder = "Transfer Code", @class = "  form-control" })
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.TransferDateFrom)
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(model => model.TransferDateFrom, new { @placeholder = "Transfer Date From", @class = "customDatePicker defaultDate  form-control" })
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.TransferDateTo)
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(model => model.TransferDateTo, new { @placeholder = "TransferDateTo", @class = "customDatePicker defaultDate  form-control" })
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.Post)
+                        </div>
+                        <div class="editor-field">
+                            <select id="Post" class="form-control">
+                                <option value=""></option>
+                                <option value="Y">Y</option>
+                                <option value="N">N</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="trk1_5">
+                        <div class="editor-label">
+                            <label>Branch Name</label>
+                        </div>
+                        <div class="editor-field">
+                            @Html.SimpleDropDownFor(model => model.BranchId, "/Config/DropDown/BranchProfile", new { @class = " selectDropdown  form-control" })
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="editor-label">
+                            <label>&nbsp;</label>
+                        </div>
+                        <div class="editor-field">
+                            <button type="button" title="Click to Search" id="btnDialog" class="sym-btn-search">&nbsp;Search</button>
+                            <button type="button" title="Clear Data" id="Clear" class=" sym-btn-clear">&nbsp;Clear</button>
+                            <button type="button" title="Post Data" onclick="PostData()" class="sym-btn-post">&nbsp;Post</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <p>&nbsp;</p>
+            <table id="myDataTable" class="display">
+                <thead>
+                    <tr>
+                        <th class="center"><input type="checkbox" class="chkAll" /> Action</th>
+                        <th>Transfer Code</th>
+                        <th>Transfer Date</th>
+                        <th>Is Posted</th>
+                        <th>Transfer Type</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <br />
+        </div>
+
+        <div class="headrow">
+            <button type="button" title="Add New Issue" data-url="/VMS/ProductTransfer/Create?tType=@Model.TransactionType" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+            @*<button type="button" title="Add New Issue" data-url="/VMS/ProductTransfer/Create?tType=@Model.TransactionType" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>*@
+
+        </div>
+        <div id="myModal" class="trkmodal"></div>
+    </div>
+
+
+    </div>
+
+    <script>
+
+        function PostData() {
+
+            var questionMSG = "Are you sure to Post Data!";
+
+            Ask(questionMSG, function () {
+
+
+                var IDs = [];
+                var $Items = $(".dSelected:input:checkbox:checked");
+
+                if ($Items == null || $Items.length == 0) {
+                    ShowResult("Fail", "You are requested to Select before Post!");
+                    return;
+                }
+
+                $Items.each(function () {
+                    var ID;
+                    ID = $(this).attr("data-Id");
+
+                    var vID = ID.split("~")[0];
+
+                    IDs.push(vID);
+                });
+
+                var model = {
+                    IDs: IDs
+                }
+                var url = '/VMS/IssueHeader/MultiplePost';
+
+                $.ajax({
+                    url: url
+                    , data: model
+                    , type: 'Post'
+                    , traditional: true
+                    , beforeSend: function () { $(".loading").show(); }
+                    , success: function (rVM) {
+                        ShowResult(rVM.Status, rVM.Message);
+                    }
+                    , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+
+                });
+            });
+
+        }
+
+    </script>
+
+    <script language="javascript" type="text/javascript">
+
+        $(document).ready(function () {
+
+            SelectAllForDelete();
+            $.datepicker.regional[""].dateFormat = 'dd/M/y';
+            $.datepicker.setDefaults($.datepicker.regional['']);
+            var oTable = $('#myDataTable').dataTable({
+                "bServerSide": true,
+                "sAjaxSource": "/VMS/ProductTransfer/_index?TransactionType=@Model.TransactionType",
+                "bProcessing": true,
+                "aLengthMenu": tablelength(),
+                "bJqueryUI": true,
+                "bAutoWidth": false,
+
+                "fnServerData": function (sSource, aoData, fnCallback) {
+                    $('.dtSearch :input').each(function () {
+                        var Name = $(this).attr("Id")
+                        var Value = $(this).val()
+                        aoData.push({ "name": Name, "value": Value });
+                    });
+                    $.getJSON(sSource, aoData, function (json) {
+                        fnCallback(json);
+                    });
+                },
+
+                "aoColumns": [
+                                {
+                                    "sName": "Id",
+                                    "bSearchable": false,
+                                    "bSortable": false,
+                                    "sWidth": "20%",
+                                    "sClass": "center",
+                                    "fnRender": function (oObj) {
+                                        return ' <input onclick="CheckAll(this)" class="dSelected" type="checkbox" data-Id="' + oObj.aData[0] + '">'
+                                            + '&nbsp; <a title="Click on for Edit" href=\"/VMS/ProductTransfer/Edit/' + oObj.aData[0].split('~')[0] + '\" class="sym-btn-edit-row"></a>'
+                                            + '&nbsp; <a title="Click on for Post" data-url="/VMS/ProductTransfer/Post"  onclick=checkValidBranch(this,' + oObj.aData[0].split('~')[2] + '); data-Id="' + oObj.aData[0] + '\" class="sym-btn-post-row"></a>'
+                                        ;
+                                    }
+                                }
+                                , { "sName": "TransferCode", "sWidth": "20%" }
+                                , { "sName": "TransferDate", "sWidth": "10%" }
+                                , { "sName": "IsPosted", "sWidth": "15%" }
+                                , { "sName": "Transfer Type", "sWidth": "10%" }
+                             
+                ]
+            });
+
+            $('#btnDialog').click(function () {
+                var model = $('.dtSearch :input').serialize();
+                $.ajax({
+                    url: "/VMS/ProductTransfer/Index",
+                    cache: false,
+                    data: model,
+                    success: function (html) {
+                        oTable.fnDraw();
+                    }
+                });
+            });
+            ////clearing fields
+            $("#Clear").on('click', function () {
+                $(".Dropdown").select2("val", "");
+                $(".form-control").val("");
+            });
+
+
+        });
+        function checkValidBranch(element, branchId) {
+            if ('@Session["BranchId"]' != branchId) {
+                ShowResult("Fail", "This Information not for this Branch!");
+                return;
+            }
+
+            btnPost(element);
+        }
+    </script>
+

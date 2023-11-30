@@ -1,0 +1,65 @@
+﻿<div class="headrow">
+    <button type="button" title="Add New Adjustment Name" data-url="/VMS/AdjustmentName/Create" id="" class="btnCreate sym-btn-add ">&nbsp;New</button>
+    @*<button type="button" title="Delete Adujustment Name" data-url="/VMS/AdjustmentName/Delete" onclick="deletedData(this, 'myDataTable');" id="" class="sym-btn-remove">&nbsp;Delete</button>*@
+    <label class="pull-right">Adjustment Head Name</label>
+</div>
+<div class="thinbox animated slideInDown faster">
+    <div class="th_thinbox">
+        <p>Head Name List</p>
+    </div>
+    <table id="myDataTable" class="display">
+        <thead>
+            <tr>
+                <th class="center">
+                    <input type="checkbox" class="chkAll" />Select All
+                </th>
+                <th>Adjustment Name</th>
+                <th>Comments</th>
+                <th>Active Status</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <br />
+</div>
+<div class="headrow">
+    <button type="button" title="Add New Adujustment Name" data-url="/VMS/AdjustmentName/Create" id="" class="btnCreate sym-btn-add ">&nbsp;New</button>
+    @*<button type="button" title="Delete Adujustment Name" data-url="/VMS/AdjustmentName/Delete" onclick="deletedData(this, 'myDataTable');" id="" class="sym-btn-remove">&nbsp;Delete</button>*@
+</div>
+@*<div id="myModal" class="trkmodal"></div>*@
+<script language="javascript" type="text/javascript">
+    $(document).ready(function () {
+        SelectAllForDelete();
+        $.datepicker.regional[""].dateFormat = 'dd/M/y';
+        $.datepicker.setDefaults($.datepicker.regional['']);
+
+        var oTable = $('#myDataTable').dataTable({
+            "bServerSide": true,
+            "sAjaxSource": "/VMS/AdjustmentName/_index",
+            "bProcessing": true,
+            "aLengthMenu": tablelength(),
+            "bJqueryUI": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+                            {
+                                "sName": "AdjId",
+                                "bSearchable": false,
+                                "bSortable": false,
+                                "sWidth": "10%",
+                                "sClass": "center",
+                                "fnRender": function (oObj) {
+                                    return '&nbsp; <a id=""  title="Click on for Edit"  style="text-decoration:none;"   href=\"/VMS/AdjustmentName/Edit/' + oObj.aData[0] + '\" class="lnkEdit sym-btn-edit-row"></a>'  
+                                    ;
+
+                                    //' <input onclick="CheckAll(this)" type="checkbox" data-Id="' + oObj.aData[0] + '">'+ 
+                                    //+ '&nbsp; <a title="Click on for Delete"  data-url="/VMS/AdjustmentName/Delete" onclick="deletedData(this, myDataTable,\'' + oObj.aData[0] + '\');"  class="sym-btn-remove-row"></a>'
+                                }
+                            }
+                            , { "sName": "AdjName", "sWidth": "15%" }
+                            , { "sName": "Comments", "sWidth": "40%" }
+                            , { "sName": "ActiveStatus", "sWidth": "10%" }
+
+            ]
+        });
+    });
+</script>

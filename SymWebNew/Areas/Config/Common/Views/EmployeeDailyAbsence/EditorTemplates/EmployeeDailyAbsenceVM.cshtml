@@ -1,0 +1,29 @@
+﻿@model SymViewModel.Attendance.EmployeeDailyAbsenceVM
+@{
+    ViewBag.Title = "EmployeeDailyAbsenceVM";
+}
+<tr>
+
+    @Html.HiddenFor(model => model.IsAbsentPrevious)
+    @Html.HiddenFor(model => model.IsManual)
+
+
+    <th style="text-align: center">@Html.CheckBoxFor(model => model.IsAbsent)</th>
+    <th>@Html.DisplayFor(model => model.Code)</th>
+    <th>@Html.DisplayFor(model => model.EmpName)</th>
+    <th>@Html.DisplayFor(model => model.Designation)</th>
+    <th>@Html.DisplayFor(model => model.Department)</th>
+    <th>@Html.DisplayFor(model => model.Section)</th>
+    <th>@Html.DisplayFor(model => model.Project)</th>
+    <th>@Html.TextBoxFor(model => model.Remarks)</th>
+
+    @Html.HiddenFor(model => model.Code)
+    @Html.HiddenFor(model => model.EmpName)
+    @Html.HiddenFor(model => model.EmployeeId)
+    @Html.HiddenFor(model => model.DesignationId)
+    @Html.HiddenFor(model => model.DepartmentId)
+    @Html.HiddenFor(model => model.SectionId)
+    @Html.HiddenFor(model => model.ProjectId)
+    @Html.HiddenFor(model => model.SearchDate)
+    @Html.HiddenFor(model => model.TransactionType)
+</tr>

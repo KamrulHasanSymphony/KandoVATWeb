@@ -1,0 +1,13 @@
+﻿@model IEnumerable<VATViewModel.DTOs.PurchaseDetailVM>
+@using UIHelper.MVC
+@{
+    Layout = null;
+    foreach (var item in Model)
+    {
+        @Html.Partial("_detailAdjustment", item)
+    }
+}
+
+    
+
+

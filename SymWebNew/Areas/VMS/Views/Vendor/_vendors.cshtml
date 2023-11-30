@@ -1,0 +1,241 @@
+﻿@model VATViewModel.DTOs.VendorVM
+@using UIHelper.MVC
+@{
+    Layout = "~/Areas/VMS/Views/Shared/_ModalLayout.cshtml";
+}
+<style>
+    .trkMT10 {
+        margin-top: 10px;
+    }
+</style>
+<div class="HigherModal-content">
+    <div class="HigherModal-header">
+        <span class="closeHigher">&times;</span>
+        <h2 class="text-center">Vendor Search</h2>
+    </div>
+    <div class="HigherModal-body formDesign">
+        <div class="row">
+            <div class="col-md-2">
+                <label>Search Field</label>
+                @Html.SimpleDropDown("SearchField", "/Config/DropDown/VendorColumnSearch", new { @class = " form-control " })
+            </div>
+            <div class="col-md-2">
+                <label>Search Value</label>
+                @Html.TextBox("SearchValue", "", new { @class = " form-control" })
+            </div>
+            <div class="col-md-2">
+                <label>Group</label>
+                @Html.SimpleDropDown("popUpVendorGroup", "/Config/DropDown/VendorGroup", new { @class = " form-control " })
+            </div>
+            <div class="trk1_5">
+                <label for="startPopUpDate">Start Date From</label>
+                <div class="editor-field">
+                    @Html.TextBox("startPopUpDate", null, new { @placeholder = "Date From", @class = "dtFrom customDatePicker form-control" })
+                </div>
+            </div>
+            <div class="trk1_5">
+                <label for="endPopUpDate">Start Date To</label>
+                <div class="editor-field">
+                    @Html.TextBox("endPopUpDate", null, new { @placeholder = "Date To", @class = "dtTo customDatePicker form-control" })
+                </div>
+            </div>
+            <div class="col-md-1 ">
+                <label>Acive</label>
+                <select id="activePopUp" class="form-control">
+                    <option value="Y">Y</option>
+                    <option value="N">N</option>
+                </select>
+            </div>
+            <div class="trk_5">
+                <div class="editor-field">
+                    <label>&nbsp;</label>
+                    <button type="button" title="Click to Search" id="searchBtn" class="sym-btn-search btnPopUpSearch">&nbsp;</button>
+                </div>
+            </div>
+            <div class="trk_5">
+                <label>&nbsp;</label>
+                <button type="button" title="Clear Data" id="Clear" class=" sym-btn-clear">&nbsp;Clear</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="fixedParent">
+                <table class="trkFixTable" id="vendorPopUpTable">
+                    <thead>
+                        <tr>
+                            <th>SL</th>
+                            <th>Code</th>
+                            <th>Name</th>
+                            <th>Group</th>
+                            <th>TIN No</th>
+                            <th>VAT Registration No</th>
+                            <th>Address 1</th>
+                            <th>City</th>
+                            <th>Email</th>
+                            <th>Contact Person</th>
+                            <th>CP Designation</th>
+                            <th>CP Email</th>
+                            <th>CP Telephone</th>
+                        </tr>
+                    </thead>
+                    <tbody id="popUpTbody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*fixed table*@
+<script language="javascript" type="text/javascript">
+    function fixedScrollPopUpFixedTable(tableId, leftTotal) {
+        $('#' + tableId + ' tbody').scroll(function (e) {
+            var i;
+            for (i = 1; i <= leftTotal; i++) {
+                $('#' + tableId + ' thead th:nth-child(' + i + ')').css("left", $("#" + tableId + " tbody").scrollLeft());
+                $('#' + tableId + ' tbody td:nth-child(' + i + ')').css("z-index", "1");
+                $('#' + tableId + ' tbody td:nth-child(' + i + ')').css("left", $("#" + tableId + " tbody").scrollLeft());
+            }
+            $('#' + tableId + ' thead').css("left", -$("#" + tableId + " tbody").scrollLeft());
+
+        });
+    }
+    function settingPopUpFixedColumnWidth(tableId, widthArgs) {
+        if (widthArgs == null) {
+            return;
+        }
+        var i;
+        for (i = 1; i <= widthArgs.length; i++) {
+            $('#' + tableId + ' tr td:nth-child(' + i + ')').css("min-width", widthArgs[i - 1] + "px");
+            $('#' + tableId + ' tr td:nth-child(' + i + ')').css("overflow", "hidden");
+            $('#' + tableId + ' tr td:nth-child(' + i + ')').css("max-width", widthArgs[i - 1] + "px");
+
+            $('#' + tableId + ' tr th:nth-child(' + i + ')').css("min-width", widthArgs[i - 1] + "px");
+            $('#' + tableId + ' tr th:nth-child(' + i + ')').css("overflow", "hidden");
+            $('#' + tableId + ' tr th:nth-child(' + i + ')').css("max-width", widthArgs[i - 1] + "px");
+        }
+    }
+    function fixLeftPopUpColumns(tableId, leftTotal) {
+        var i;
+        for (i = 1; i <= leftTotal; i++) {
+            //fixed column header style
+            $('#' + tableId + ' thead th:nth-child(' + i + ')').css("height", "30px");
+            $('#' + tableId + ' thead th:nth-child(' + i + ')').css("position", "relative");
+            $('#' + tableId + ' thead th:nth-child(' + i + ')').css("z-index", "2");
+            //fixed column rows style
+            $('#' + tableId + ' tbody tr td:nth-child(' + i + ')').css("height", "30px");
+            $('#' + tableId + ' tbody tr td:nth-child(' + i + ')').css("position", "relative");
+        }
+    }
+    function settingFixedPopUpWidth(tableId) {
+        //var parentWidth = $('.fixedParent').width();
+        var parentWidth = $('#' + tableId).closest('.fixedParent').width();
+        $('#' + tableId + ' thead').width(parentWidth);
+        $('#' + tableId + ' tbody').width(parentWidth);
+    }
+    function trkFixedPopUpTable(tableId, leftTotal, args) {
+        settingFixedPopUpWidth(tableId);
+        fixLeftPopUpColumns(tableId, leftTotal);
+        fixedScrollPopUpFixedTable(tableId, leftTotal);
+        settingPopUpFixedColumnWidth(tableId, args);
+    }
+    function callingFixedPopUpTable() {
+        var args = [50,100, 300, 100, 100, 200, 200, 200, 200, 200, 200, 200, 200];
+        trkFixedPopUpTable("vendorPopUpTable",3, args);
+    }
+    $(function () {
+        callingFixedPopUpTable();
+    })
+</script>
+@*events of the modal*@
+<script>
+    ////closing higher modal
+    function closeHigherModal() {
+        $("#myHigherModal").html("");
+        trkmodal.style.display = "none";
+    }
+    var span = document.getElementsByClassName("closeHigher")[0];
+    var trkmodal = document.getElementById('myHigherModal');
+    span.onclick = function () {
+        closeHigherModal();
+    }
+
+    $(function () {
+        $('#vendorPopUpTable').unbind().on('dblclick', '.trSelectPopUpCustomer', function () {
+            var itemName = $(this).children('td.popUpItemName').text();
+            selectPopUpProduct(itemName, this);
+        });
+        function selectPopUpProduct(itemName, sender) {
+            callbackFromVendorModal(sender);
+            closeHigherModal();
+        }
+        $(document).on('click', '.trSelectPopUpCustomer', function () {
+            var activeEl = $('tr.active');
+            activeEl.removeClass("active");
+            $(this).addClass(" active");
+        });
+    })
+</script>
+@*for search action*@
+<script>
+
+    function showSelectedVendor() {
+        var vendorname = '@Model.VendorName';
+        if (vendorname.trim().toLowerCase() == "select") {
+            return;
+        }
+        var interval = setInterval(function () {
+            if (document.querySelectorAll('#SearchField option').length > 0) {
+                $('#SearchField').val("VendorName");
+                $('#SearchValue').val(vendorname);
+                SearchVendors();
+                clearInterval(interval);
+            }
+        }, 200);
+    }
+    function SearchVendors() {
+        var SearchField = $('#SearchField').val();
+        var SearchValue = $('#SearchValue').val();
+        var VendorGroupID = $('#popUpVendorGroup').val();
+        var StartDateFrom = $('#startPopUpDate').val();
+        var StartDateTo = $('#endPopUpDate').val();
+        var activePopUp = $('#activePopUp').val();
+        var ActiveStatus;
+        if (activePopUp == "Y") {
+            ActiveStatus = true;
+        }
+        if (activePopUp == "N") {
+            ActiveStatus = false;
+        }
+
+        var model = {
+            SearchField: SearchField,
+            SearchValue: SearchValue,
+            VendorGroupID: VendorGroupID,
+            StartDateFrom: StartDateFrom,
+            StartDateTo: StartDateTo,
+            IsActive: activePopUp
+        }
+        $.ajax({
+            data: model
+            , url: "/Vms/Vendor/GetFilteredVendors"
+            , cache: false
+            , beforeSend: function () { $(".loading").show(); }
+            , success: function (html) {
+                $("#popUpTbody").html("");
+                $("#popUpTbody").html(html);
+                callingFixedPopUpTable();
+            }
+            , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+        });
+    }
+    $(function () {
+        showSelectedVendor();
+        $('.btnPopUpSearch').click(function () {
+            SearchVendors();
+        });
+        $("#Clear").on('click', function () {
+            $(".HigherModal-body .Dropdown").select2("val", "");
+            $(".HigherModal-body .form-control").val("");
+        });
+    });
+</script>
+

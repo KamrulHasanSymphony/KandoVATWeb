@@ -1,0 +1,143 @@
+﻿@{
+    ViewBag.Title = "HomeIndex";
+}
+
+@using SymOrdinary
+@using System.Threading;
+
+@{
+    ShampanIdentity identity = null;
+    try
+    {
+        identity = (ShampanIdentity)Thread.CurrentPrincipal.Identity;
+    }
+    catch (Exception)
+    {
+        Response.Redirect("/VMS/Home/Login");
+        return;
+    }
+}
+
+
+@*<h2>Adjustment HomeIndex</h2>*@
+
+<style>
+    .myUL, .myUL ul {
+        list-style-type: none;
+    }
+
+    .myUL {
+        margin: 0;
+        padding: 0;
+    }
+
+        .myUL li {
+            cursor: pointer;
+            font-size: 20px;
+            border: 2px solid #44fcd4;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 5px;
+            border-radius: 10px;
+        }
+
+            .myUL li:hover {
+                color: white;
+                border: 2px solid #00aa08;
+            }
+
+    ul.myUL .trCaret {
+        cursor: pointer;
+        user-select: none;
+        -webkit-user-select: none; /* Safari 3.1+ */
+        -moz-user-select: none; /* Firefox 2+ */
+        -ms-user-select: none; /* IE 10+ */
+    }
+
+    ul.myUL li {
+        color: #42f4c5;
+        background-color: #003ea3;
+    }
+
+    ul.myUL .trCaret {
+        color: white;
+    }
+
+        ul.myUL .trCaret::before {
+            content: "\25B6";
+            color: #ffb049;
+            display: inline-block;
+            margin-right: 6px;
+        }
+
+    ul.myUL .trCaret-down::before {
+        transform: rotate(90deg);
+    }
+
+    ul.myUL .nested {
+        display: none;
+    }
+
+    ul.myUL .active {
+        display: block;
+    }
+</style>
+
+<div class="thinbox">
+    <div class="th_thinbox">
+        <p class="text-center" style=" padding-left: 7%;">Adjustment</p>
+    </div>
+    <div class="row animated zoomIn faster">
+        <div class="col-md-3 col-md-offset-5">
+            <ul class="myUL">
+
+                @*<li class="Treasury" data-url="/Vms/Deposit/Index?TransactionType=Treasury" onclick="GoTo(this)">Treasury</li>*@
+                @*<li class="SD" data-url="/Vms/Deposit/Index?TransactionType=SD" onclick="GoTo(this)">SD</li>*@
+               
+                 @if (identity.IsPermitted("170130"))
+                {
+                    <li>
+                        <span class="trCaret">Sale</span>
+                        <ul class="nested">
+                            @if (identity.IsPermitted("170130110"))
+                            {
+                                <li class="CN" data-url="/Vms/SaleInvoice/Index?TransactionType=Credit" onclick="GoTo(this)">CN</li>
+
+                            }
+                            @if (identity.IsPermitted("170130120"))
+                            {
+                                <li class="DN" data-url="/Vms/SaleInvoice/Index?TransactionType=Debit" onclick="GoTo(this)">DN</li>
+
+                            }
+
+                        </ul>
+                    </li>
+
+                }
+
+
+            </ul>
+
+        </div>
+
+
+        <div class="col-md-3"></div>
+    </div>
+
+</div>
+<script>
+    ////expanding menus
+    $(function () {
+        var toggler = document.getElementsByClassName("trCaret");
+        var i;
+
+        for (i = 0; i < toggler.length; i++) {
+            toggler[i].addEventListener("click", function () {
+                this.parentElement.querySelector(".myUL .nested").classList.toggle("active");
+                this.classList.toggle("trCaret-down");
+            });
+        }
+    });
+
+</script>
+

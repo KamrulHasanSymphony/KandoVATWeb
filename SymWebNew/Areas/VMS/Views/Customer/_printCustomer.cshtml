@@ -1,0 +1,115 @@
+﻿@using UIHelper.MVC
+@{
+    Layout = null;
+}
+<style>
+    .trkmodal{
+        padding-top:10%;
+    }
+    .trkmodal-content {
+        width: 50%;
+        padding-bottom:10px;
+    }
+</style>
+<div class="trkmodal-content">
+    <div class="trkmodal-header">
+        <span class="close">&times;</span>
+        <h2 class="text-center">Report(Customer)</h2>
+    </div>
+    <div class="trkmodal-body">
+    @using (Html.BeginForm("ReportView", "Customer", FormMethod.Post, new { enctype = "multipart/form-data", @target = "_blank" }))
+    {
+        <div class="form-group">
+            <label>Customer Name</label>
+            @Html.SimpleDropDown("cId", "/Config/DropDown/Customer", new { @class = " form-control selectDropdown trName" })
+        </div>
+        <div class="form-group">
+            <label>Customer Group</label>
+            @Html.SimpleDropDown("cgId", "/Config/DropDown/CustomerGroup", new { @class = " form-control selectDropdown trGroup" })
+        </div>
+        <div class="form-group">
+            <label>TIN No</label>
+            @Html.TextBox("TinNo", null, new { @class = " form-control trTinNo", @readonly = "readonly" })
+        </div>
+        <div class="form-group">
+            <label>VAT Registration No</label>
+            @Html.TextBox("VatNo", null, new { @class = " form-control trVatNo", @readonly = "readonly" })
+        </div>
+        <button type="submit" class=" btn btn-info">Preview</button>
+        <button type="button" class="btn btn-danger closeBtn pull-right">Close</button>
+    }
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        ////for dropdown
+        InitDropDowns();
+        ////for select2 dropdown
+        $(".selectDropdown").select2();
+        $(".selectDropdown").trigger('change');
+        $(".selectDropdown").removeClass('form-control');
+
+        function closeModal() {
+            $("#myModal").html("");
+            trkmodal.style.display = "none";
+        }
+
+        ////category change method
+        function GroupChange() {
+            $('.trName').select2("val", "");
+            $('.trTinNo').val("");
+            $('.trVatNo').val("");
+            var value = $('.trGroup').val().toString();
+            var url = "/Vms/Customer/DropdownByGroup/?groupId=" + value;
+            if (value == 0) {
+                url = "/Config/DropDown/Customer";
+            }
+            var itemNames = "";
+
+            itemNames += "<option value=0>Select</option>";
+            $.getJSON(url, function (data) {
+                $.each(data, function (i, state) {
+                    itemNames += "<option value='" + state.Value + "'>" + state.Text + "</option>";
+                });
+
+                $('.trName').html(itemNames);
+            });
+        }
+
+        ////Item change method
+        function ItemChange() {
+            var value = $('.trName').val().toString();
+            var url = "/Vms/Customer/GetItemGroupId?ItemId=" + value;
+            
+            $.getJSON(url, function (data) {
+                var cGroup = data.split('~')[0];
+                var tinNo = data.split('~')[1];
+                var vatNo = data.split('~')[2];
+                $('.trGroup').select2("val", cGroup);
+
+                $('.trTinNo').val(tinNo);
+                $('.trVatNo').val(vatNo);
+            });
+        }
+        ////changing group
+        $('.trGroup').change(function () {
+            GroupChange();
+        });
+        ////changing item
+        $('.trName').change(function () {
+            ItemChange();
+        });
+
+        var span = document.getElementsByClassName("close")[0];
+        var trkmodal = document.getElementById('myModal');
+        //When the user clicks on <span> (x), close the trkmodal
+        span.onclick = function () {
+            closeModal();
+        }
+
+        $('.closeBtn').click(function () {
+            closeModal();
+        });
+        
+    });
+</script>

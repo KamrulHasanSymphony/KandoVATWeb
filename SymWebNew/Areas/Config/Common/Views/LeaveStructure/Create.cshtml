@@ -1,0 +1,124 @@
+﻿@model SymViewModel.Leave.LeaveStructureVM
+
+@using (Html.BeginForm("Create", "LeaveStructure", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmLevStr" }))
+{
+    @Html.ValidationSummary(true)
+
+<div class="headrow">
+    <button type="button" title="Save Data" onclick="pageSubmit('frmLevStr')" class="sym-btn-save" >&nbsp;Save</button>
+ <label class="pull-right"> Leave Structure > Create</label>
+</div>
+        
+    <div class="thinbox">
+        <div class="th_thinbox">
+            <p>Leave Structure</p>
+        </div>
+        @Html.HiddenFor(model => model.BranchId)
+        <div class="row">
+            <div class="col-md-2">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.Code)
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.Code, new { @placeholder = "Leave Code", @class = "required form-control" })
+                    @Html.ValidationMessageFor(model => model.Code)
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.Name)
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.Name, new { @placeholder = "Leave Name", @class = " required form-control" })
+                    @Html.ValidationMessageFor(model => model.Name)
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.Remarks)
+                </div>
+                <div class="editor-field">
+                    @Html.TextAreaFor(model => model.Remarks, new { @placeholder = "Remarks", @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Remarks)
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div id="leaveSDRows">
+            <div class="row" >
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.leaveStructureDetailVMs.FirstOrDefault().LeaveType_E)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.leaveStructureDetailVMs.FirstOrDefault().LeaveDays)
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.leaveStructureDetailVMs.FirstOrDefault().IsEarned)
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.leaveStructureDetailVMs.FirstOrDefault().IsCompensation)
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.leaveStructureDetailVMs.FirstOrDefault().IsCarryForward)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.leaveStructureDetailVMs.FirstOrDefault().MaxBalance)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.leaveStructureDetailVMs.FirstOrDefault().Remarks)
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <a href="#" class="RemoveRow Button Delete IconOnly"></a>
+                </div>
+            </div>
+            @if (Model.leaveStructureDetailVMs != null)
+            {
+                foreach (var item in Model.leaveStructureDetailVMs)
+                {
+                    Html.RenderPartial("_leaveStructureDetail", item);
+                }
+            }
+        </div>
+       @* <p>
+            <input type="button" class="AddRow  btn btn-info" data-url="/Common/LeaveStructure/leaveStructureDetails" data-container="leaveSDRows" value="Add Row" />
+        </p>*@
+
+       @*<div  id="ItemExist" title="Add Quotation Detail" class="sym-btn-add-row calc AddRow" data-url="/PharmaRaw/Quotation/BlankItem" data-container="editorItemRows4"> Add Product</div>*@
+       @*<div  id="ItemExist" title="Add Quotation Detail" class="sym-btn-add-row calc AddRow" data-url="/PharmaRaw/Quotation/BlankItem" data-container="editorItemRows4"> Add Product</div>*@
+            <button type="button" title="Add New Row" class="AddRow  sym-btn-add" data-url="/Common/LeaveStructure/leaveStructureDetails" data-container="leaveSDRows" > Add Row</button>
+
+@*        <input type="button" onclick="pageSubmit('frmLevStr')" class="btn btn-info" value="Save" />
+        <input type="button" class="btn btn-info" data-url="/Common/LeaveStructure" onclick="GoTo(this);" value="Cancel" />
+    *@</div>
+    
+    
+<div class="headrow">
+    <button type="button" title="Save Data" onclick="pageSubmit('frmLevStr')" class="sym-btn-save" >&nbsp;Save</button>
+</div>
+
+}
+<script>
+    $(function () {
+        valiDation("frmLevStr");
+        if ('@ViewBag.Success' !="") {
+            ShowResult('Success', '@ViewBag.Success');
+        }
+        if ('@ViewBag.Fail' !="") {
+            ShowResult('Fail','@ViewBag.Fail');
+        }
+    });
+</script>

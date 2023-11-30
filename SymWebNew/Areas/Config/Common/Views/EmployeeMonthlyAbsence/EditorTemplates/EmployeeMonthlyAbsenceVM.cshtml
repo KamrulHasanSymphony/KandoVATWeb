@@ -1,0 +1,38 @@
+﻿@model SymViewModel.Attendance.EmployeeMonthlyAbsenceVM
+@using UIHelper.MVC
+@{
+    ViewBag.Title = "EmployeeMonthlyAbsence";
+}
+<tr>
+    <th class="col-sm-3" style="width: 9%">&nbsp;@Html.DisplayFor(model => model.Code)</th>
+    <th style="width: 14%">&nbsp;@Html.DisplayFor(model => model.EmpName)</th>
+    <th>&nbsp;@Html.TextBoxFor(model => model.AbsentDays, new { @class = "absentDays  col-sm-12 right tm" })</th>
+    <th>&nbsp;@Html.TextBoxFor(model => model.LateInDays, new { @class = "col-sm-12 right tm" })</th>
+    <th>&nbsp;@Html.TextBoxFor(model => model.EarlyOutDays, new { @class = "col-sm-12 right tm" })</th>
+    <th style="width: 9%">&nbsp;@Html.DisplayFor(model => model.Designation)</th>
+    <th style="width: 14%">&nbsp;@Html.DisplayFor(model => model.Department)</th>
+    <th style="width: 9%">&nbsp;@Html.DisplayFor(model => model.Section)</th>
+    <th style="width: 9%">&nbsp;@Html.DisplayFor(model => model.Project)</th>
+    <th style="width: 9%">&nbsp;@Html.DisplayFor(model => model.Remarks)</th>
+
+    @Html.HiddenFor(model => model.Code)
+    @Html.HiddenFor(model => model.EmpName)
+    @Html.HiddenFor(model => model.EmployeeId)
+    @Html.HiddenFor(model => model.DesignationId)
+    @Html.HiddenFor(model => model.DepartmentId)
+    @Html.HiddenFor(model => model.SectionId)
+    @Html.HiddenFor(model => model.ProjectId)
+    @Html.HiddenFor(model => model.SearchFid)
+
+
+    @Html.HiddenFor(model => model.AbsentDaysPrevious)
+    @Html.HiddenFor(model => model.LateInDaysPrevious)
+    @Html.HiddenFor(model => model.EarlyOutDaysPrevious)
+    @Html.HiddenFor(model => model.IsManual)
+</tr>
+
+<style>
+    .tm {
+        margin-top: -10px;
+    }
+</style>

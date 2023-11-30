@@ -1,0 +1,238 @@
+﻿@{
+    ViewBag.Title = "FixedTable";
+}
+<h2>FixedTable</h2>
+<div class="col-md-6" style="background-color:red;height:200px;"></div>
+<div class="col-md-6 fixedParent">
+    <table class="trkFixTable">
+        <thead>
+            <tr>
+                <th>First</th>
+                <th>1</th>
+                <th>2</th>
+                <th>3</th>
+                <th>4</th>
+                <th>5</th>
+                <th>6</th>
+                <th>7</th>
+                <th>8</th>
+                <th>9</th>
+                <th>10</th>
+                <th>11</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>First</td>
+                <td>1</td>
+                <td>2</td>
+                <td>3</td>
+                <td>4</td>
+                <td>5</td>
+                <td>6</td>
+                <td>7</td>
+                <td>8</td>
+                <td>9</td>
+                <td>10</td>
+                <td>11</td>
+            </tr>
+            <tr>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+            </tr>
+            <tr>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+            </tr>
+            <tr>
+                <td>First</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+            </tr>
+            <tr>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+            </tr>
+            <tr>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+            </tr>
+            <tr>
+                <td>First</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+            </tr>
+            <tr>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+            </tr>
+            <tr>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+            </tr>
+            <tr>
+                <td>First</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+            </tr>
+            <tr>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+            </tr>
+            <tr>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+                <td>Robin</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<script>
+    
+    $(document).ready(function () {
+        
+        $('tbody').scroll(function (e) {
+
+            $('table.trkFixTable tbody td:nth-child(1)').css("z-index", "1");
+            $('table.trkFixTable tbody td:nth-child(2)').css("z-index", "1");
+
+            $('table.trkFixTable thead').css("left", -$("tbody").scrollLeft());
+            $('table.trkFixTable thead th:nth-child(1)').css("left", $("tbody").scrollLeft());
+            $('table.trkFixTable tbody td:nth-child(1)').css("left", $("tbody").scrollLeft());
+            
+            $('table.trkFixTable thead th:nth-child(2)').css("left", $("tbody").scrollLeft());
+            $('table.trkFixTable tbody td:nth-child(2)').css("left", $("tbody").scrollLeft());
+        });
+
+        function fixLeftColumns(leftTotal) {
+            settingWidth();
+            var i;
+            for (i = 1; i <= leftTotal; i++) {
+                //fixed width
+                $('table.trkFixTable tr td:nth-child(' + i + ')').css("min-width", "150px");
+                $('table.trkFixTable tr th:nth-child(' + i + ')').css("min-width", "150px");
+                //fixed column header style
+                $('table.trkFixTable thead th:nth-child(' + i + ')').css("height", "50px");
+                $('table.trkFixTable thead th:nth-child(' + i + ')').css("position", "relative");
+                $('table.trkFixTable thead th:nth-child(' + i + ')').css("z-index", "2");
+                //fixed column rows style
+                $('table.trkFixTable tbody tr td:nth-child(' + i + ')').css("height", "40px");
+                $('table.trkFixTable tbody tr td:nth-child(' + i + ')').css("position", "relative");
+            }
+        }
+        function settingWidth() {
+            var parentWidth = $('.fixedParent').width();
+            $('thead').width(parentWidth);
+            $('tbody').width(parentWidth);
+        }
+        fixLeftColumns(2);
+
+    });
+
+</script>

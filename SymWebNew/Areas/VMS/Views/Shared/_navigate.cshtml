@@ -1,0 +1,19 @@
+﻿@model VATViewModel.DTOs.IdName
+@using UIHelper.MVC
+@{
+    Layout = null;
+    var targeturl="/Config/DropDown/IdNameDropdown?tableName=" + Model.tableName + "&Id="+Model.Id+"&Name=" + Model.Name;
+}
+<div class="col-sm-12 col-md-12 thinbox">
+    <div class="input-group   col-lg-8  col-md-8  col-sm-8 col-xs-12 text-color col-md-offset-2" style="">
+        <a class="input-group-addon btn btn-primary hidden-xs changePage" data-pager-action='first' id="first"><i class="fa fa-angle-double-left"></i>First</a>
+        <a class="input-group-addon btn btn-primary hidden-xs changePage" data-pager-action='previous' id="precode"><i class="fa fa-angle-left"></i>Previous</a>
+        @Html.SimpleDropDown("SearchBox", targeturl, new { @class = " trNavigateMenu form-control selectDropdown " })
+        <a class="input-group-addon btn btn-primary changePage" data-pager-action='current' id="current"><i class="fa fa-search"></i></a>
+        <a class="input-group-addon btn btn-primary hidden-xs changePage" data-pager-action='next' id="nextcode">Next <i class="fa  fa-angle-right"></i></a>
+        <a class="input-group-addon btn btn-primary hidden-xs changePage" data-pager-action='last' id="last">Last <i class="fa  fa-angle-double-right"></i></a>
+    </div>
+</div>
+<script>
+
+</script>

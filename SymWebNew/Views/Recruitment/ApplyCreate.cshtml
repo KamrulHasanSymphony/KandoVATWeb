@@ -1,0 +1,79 @@
+﻿@{
+    ViewBag.Title = "ApplyCreate";
+}
+@model SymViewModel.Common.PublicApplicantVM
+@using UIHelper.MVC
+
+<div class="content">
+    @using (Html.BeginForm("ApplyCreate", "Recruitment", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmRecruitment" }))
+    {
+        @Html.ValidationSummary(true)
+        @Html.HiddenFor(model => model.JobCircularId)
+
+        <div class="thinbox">
+            <div class="th_thinbox">
+                <p>Job Circular</p>
+            </div>
+            <div class="row">
+            
+                                    <div class="col-md-3">
+                                        <div class="editor-label">
+                                            @Html.LabelFor(model => model.ApplicantName)
+                                        </div>
+                                        <div class="editor-field">
+                                            @Html.TextBoxFor(model => model.ApplicantName, new { @placeholder = "Applicant Name ", @class = "required form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="editor-label">
+                                            @Html.LabelFor(model => model.ApplicantEmail)
+                                        </div>
+                                        <div class="editor-field">
+                                            @Html.TextBoxFor(model => model.ApplicantEmail, new { @placeholder = "Applicant Email ", @type = "email", @class = "required form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="editor-label">
+                                            @Html.LabelFor(model => model.Expriance)
+                                        </div>
+                                        <div class="editor-field">
+                                            @Html.TextBoxFor(model => model.Expriance, new { @placeholder = "Expriance Years ", @type = "numeric", @class = "required form-control" })
+                                        </div>
+                                    </div>
+                                     <div class="col-md-8">
+                                        <div class="editor-label">
+                                            @Html.Label("CV Upload")
+                                        </div>
+                                        <div class="editor-field">
+                                        @Html.TextBoxFor(model => model.file, new { @placeholder = "Expriance Years ", @type = "file", accept = ".pdf,.doc,.docx",Onclick="CheckFileSize(this)", @class = "required form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="editor-label">
+                                            @Html.LabelFor(model => model.Description)
+                                        </div>
+                                        <div class="editor-field">
+                                            @Html.TextAreaFor(model => model.Description, new { @placeholder = "Description", @class = "required form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+                       
+
+                                @*<input type="file" onchange="CheckFileSize(this);" name="file" id="file" style="width: 200px;" />*@
+
+
+                       
+                            <ul class="list-inline pull-right">
+                                <li> <button type="button" id="saveJSON" onclick="pageSubmit('frmRecruitment')" class="btn btn-primary save">Save</button></li>
+                            </ul>
+                            <div class="clearfix"></div>
+                            </div>
+    }
+</div>
+<script>
+    $(document).ready(function () {
+   
+   
+    });
+</script>
+

@@ -1,0 +1,65 @@
+﻿<div class="headrow">
+    <button type="button" title="Add New Currency" data-url="/VMS/VAT7/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+    <label class="pull-right">VAT7</label>
+</div>
+<div class="thinbox animated slideInDown faster">
+    <div class="th_thinbox">
+        <p>VAT7 List</p>
+    </div>
+    <table id="myDataTable" class="display">
+        <thead>
+            <tr>
+                <th class="center">
+                    <input type="checkbox" class="chkAll" />Select All
+                </th>
+                <th>VAT7 No</th>
+                <th>Finish Item No</th>
+                <th>Finish Item Name</th>
+                <th>Finish UOM</th>
+                <th>Date</th>
+                <th>Post</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <br />
+</div>
+<div class="headrow">
+    <button type="button" title="Add New Currency" data-url="/VMS/VAT7/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+</div>
+<script language="javascript" type="text/javascript">
+    $(document).ready(function () {
+        SelectAllForDelete();
+        $.datepicker.regional[""].dateFormat = 'dd/M/y';
+        $.datepicker.setDefaults($.datepicker.regional['']);
+        var oTable = $('#myDataTable').dataTable({
+            "bServerSide": true,
+            "sAjaxSource": "/VMS/VAT7/_index",
+            "bProcessing": true,
+            "aLengthMenu": tablelength(),
+            "bJqueryUI": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+                            {
+                                "sName": "VAT7No",
+                                "bSearchable": false,
+                                "bSortable": false,
+                                "sWidth": "10%",
+                                "sClass": "center",
+                                "fnRender": function (oObj) {
+                                    return ' <input onclick="CheckAll(this)" type="checkbox" data-Id="' + oObj.aData[0] + '">'
+                                        + '&nbsp; <a id=""  title="Click on for Edit"  style="text-decoration:none;"   href=\"/VMS/VAT7/Edit/' + oObj.aData[0] + '\" class=" innerListLink sym-btn-edit-row"></a>'
+                                    ;
+                                }
+                            }
+                            , { "sName": "VAT7No", "sWidth": "10%" }
+                            , { "sName": "FinishItemNo", "sWidth": "10%" }
+                            , { "sName": "FinishItemName", "sWidth": "15%" }
+                            , { "sName": "FinishUOM", "sWidth": "10%" }
+                            , { "sName": "Vat7DateTime", "sWidth": "15%" }
+                            , { "sName": "Post", "sWidth": "8%" }
+
+            ]
+        });
+    });
+</script>

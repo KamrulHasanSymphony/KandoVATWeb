@@ -1,0 +1,185 @@
+﻿@model VATViewModel.DTOs.SaleDetailVm
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+<tr class="tablerow ">
+    @using (Html.BeginCollectionItem("Details"))
+    {
+        <td>
+            <input onclick="CheckAll(this)" type="checkbox" class="deleteCheckBox">
+            <a id="" title="Click to Remove" onclick="RemoveItem(this);" class="sym-btn-remove-row "></a>
+            <a id="" title="Click to Edit" onclick="EditItem(this);" class="sym-btn-edit-row"></a>
+            <a id="idPreviousSalesPopUp" title="Click to Previous Sales Data" onclick="PreviousSalesPopUp(this);" class="sym-btn-search btnStyle"></a>
+            @*<a id="" title="Click to Copy" onclick="CopyItem(this);" class="sym-btn-duplicate-row"></a>*@
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.ProductCode, new { @class = "  dItemNo   form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.ProductName, new { @class = "  dItemName   form-control", @readonly = "readonly" })
+        </td>
+        
+        <td>
+            @Html.TextBoxFor(model => model.UOM, new { @class = "  dUOM   form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.Quantity, new { @class = "  dQuantity NumberCheck  right form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.PromotionalQuantity, new { @class = "  dPQuantity NumberCheck right  form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.NBRPrice, new { @class = "  dSalesPrice NumberCheck   right form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.SubTotal, new { @class = "  dSubTotal NumberCheck   right form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.TradingD, new { @class = "  dTradingD  right form-control", @readonly = "readonly" })
+        </td>   
+        <td>
+            @Html.TextBoxFor(model => model.SD, new { @class = "  dSD   NumberCheck right form-control", @readonly = "readonly" })
+        </td>  
+        <td>
+            @Html.TextBoxFor(model => model.SDAmount, new { @class = "  dSDAmount   NumberCheck right form-control", @readonly = "readonly" })
+        </td> 
+        <td>
+            @Html.TextBoxFor(model => model.VATRate, new { @class = "  dVATRate NumberCheck  right form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.VATAmount, new { @class = "  dVATAmount NumberCheck   right form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.Total, new { @class = "  dTotal NumberCheck  right form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.Type, new { @class = "  dType   form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.UOMPrice, new { @class = "  dBasePrice NumberCheck  right form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.UOMc, new { @class = "  dConvFactor NumberCheck  right form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.UOMn, new { @class = "  dBaseUOM   form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.UOMQty, new { @class = "  dBaseQty NumberCheck  right form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.CurrencyValue, new { @class = "  dBDT NumberCheck  right form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.DollerValue, new { @class = "  dDollerValue NumberCheck right   form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.VatName, new { @class = "  dVatName   form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.CConversionDate, new { @class = "  dCConversionDate   form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.Weight, new { @class = "  dWeight form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.ValueOnly, new { @class = "  dValueOnly  form-control", @readonly = "readonly" })
+        </td>
+        
+        <td>
+            @Html.TextBoxFor(model => model.TotalValue, new { @class = "  dTotalValue NumberCheck  right form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.WareHouseRent, new { @class = "  dWareHouseRent NumberCheck  right form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.WareHouseVAT, new { @class = "  dWareHouseVAT NumberCheck  right form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.ATVRate, new { @class = "  dATVRate NumberCheck  right form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.ATVablePrice, new { @class = "  dATVablePrice NumberCheck  right form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.ATVAmount, new { @class = "  dATVAmount NumberCheck  right form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.IsCommercialImporter, new { @class = "  dIsCommercialImporter  form-control", @readonly = "readonly" })
+        </td>
+         <td>
+            @Html.TextBoxFor(model => model.ProductDescription, new { @class = "  dProductDescription  form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.CDNVATAmount, new { @class = "  dCDNVATAmount NumberCheck  right form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.CDNSDAmount, new { @class = "  dCDNSDAmount NumberCheck  right form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.CDNSubtotal, new { @class = "  dCDNSubtotal NumberCheck  right form-control", @readonly = "readonly" })
+        </td>
+        
+        <td>
+            @Html.TextBoxFor(model => model.PreviousSalesInvoiceNoD, new { @class = "  dPreviousSalesInvoiceNo form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.PreviousInvoiceDateTime, new { @class = "  dPreviousInvoiceDateTime form-control", @readonly = "readonly" })
+        </td>
+               
+        <td>
+            @Html.TextBoxFor(model => model.PreviousNBRPrice, new { @class = "  dPreviousNBRPrice NumberCheck  right form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.PreviousQuantity, new { @class = "  dPreviousQuantity NumberCheck  right form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.PreviousUOM, new { @class = "  dPreviousUOM form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.PreviousSubTotal, new { @class = "  dPreviousSubTotal NumberCheck  right form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.PreviousVATAmount, new { @class = "  dPreviousVATAmount NumberCheck  right form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.PreviousVATRate, new { @class = "  dPreviousVATRate NumberCheck  right form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.PreviousSD, new { @class = "  dPreviousSD NumberCheck  right form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.PreviousSDAmount, new { @class = "  dPreviousSDAmount NumberCheck  right form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.ReasonOfReturn, new { @class = "  dReasonOfReturn form-control", @readonly = "readonly" })
+        </td>
+        
+         <td>
+                @Html.TextBoxFor(model => model.BENumber, new { @class = "  dBENumber  form-control", @readonly = "readonly" })
+         </td>
+        
+       
+        
+        @Html.HiddenFor(m => m.ItemNo, new { @class = " dItem" })
+        @Html.HiddenFor(m => m.TradingD, new { @class = " dTradingD" })
+        @Html.HiddenFor(m => m.NonStockD, new { @class = " dNonStockD" })
+        @Html.HiddenFor(m => m.SaleTypeD, new { @class = " dSaleTypeD" })
+        @Html.HiddenFor(m => m.CommentsD, new { @class = " dCommentsD" })
+        @Html.HiddenFor(m => m.InvoiceLineNo, new { @class = " dInvoiceLineNo" })
+        @Html.HiddenFor(m => m.PreviousSalesInvoiceNoD)
+        
+    }
+</tr>
+<div id="myModal" class="trkmodal"></div>
+<div id="myHigherModal" class="HigherModal"></div>
+
+
+<style>
+    .btnStyle {
+        font-size: 0.9em;
+        background-color: #5bc0de;
+    } 
+</style>
+

@@ -1,0 +1,70 @@
+﻿@using UIHelper.MVC
+@Html.ValidationSummary(true)
+@*DailyOTnAbsenceToMonthlyOTnAbsenceProcess*@
+<div class="headrow">
+    <button type="button" title="Save Data" id="" class="saveJSON sym-btn-save">&nbsp;Save</button>
+    <label class="pull-right">Daily OT and Absence To Monthly OT and Absence Process</label>
+</div>
+<div class="thinbox">
+    <div class="th_thinbox">
+        <p>Daily OT and Absence To Monthly OT and Absence Process</p>
+    </div>
+    <div class="BankBranch">
+        <div class="row">
+            <div class="col-md-1">
+                <div class="editor-label">
+                    <label>Year</label>
+                </div>
+                <div class="editor-field">
+                    <div>@Html.TextBox("Year", @Session["SessionYear"].ToString(), new { @Id = "fYear", @class = "fiscalyearCom form-control" }) </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="editor-label">
+                    <label>Fiscal Period</label>
+                </div>
+                <div class="editor-field">
+                    <div>
+                        @Html.SimpleDropDown("FiscalPeriod", "/Config/DropDown/DropDownPeriodByFYear?year=" + @Session["SessionYear"].ToString(), new { @Id = "FiscalPeriodDetailId", @class = " fpDetailsCom required form-control" })
+                    </div>
+                </div>
+            </div>
+                        <div class="col-md-6">
+            <div class="editor-label">
+                <label>Employee</label>
+            </div>
+            <div class="editor-field">
+                @Html.SimpleDropDown("EmployeeId", "/Config/DropDown/DropDownAllEmployee", new { @class = "employeeId form-control selectDropdown" })
+            </div>
+        </div>
+
+        </div>
+    </div>
+</div>
+<div class="headrow">
+    <button type="button" title="Save Data" id="" class="saveJSON sym-btn-save">&nbsp;Save</button>
+</div>
+
+<script>
+    $(function () {
+        InitDropdownsCommon();
+    });
+    $('.saveJSON').click(function () {
+        var FiscalPeriodDetailId = $("#FiscalPeriodDetailId").val();
+        var EmployeeId = $("#EmployeeId").val();
+        if (FiscalPeriodDetailId == "") {
+            ShowResult("Fail", "Please Select the Fiscal Period");
+            return;
+        }
+
+        urlObj = new Object();
+        urlObj.fydid = FiscalPeriodDetailId;
+        urlObj.employeeId = EmployeeId;
+        var urlParam = $.param(urlObj);
+        var url = "/Common/DailyAttendanceProcess/Process3";
+        url = url + "?" + urlParam;
+        submit(url);
+    });
+
+
+</script>

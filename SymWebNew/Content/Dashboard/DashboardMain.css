@@ -1,0 +1,55 @@
+﻿
+                        .resizeInput {
+                            width: 95%;
+                            float: left;
+                        }
+
+                        .dbTopDiv {
+                            border: 1px solid #a3d0e4;
+                            padding: 0;
+                            width: 100%;
+                            margin-left: 2px;
+                            margin-top: 10px;
+                        }
+
+                        .db2ndDiv {
+                            /*background: #88ad19;*/
+                            padding: 0;
+                            text-align: center;
+                            height: 22px;
+                            padding-top: 3px;
+                            color: currentcolor;
+                            font-weight: bold;
+                            font-size: 11px;
+                            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+                        }
+
+                        .infoSpan {
+                            margin-left: 10px;
+                            margin-top: 2px;
+                            background: #efecea !important;
+                            font-size: 33px;
+                            padding: 5px;
+                            border-radius: 24px;
+                            width: 47px;
+                            text-align: center;
+                            border: 1px solid #efecea;
+                            box-shadow: 2px 0px 0px 0px;
+                            float: left;
+                            height: 50px;
+                        }
+
+                        body {
+                            background: #fff !important;
+                        }
+
+                        .infoSpanCount {
+                            float: left;
+                            margin-left: 7px;
+                            margin-top: 7px;
+                            font-family: Segoe UI;
+                            font-size: 14px;
+                            font-weight: bold;
+                            color: #77768c;
+                        }
+            

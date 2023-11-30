@@ -1,0 +1,91 @@
+﻿@model VATViewModel.DTOs.CStatementMISViewModel
+@using UIHelper.MVC
+@{
+    Layout = "~/Areas/VMS/Views/Shared/_ModalLayout.cshtml";
+}
+
+<div class="trkmodal-content">
+    <div class="trkmodal-header">
+        <span class="close">&times;</span>
+        <h2 class="text-center">Report Toll Register</h2>
+    </div>
+    <div class="trkmodal-body">
+        @using (Html.BeginForm("ReportCStatement", "MISReport", FormMethod.Post, new { enctype = "multipart/form-data", @target = "_blank", @Id = "frmStatement" }))
+        {
+            <div class="npForm col-md-6">
+                <label>1st Comparison Date From</label>
+                @Html.TextBoxFor(m => m.FirstDateFrom, new {@class = "customDatePicker form-control" })
+            </div>
+            <div class="npForm col-md-6">
+                <label>1st Comparison Date To</label>
+                @Html.TextBoxFor(m => m.FirstDateTo, new { @class = "customDatePicker form-control" })
+            </div>
+            <div class="npForm col-md-6">
+                <label>2nd Comparison Date From</label>
+                @Html.TextBoxFor(m => m.SecondDateFrom, new { @class = "customDatePicker form-control" })
+            </div>
+            <div class="npForm col-md-6">
+                <label>2nd Comparison Date To</label>
+                @Html.TextBoxFor(m => m.SecondDateTo, new { @class = "customDatePicker form-control" })
+            </div>
+            <div class="npForm col-md-2">
+        @Html.SimpleDropDownFor(m => m.FontSize, "/Config/DropDown/Font", new { @class = " form-control DRselectDropdown" })
+    </div>
+            <button type="button" class=" btn sym-btn-report trPreview"> Preview</button>
+            <button type="button" class="sym-btn-close closeBtn pull-right"> Close</button>
+        }
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        ///check validation
+        function checkValidation() {
+            var startDate = $('#FirstDateFrom').val();
+            if (startDate == "") {
+                ShowResult("Fail", "Select 1st comparison start date!");
+                return false;
+            }
+            var endDate = $('#FirstDateFromTo').val();
+            if (endDate == "") {
+                ShowResult("Fail", "Select 1st comparison end date!");
+                return false;
+            }
+            var startDate2 = $('#SecondDateFrom').val();
+            if (startDate2 == "") {
+                ShowResult("Fail", "Select 2nd comparison start date!");
+                return false;
+            }
+            var endDate2 = $('#SecondDateTo').val();
+            if (endDate2 == "") {
+                ShowResult("Fail", "Select 2nd comparison end date!");
+                return false;
+            }
+            return true;
+        }
+        ////clicking preview button
+        $('.trPreview').click(function () {
+            var isValid = checkValidation();
+            if (isValid == false) {
+                return;
+            }
+            $('#frmStatement').submit();
+            //pageSubmit('frmStatement');
+        });
+        function closeModal() {
+            $("#myModal").html("");
+            trkmodal.style.display = "none";
+        }
+
+        var span = document.getElementsByClassName("close")[0];
+        var trkmodal = document.getElementById('myModal');
+        //When the user clicks on <span> (x), close the trkmodal
+        span.onclick = function () {
+            closeModal();
+        }
+
+        $('.closeBtn').click(function () {
+            closeModal();
+        });
+
+    });
+</script>

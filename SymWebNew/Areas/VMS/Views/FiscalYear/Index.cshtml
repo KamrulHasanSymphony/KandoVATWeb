@@ -1,0 +1,116 @@
+﻿@model IEnumerable<VATViewModel.DTOs.FiscalYearVM>
+@using UIHelper.MVC
+@{
+    var count=0;
+    foreach(var item in Model){
+        count++;
+    }
+}
+<div class="row">
+    <div class="col-md-4">
+        @using (Html.BeginForm("YearSelector", "Home"))
+        {
+            
+            @Html.SimpleDropDown("Group", "/Config/DropDown/FiscalYear", new { @class = " form-control trkMT-0", @Id = "GroupSel" })
+        }
+    </div>
+</div>
+    <div class="headrow">
+        @if (ViewBag.Operation == "Add")
+        {
+            <button type="button" name="btnName" value="Save" title="Save Data" onclick="AddNew()" class="sym-btn-save">&nbsp;Save</button>            
+        }
+        else
+        {
+            if (count != 0) { 
+                <button type="button" name="btnName" value="Save" title="Save Data" onclick="pageSubmit('frmFiscalYear')" class="sym-btn-update">&nbsp;Update</button>                
+            }
+            <button type="button" title="Add New Fiscal Year" data-url="/VMS/FiscalYear/Create" onclick="GoTo(this)" id=""  class=" sym-btn-add ">&nbsp;New</button>        
+        }
+        <label class="pull-right">Fiscal Year > Index</label>
+    </div>
+
+    <div class="thinbox animated slideInDown faster">
+    <div class="th_thinbox">
+        <p>Fiscal Year</p>
+    </div>
+    <div class="row">
+        <div class="col-md-2 col-md-offset-2">
+            <div class="editor-label">
+                <label>Month Name</label>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="editor-label">
+                <label>Period Start</label>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="editor-label">
+                <label>Period End</label>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="editor-label">
+                <label>Lock</label>
+            </div>
+        </div>
+    </div>
+    @using (Html.BeginForm("Edit", "FiscalYear", FormMethod.Post, new { @Id = "frmFiscalYear" }))
+    {
+
+        <div>
+            @foreach (var item in Model)
+            {
+                Html.RenderPartial("_FiscalYear", item);
+            }
+        </div>
+    }
+</div>
+
+
+
+
+    
+@if (count != 0)
+{
+    <div class="headrow">
+        @if (ViewBag.Operation == "Add")
+        {
+            <button type="button" name="btnName" value="Save" title="Save Data" onclick="AddNew()" class="sym-btn-save">&nbsp;Save</button>
+        }
+        else
+        {
+            if (count != 0)
+            {
+                <button type="button" name="btnName" value="Save" title="Save Data" onclick="pageSubmit('frmFiscalYear')" class="sym-btn-update">&nbsp;Update</button>
+            }
+            <button type="button" title="Add New Fiscal Year" data-url="/VMS/FiscalYear/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+        }
+    </div>
+
+}
+<script>
+    $(document).ready(function () {
+        var interval = setInterval(function () {
+            if (document.querySelectorAll('#GroupSel option').length > 0) {
+                $('#GroupSel').val('@ViewBag.groupName');
+                clearInterval(interval);
+            }
+        }, 200);
+
+        
+        $(".checkAll").on("click", function () {
+            $('input:checkbox').not(this).prop('checked', this.checked);
+        });
+    });
+    $("#GroupSel").change(function () {
+        var year = $('#GroupSel').val();
+        //console.log(year);
+        window.location.href = "/VMS/FiscalYear/Index?year=" + year;
+    });
+    function AddNew() {
+        var url = "/VMS/FiscalYear/CreateFiscalYear";
+        $('#frmFiscalYear').attr('action', url).submit();
+    }
+</script>

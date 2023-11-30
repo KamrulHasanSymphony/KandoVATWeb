@@ -1,0 +1,100 @@
+﻿@*@model VATViewModel.DTOs.VDSMasterVM*@
+@model IEnumerable<VATViewModel.DTOs.VDSMasterVM>
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+@foreach (var item in Model)
+{
+    <tr class="tablerow ">
+        @using (Html.BeginCollectionItem("Details"))
+        {
+            <td>
+                <a id="" title="Click to Remove" onclick="RemoveItem(this);" class="sym-btn-remove-row "></a>
+                <a id="" title="Click to Edit" onclick="EditItem(this);" class="sym-btn-edit-row"></a>
+            </td>
+
+            <td>
+                @Html.TextBox("VendorName", item.VendorName, new { @class = "  dVendorName   form-control", @readonly = "readonly" })
+            </td>
+            <td>
+                @Html.TextBox("VendorId", item.VendorId, new { @class = "  dVendorId   form-control", @readonly = "readonly" })
+            </td>
+            <td>
+                @Html.TextBox("BillNo", item.BillNo, new { @class = "  dBillNo pricelen right   form-control", @readonly = "readonly" })
+            </td>
+            <td>
+                @Html.TextBox("BillAmount", item.BillAmount, new { @class = "  dBillAmount pricelen right   form-control", @readonly = "readonly" })
+            </td>
+            <td>
+                @Html.TextBox("VDSPercent", item.VDSPercent, new { @class = "  dVDSPercent pricelen right   form-control", @readonly = "readonly" })
+            </td>
+            <td>
+                @Html.TextBox("BillDeductedAmount", item.BillDeductedAmount, new { @class = "  dVDSAmount pricelen right   form-control", @readonly = "readonly" })
+            </td>
+            
+            <td>
+                @Html.TextBox("BillDate", item.BillDate, new { @class = "  dBillDate  form-control", @readonly = "readonly" })
+            </td>
+            <td>
+                @Html.TextBox("IssueDate", item.IssueDate, new { @class = "  dIssueDate  form-control", @readonly = "readonly" })
+            </td>
+            <td>
+                @Html.TextBox("Remarks", item.Remarks, new { @class = "  dRemarks    form-control", @readonly = "readonly" })
+            </td>
+            <td>
+                @Html.TextBox("PurchaseNumber", item.PurchaseNumber, new { @class = "  dPurchaseNumber   form-control", @readonly = "readonly" })
+            </td>
+            <td>
+                @Html.TextBox("IsPercent", item.IsPercent, new { @class = "  dIsPercent  form-control", @readonly = "readonly" })
+            </td>
+            <td>
+                @Html.TextBox("IsPurchase", item.IsPurchase, new { @class = "  dIsPurchase  form-control", @readonly = "readonly" })
+            </td>
+            
+             <td>
+                @Html.TextBox("VATAmount", item.VATAmount, new { @class = "  dVATAmount  form-control", @readonly = "readonly" })
+            </td>
+            
+                @Html.Hidden("BillDeductedAmount", item.BillDeductedAmount)
+
+            @*<td>
+                    @Html.TextBoxFor(model => model.VendorName, new { @class = "  dVendorName   form-control", @readonly = "readonly" })
+                </td>
+                <td>
+                    @Html.TextBoxFor(model => model.VendorId, new { @class = "  dVendorId   form-control", @readonly = "readonly" })
+                </td>
+                <td>
+                    @Html.TextBoxFor(model => model.BillNo, new { @class = "  dBillNo pricelen right  form-control", @readonly = "readonly" })
+                </td>
+                <td>
+                    @Html.TextBoxFor(model => model.BillAmount, new { @class = "  dBillAmount pricelen right  form-control", @readonly = "readonly" })
+                </td>
+                <td>
+                    @Html.TextBoxFor(model => model.VDSPercent, new { @class = "  dVDSPercent right priceLen  form-control", @readonly = "readonly" })
+                </td>
+                <td>
+                    @Html.TextBoxFor(model => model.BillDeductedAmount, new { @class = "  dVDSAmount priceLen right  form-control", @readonly = "readonly" })
+                </td>
+                <td>
+                    @Html.TextBoxFor(model => model.BillDate, new { @class = "  dBillDate form-control", @readonly = "readonly" })
+                </td>
+                <td>
+                    @Html.TextBoxFor(model => model.IssueDate, new { @class = "  dIssueDate form-control", @readonly = "readonly" })
+                </td>
+                <td>
+                    @Html.TextBoxFor(model => model.Remarks, new { @class = "  dRemarks form-control", @readonly = "readonly" })
+                </td>
+                <td>
+                    @Html.TextBoxFor(model => model.PurchaseNumber, new { @class = "  dPurchaseNumber  form-control", @readonly = "readonly" })
+                </td>
+                <td>
+                    @Html.TextBoxFor(model => model.IsPercent, new { @class = "  dIsPercent form-control", @readonly = "readonly" })
+                </td>
+                <td>
+                    @Html.TextBoxFor(model => model.IsPurchase, new { @class = "  dIsPurchase form-control", @readonly = "readonly" })
+                </td>
+                @Html.HiddenFor(m => m.BillDeductedAmount)*@
+        }
+    </tr>
+}

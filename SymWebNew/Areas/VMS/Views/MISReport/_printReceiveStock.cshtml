@@ -1,0 +1,99 @@
+﻿@model VATViewModel.DTOs.StockMISViewModel
+@using UIHelper.MVC
+@{
+    Layout = "~/Areas/VMS/Views/Shared/_ModalLayout.cshtml";
+}
+<div class="trkmodal-content">
+    <div class="trkmodal-header">
+        <span class="close">&times;</span>
+        <h2 class="text-center">Report(Receive FG-Production)</h2>
+    </div>
+    <div class="trkmodal-body">
+        @using (Html.BeginForm("ReportReceiveStock", "MISReport", FormMethod.Post, new { enctype = "multipart/form-data", @target = "_blank", @Id = "frmReceiveStock" }))
+{
+        <div class="npForm col-md-6">
+            <label>Date From</label>
+            @Html.TextBoxFor(m => m.DateFrom, new { @placeholder = "Start Date", @class = "customDatePicker form-control" })
+        </div>
+        <div class="npForm col-md-6">
+            <label>Date To</label>
+            @Html.TextBoxFor(m => m.DateTo, new { @placeholder = "End Date", @class = "customDatePicker form-control" })
+        </div>
+            
+         @*<div class="npForm col-md-6">
+              <label>Branch Name</label>
+              @Html.SimpleDropDownFor(m => m.BranchId, "/Config/DropDown/BranchProfile", new { @class = " form-control selectDropdown cBranchId" })
+         </div>*@
+
+        <div class="npForm col-md-12">
+            <div class="npForm col-md-6 chkDesign">
+                @Html.HiddenFor(m => m.Post, new { @class=" chkValue"})
+                <label>Post </label>
+                <input id="input-1" type="checkbox">
+            </div>
+            <div class="npForm col-md-6">
+                <label>Shift </label>
+                <select id="ShiftId" name="ShiftId" class="form-control">
+                    <option value="0">=All=</option>
+                    <option value="1">General</option>
+                </select>
+            </div>
+        </div>
+        <div class="npForm col-md-2">
+        @Html.SimpleDropDownFor(m => m.FontSize, "/Config/DropDown/Font", new { @class = " form-control DRselectDropdown" })
+    </div>
+        @Html.HiddenFor(m => m.PreviewOnly);
+        <button type="button" class=" btn sym-btn-report trPreview"> Preview</button>
+        <button type="button" class="sym-btn-close closeBtn pull-right"> Close</button>
+    }
+    </div>
+    <div id="myHigherModal" class="HigherModal"></div>
+    <script>
+        $(document).ready(function () {
+            ////boolean checkbox
+            CheckBoxDesign();
+            MyCheckBox('@Model.Post', 'input-1', 'Post');
+
+            ///check validation
+            function checkValidation() {
+                var startDate = $('#DateFrom').val();
+                //if (startDate == "") {
+                //    ShowResult("Fail", "Select start date!");
+                //    return false;
+                //}
+                var endDate = $('#DateTo').val();
+                //if (endDate == "") {
+                //    ShowResult("Fail", "Select end date!");
+                //    return false;
+                //}
+                return true;
+            }
+            ////clicking preview button
+            $('.trPreview').click(function () {
+                var isValid = checkValidation();
+                //if (isValid == false) {
+                //    return;
+                //}
+                $('#frmReceiveStock').submit();
+                //pageSubmit('frmReceiveStock');
+            });
+
+            function closeModal() {
+                $("#myModal").html("");
+                trkmodal.style.display = "none";
+            }
+
+            var span = document.getElementsByClassName("close")[0];
+            var trkmodal = document.getElementById('myModal');
+            //When the user clicks on <span> (x), close the trkmodal
+            span.onclick = function () {
+                closeModal();
+            }
+
+            $('.closeBtn').click(function () {
+                closeModal();
+            });
+
+        });
+    </script>
+

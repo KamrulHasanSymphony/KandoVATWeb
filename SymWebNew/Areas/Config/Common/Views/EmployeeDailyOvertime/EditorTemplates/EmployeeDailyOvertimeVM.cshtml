@@ -1,0 +1,70 @@
+﻿@model SymViewModel.Attendance.EmployeeDailyOvertimeVM
+@{
+    ViewBag.Title = "EmployeeDailyOvertimeVM";
+}
+<tr>
+
+    <th>&nbsp;@Html.DisplayFor(model => model.Code)</th>
+    <th>@Html.DisplayFor(model => model.EmpName)</th>
+    <th>@Html.TextBoxFor(model => model.Overtime, new { @onchange = "TimeFormat(this)", @class = " NumberCheck col-md-12 col-sm-12 right tm" })</th>
+    <th>@Html.TextBoxFor(model => model.LateInHrs, new { @onchange = "TimeFormat(this)", @class = " NumberCheck col-md-12 right tm" })</th>
+    <th>@Html.TextBoxFor(model => model.EarlyOutHrs, new { @onchange = "TimeFormat(this)", @class = " NumberCheck col-md-12 right tm" })</th>
+    <th>@Html.TextBoxFor(model => model.Remarks, new { @class = "col-md-12 right tm" })</th>
+
+    <th>@Html.DisplayFor(model => model.Designation)</th>
+    <th>@Html.DisplayFor(model => model.Department)</th>
+    <th>@Html.DisplayFor(model => model.Section)</th>
+    <th>@Html.DisplayFor(model => model.Project)</th>
+
+    @Html.HiddenFor(model => model.Code)
+    @Html.HiddenFor(model => model.EmpName)
+    @Html.HiddenFor(model => model.EmployeeId)
+    @Html.HiddenFor(model => model.DesignationId)
+
+    @Html.HiddenFor(model => model.DepartmentId)
+    @Html.HiddenFor(model => model.SectionId)
+    @Html.HiddenFor(model => model.ProjectId)
+    @Html.HiddenFor(model => model.SearchDate)
+
+
+    @Html.HiddenFor(model => model.OvertimePrevious)
+    @Html.HiddenFor(model => model.LateInHrsPrevious)
+    @Html.HiddenFor(model => model.EarlyOutHrsPrevious)
+    @Html.HiddenFor(model => model.IsManual)
+
+</tr>
+<script>
+    $(".NumberCheck").each(function () {
+        this.value = parseFloat(this.value).toFixed(2);
+    });
+
+    //$(".TimeFormat").change(function () {
+    //    var regexp = /([01][0-9]|[02][0-3]).[0-5][0-9]/;
+    //    var correct = ($(this).val().search(regexp) >= 0) ? true : false;
+    //    alert(correct);
+
+    //    if (correct == false) {
+    //        ShowResult("Fail", $(this).val() + " Invalid Time Format!");
+    //    }
+    //});
+
+
+</script>
+
+<script>
+    //$(function () {
+
+    //function TimeFormat(sender) {
+    //    //alert($(sender).val());
+    //    var time = $(sender).val();
+
+    //    var regexp = /([0-9][0-9][0-9]).[0-5][0-9]/;
+    //    var correct = (time.search(regexp) >= 0) ? true : false;
+    //    alert(correct)
+    //    if (correct == false) {
+    //        $(sender).val("0.00")
+    //        ShowResult("Fail", time + " Invalid Time Format!");
+    //    }
+    //}
+    //});
+</script>

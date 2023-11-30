@@ -1,0 +1,398 @@
+﻿@model VATViewModel.DTOs.CustomerItemVM
+@using UIHelper.MVC
+@using SymOrdinary
+@using System.Threading;
+@using VATServer.Ordinary
+
+@{
+    ShampanIdentity identity = null;
+    try
+    {
+        identity = (ShampanIdentity)Thread.CurrentPrincipal.Identity;
+    }
+    catch (Exception)
+    {
+        Response.Redirect("/VMS/Home/Login");
+        return;
+    }
+}
+
+@{
+    ViewBag.Title = "Index";
+}
+
+@Html.HiddenFor(model => model.TransactionType, new { @class = " cTransactionType" })
+
+<div class="headrow">
+    <div style="display: none" id="formAppend"></div>
+    @*<button type="button" title="Add New" data-url="/VMS/CustomerItem/Create?tType=@Model.TransactionType" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>*@
+    @*<button type="button" title="Bill Process" data-url="/VMS/CustomerItem/BillProcess?TransactionType=@Model.TransactionType" onclick="GoTo(this)" id="" class="sym-btn-approve ">&nbsp;Bill Process</button>*@
+   
+     @*<button type="button" title="Export Data" onclick="ExportExcel()" class="sym-btn-Excel-Export">&nbsp;Export</button>*@
+
+    <label class="pull-right">Customer Product Maping</label>
+
+
+</div>
+ 
+    <div id="IssueIndex" class="tab-pane fade  in active">
+        <div class="thinbox  animated zoomIn faster">
+            <div class="th_thinbox">
+                <p>Customer List</p>
+            </div>
+            <div class="dtSearch formDesign">
+               
+                <div class="row">
+
+                    <div class="col-md-4">
+                        <div class="editor-label">
+                            <label>&nbsp;</label>
+                        </div>
+                        <div class="editor-field">
+                            @*<button type="button" title="Click to Search" id="btnDialog" class="sym-btn-search">&nbsp;Search</button>
+                            <button type="button" title="Clear Data" id="Clear" class=" sym-btn-clear">&nbsp;Clear</button>*@
+                            @*<button type="button" title="Post Data" onclick="PostData()" class="sym-btn-post">&nbsp;Post</button>*@
+                            @*<button type="button" title="Export Data" onclick="ExportExcel()" class="sym-btn-Excel-Export">&nbsp;Export</button>*@
+
+                        </div>
+                    </div>
+                    @*<div class="col-md-1">
+                            <div class="editor-label">
+                                <label>Export All</label>
+                            </div>
+                            <div class="editor-field">
+                                @Html.CheckBox("ExportAll", new { id = "idExportAll", @class = "cExportAll form-control", @name = "att[]" })
+                            </div>
+                        </div>*@
+                </div>
+
+
+
+            </div>
+            <p>&nbsp;</p>
+            <table id="myDataTable" class="display">
+                <thead>
+                    <tr>
+                        <th class="center"><input type="checkbox" class="chkAll" /> Action</th>
+                        @*<th>Invoice No</th>*@
+                        <th>Customer Code</th>
+                        <th>Customer Name</th>
+                        <th>Total Item</th>
+                        <th>Total Value</th>
+                        <th>Attention</th>
+                        <th>Notes</th>
+                        @*<th>Is Posted</th>*@
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <br />
+        </div>
+
+        <div class="headrow">
+
+            <div class="col-md-12">
+
+                <div class="col-md-6">
+                    <label style="text-align: right;color: black;font-size: 1.7em;">Total Value :</label>
+                </div>
+                <div class="col-md-6">
+                    <p class="cvalueDesign">
+                        @Html.Label("TotalValue", new { @class = " cTotalValue cvalueDesign" })
+                    </p>
+                    
+                    @*<label  class="cTotalValue">500000.000</label>*@
+                </div>
+
+            </div>
+
+            @*<button type="button" title="Add New Issue" data-url="/VMS/CustomerItem/Create?tType=@Model.TransactionType" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>*@
+        </div>
+        <div id="myModal" class="trkmodal"></div>
+    </div>
+
+
+<div id="myModal" class="trkmodal"></div>
+<div id="productDetails" class="trkmodal">
+    <div class="trkmodal-content">
+    </div>
+</div>
+<div id="myHigherModal" class="HigherModal"></div>
+
+<script>
+
+    function ExportExcel() {
+
+        var questionMSG = "Are you sure to Export Excel!";
+
+        Ask(questionMSG, function () {
+
+            var IDs = [];
+            var $Items = $(".dSelected:input:checkbox:checked");
+
+            if ($Items == null || $Items.length == 0) {
+                ShowResult("Fail", "You are requested to Select before Export!");
+                return;
+            }
+
+            $Items.each(function () {
+
+                var ID = $(this).attr("data-Id");
+                IDs.push(ID);
+            });
+
+            var model = {
+                IDs: IDs,
+
+            }
+
+            var url = '/VMS/CustomerItem/ExportExcell';
+
+            var form = $('<form action="' + url + '"></form>');
+
+            IDs.forEach(function (item) {
+                form.append($('<input  value="' + item + '" name="IDs" />'))
+            })
+            form.appendTo('#formAppend').submit()
+           
+                ////$.ajax({
+                ////    url: url
+                ////    , data: model
+                ////    , type: 'Get'
+                ////    , traditional: true
+                ////    , beforeSend: function () { $(".loading").show(); }
+                ////    , success: function (rVM) {
+                ////        alert(rVM);
+                ////        ShowResult(rVM.Status, rVM.Message);
+                ////    }
+                ////    , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+
+                ////});
+
+        });
+
+    }
+
+
+</script>
+
+<script>
+
+    $('#customerBtn').click(function () {
+        var customerName = $('.trCustomerId option:selected').text();
+        var url = "/Vms/Customer/GetCustomerPopUp?CustomerName=" + customerName;
+        var modal = document.getElementById('myHigherModal');
+        $.ajax({
+            url: url,
+            cache: false,
+            beforeSend: function () { $(".loading").show(); },
+            success: function (html) {
+                modal.style.display = "block";
+                $("#myHigherModal").html(html);
+            }
+        , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+        });
+    });
+
+    function callbackFromCustomerModal(sender) {
+        var id = $(sender).children('td.popUpCustomerId').text();
+        var CustomerName = $(sender).children('td.popUpCustomerName').text();
+
+        CustomerSelect(id);
+
+        //$('.trCustomerId').select2('val', id);
+
+    }
+
+    function CustomerSelect(CustomerID) {
+
+        $('.trCustomerId').val("");
+
+            @*var value = '@Model.CustomerID';*@
+
+            var value = CustomerID;
+
+        var CustomerNames = "";
+
+        var url = "/Config/DropDown/DropDownByCustomerID/?CustomerID=" + value;
+        CustomerNames += "<option value=0>Select</option>";
+        $.getJSON(url, function (data) {
+            $.each(data, function (i, state) {
+                CustomerNames += "<option value='" + state.Value + "'>" + state.Text + "</option>";
+            });
+
+            $('.trCustomerId').html(CustomerNames);
+
+            $('.trCustomerId').select2('val', CustomerID);
+
+            ////CustomerChange();
+                
+
+        });
+    }
+
+</script>
+
+<script>
+
+    function PostData() {
+
+        var questionMSG = "Are you sure to Post Data!";
+
+        Ask(questionMSG, function () {
+
+
+            var IDs = [];
+            var $Items = $(".dSelected:input:checkbox:checked");
+
+            if ($Items == null || $Items.length == 0) {
+                ShowResult("Fail", "You are requested to Select before Post!");
+                return;
+            }
+
+            $Items.each(function () {
+                var ID;
+                ID = $(this).attr("data-Id");
+
+                var vID = ID.split("~")[0];
+
+                IDs.push(vID);
+            });
+
+            var model = {
+                IDs: IDs
+            }
+            var url = '/VMS/IssueHeader/MultiplePost';
+
+            $.ajax({
+                url: url
+                , data: model
+                , type: 'Post'
+                , traditional: true
+                , beforeSend: function () { $(".loading").show(); }
+                , success: function (rVM) {
+                    ShowResult(rVM.Status, rVM.Message);
+                }
+                , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+
+            });
+        });
+
+    }
+
+
+</script>
+
+<script language="javascript" type="text/javascript">
+
+    $(document).ready(function () {
+
+        var value = 0;
+
+        SelectAllForDelete();
+        $.datepicker.regional[""].dateFormat = 'dd/M/y';
+        $.datepicker.setDefaults($.datepicker.regional['']);
+        var oTable = $('#myDataTable').dataTable({
+            "bServerSide": true,
+            "sAjaxSource": "/VMS/CustomerItem/_index?transactionType=@Model.TransactionType",
+            "bProcessing": true,
+            "aLengthMenu": tablelength(),
+            "bJqueryUI": true,
+            "bAutoWidth": false,
+
+            "fnServerData": function (sSource, aoData, fnCallback) {
+                $('.dtSearch :input').each(function () {
+                    var Name = $(this).attr("Id")
+                    var Value = $(this).val()
+                    aoData.push({ "name": Name, "value": Value });
+                    alert(1);
+                });
+                $.getJSON(sSource, aoData, function (json) {
+                    fnCallback(json);
+                    
+                    //console.log(json.aaData);
+                    var sum = 0;
+
+                    for (var i = 0; i <json.aaData.length; i++ ){
+
+                        sum += Number(json.aaData[i][4]);
+
+                    }
+                    $('.cTotalValue').text(sum.toFixed(4));
+
+                });
+            },
+
+            "aoColumns": [
+                            {
+                                "sName": "Id",
+                                "bSearchable": false,
+                                "bSortable": false,
+                                "sWidth": "10%",
+                                "sClass": "center",
+                                "fnRender": function (oObj) {
+                                    return ' <input onclick="CheckAll(this)" class="dSelected" type="checkbox" data-Id="' + oObj.aData[0] + '">'
+                                        + '&nbsp; <a title="Click on for Edit" href=\"/VMS/CustomerItem/Edit/' + oObj.aData[0].split('~')[0] + '?TransactionType=' + '@Model.TransactionType' + '\" class="sym-btn-edit-row"></a>'
+                                    //+ '&nbsp; <a title="Click on for Post" data-url="/VMS/IssueHeader/Post"  onclick=checkValidBranch(this,' + oObj.aData[0].split('~')[2] + '); data-Id="' + oObj.aData[0] + '\" class="sym-btn-post-row"></a>'
+
+                                    ;
+
+                                }
+                            }
+                          //, { "sName": "InvoiceNo", "sWidth": "10%" }
+                            , { "sName": "CustomerCode", "sWidth": "10%" }
+                            , { "sName": "CustomerName", "sWidth": "15%" }
+                            , { "sName": "TotalItem", "sWidth": "10%" }
+                            , { "sName": "TotalValue", "sWidth": "10%" }
+                            , { "sName": "Attention", "sWidth": "15%" }
+                            , { "sName": "Notes", "sWidth": "15%" }
+                            //, { "sName": "Post", "sWidth": "7%" }
+
+                           
+            ]
+
+           
+
+            
+
+        });
+
+        $('#btnDialog').click(function () {
+            var model = $('.dtSearch :input').serialize();
+            $.ajax({
+                url: "/VMS/CustomerItem/Index",
+                cache: false,
+                data: model,
+                success: function (html) {
+                    oTable.fnDraw();
+                }
+            });
+        });
+        ////clearing fields
+        $("#Clear").on('click', function () {
+            $(".Dropdown").select2("val", "");
+            $(".form-control").val("");
+        });
+
+
+    });
+    function checkValidBranch(element, branchId) {
+        if ('@Session["BranchId"]' != branchId) {
+            ShowResult("Fail", "This Information not for this Branch!");
+            return;
+        }
+
+        btnPost(element);
+    }
+</script>
+
+<style>
+    .cvalueDesign {
+        margin-left: 11px;
+        color: black !important;
+        font-size: 1.3em;
+        margin-top: -3px;
+        margin-left: 6px;
+    } 
+
+</style>

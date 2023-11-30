@@ -1,0 +1,517 @@
+﻿@{ Layout = "_HomeLayout1.cshtml";}
+
+<script src="~/assets/KendoCommonJs/KendoJs.js"></script>
+<link href="~/assets/stylesheets/KendoStyle.css" rel="stylesheet" />
+
+@model VATViewModel.DTOs.VendorVM
+@using UIHelper.MVC
+@using (Html.BeginForm("CreateEdit", "Vendor", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmVendorMy" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.VendorID)
+    @Html.HiddenFor(model => model.Operation)
+    <div class="headrow bs-example">
+        @if (Model.Operation == "add")
+        {
+            <button type="button" name="btnName" value="Save" title="Save Data" onclick="pageSubmit('frmVendorMy')" class="sym-btn-save">&nbsp;Save</button>
+            <label class="pull-right">Vendor > Create</label>
+        }
+        else
+        {
+            <button type="button" name="btnName" value="Update" title="Update Data" onclick="pageSubmit('frmVendorMy')" class="sym-btn-update">&nbsp;Update</button>
+            <label class="pull-right">Vendor > Edit</label>
+        }
+        <button type="button" title="Go To Index" data-url="/VMS/Vendor" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New Vendor" data-url="/VMS/Vendor/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+
+    </div>
+    if (Model.Operation == "update")
+    {
+        <div class="col-sm-12 col-md-12 col-xs-12">
+            <div class="input-group   col-lg-8  col-md-8  col-sm-8 col-xs-12 text-color col-md-offset-2" style="">
+                <a class="input-group-addon btn btn-primary hidden-xs changePage" data-pager-action='first' id="first"><i class="fa fa-angle-double-left"></i>First</a>
+                <a class="input-group-addon btn btn-primary hidden-xs changePage" data-pager-action='previous' id="precode"><i class="fa fa-angle-left"></i>Previous</a>
+                @Html.SimpleDropDown("", "/Config/DropDown/IdNameDropdown?tableName=Vendors&Id=VendorID&Name=VendorName&AllData=no&code=VendorCode", new { @class = " trNavigateMenu form-control selectDropdown " })
+                <a class="input-group-addon btn btn-primary changePage" data-pager-action='current' id="current"><i class="fa fa-search"></i></a>
+                <a class="input-group-addon btn btn-primary hidden-xs changePage" data-pager-action='next' id="nextcode">Next <i class="fa  fa-angle-right"></i></a>
+                <a class="input-group-addon btn btn-primary hidden-xs changePage" data-pager-action='last' id="last">Last <i class="fa  fa-angle-double-right"></i></a>
+            </div>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-6 col-xs-6 trkPL-0 trkPR-2 animated zoomIn faster">
+            <div class="row">
+                <div class="col-md-12 col-xs-12">
+                    <div class="th_thinbox well well-sm">Basic</div>
+                    <div class="thinbox">
+
+                        @*<div class="th_thinbox">
+                                <p>Basic</p>
+                            </div>*@
+                        
+                        <div class="bs-example">
+                            
+                            <div class="panel-body">
+                                <div class="row clsBasic">
+                                    <div class="form-group">
+                                        <label for="VendorCode" class="col-md-4 col-xs-4 control-label text-right trkLabelMargin">Vendor Code</label>
+                                        <div class="col-md-8">
+                                            <div class="input-group col-md-6 col-xs-6" style="margin-bottom:6px;">
+                                                @Html.TextBoxFor(model => model.VendorCode, new { @placeholder = "Vendor Code", @class = "kTextbox required", @style = "" })
+                                            </div>
+                                            @Html.ValidationMessageFor(model => model.VendorCode)
+                                        </div>
+                                        <label for="VendorName" class="col-md-4 col-xs-4 control-label text-right trkLabelMargin">Vendor Name</label>
+                                        <div class="col-md-8">
+                                            <div class="input-group col-md-6 col-xs-6" style="margin-bottom:6px;">
+                                                @Html.TextBoxFor(model => model.VendorName, new { @placeholder = "Vendor Name", @class = "kTextbox @*required*@", @style = "" })
+                                            </div>
+                                            @*@Html.TextBoxFor(model => model.VendorName, new {@placeholder = "Vendor Name", @class = " k-formatted-value k-input"})*@
+                                            @Html.ValidationMessageFor(model => model.VendorName)
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="VendorGroupID" class="col-md-4 col-xs-4 control-label text-right trkLabelMargin">Group</label>
+                                        <div class="col-md-8">
+                                            <div class="input-group col-md-6 col-xs-6" style="margin-bottom:6px;">
+                                                @*@<input name="VendorGroupID" model="model.VendorGroupID" style="width: 100%; height: 21px;" class="kVgrpDropdown required">*@
+                                                @*@Html.SimpleDropDownFor(model => model.VendorGroupID, "/Config/DropDown/VendorGroup", new { @class = "kVgrpDropdown required" })*@
+                                                @Html.TextBoxFor(model => model.VendorGroupID, new { @class = "kVgrpDropdown", @style = "width: 100%;" })
+                                            </div>
+                                            @Html.ValidationMessageFor(model => model.VendorGroupID)
+                                        </div>
+                                        <label for="VendorGroupID" class="col-md-4 col-xs-4 control-label text-right trkLabelMargin">Start DateTime</label>
+                                        <div class="col-md-8">
+                                            <div class="input-group col-md-6 col-xs-6" style="margin-bottom:6px;">
+                                                @*@Html.TextBoxFor(model => model.StartDateTime, new {@class = "kDatePicker"})*@
+                                                @Html.TextBoxFor(model => model.StartDateTime, new { @class = "kDatePicker trDate customTimePicker", @style = "width: 100%;" })
+                                            </div>
+                                            @Html.ValidationMessageFor(model => model.StartDateTime)
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="VendorGroupID" class="col-md-4 col-xs-4 control-label text-right kLabelMargin">NID/BIN /VAT Registration No.</label>
+                                        <div class="col-md-8" style="margin-bottom:6px;">
+                                            @Html.TextBoxFor(model => model.VATRegistrationNo, new { @placeholder = "NID/BIN / VAT Registration No.", @class = "kTextbox", @style = "width: 50%;" })
+                                            @Html.ValidationMessageFor(model => model.VATRegistrationNo)
+                                        </div>
+
+                                        @*<label for="VendorGroupID" class="col-md-4 col-xs-4 control-label text-right trkLabelMargin">NID No.</label>
+                                            <div class="col-md-8">
+                                                @Html.TextBoxFor(model => model.NIDNo, new { @placeholder = "NID No.", @class = " form-control" })
+                                                @Html.ValidationMessageFor(model => model.NIDNo)
+                                            </div>*@
+
+
+                                        <label for="VendorGroupID" class="col-md-4 col-xs-4 control-label text-right trkLabelMargin">TIN No</label>
+                                        <div class="col-md-8" style="margin-bottom:6px;">
+                                            @Html.TextBoxFor(model => model.TINNo, new { @placeholder = "TIN No.", @class = "kTextbox", @style = "width: 50%;" })
+                                            @Html.ValidationMessageFor(model => model.TINNo)
+                                        </div>
+
+                                        @*<label for="VDS" class="col-md-4 col-xs-4 control-label text-right trkLabelMargin">VDS</label>
+                                            <div class="col-md-8">
+                                                @Html.TextBoxFor(model => model.VDSPercent, new { @placeholder = "VDS", @class = "cVDSPercent form-control" })
+                                                @Html.ValidationMessageFor(model => model.VDSPercent)
+                                            </div>*@
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="spacer4"></div>
+            <div class="row">
+                <div class="col-md-12 col-xs-12">
+                    <div class="th_thinbox well well-sm"><p>Business</p></div>
+                    <div class="thinbox">
+                        <div class=" bs-example businessCls">
+                            
+                            <div class="panel-body">
+                                <div class="row clsBusiness">
+                                    <div class="form-group">
+                                        <label for="BusinessType" class="col-md-4 col-xs-4 control-label text-right trkLabelMargin">Business Type</label>
+                                        <div class="col-md-8" style="margin-bottom:6px;">
+                                            @Html.TextBoxFor(model => model.BusinessType, new { @placeholder = "Business Type", @class = "kTextbox", @style = "width: 50%; @*height:50%;*@" })
+                                            @Html.ValidationMessageFor(model => model.BusinessType)
+                                        </div>
+                                        <label for="BusinessCode" class="col-md-4 col-xs-4 control-label text-right kLabelMargin">Business Code</label>
+                                        <div class="col-md-8">
+                                            @Html.TextBoxFor(model => model.BusinessCode, new { @placeholder = "Business Code", @class = "kTextbox", @style = "width: 50%; height:50%;" })
+                                            @Html.ValidationMessageFor(model => model.BusinessCode)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="padding-bottom:20px"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @*<div class="spacer4" style="height:12px;"></div>*@
+
+        </div>
+        <div class="col-md-6 col-xs-6 trkPX-0 animated zoomIn faster">
+            <div class="th_thinbox well well-sm">
+                <p>Details</p>
+            </div>
+            <div class="thinbox">
+                <div class=" bs-example">
+                    
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="form-group">
+                                <label for="Address1" class="col-md-4 col-xs-4 control-label text-right trkLabelMargin">Address </label>
+                                <div class="col-md-8 col-xs-8" style="margin-bottom:6px;">
+                                    @Html.TextBoxFor(model => model.Address1, new { @placeholder = "Address ", @class = "kTextbox", @style = "width: 50%;" })
+                                    @Html.ValidationMessageFor(model => model.Address1)
+                                </div>
+                                @*<label for="Address2" class="col-md-4 control-label text-right trkLabelMargin" >Address2</label>
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.Address2, new { @placeholder = "Address 2", @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.Address2)
+                                    </div>*@
+                            </div>
+
+                            <div class="form-group">
+                                @*<label for="Address3" class="col-md-4 control-label text-right trkLabelMargin">Address3</label>
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.Address3, new { @placeholder = "Address 3", @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.Address2)
+                                    </div>*@
+                                <label for="City" class="col-md-4 col-xs-4 control-label text-right trkLabelMargin">City </label>
+                                <div class="col-md-8" style="margin-bottom:6px;">
+                                    @Html.TextBoxFor(model => model.City, new { @placeholder = "City", @class = "kTextbox", @style = "width: 50%;" })
+                                    @Html.ValidationMessageFor(model => model.City)
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="Country" class="col-md-4 col-xs-4 control-label text-right trkLabelMargin">Country </label>
+                                <div class="col-md-8" style="margin-bottom:6px;">
+                                    @Html.TextBoxFor(model => model.Country, new { @placeholder = "Country", @class = "kTextbox", @style = "width: 50%;" })
+                                    @Html.ValidationMessageFor(model => model.Country)
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="Email" class="col-md-4 col-xs-4 control-label text-right trkLabelMargin">Email </label>
+                                <div class="col-md-8" style="margin-bottom:6px;">
+                                    @Html.TextBoxFor(model => model.Email, new { @placeholder = "Email", @class = "kTextbox", @style = "width: 50%;" })
+                                    @Html.ValidationMessageFor(model => model.Email)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="FaxNo" class="col-md-4 col-xs-4 control-label text-right trkLabelMargin">FaxNo </label>
+                                <div class="col-md-8" style="margin-bottom:6px;">
+                                    @Html.TextBoxFor(model => model.FaxNo, new { @placeholder = "Fax Number", @class = "kTextbox ", @style = "width: 50%;" })
+                                    @Html.ValidationMessageFor(model => model.FaxNo)
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @*<label for="VDSPercent" class="col-md-4 col-xs-4 control-label text-right trkLabelMargin">VDSPercent</label>
+                                    <div class="col-md-8" style="margin-bottom:6px;">
+                                        <div class="input-group">
+                                            @Html.TextBoxFor(model => model.VDSPercent, new { @placeholder = "VDS Percent", @class = "priceLen form-control" })
+                                            <span class="input-group-addon">%</span>
+                                            @Html.ValidationMessageFor(model => model.VDSPercent)
+                                        </div>
+                                      </div>*@
+                                <label for="TelephoneNo" class="col-md-4 col-xs-4 control-label text-right trkLabelMargin">Telephone No </label>
+                                <div class="col-md-8" style="margin-bottom:6px;">
+                                    @Html.TextBoxFor(model => model.TelephoneNo, new { @placeholder = "Telephone No.", @class = "required kTextbox", @style = "width: 50%;" })
+                                    @Html.ValidationMessageFor(model => model.TelephoneNo)
+                                </div>
+
+                                <label for="Comments" class="col-md-4 col-xs-4 control-label text-right trkLabelMargin">Comments </label>
+                                <div class="col-md-8" style="margin-bottom:6px;">
+                                    @Html.TextAreaFor(model => model.Comments, new { @placeholder = "Comments", @class = "kTextarea k-input" })
+                                    @Html.ValidationMessageFor(model => model.Comments)
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="ShortName" class="col-md-4 col-xs-4 control-label text-right trkLabelMargin">Short Name </label>
+                                <div class="col-md-8" style="margin-bottom:6px;">
+                                    @Html.TextAreaFor(model => model.ShortName, new { @placeholder = "Short Name", @class = "kTextarea cShortName " })
+                                    @Html.ValidationMessageFor(model => model.ShortName)
+                                </div>
+                            </div>
+
+                            <label class="col-md-4 col-xs-4 text-right trkLabelMargin" for="IsRegister" style="margin-top:0px;">Register</label>
+                            <div class="form-group">
+                                <div class="col-md-8" style="margin-top:0px;">
+                                    @*@Html.SimpleDropDownFor(m => m.IsRegister, "/Config/DropDown/DecisionList", new { @class = " cIsRegister" })*@
+                                    @Html.TextBoxFor(model => model.IsRegister, new { @class = "cIsRegister", @style = "width: 50%;" })
+                                    @*<input name="IsRegister" style="width: 100%; height: 21px;" class="cIsRegister required">*@
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 col-xs-12">
+                                    <label class="col-md-4 col-xs-4 text-right trkLabelMargin" for="IsTurnover" style="margin-top:8px;">Turnover</label>
+                                    <div class="form-group">
+                                        <div class="col-md-8" style="margin-top:6px;">
+                                            @*@Html.SimpleDropDownFor(m => m.IsRegister, "/Config/DropDown/DecisionList", new { @class = " cIsRegister" })*@
+                                            @Html.TextBoxFor(model => model.IsTurnover, new { @class = "cIsTurnover", @style = "width: 50%;" })
+                                            @*<input name="IsRegister" style="width: 100%; height: 21px;" class="cIsRegister required">*@
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+
+
+                            <label class="col-md-4 col-xs-4 text-right trkLabelMargin" for="IsActive" style="margin-top:8px;">Is Active</label>
+                            <div class="form-group">
+                                <div class="col-md-8" style="margin-top:6px;">
+                                    @*@Html.SimpleDropDownFor(m => m.IsRegister, "/Config/DropDown/DecisionList", new { @class = " cIsRegister" })*@
+                                    @Html.TextBoxFor(model => model.ActiveStatus, new { @class = "clsIsActive", @style = "width: 50%;" })
+                                    @*<input name="IsRegister" style="width: 100%; height: 21px;" class="cIsRegister required">*@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="spacer4"></div>
+
+
+    <div class="row">
+        <div class="th_thinbox well well-sm">
+            <p>Contact Person</p>
+        </div>
+        <div class="col-md-12 col-xs-12 trkPX-0 bs-example">
+            
+            <div class="thinbox animated zoomIn faster">               
+
+                <div class="panel-body">
+                    <div class="row clsContact">
+                        <div class="col-md-12 col-xs-12">
+                            <div class="form-group">
+                                <label for="ContactPerson" class="col-md-2 control-label text-right trkLabelMargin">Name</label>
+                                <div class="col-md-4 col-xs-4" style="margin-bottom:2px;">
+                                    @Html.TextBoxFor(model => model.ContactPerson, new { @placeholder = "Contact Person", @class = "kTextbox", @style = "width: 50%;" })
+                                    @Html.ValidationMessageFor(model => model.ContactPerson)
+                                </div>
+                                <label for="ContactPersonDesignation" class="col-md-2 control-label text-right trkLabelMargin">Designation</label>
+                                <div class="col-md-4 col-xs-4" style="margin-bottom:2px;">
+                                    @Html.TextBoxFor(model => model.ContactPersonDesignation, new { @placeholder = "Designation", @class = "kTextbox", @style = "width: 50%;" })
+                                    @Html.ValidationMessageFor(model => model.ContactPersonDesignation)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                        @*<div class="form-group">*@
+
+
+                        @*</div>*@
+                    <div class="row clsTelephone">
+                        <div class="form-group">
+                            <label for="ContactPersonTelephone" class="col-md-2 control-label text-right trkLabelMargin">Telephone</label>
+                            <div class="col-md-4 col-xs-4">
+                                @Html.TextBoxFor(model => model.ContactPersonTelephone, new { @placeholder = "Telephone No.", @class = "kTextbox", @style = "width: 50%;" })
+                                @Html.ValidationMessageFor(model => model.ContactPersonTelephone)
+                            </div>
+                            <label for="ContactPersonEmail" class="col-md-2 control-label text-right trkLabelMargin">Email</label>
+                            <div class="col-md-4 col-xs-4">
+                                @Html.TextBoxFor(model => model.ContactPersonEmail, new { @placeholder = "Email", @class = "kTextbox", @style = "width: 50%;" })
+                                @Html.ValidationMessageFor(model => model.ContactPersonEmail)
+                            </div>
+                        </div>
+                    </div>
+                        
+                    
+                
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="headrow">
+        @if (Model.Operation == "add")
+        {
+        <button type="button" name="btnName" value="Save" title="Save Data" onclick="pageSubmit('frmVendorMy')" class="sym-btn-save">&nbsp;Save</button>
+        }
+        else
+        {
+        <button type="button" name="btnName" value="Update" title="Update Data" onclick="pageSubmit('frmVendorMy')" class="sym-btn-update">&nbsp;Update</button>
+        }
+        <button type="button" title="Go To Index" data-url="/VMS/Vendor" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New Vendor" data-url="/VMS/Vendor/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+
+    </div>
+
+}
+
+<script>
+
+    $(function () {
+        $(document).ready(function () {
+            //function KendoDropdown(sender) {
+            //    var url = $(sender).attr("data-url") + "?ids=" + ids;
+
+            //    var vendorDataSource = new kendo.data.DataSource({
+            //        //data: "/Config/DropDown/VendorGroup"
+            //        transport: {
+            //            read: {
+            //                url: url,
+            //                dataType: "json"
+            //            }
+            //        }
+            //    });
+            //    $(".kVgrpDropdown").kendoDropDownList({
+            //        optionLabel: '--Select--',
+            //        dataSource: vendorDataSource,
+            //        dataTextField: "Text",
+            //        dataValueField: "Value",
+            //        dataType: "json",
+            //        index: 0
+            //    });
+            //}
+            $("#VendorGroupID").each(function () {
+                var url = $(this).attr('data-url');
+                //alert(url);
+
+                var vendorDataSourceXX = new kendo.data.DataSource({
+                    //data: "/Config/DropDown/VendorGroup"
+                    transport: {
+                        read: {
+                            url: url,
+                            dataType: "json"
+                        }
+                    }
+                })
+                $("#VendorGroupIDXX").kendoDropDownList({
+                    optionLabel: '--Select--',
+                    dataSource: vendorDataSource,
+                    dataTextField: "Text",
+                    dataValueField: "Value",
+                    dataType: "json",
+                    index: 0
+                })
+            });
+            var vendorDataSource = new kendo.data.DataSource({
+                //data: "/Config/DropDown/VendorGroup"
+                transport: {
+                    read: {
+                        url: "/Config/DropDown/VendorGroup",
+                        dataType: "json"
+                    }
+                }
+            });
+            //console.log(vendorDataSource);
+            $(".kVgrpDropdown").kendoDropDownList({
+                filter: "contains",
+                optionLabel: '--Select--',
+                dataSource: vendorDataSource,
+                dataTextField: "Text",
+                dataValueField: "Value",
+                dataType: "json",
+                index: 0
+            });
+
+
+            var dataSourceIsRegister = new kendo.data.DataSource({
+                transport: {
+                    read: {
+                        url: "/Config/DropDown/DecisionList",
+                        dataType: "json"
+                    }
+                }
+                //data: [
+                //  { Id: 1, Name: "Y" },
+                //  { Id: 2, Name: "N" },
+                //],
+                //sort: { field: "Id", dir: "asc" }
+            });
+            $(".cIsRegister").kendoDropDownList({
+                optionLabel: '--Select--',
+                dataSource: dataSourceIsRegister,
+                dataTextField: "Text",
+                dataValueField: "Value"
+            });
+            $(".cIsTurnover").kendoDropDownList({
+                optionLabel: '--Select--',
+                dataSource: dataSourceIsRegister,
+                dataTextField: "Text",
+                dataValueField: "Value"
+            });
+            $(".clsIsActive").kendoDropDownList({
+                optionLabel: '--Select--',
+                dataSource: dataSourceIsRegister,
+                dataTextField: "Text",
+                dataValueField: "Value"
+            });
+        });
+
+        //valiDation("frmVendorMy");
+
+        var operation = '@Model.Operation';
+        if (operation == "update") {
+            navigatePage();
+        }
+
+        function navigatePage() {
+            var interval = setInterval(function () {
+                if (document.querySelectorAll('.trNavigateMenu option').length > 0) {
+                    var id = '@Model.VendorID';
+                    $('.trNavigateMenu').select2("val", id);
+                    clearInterval(interval);
+                }
+            }, 200);
+            ////navigating previous-next
+            $('.changePage').click(function () {
+                var id = '@Model.VendorID';
+                var btn = $(this).attr("data-pager-action");
+                if (btn.toLocaleLowerCase() == "current") {
+                    var targetId = $('.trNavigateMenu').val();
+                    if (id == targetId) {
+                        return;
+                    }
+                    id = targetId;
+                }
+                window.location = "/VMS/Vendor/Navigate?id=" + id + "&btn=" + btn;
+            });
+        }
+    });
+
+</script>
+
+<style>
+    .businessCls {
+        height: 97px;
+    }
+
+    .clsBusiness {
+        margin-right: -15px;
+        margin-left: -15px;
+        margin-top: 12px;
+    }
+
+    .clsContact {
+        margin-bottom: 4px;
+    }
+    .clsTelephone {
+        margin-bottom: 4px;
+    } 
+    .clsBasic {
+        margin-top: 17px;
+        margin-bottom: 18px;
+    }
+
+    .col-md-12, .col-xs-12 {
+        padding-left: 1px;
+    }
+</style>

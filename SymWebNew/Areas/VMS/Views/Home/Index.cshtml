@@ -1,0 +1,540 @@
+﻿@using UIHelper.MVC
+@using SymOrdinary
+@using System.Threading;
+@using System.Configuration
+
+@{
+    ViewBag.Title = "DashBoard";
+    ShampanIdentity identity = (ShampanIdentity)Thread.CurrentPrincipal.Identity;
+}
+
+@{
+    string NBRAuth = "";
+
+    try
+    {
+        NBRAuth = new AppSettingsReader().GetValue("NBRAuth", typeof(string)).ToString();
+
+    }
+    catch (Exception e)
+    {
+        NBRAuth = "";
+
+    }
+
+}
+
+@*<h2>Dash Board</h2>*@
+
+@*<div class="headrow">
+        <button type="button" title="Sale" data-url="/VMS/SaleInvoice/Index?TransactionType=Other" onclick="GoTo(this)" id="" class="btn btn-primary">&nbsp;Sale</button>
+        &nbsp;<button type="button" title="FG IN" data-url="/VMS/TransferReceive/Index?transactionType=62In" onclick="GoTo(this)" id="" class="btn btn-primary">&nbsp;FG IN</button>
+        &nbsp;<button type="button" title="FG OUT" data-url="/VMS/TransferIssue/Index?transactionType=62Out" onclick="GoTo(this)" id="" class="btn btn-primary">&nbsp;FG OUT</button>
+        &nbsp;<button type="button" title="RM IN" data-url="/VMS/TransferReceive/Index?transactionType=61In" onclick="GoTo(this)" id="" class="btn btn-primary">&nbsp;RM IN</button>
+        &nbsp;<button type="button" title="RM OUT" data-url="/VMS/TransferIssue/Index?transactionType=61Out" onclick="GoTo(this)" id="" class="btn btn-primary">&nbsp;RM OUT</button>
+    </div>*@
+
+@if (string.IsNullOrEmpty(NBRAuth) || NBRAuth.ToLower() == "all")
+{
+
+
+    @*<div class=" col-sm-4 col-xs-4 ">
+            <label>&nbsp;</label>
+        </div>*@
+
+    <div class=" col-sm-4 col-xs-4 ">
+
+
+
+    </div>
+    if (identity.IsPermitted("170130110") || identity.IsPermitted("170130120"))
+    {
+        <div class=" col-sm-4 col-xs-4 ">
+            <div class="imgContainer">
+                <a href="/VMS/SaleInvoice/Index?TransactionType=Other">
+                    <img border="0" alt="lead" src="~/assets/Images/Sales.png" class="bigIcon">
+                    <p class="icon-caption">Sale</p>
+                </a>
+            </div>
+        </div>
+        <div class=" col-sm-4 col-xs-4  " style="margin-bottom: 190px;">
+
+        </div>
+
+
+        <div class="row ">
+        </div>
+        <div class="row ">
+        </div>
+
+        <div class="col-sm-3 col-xs-3">
+            <div class="imgContainer">
+                <a href="/VMS/TransferIssue/Index?transactionType=62Out">
+                    <img border="0" alt="lead" src="~/assets/Images/Out.ico" style="height: 100px; margin-bottom: 10px;padding-top:10px;">
+                    <p class="icon-caption">FG OUT</p>
+                </a>
+            </div>
+        </div>
+        <div class=" col-sm-3 col-xs-3">
+            <div class="imgContainer">
+                <a href="/VMS/TransferIssue/Index?transactionType=61Out">
+                    <img border="0" alt="lead" src="~/assets/Images/Out.ico" style="height: 100px; margin-bottom: 10px;padding-top:10px;">
+                    <p class="icon-caption">RM OUT</p>
+                </a>
+            </div>
+        </div>
+
+        <div class=" col-sm-3 col-xs-3">
+            <div class="imgContainer">
+                <a href="/VMS/TransferReceive/Index?transactionType=62In">
+                    <img border="0" alt="lead" src="~/assets/Images/In.png" style="height: 95px; margin-bottom: 15px; padding-top: 10px;">
+                    <p class="icon-caption">FG IN</p>
+                </a>
+            </div>
+        </div>
+
+        <div class=" col-sm-3 col-xs-3">
+            <div class="imgContainer">
+                <a href="/VMS/TransferReceive/Index?transactionType=61In">
+                    <img border="0" alt="lead" src="~/assets/Images/In.png" style="height: 100px; margin-bottom: 10px;padding-top:10px;">
+                    <p class="icon-caption">RM IN</p>
+                </a>
+            </div>
+        </div>
+    }
+}
+else
+{
+
+    <div class="col-md-12 ">
+        <div class="row ">
+            <div class="col-xl-3 col-lg-2 cVAT4_3Report">
+                <div class="card l-bg-cherry">
+                    <div class="card-statistic-3 p-4 cCardButtonH">
+                        <div class="mb-4">
+                            <h1 class="card-title mb-0 ctextAlign">VAT 4.3 </h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-xl-3 col-lg-2 cVAT6_1Report">
+                <div class="card l-bg-blue-dark">
+                    <div class="card-statistic-3 p-4 cCardButtonH">
+                        <div class="mb-4">
+                            <h1 class="card-title mb-0 ctextAlign">VAT 6.1 </h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-lg-2 cVAT6_2Report">
+                <div class="card l-bg-blue-dark">
+                    <div class="card-statistic-3 p-4 cCardButtonH">
+                        <div class="mb-4">
+                            <h1 class="card-title mb-0 ctextAlign">VAT 6.2 </h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-xl-3 col-lg-2 cVAT6_2_1Report">
+                <div class="card l-bg-blue-dark">
+                    <div class="card-statistic-3 p-4 cCardButtonH">
+                        <div class="mb-4">
+                            <h1 class="card-title mb-0 ctextAlign">VAT 6.2.1 </h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-xl-3 col-lg-2 cVAT6_3Report">
+                <div class="card l-bg-blue-dark">
+                    <div class="card-statistic-3 p-4 cCardButtonH">
+                        <div class="mb-4">
+                            <h1 class="card-title mb-0 ctextAlign">VAT 6.3 </h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-xl-3 col-lg-2 cVAT6_5">
+                <div class="card l-bg-blue-dark">
+                    <div class="card-statistic-3 p-4 cCardButtonH">
+                        <div class="mb-4">
+                            <h1 class="card-title mb-0 ctextAlign">VAT 6.5 </h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-lg-2 cVAT6_7">
+                <div class="card l-bg-blue-dark">
+                    <div class="card-statistic-3 p-4 cCardButtonH">
+                        <div class="mb-4">
+                            <h1 class="card-title mb-0 ctextAlign">VAT 6.7 </h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-xl-3 col-lg-2 cVAT6_8">
+                <div class="card l-bg-blue-dark">
+                    <div class="card-statistic-3 p-4 cCardButtonH">
+                        <div class="mb-4">
+                            <h1 class="card-title mb-0 ctextAlign">VAT 6.8 </h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-lg-2 cVAT6_10">
+                <div class="card l-bg-blue-dark">
+                    <div class="card-statistic-3 p-4 cCardButtonH">
+                        <div class="mb-4">
+                            <h1 class="card-title mb-0 ctextAlign">VAT 6.10 </h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-xl-3 col-lg-2 vat9_1Report">
+                <div class="card l-bg-green-dark">
+                    <div class="card-statistic-3 p-4 cCardButtonH">
+                        <div class="mb-4">
+                            <h1 class="card-title mb-0 ctextAlign">VAT 9.1 </h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-xl-3 col-lg-2 chakka">
+                <div class="card l-bg-orange-dark">
+                    <div class="card-statistic-3 p-4 cCardButtonH">
+                        <div class="mb-4">
+                            <h1 class="card-title mb-0 ctextAlign">Chak Ka </h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-lg-2 chakkha">
+                <div class="card l-bg-orange-dark">
+                    <div class="card-statistic-3 p-4 cCardButtonH">
+                        <div class="mb-4">
+                            <h1 class="card-title mb-0 ctextAlign">Chak Kha </h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-lg-2 vatSDReport">
+                <div class="card l-bg-orange-dark">
+                    <div class="card-statistic-3 p-4 cCardButtonH">
+                        <div class="mb-4">
+                            <h1 class="card-title mb-0 ctextAlign">SD Report </h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+
+}
+
+<div id="myHigherModal" class="HigherModal"></div>
+<style>
+    /*#header {
+                border-bottom: 5px solid #37474F;
+                color: #37474F;
+                margin-bottom: 1.5rem;
+                padding: 1rem 0;
+            }*/
+
+    #revenue-tag {
+        font-weight: inherit !important;
+        border-radius: 0px !important;
+    }
+
+    .card {
+        border: 0rem;
+        border-radius: 0rem;
+    }
+
+    .card-header {
+        background-color: #37474F;
+        border-radius: 0 !important;
+        color: white;
+        margin-bottom: 0;
+        padding: 1rem;
+    }
+
+    .card-block {
+        border: 1px solid #cccccc;
+        box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12), 0 3px 5px -1px rgba(0, 0, 0, 0.2);
+    }
+
+    .shadow {
+        box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12), 0 3px 5px -1px rgba(0, 0, 0, 0.2);
+    }
+
+    #revenue-column-chart, #products-revenue-pie-chart, #orders-spline-chart {
+        height: 300px;
+        width: 100%;
+    }
+
+
+    .Marg {
+        margin-right: 7%;
+    }
+</style>
+<script>
+
+
+    function bkColor() {
+        var backgroundColor = [
+           "#2ecc71",
+           "#3498db",
+           "#95a5a6",
+           "#9b59b6",
+           "#f1c40f",
+           "#e74c3c",
+           "#34495e"
+        ];
+        return backgroundColor;
+    }
+
+    @*    $(function () {
+        var fydid = '@Model.GLFiscalYearDetailId';
+        //alert(fydid);
+        var PeriodName = "";
+        //var url = "/Sage/FiscalYear/SelectPeriodName?fydid=" + fydid;
+        //$.getJSON(url, function (data) {
+        //    PeriodName = data;
+        //});
+
+        //setTimeout(function () { loadsPie() }, 0);
+        //setTimeout(function () { loadsbar() }, 0);
+
+        //loadsPie(fydid);
+        //loadsbar(fydid);
+
+    });*@
+</script>
+
+<script>
+    $(function () {
+        function modalInit(url) {
+            var modal = document.getElementById('myModal');
+            $.ajax({
+                url: url,
+                cache: false,
+                beforeSend: function () { $(".loading").show(); },
+                complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                success: function (html) {
+                    modal.style.display = "block";
+                    $("#myModal").html(html);
+                }
+            });
+        }
+
+
+        $('.cVAT6_1Report').click(function () {
+            var url = "/Vms/NBRReport/PrintVAT16";
+            modalInit(url);
+        });
+
+        $('.cVAT6_2Report').click(function () {
+            var url = "/Vms/NBRReport/PrintVAT17";
+            modalInit(url);
+        });
+
+
+        $('.cVAT6_2_1Report').click(function () {
+            var url = "/Vms/NBRReport/PrintVAT6_2_1";
+            modalInit(url);
+        });
+
+        $('.cVAT4_3Report').click(function () {
+            var url = "/Vms/NBRReport/PrintVAT1";
+            modalInit(url);
+        });
+
+
+        $('.vatSDReport').click(function () {
+            var url = "/Vms/NBRReport/PrintVATSD";
+            modalInit(url);
+        });
+
+
+        $('.vat9_1Report').click(function () {
+            var url = "/Vms/NBRReport/ViewVAT9_1";
+            window.location = url;
+        });
+
+
+        $('.chakkha').click(function () {
+            var url = "/Vms/NBRReport/chakkha";
+            modalInit(url);
+        });
+
+        $('.chakka').click(function () {
+            var url = "/Vms/NBRReport/chakka";
+            modalInit(url);
+        });
+
+        $('.cVAT6_5').click(function () {
+            var url = "/Vms/NBRReport/transferIsuue";
+            modalInit(url);
+        });
+
+        $('.cVAT6_10').click(function () {
+            var url = "/Vms/NBRReport/VAT6_10Report";
+            modalInit(url);
+        });
+
+        $('.cVAT6_3Report').click(function () {
+            var url = "/Vms/NBRReport/PreviewVAT6_3?TransactionTypes=Other";
+            modalInit(url);
+        });
+
+        $('.cVAT6_7').click(function () {
+            var url = "/Vms/NBRReport/PreviewVAT6_3?TransactionTypes=Credit";
+            modalInit(url);
+        });
+        $('.cVAT6_8').click(function () {
+            var url = "/Vms/NBRReport/PreviewVAT6_3?TransactionTypes=Debit";
+            modalInit(url);
+        });
+
+    });
+</script>
+
+<style>
+    .icon-caption {
+        font-size: 18px;
+        font-weight: 700;
+        color: #56f7ec;
+        text-align: center;
+        margin-top: -10px;
+    }
+
+    .bigIcon {
+        height: 150px !important;
+    }
+
+    .smallIcon {
+        height: 100px !important;
+    }
+
+    img {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .imgContainer {
+        background-color: green;
+        margin-left: -12px !important;
+        margin-right: -12px !important;
+        min-height: 180px;
+        cursor: pointer !important;
+    }
+
+        .imgContainer a {
+            text-decoration: none !important;
+        }
+</style>
+
+
+<style>
+    .card {
+        background-color: #fff;
+        border-radius: 10px;
+        border: none;
+        position: relative;
+        margin-bottom: 30px;
+        box-shadow: 0 0.46875rem 2.1875rem rgba(90,97,105,0.1), 0 0.9375rem 1.40625rem rgba(90,97,105,0.1), 0 0.25rem 0.53125rem rgba(90,97,105,0.12), 0 0.125rem 0.1875rem rgba(90,97,105,0.1);
+    }
+
+    .l-bg-cherry {
+        background: linear-gradient(to right, #493240, #f09) !important;
+        color: #fff;
+    }
+
+    .l-bg-blue-dark {
+        background: linear-gradient(to right, #373b44, #4286f4) !important;
+        color: #fff;
+    }
+
+    .l-bg-green-dark {
+        background: linear-gradient(to right, #0a504a, #38ef7d) !important;
+        color: #fff;
+    }
+
+    .l-bg-orange-dark {
+        background: linear-gradient(to right, #a86008, #ffba56) !important;
+        color: #fff;
+    }
+
+    .card .card-statistic-3 .card-icon-large .fas, .card .card-statistic-3 .card-icon-large .far, .card .card-statistic-3 .card-icon-large .fab, .card .card-statistic-3 .card-icon-large .fal {
+        font-size: 110px;
+    }
+
+    .card .card-statistic-3 .card-icon {
+        text-align: center;
+        line-height: 50px;
+        margin-left: 15px;
+        color: #000;
+        position: absolute;
+        right: -5px;
+        top: 20px;
+        opacity: 0.1;
+    }
+
+    .l-bg-cyan {
+        background: linear-gradient(135deg, #289cf5, #84c0ec) !important;
+        color: #fff;
+    }
+
+    .l-bg-green {
+        background: linear-gradient(135deg, #23bdb8 0%, #43e794 100%) !important;
+        color: #fff;
+    }
+
+    .l-bg-orange {
+        background: linear-gradient(to right, #f9900e, #ffba56) !important;
+        color: #fff;
+    }
+
+    .l-bg-cyan {
+        background: linear-gradient(135deg, #289cf5, #84c0ec) !important;
+        color: #fff;
+    }
+
+    .cCardButtonH {
+        height: 90px;
+        cursor: pointer;
+    }
+
+    .ctextAlign {
+        text-align: center;
+        padding-top: 30px;
+        color: white;
+        font-weight: bold;
+    }
+</style>
+
+
+
+
+

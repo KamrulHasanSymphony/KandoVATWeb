@@ -1,0 +1,317 @@
+﻿@model VATViewModel.DTOs.PopUpViewModel
+@using UIHelper.MVC
+@{
+    Layout = "~/Areas/VMS/Views/Shared/_ModalLayout.cshtml";
+}
+<style>
+    table.trkFixTable tr.trSelectPopUpIssue td {
+        overflow-x: hidden;
+    }
+
+    .trkMT10 {
+        margin-top: 10px;
+    }
+
+    .sortableHeader {
+        cursor: pointer;
+    }
+</style>
+<div class="HigherModal-content">
+    <div class="HigherModal-header">
+        <span class="closeHigher">&times;</span>
+        <h2 class="text-center">Multiple Invoice search</h2>
+    </div>
+    @Html.HiddenFor(model => model.TransactionType)
+
+
+    <div class="HigherModal-body formDesign">
+        <div class="row">
+            <div class="col-md-2">
+                <label>Invoice No</label>
+                @Html.TextBox("SearchValueInvoiceNo", "", new { @class = " form-control" })
+             </div>
+           
+            <div class="trk1_5">
+                <label for="startPopUpDate"> Sales date From</label>
+                <div class="editor-field">
+
+                    <!-- JBR -->
+                    <script>
+                        var date = new Date();
+                        var mon = date.toLocaleString('default', { month: 'short' });
+                        var day_mpnth = date.getDate() + "/" + mon + "/" + date.getFullYear();
+
+                        $('#startPopUpDate').val(day_mpnth);
+                        $('#endPopUpDate').val(day_mpnth);
+                    </script>
+
+                    @Html.TextBox("startPopUpDate", null, new { @placeholder = "Date From", @class = "dtFrom customDatePicker defaultDate form-control" })
+                </div>
+            </div>
+
+            <div class="trk1_5">
+                <label for="endPopUpDate"> Sales date To</label>
+                <div class="editor-field">
+                    @Html.TextBox("endPopUpDate", null, new { @placeholder = "Date To", @class = "dtTo customDatePicker defaultDate form-control" })
+                </div>
+            </div>
+            
+            <div class="trk1_5">
+                <label for="endPopUpDate"> Ref.No.</label>
+                <div class="editor-field">
+                    @Html.TextBox("SearchValueRefNo", "", new { @class = " form-control" })
+                </div>
+            </div>
+
+            <div class="trk1_5">
+                <label for="endPopUpDate"> Customer Name</label>
+                <div class="editor-field">
+                    @Html.TextBox("SearchValueCustomerName", "", new { @class = " form-control" })
+                </div>
+            </div>
+
+            
+            <div class="trk_5">
+                <label for="postPopUp">Print</label>
+                <div class="editor-field">
+                    <select id="printPopUp" class="form-control">
+                        <option value=""></option>
+                        <option value="Y">Y</option>
+                        <option value="N">N</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="trk_5">
+                <label for="postPopUp">Post</label>
+                <div class="editor-field">
+                    <select id="postPopUp" class="form-control">
+                        <option value=""></option>
+                        <option value="Y">Y</option>
+                        <option value="N">N</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="trk1_5">
+                <label for="endPopUpDate"> Exp. Form No.</label>
+                <div class="editor-field">
+                    @Html.TextBox("expFormNo", "", new { @class = " form-control" })
+                </div>
+            </div>
+
+            <div class="col-md-1">
+                <label>&nbsp;</label>
+                <div class="editor-field">
+                    <button type="button" title="Click to Search" id="searchBtn" class="sym-btn-search btnPopUpSearch">Search</button>
+                </div>
+            </div>
+
+            <div class="col-md-1">
+                <label>&nbsp;</label>
+                <div class="editor-field">
+                    <button type="button" title="Select Data" onclick="SelectData()" class="sym-btn-post">&nbsp;Ok</button>
+                    @*<button type="button" title="Click to Save" id="okBtn" class="sym-btn-save btnOkSearch">Ok</button>*@
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="fixedParent">
+                <table class="trkFixTable" id="PopUpTable">
+                    <thead>
+                        <tr>
+                            <th>SL</th>
+                            <th>Purchase No</th>
+                            <th>Vendor Name</th>
+                            <th>Group Name</th>
+                            <th>Address</th>
+                            <th>Vehicle Type</th>
+                            <th>Grand Total</th>
+                            <th>Total VAT</th>
+                            <th>Ref Number</th>
+                            <th>Sales Date</th>
+                            <th>sale Type</th>
+                            <th>Invoice Date</th>
+                            <th>Is Print</th>
+                            <th>Post</th>
+                            <th>Delivery Date</th>
+                            <th>Currency ID</th>
+                            <th>Currency Rate Form</th>
+                            <th>Currency Code</th>
+                            <th>Doller Rate</th>
+                            <th>LC Number</th>
+                            <th>Al Ready Print</th>                            
+                        </tr>
+                    </thead>
+                    <tbody id="popUpTbody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script language="javascript" type="text/javascript">
+    ////fixed header column table
+    function fixedScrollPopUpFixedTable(tableId, leftTotal) {
+        $('#' + tableId + ' tbody').scroll(function (e) {
+            var i;
+            for (i = 1; i <= leftTotal; i++) {
+                $('#' + tableId + ' thead th:nth-child(' + i + ')').css("left", $("#" + tableId + " tbody").scrollLeft());
+                $('#' + tableId + ' tbody td:nth-child(' + i + ')').css("z-index", "1");
+                $('#' + tableId + ' tbody td:nth-child(' + i + ')').css("left", $("#" + tableId + " tbody").scrollLeft());
+            }
+            $('#' + tableId + ' thead').css("left", -$("#" + tableId + " tbody").scrollLeft());
+        });
+    }
+    function settingPopUpFixedColumnWidth(tableId, widthArgs) {
+        if (widthArgs == null) {
+            return;
+        }
+        var i;
+        for (i = 1; i <= widthArgs.length; i++) {
+            $('#' + tableId + ' tr td:nth-child(' + i + ')').css("min-width", widthArgs[i - 1] + "px");
+            $('#' + tableId + ' tr td:nth-child(' + i + ')').css("max-width", widthArgs[i - 1] + "px");
+
+            $('#' + tableId + ' tr th:nth-child(' + i + ')').css("min-width", widthArgs[i - 1] + "px");
+        }
+    }
+    function fixLeftPopUpColumns(tableId, leftTotal) {
+        var i;
+        for (i = 1; i <= leftTotal; i++) {
+            //fixed column header style
+            $('#' + tableId + ' thead th:nth-child(' + i + ')').css("height", "30px");
+            $('#' + tableId + ' thead th:nth-child(' + i + ')').css("position", "relative");
+            $('#' + tableId + ' thead th:nth-child(' + i + ')').css("z-index", "2");
+            //fixed column rows style
+            $('#' + tableId + ' tbody tr td:nth-child(' + i + ')').css("height", "30px");
+            $('#' + tableId + ' tbody tr td:nth-child(' + i + ')').css("position", "relative");
+        }
+    }
+    function settingFixedPopUpWidth(tableId) {
+        //var parentWidth = $('.fixedParent').width();
+        var parentWidth = $('#' + tableId).closest('.fixedParent').width();
+        $('#' + tableId + ' thead').width(parentWidth);
+        $('#' + tableId + ' tbody').width(parentWidth);
+    }
+    function trkFixedPopUpTable(tableId, leftTotal, args) {
+        settingFixedPopUpWidth(tableId);
+        fixLeftPopUpColumns(tableId, leftTotal);
+        fixedScrollPopUpFixedTable(tableId, leftTotal);
+        settingPopUpFixedColumnWidth(tableId, args);
+    }
+    function callingFixedPopUpTable() {
+        var args = [50, 200, 200, 200, 200, 200, 200, 200];
+        trkFixedPopUpTable("PopUpTable", 2, args);
+    }
+    $(function () {
+        callingFixedPopUpTable();
+    })
+
+    ////closing higher modal
+    function closeHigherModal() {
+        $("#myHigherModal").html("");
+        trkmodal.style.display = "none";
+    }
+    var span = document.getElementsByClassName("closeHigher")[0];
+    var trkmodal = document.getElementById('myHigherModal');
+    //When the user clicks on <span> (x), close the trkmodal
+    span.onclick = function () {
+        closeHigherModal();
+    }
+
+    $(function () {
+        $(document).on('click', '.trSelectPopUpTranser', function () {
+            var activeEl = $('tr.active');
+            activeEl.removeClass("active");
+            $(this).addClass(" active");
+        });
+
+        $(document).off('dblclick').on('dblclick', '.trSelectPopUpTollInvoice', function () {
+            var invoiceNo = $(this).children('td.popUpSalesInvoiceNo').text();
+            selectPopUpValue(invoiceNo, this);
+        });
+        function selectPopUpValue(invoiceNo, sender) {
+            var target = '@Model.TargetId';
+            //console.log(transferNo);
+            $('#' + target).val(invoiceNo);
+            callbackFromTollInvoiceModal(invoiceNo, sender);
+            closeHigherModal();
+        }
+    })
+
+
+
+
+    function SelectData() { 
+        var IDs = [];
+        var $Items = $("#popUpTbody .dSelected:input:checkbox:checked");
+        if ($Items == null || $Items.length == 0) {
+            ShowResult("Fail", "You are requested to Select before Save!");
+            return;
+        }
+
+        $Items.each(function () {
+
+            var ID = $(this).attr("data-id"); //$(this).closest('tr').find('.popUpSalesInvoiceNo').text();
+         
+            IDs.push(ID);
+        });
+
+       //console.log(IDs)
+        callbackFromTollInvoiceModal(IDs, this);
+        closeHigherModal();
+
+    }
+
+
+    
+
+</script>
+
+<script src="~/assets/javascripts/custom.js"></script>
+
+<script>
+    $(function () {
+        $('.btnPopUpSearch').click(function () {
+            var invoiceNo = $('#SearchValueInvoiceNo').val();
+            var startDate = $('#startPopUpDate').val();
+            var endDate = $('#endPopUpDate').val();
+            var SearchValueRefNo = $('#SearchValueRefNo').val();
+            var SearchValueCustomerName = $('#SearchValueCustomerName').val();
+            var printPopUp = $('#printPopUp').val();
+            var post = $('#postPopUp').val();
+            var expFormNo = $('#expFormNo').val();
+            var TransactionType = $('#TransactionType').val();
+
+
+            var model = {
+                TollDateFrom: startDate,
+                TollDateTo: endDate,
+                CustomerName: SearchValueCustomerName,
+                Post: post,
+                InvoiceNo: invoiceNo,
+                RefNo: SearchValueRefNo,
+                IsPrint: printPopUp,
+                ExpFormNo: expFormNo,                
+                TransactionType: TransactionType                
+            }
+           // console.log(model);
+            $.ajax({
+                data: model,
+                url: "/Vms/Toll6_3Invoice/GetFilteredItems",
+                cache: false,
+                beforeSend: function () { $(".loading").show(); },
+                complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                success: function (html) {
+                    $("#popUpTbody").html("");
+                    $("#popUpTbody").html(html);
+                    callingFixedPopUpTable();
+                }
+            });
+
+        });
+    });
+</script>
+

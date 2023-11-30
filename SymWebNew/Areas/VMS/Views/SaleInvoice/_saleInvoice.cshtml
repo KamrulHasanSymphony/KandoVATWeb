@@ -1,0 +1,89 @@
+﻿@model IEnumerable<VATViewModel.DTOs.SaleMasterVM>
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+<div class="trkmodal-content">
+    <div class="trkmodal-header">
+        <span class="close">&times;</span>
+        <h2 class="text-center">Sale Invoices</h2>
+    </div>
+    <div class="trkmodal-body">
+        <table id="myDataTable" class="display" style="width: 100%">
+            <thead>
+                <tr>
+                    <th>Sale No</th>
+                    <th>Customer</th>
+                    <th>Invoice Date</th>
+                    <th>Total Amount </th>
+                    <th>Total VATAmount</th>
+                    <th>Transaction Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var sale in Model) {
+                    <tr class="prdRow ">
+                        <td class="code">@sale.SalesInvoiceNo</td>
+                        <td>@sale.CustomerName</td>
+                        <td>@sale.InvoiceDateTime</td>
+                        <td>@sale.TotalAmount</td>
+                        <td>@sale.TotalAmount</td>
+                        <td>@sale.TransactionType</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <button type="button" class="btn btn-default submitPrd" >Select</button>
+    </div>
+</div>
+<script src="~/assets/DataTables/js/jquery.dataTables.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#myDataTable').DataTable({
+            scrollY: "280px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging:false,
+            fixedColumns: { leftColumns: 0 }
+        });
+
+        var span = document.getElementsByClassName("close")[0];
+        var trkmodal = document.getElementById('myModal');
+        //When the user clicks on <span> (x), close the trkmodal
+        span.onclick = function () {
+            $("#myModal").html("");
+            trkmodal.style.display = "none";
+        }
+        ////Selecting a product
+        $('.prdRow').click(function () {
+            var activeEl = $('tr.active');
+            activeEl.removeClass("active");
+            $(this).addClass(" active");
+        });
+        ///Double click on a purchase
+        $('.prdRow').dblclick(function () {
+            var code = $(this).children('td.code').text();
+            $('.trPurchaseNo').val(code);
+            PurchaseChange(code)
+            $("#myModal").html("");
+            trkmodal.style.display = "none";
+        });
+        ////Clicking select button
+        $('.submitPrd').click(function () {
+            var count = 0;
+            $('tr.active').each(function () {
+                count++;
+            });
+            if (count != 1) {
+                ShowResult("Fail", "select a product first!");
+                return;
+            }
+            var code = $('tr.active').children('td.code').text();
+            $('.trPurchaseNo').val(code);
+            PurchaseChange(code);
+            $("#myModal").html("");
+            trkmodal.style.display = "none";
+        });
+        
+    });
+</script>

@@ -1,0 +1,65 @@
+﻿<div class="headrow">
+    <button type="button" title="View Report" class=" sym-btn-report" data-url="/VMS/CompanyProfile/ReportView" onclick="OpenNew(this)">&nbsp;Print</button>
+    <label class="pull-right">CompanyProfile</label>
+</div>
+<div class="thinbox animated slideInDown faster">
+    <div class="th_thinbox">
+        <p>Company Profile List</p>
+    </div>
+    <table id="myDataTable" class="display">
+        <thead>
+            <tr>
+                <th class="center">Edit</th>
+                <th>Company Name</th>
+                <th>Address 1 </th>
+                <th>Zip Code</th>
+                <th>Email No</th>
+                <th>Telephone</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <br />
+</div>
+<script language="javascript" type="text/javascript">
+
+    function OpenNew(sender) {
+        var attr = $(sender).attr("data-url");
+        window.open(attr, '_blank');
+    }
+
+    $(document).ready(function () {
+        SelectAllForDelete();
+        $.datepicker.regional[""].dateFormat = 'dd/M/y';
+        $.datepicker.setDefaults($.datepicker.regional['']);
+        var oTable = $('#myDataTable').dataTable({
+            "bServerSide": true,
+            "sAjaxSource": "/VMS/CompanyProfile/_index",
+            "bProcessing": true,
+            "aLengthMenu": tablelength(),
+            "bJqueryUI": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+                            {
+                                "sName": "Id",
+                                "bSearchable": false,
+                                "bSortable": false,
+                                "sWidth": "8%",
+                                "sClass": "center",
+                                "fnRender": function (oObj) {
+                                    return '&nbsp; <a id=""  title="Click on for Edit"  style="text-decoration:none;"   href=\"/VMS/CompanyProfile/Edit/' + oObj.aData[0] + '\" class=" innerListLink sym-btn-edit-row"></a>'
+                                    ;
+                                }
+                                //"sName": "Id", "sWidth": "12%"
+                            }
+                            , { "sName": "CompanyProfileName", "sWidth": "12%" }
+                            , { "sName": "Address1", "sWidth": "10%" }
+                            , { "sName": "ZipCode", "sWidth": "5%" }
+                            , { "sName": "Email", "sWidth": "8%" }
+                            , { "sName": "TelephoneNo", "sWidth": "8%" }
+              
+
+            ]
+        });
+    });
+</script>

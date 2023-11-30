@@ -1,0 +1,281 @@
+﻿@model VATViewModel.DTOs.VAT7VM
+@using UIHelper.MVC
+@using (Html.BeginForm("CreateEdit", "VAT7", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmVAT7Header" }))
+{   
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(m=>m.Operation)
+    @Html.HiddenFor(m=>m.Post)
+    <div class="headrow">
+        @if (Model.Operation == "update")
+        {
+            <button type="button" title="Update Data" onclick="SaveData()" class="sym-btn-update">&nbsp;Update</button>
+    <button type="button" title="View Report" class=" sym-btn-report vat7Report">&nbsp;VAT 7</button>
+
+            if (Model.Post == "N")
+            {
+                <button type="button" title="Post Data" onclick="PostData(this)" class="sym-btn-post">&nbsp;Post</button>
+            }
+            <label class="pull-right">VAT7 > Edit</label>
+        }
+        else if (Model.Operation == "add")
+        {
+            <button type="button" title="Save Data" onclick="SaveData()" class="sym-btn-save">&nbsp;Save</button>
+            <label class="pull-right">VAT7  > Create </label>
+        }
+        <button type="button" title="Go To Index" data-url="/VMS/VAT7" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New VAT7" data-url="/VMS/VAT7/Create" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+    </div>
+    <div class="thinbox formDesign">
+        <div class="th_thinbox">
+            <p>Finish Goods</p>
+        </div>
+        <div class="row">
+            <div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        <label>VAT7 No</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(m => m.VAT7No, new { @placeholder = "New", @class = " form-control", @readonly = "readonly" })
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="editor-label">
+                        <label>Product</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.HiddenFor(m => m.FinishItemNo, new { @class = "trFinishItemNo" })
+                        @Html.TextBoxFor(m=>m.FinishItemName, new { @class = " form-control required trFinishItemName", @readonly = "readonly" })
+                        @Html.ValidationMessageFor(m=>m.FinishItemName)
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="editor-label">
+                        <label>&nbsp;</label>
+                    </div>
+                    <div class="editor-field">
+                        <button class="sym-btn-search" type="button" id="productFinishBtn">Search</button>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        <label>Code</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(m=>m.FinishItemCode, new { @placeholder = "Product Code", @class = "trFinishItemCode form-control", @readonly = "readonly" })
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="editor-label">
+                        <label>UOM</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(m=>m.FinishUOM, new { @placeholder = "UOM", @class = "trFinishUOM form-control", @readonly = "readonly" })
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        <label>VAT7 Date</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.Vat7DateTime, new { @class = " trVAT7Date customDatePicker form-control" })
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    <div class="thinbox formDesign">
+        <div class="th_thinbox">
+            <p>Item</p>
+        </div>
+        <div class="row">
+            <div>
+                <div class="col-md-4">
+                    <div class="editor-label">
+                        <label>Product</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.HiddenFor(m => m.ItemNo, new { @class = "trItemNo" })
+                        @Html.TextBoxFor(m => m.ItemName, new { @class = " form-control required trItemName", @readonly = "readonly" })
+                        @Html.ValidationMessageFor(m => m.ItemName)
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="editor-label">
+                        <label>&nbsp;</label>
+                    </div>
+                    <div class="editor-field">
+                        <button class="sym-btn-search" type="button" id="productDetailBtn">Search</button>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        <label>Code</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(m => m.ItemCode, new { @placeholder = "Product Code", @class = "trItemCode form-control", @readonly = "readonly" })
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="editor-label">
+                        <label>UOM</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(m=>m.UOMn, new { @placeholder = "Item UOM", @class = "trItemUOM form-control", @readonly = "readonly" })
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="editor-label">
+                        <label>Pkt Size</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.HiddenFor(m => m.UOMc)
+                        <select class="Dropdown form-control DropdownInited trPackSize" name="ItemUOM" id="PackSize"></select>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        <label>Quantity</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(m => m.Quantity, new { @class = "trQuantity required number right form-control" })
+                        @Html.ValidationMessageFor(m => m.ItemName)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="headrow">
+        @if (Model.Operation == "update")
+        {
+            <button type="button" title="Update Data" onclick="SaveData()" class="sym-btn-update">&nbsp;Update</button>
+            <button type="button" title="View Report" class=" sym-btn-report vat7Report">&nbsp;VAT 7</button>
+            if (Model.Post == "N")
+            {
+                <button type="button" title="Post Data" onclick="PostData(this)" class="sym-btn-post">&nbsp;Post</button>                
+            }
+        }
+        else if (Model.Operation == "add")
+        {
+            <button type="button" title="Save Data" onclick="SaveData()" class="sym-btn-save">&nbsp;Save</button>
+        }
+        <button type="button" title="Go To Index" data-url="/VMS/VAT7" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New Petty Cash" data-url="/VMS/VAT7/Create" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+    </div>
+}
+<div id="myHigherModal" class="HigherModal"></div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @*for product search*@
+    <script>
+        function modalInitHigher(url) {
+            var modal = document.getElementById('myHigherModal');
+            $.ajax({
+                url: url,
+                cache: false,
+                beforeSend: function () { $(".loading").show(); },
+                complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                success: function (html) {
+                    modal.style.display = "block";
+                    $("#myHigherModal").html(html);
+                }
+            });
+        }
+        function UomOptions() {
+            var uom = $('.trItemUOM').val();
+            var html = "<option value=" + uom + ">" + uom + "</option>";
+            $('#PackSize').html(html);
+            var url = "/Vms/VAT7/GetUomOption?uomFrom=" + uom;
+            $.ajax({
+                url: url,
+                cache: false,
+                success: function (html) {
+                    $('#PackSize').append(html);
+                    setUOMc();
+                }
+            });
+        }
+        function callbackFromProductModal(sender, target) {
+            var code = $(sender).children('td.popUpItemCode').text();
+            var itemNo = $(sender).children('td.popUpItemNo').text();
+            var uom = $(sender).children('td.popUpUOM').text();
+            var Ptype = $(sender).children('td.popUpProductyType').text().trim();
+
+            if (target == "FinishItemName") {
+                if (Ptype != "Finish") {
+                    $('#' + target).val("");
+                    ShowResult("Fail", "Select a finish type product!");
+                    return;
+                }
+                $('.trFinishItemCode').val(code);
+                $('.trFinishItemNo').val(itemNo);
+                $('.trFinishUOM').val(uom); 
+            }
+            else {
+                $('.trItemCode').val(code);
+                $('.trItemNo').val(itemNo);
+                $('.trItemUOM').val(uom);
+                UomOptions();
+            }
+            
+        }
+        $(function () {
+            $('#productFinishBtn').click(function () {
+                var url = "/Vms/Product/GetProductPopUp?targetId=FinishItemName";
+                modalInitHigher(url);
+            });
+            $('#productDetailBtn').click(function () {
+                var url = "/Vms/Product/GetProductPopUp?targetId=ItemName";
+                modalInitHigher(url);
+            });
+            $('.trPackSize').change(function () {
+                setUOMc();
+            });
+            var operation = '@Model.Operation';
+            if (operation == "update") {
+                var uom = '@Model.ItemUOM';
+                var html = "<option value=" + uom + ">" + uom + "</option>";
+                $('#PackSize').html(html);
+            }
+        });
+        function setUOMc() {
+            var uomFrom = $('.trItemUOM').val();
+            var uomTo = $('.trPackSize').val();
+            var conversionFactor = 1;
+            if (uomFrom != uomTo) {
+                var actionUrl = "/Vms/VAT7/GetConvFactor?uomFrom=" + uomFrom + "&UomTo=" + uomTo;
+                $.getJSON(actionUrl, function (data) {
+                    conversionFactor = parseFloat(data);
+                });
+            }
+            $('#UOMc').val(conversionFactor);
+        }
+
+        ////form posting method
+        function SaveData() {
+            var Post = $("#Post").val();
+            if (Post.toLowerCase() == 'true' || Post.toLowerCase() == 'y') {
+                ShowResult("Fail", "Data Already Posted. Can't Update!");
+                return;
+            }
+            var quantity = parseFloat($(".trQuantity").val());
+            if (isNaN(quantity)||quantity<=0) {
+                ShowResult("Fail", "Quantity can't be negative or zero!");
+                return;
+            }
+            pageSubmit('frmVAT7Header');
+        }
+    </script>
+
+    <script>
+        $(function () {
+            $('.vat7Report').click(function () {
+                var VAT7No = '@Model.VAT7No';
+                var url="/VMS/VAT7/ReportVAT7?VAT7No=" + VAT7No;
+                window.open(url, "_blank");
+            });
+        })
+    </script>
+
+}

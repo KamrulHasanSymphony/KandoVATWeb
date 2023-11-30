@@ -1,0 +1,92 @@
+﻿<div class="headrow">
+    <button type="button" title="Add New Product Category" data-url="/VMS/ProductCategory/Create" onclick="GoTo(this)" id=""  class=" sym-btn-add ">&nbsp;New</button>
+    <button type="button" title="View Report" class=" sym-btn-report printBtn">&nbsp;Print</button>
+    @*<button type="button" title="Delete ProductCategory" data-url="/VMS/ProductCategory/Delete" onclick="deletedData(this, 'myDataTable');" id="" class="sym-btn-remove">&nbsp;Delete</button>*@
+    <label class="pull-right">Product Category </label>
+</div>
+<div class="thinbox animated slideInDown faster">
+    <div class="th_thinbox">
+        <p>Product Category List</p>
+    </div>
+    <table id="myDataTable" class="display">
+        <thead>
+            <tr>
+                <th class="center">
+                    <input type="checkbox" class="chkAll" />Select All
+                </th>
+                <th>Category Name</th>
+                <th>Product Type</th>
+                <th>HSCodeNo</th>
+                <th>VATRate</th>
+                <th>PropergatingRate</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <br />
+</div>
+<div class="headrow">
+        <button type="button" title="Add New Product Category" data-url="/VMS/ProductCategory/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+        <button type="button" title="View Report" class=" sym-btn-report printBtn">&nbsp;Print</button>
+        @*<button type="button" title="Delete ProductCategory" data-url="/VMS/ProductCategory/Delete" onclick="deletedData(this, 'myDataTable');" id="" class="sym-btn-remove">&nbsp;Delete</button>*@
+</div>
+
+<div id="myModal" class="trkmodal"></div>
+
+<script language="javascript" type="text/javascript">
+    $(document).ready(function () {
+        SelectAllForDelete();
+
+        function modalInit() {
+            var modal = document.getElementById('myModal');
+            $('.printBtn').click(function () {
+                var url = "/Vms/ProductCategory/PrintProductCategory";
+                $.ajax({
+                    url: url,
+                    cache: false,
+                    beforeSend: function () { $(".loading").show(); },
+                    complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                    success: function (html) {
+                        modal.style.display = "block";
+                        $("#myModal").html(html);
+                    }
+                });
+            });
+        }
+        modalInit();
+
+        $.datepicker.regional[""].dateFormat = 'dd/M/y';
+        $.datepicker.setDefaults($.datepicker.regional['']);
+        var oTable = $('#myDataTable').dataTable({
+            "bServerSide": true,
+            "sAjaxSource": "/VMS/ProductCategory/_index",
+            "bProcessing": true,
+            "aLengthMenu": tablelength(),
+            "bJqueryUI": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+                            {
+                                "sName": "Id",
+                                "bSearchable": false,
+                                "bSortable": false,
+                                "sWidth": "10%",
+                                "sClass": "center",
+                                "fnRender": function (oObj) {
+                                    return ' <input onclick="CheckAll(this)" type="checkbox" data-Id="' + oObj.aData[0] + '">'
+                                        + '&nbsp; <a id=""  title="Click on for Edit"  style="text-decoration:none;"   href=\"/VMS/ProductCategory/Edit/' + oObj.aData[0] + '\" class=" innerListLink sym-btn-edit-row"></a>'
+                                        + '&nbsp; <a title="Click on for Delete"  data-url="/VMS/ProductCategory/Delete" onclick="deletedData(this, myDataTable,\'' + oObj.aData[0] + '\');"  class="sym-btn-remove-row"></a>'
+                                    ;
+                                }
+                                //"sName": "Id", "sWidth": "12%"
+                            }
+                            , { "sName": "CategoryName", "sWidth": "10%" }
+                            , { "sName": "IsRaw", "sWidth": "10%" }
+                            , { "sName": "HSCodeNo", "sWidth": "10%" }
+                            , { "sName": "VATRate", "sWidth": "10%" }
+                            , { "sName": "PropergatingRate", "sWidth": "10%" }
+              
+
+            ]
+        });
+    });
+</script>

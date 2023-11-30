@@ -1,0 +1,139 @@
+﻿@model VATViewModel.DTOs.DepositMISViewModel
+@using UIHelper.MVC
+@{
+    Layout = "~/Areas/VMS/Views/Shared/_ModalLayout.cshtml";
+}
+<div class="trkmodal-content">
+    <div class="trkmodal-header">
+        <span class="close">&times;</span>
+        <h2 class="text-center">Report(VAT 6.6)</h2>
+    </div>
+    <div class="trkmodal-body">
+        @using (Html.BeginForm("Report_VAT6_6", "Deposit", FormMethod.Post, new { enctype = "multipart/form-data", @target = "_blank", @Id = "frmPopUpDeposit" }))
+        {
+
+            @Html.HiddenFor(model => model.TransactionType)
+
+            <div class="npForm col-md-12">
+                <div class="col-md-10 npForm">
+                    <label>Deposit No</label>
+                    @Html.TextBoxFor(m => m.DepositNo, new { @class = " form-control trDepositNo", @readonly = "readonly" })
+                </div>
+                @*<div class=" col-md-2 npForm">
+                        <label>&nbsp;</label>
+                        <button type="button" class=" sym-btn-search depositBtn">
+                            Search
+                        </button>
+                    </div>*@
+            </div>
+
+            @*<div class="npForm col-md-6">
+                    <label>Deposit Date From</label>
+                    @Html.TextBoxFor(m => m.DepositDateFrom, new { @placeholder = "Start Date", @class = "customDatePicker form-control" })
+                </div>
+
+                <div class="npForm col-md-6">
+                    <label>Deposit Date To</label>
+                    @Html.TextBoxFor(m => m.DepositDateTo, new { @placeholder = "End Date", @class = "customDatePicker form-control" })
+                </div>*@
+
+            @*<div class="npForm col-md-12">
+                    <label>Bank Name</label>
+                    @Html.HiddenFor(m => m.BankName)
+                    @Html.SimpleDropDownFor(m => m.BankId, "/Config/DropDown/BankInformations", new { @class = " form-control selectDropdown trProductGroup" })
+                </div>*@
+
+            @*<div class="npForm col-md-6 chkDesign">
+                    @Html.HiddenFor(m => m.Post, new { @class = " chkValue" })
+                    <label>Post </label>
+                    <input id="input-1" type="checkbox">
+                </div>*@
+            @*<div class="npForm col-md-6">
+                    <label>Report Type </label>
+                    <select id="ReportType" name="ReportType" class="form-control" style="padding-top:2px;">
+                        <option value="Deposit">Deposit</option>
+                        <option value="VDS">VDS</option>
+                    </select>
+                </div>*@
+
+            <button type="button" class=" btn sym-btn-report trPreview"> Preview</button>
+            <button type="button" class="sym-btn-close closeBtn pull-right"> Close</button>
+        }
+    </div>
+</div>
+<div id="myHigherModal" class="HigherModal"></div>
+<script>
+    $(document).ready(function () {
+        ////boolean checkbox
+        CheckBoxDesign();
+        MyCheckBox('@Model.Post', 'input-1', 'Post');
+        ///check validation
+        function checkValidation() {
+            var startDate = $('#IssueDateFrom').val();
+            if (startDate == "") {
+                ShowResult("Fail", "Select start date!");
+                return false;
+            }
+            var endDate = $('#IssueDateTo').val();
+            if (endDate == "") {
+                ShowResult("Fail", "Select end date!");
+                return false;
+            }
+            return true;
+        }
+        //clicking preview button
+        $('.trPreview').click(function () {
+            //var isValid = checkValidation();
+            //if (isValid == false) {
+            //    return;
+            //}
+            var radioValue = $("input[type='radio'][name='rptType']:checked").closest("label.RadioContainer").text().trim();
+            $('#ReportType').val(radioValue);
+            //$("#PreviewOnly").val("true");
+            $('#frmPopUpDeposit').submit();
+            //pageSubmit('frmPopUpDeposit');
+        });
+
+        $('.depositBtn').click(function () {
+            var url = "/Vms/Deposit/GetVAT6_6PopUp?targetId=DepositNo";
+            modalInitHigher(url);
+        });
+
+        function closeModal() {
+            $("#myModal").html("");
+            trkmodal.style.display = "none";
+        }
+
+        var span = document.getElementsByClassName("close")[0];
+        var trkmodal = document.getElementById('myModal');
+        //When the user clicks on <span> (x), close the trkmodal
+        span.onclick = function () {
+            closeModal();
+        }
+
+        $('.closeBtn').click(function () {
+            closeModal();
+        });
+
+        function modalInitHigher(url) {
+            var modal = document.getElementById('myHigherModal');
+            $.ajax({
+                url: url,
+                cache: false,
+                beforeSend: function () { $(".loading").show(); },
+                complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                success: function (html) {
+                    modal.style.display = "block";
+                    $("#myHigherModal").html(html);
+                }
+            });
+        }
+
+    });
+</script>
+@*callback from higher modal*@
+<script>
+    function callbackFromDepositModal(sender) {
+        ////issue logic here
+    }
+</script>

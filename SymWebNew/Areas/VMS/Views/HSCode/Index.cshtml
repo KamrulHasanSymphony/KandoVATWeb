@@ -1,0 +1,176 @@
+﻿@model VATViewModel.DTOs.HSCodeVM
+@using UIHelper.MVC
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="headrow">
+    <button type="button" title="Add New HSCode" data-url="/VMS/HSCode/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+    @*<button type="button" title="Delete HSCode" data-url="/VMS/HSCode/Delete" onclick="deletedData(this, 'myDataTable');" id="" class="sym-btn-remove">&nbsp;Delete</button>*@
+    <label class="pull-right">HSCode</label>
+</div>
+
+<div class="thinbox animated slideInDown faster">
+    <div class="th_thinbox">
+        <p>HSCode</p>
+    </div>
+    <div class="dtSearch formDesign">
+        <div class="row">
+            <div class="col-md-2">
+                <label>Search Field</label>
+                @Html.SimpleDropDown("SearchField", "/Config/DropDown/HSCodeColumnSearch", new { @class = " form-control " })
+            </div>
+            <div class="col-md-2">
+                <label>Search Value</label>
+                @Html.TextBox("SearchValue", "", new { @class = " form-control" })
+            </div>
+            <div class="col-md-2">
+                <div class="editor-label">
+                    @Html.Label("FiscalYear")
+                </div>
+                <div class="editor-field">
+                   @Html.SimpleDropDownFor(model => model.FiscalYear, "/Config/DropDown/FiscalYear", new { @class = " form-control"})
+                </div>
+            </div>
+            <div class="col-md-1">
+                <div class="editor-label">
+                    <label>Select Top</label>
+                </div>
+                <div class="editor-field">
+                    @Html.SimpleDropDownFor(model => model.SelectTop, "/Config/DropDown/RecordSelectList", new { @class = "  form-control" })
+                </div>
+            </div>
+
+
+
+
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <div class="editor-label">
+                    <label>&nbsp;</label>
+                </div>
+                <div class="editor-field">
+                    <button type="button" title="Click to Search" id="btnDialog" class="sym-btn-search">&nbsp;Search</button>
+                    <button type="button" title="Clear Data" id="Clear" class=" sym-btn-clear">&nbsp;Clear</button>
+                </div>
+            </div>
+
+
+        </div>
+        </div>
+    <p>&nbsp;</p>
+    <table id="myDataTable" class="display">
+        <thead>
+            <tr>
+                <th class="display"><input type="checkbox" class="chkAll" /> Select All</th>
+                <th>HSCode</th>
+                <th>SD</th>
+                <th>VAT</th>
+                <th>OtherVAT</th>
+                <th>IsFixedVAT</th>
+                
+            </tr>
+        </thead>
+    </table>
+    <br />
+</div>
+
+
+<div class="headrow">
+    <button type="button" title="Add New HSCode" data-url="/VMS/HSCode/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+    @*<button type="button" title="Delete HSCode" data-url="/VMS/HSCode/Delete" onclick="deletedData(this, 'myDataTable');" id="" class="sym-btn-remove">&nbsp;Delete</button>*@
+    <label class="pull-right">HSCode</label>
+</div>
+
+
+<script language="javascript" type="text/javascript">
+    $(document).ready(function () {
+        SelectAllForDelete();
+        $.datepicker.regional[""].dateFormat = 'dd/M/y';
+        $.datepicker.setDefaults($.datepicker.regional['']);
+
+        function modalInit() {
+            var modal = document.getElementById('myModal');
+            $('.printBtn').click(function () {
+                var url = "/Vms/HSCode/Print";
+                $.ajax({
+                    url: url,
+                    cache: false,
+                    beforeSend: function () { $(".loading").show(); },
+                    complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                    success: function (html) {
+                        modal.style.display = "block";
+                        $("#myModal").html(html);
+                    }
+                });
+            });
+        }
+        modalInit();
+
+        $('#btnDialog').click(function () {
+           // var model = $('.dtSearch :input').serialize();
+           // console.log(model)
+            //$.ajax({
+            //    url: "/VMS/HSCode/Index",
+            //    cache: false,
+            //    data: model,
+            //    success: function (html) {
+            //    }
+            //});
+
+            oTable.fnDraw();
+
+        });
+        $("#Clear").on('click', function () {
+            $(".Dropdown").select2("val", "");
+            $(".form-control").val("");
+        });
+
+        var oTable = $('#myDataTable').dataTable({
+            "bServerSide": true,
+            "sAjaxSource": "/VMS/HSCode/_index",
+            "bProcessing": true,
+            "aLengthMenu": tablelength(),
+            "bJqueryUI": true,
+            "bAutoWidth": false,
+            "fnServerData": function (sSource, aoData, fnCallback) {
+                $('.dtSearch :input').each(function () {
+                    var Name = $(this).attr("Id")
+                    var Value = $(this).val()
+                    aoData.push({ "name": Name, "value": Value });
+                });
+
+                console.log(aoData)
+
+                $.getJSON(sSource, aoData, function (json) {
+                    fnCallback(json);
+                });
+
+            },
+            "aoColumns": [
+                            {
+                                "sName": "Id",
+                                "bSearchable": false,
+                                "bSortable": false,
+                                "sWidth": "8%",
+                                "sClass": "center",
+                                "fnRender": function (oObj) {
+                                    return ' <input onclick="CheckAll(this)" type="checkbox" data-Id="' + oObj.aData[0] + '">'
+                                        + '&nbsp; <a id=""  title="Click on for Edit"  style="text-decoration:none;"   href=\"/VMS/HSCode/Edit/' + oObj.aData[0] + '\" class=" innerListLink sym-btn-edit-row"></a>'
+                                   ////+ '&nbsp; <a title="Click on for Delete"  data-url="/VMS/HSCode/Delete" onclick="deletedData(this, myDataTable,\'' + oObj.aData[0] + '\');"  class="sym-btn-remove-row"></a>'
+                                    ;
+                                }
+                                //"sName": "Id", "sWidth": "12%"
+                            }
+                            , { "sName": "HSCode", "sWidth": "12%" }
+                            , { "sName": "SD", "sWidth": "10%" }
+                            , { "sName": "VAT", "sWidth": "8%" }
+                            , { "sName": "OtherVAT", "sWidth": "8%" }
+                            , { "sName": "IsFixedVAT", "sWidth": "8%" }
+                            
+            ]
+        });
+    });
+</script>

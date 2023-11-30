@@ -1,0 +1,162 @@
+﻿@model VATViewModel.DTOs.TransferMISViewModel
+@using UIHelper.MVC
+@{
+    Layout = "~/Areas/VMS/Views/Shared/_ModalLayout.cshtml";
+}
+
+<div class="trkmodal-content">
+    <div class="trkmodal-header">
+        <span class="close">&times;</span>
+        <h2 class="text-center">Report(Transfer Issue</h2>
+    </div>
+    <div class="trkmodal-body">
+    @using (Html.BeginForm("DownloadTransferIssue", "MISReport", FormMethod.Post, new { enctype = "multipart/form-data", @target = "_blank", @Id = "frmPopUpReceive" }))
+{
+        <div class="npForm col-md-12">
+        <div class="col-md-10 npForm">
+            <label>Product Name</label>
+            @Html.HiddenFor(m => m.ItemNo)
+            @Html.HiddenFor(m => m.ReportType)
+            @Html.TextBoxFor(m => m.ProductName, new { @class = " form-control trProductName", @readonly = "readonly" })
+        </div>
+        <div class=" col-md-2 npForm">
+            <label>&nbsp;</label>
+            <button type="button" class=" sym-btn-search productBtn">
+                Search
+            </button>
+        </div>
+    </div>
+
+        
+    <div class="npForm col-md-6">
+        <label>Date From</label>
+        @Html.TextBoxFor(m => m.DateFrom, new { @placeholder = "Start Date", @class = "customDatePicker form-control" })
+    </div>
+    <div class="npForm col-md-6">
+        <label>Date To</label>
+        @Html.TextBoxFor(m => m.DateTo, new { @placeholder = "End Date", @class = "customDatePicker form-control" })
+    </div>
+        
+          <div class="npForm col-md-6">
+        <label>From Branch </label>
+        @Html.SimpleDropDownFor(m => m.FromBranch, "/Config/DropDown/UserBranchProfile", new { @class = " form-control selectDropdown cFromBranch" })
+     </div>
+        
+          <div class="npForm col-md-6">
+        <label>To Branch </label>
+        @Html.SimpleDropDownFor(m => m.ToBranch, "/Config/DropDown/UserBranchProfile", new { @class = " form-control selectDropdown cToBranch" })
+     </div>
+
+    <div class="npForm col-md-6">
+        <label>Product Type</label>
+        @Html.SimpleDropDownFor(m => m.ProductType, "/Config/DropDown/ProductTypes", new { @class = " form-control selectDropdown trProductType" })
+    </div>
+       
+    <div class="npForm col-md-6 chkDesign">
+        @Html.HiddenFor(m => m.Post, new { @class=" chkValue"})
+        <label>Post </label>
+        <input id="input-1" type="checkbox">
+    </div>
+    
+        <div class="npForm col-md-12 col-md-offset-2">
+        
+    </div>
+        <div class="npForm col-md-2">
+    </div>
+        <button type="button" class=" btn sym-btn-report trPreview"> Preview</button>
+        <button type="button" class="sym-btn-close closeBtn pull-right"> Close</button>
+    }
+    </div>
+</div>
+<div id="myHigherModal" class="HigherModal"></div>
+<script>
+    $(document).ready(function () {
+        ////boolean checkbox
+        MyCheckBox('@Model.Post', 'input-1', 'Post');
+        CheckBoxDesign();
+
+        ///check validation
+        function checkValidation() {
+            var startDate = $('#IssueDateFrom').val();
+            var endDate = $('#IssueDateTo').val();
+            var radioValue = $("input[type='radio'][name='rptType']:checked").closest("label.RadioContainer").text().trim();
+            var receiveNo=$('.trIssueNo').val();
+            if (radioValue == "Single" && receiveNo == "") {
+                ShowResult("Fail", "Select receive no!");
+                return false;
+            }
+            //if (startDate == "") {
+            //    ShowResult("Fail", "Select start date!");
+            //    return false;
+            //}
+            //if (endDate == "") {
+            //    ShowResult("Fail", "Select end date!");
+            //    return false;
+            //}
+            return true;
+        }
+        ////clicking preview button
+        $('.trPreview').click(function () {
+            var isValid = checkValidation();
+            if (isValid == false) {
+                return;
+            }
+            var radioValue = $("input[type='radio'][name='rptType']:checked").closest("label.RadioContainer").text().trim();
+            $('#ReportType').val(radioValue);
+
+            $('#frmPopUpReceive').submit();
+            //pageSubmit('frmPopUpReceive');
+        });
+
+        function closeModal() {
+            $("#myModal").html("");
+            trkmodal.style.display = "none";
+        }
+
+        var span = document.getElementsByClassName("close")[0];
+        var trkmodal = document.getElementById('myModal');
+        //When the user clicks on <span> (x), close the trkmodal
+        span.onclick = function () {
+            closeModal();
+        }
+
+        $('.closeBtn').click(function () {
+            closeModal();
+        });
+        
+    });
+</script>
+@*clicking on receive and product search*@
+<script>
+    function modalInitHigher(url) {
+        var modal = document.getElementById('myHigherModal');
+        $.ajax({
+            url: url,
+            cache: false,
+            beforeSend: function () { $(".loading").show(); },
+            complete: function () { $(".loading").fadeOut(200).hide("slow") },
+            success: function (html) {
+                modal.style.display = "block";
+                $("#myHigherModal").html(html);
+            }
+        });
+    }
+    function callbackFromProductModal(sender) {
+        var itemNo = $(sender).children('td.popUpItemNo').text();
+        $('#ItemNo').val(itemNo);
+    }
+    function callbackFromReceiveModal(sender) {
+        ////issue logic here
+    }
+    $(function () {
+        $('.issueBtn').click(function () {
+            var url = "/Vms/Receive/GetReceivePopUp?targetId=IssueNo";
+            modalInitHigher(url);
+        });
+
+        $('.productBtn').click(function () {
+            var url = "/Vms/Product/GetProductPopUp?targetId=ProductName";
+            modalInitHigher(url);
+        });
+    });
+</script>

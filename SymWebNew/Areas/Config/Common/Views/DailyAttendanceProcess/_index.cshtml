@@ -1,0 +1,115 @@
+﻿@model IEnumerable<SymViewModel.Attendance.AttendanceDailyNewVM>
+@using UIHelper.MVC
+@using (Html.BeginForm("Create", "DailyAttendanceProcess", FormMethod.Post, new { @Id = "frmDailyAttendance" }))
+{
+    
+    @Html.Hidden("updatedList", Model)
+    <div style="overflow-x: auto;">
+        <div class="thinbox">
+            <div class="th_thinbox">
+                <p>
+                    Employee List
+                </p>
+            </div>
+
+
+            <div id="container" class=" table-responsive">
+                <table id="myDataTable" class=" display">
+                    <thead>
+                        <tr>
+                            <th style="text-align: center">
+                                Select
+                                <input type="checkbox" class="chkAllThis" />
+                                </th>
+                            <th>Code</th>
+                            <th>Name</th>
+                            <th>Designation</th>
+                            <th>Attendance Date</th>
+                            <th>In Time</th>
+                            <th>Out Time</th>
+                            <th>Next Day</th>
+                            <th>Late</th>
+                            <th>Working Hour</th>
+                            <th>Overtime</th>
+                            <th>Attn Status</th>
+
+                            <th>@Session["DepartmentLabel"]</th>
+                            <th>@Session["ProjectLabel"]</th>
+                            <th>@Session["ProjectLabel"]</th>
+
+                            <th>Remarks</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @for (int i = 0; i < Model.Count(); i++)
+                        {
+                           
+                            <tr>
+                                <th style="text-align: center">@Html.CheckBoxFor(model => Model.ToList()[i].IsEmployeeChecked, new { @class = " selectChk " })</th>
+                                <th>&nbsp;@Html.DisplayFor(model => Model.ToList()[i].EmpCode)</th>
+                                <th>&nbsp;@Html.DisplayFor(model => Model.ToList()[i].EmpName)</th>
+                                <th>&nbsp;@Html.DisplayFor(model => Model.ToList()[i].Designation)</th>
+                                <th>&nbsp;@Html.DisplayFor(model => Model.ToList()[i].DailyDate)</th>
+                                <th>&nbsp;@Html.TextBoxFor(model => Model.ToList()[i].InTime, "", new { @placeholder = "In Time", @Id = "InTime", @class = " inTime col-sm-12 customTimePicker tm   " })</th>
+                                <th>&nbsp;@Html.TextBoxFor(model => Model.ToList()[i].OutTime, "", new { @placeholder = "Out Time", @Id = "", @class = " outTime col-sm-12 customTimePicker tm  " })</th>
+                                <th>&nbsp;@Html.CheckBoxFor(model => Model.ToList()[i].PunchNextDay)</th>
+                                <th>&nbsp;@Html.DisplayFor(model => Model.ToList()[i].LateInMin)</th>
+                                <th>&nbsp;@Html.DisplayFor(model => Model.ToList()[i].WorkingHrs)</th>
+                                <th>&nbsp;@Html.DisplayFor(model => Model.ToList()[i].TotalOT)</th>
+                                @if (Model.ToList()[i].AttnStatus == "Absent")
+                                {
+                                    <th style="color: red!important">&nbsp;@Html.DisplayFor(model => Model.ToList()[i].AttnStatus)</th>
+                                }
+                                else
+                                {
+                                    <th>&nbsp;@Html.DisplayFor(model => Model.ToList()[i].AttnStatus)</th>
+                                }
+                                <th>&nbsp;@Html.DisplayFor(model => Model.ToList()[i].Department)</th>
+                                <th>&nbsp;@Html.DisplayFor(model => Model.ToList()[i].Section)</th>
+                                <th>&nbsp;@Html.DisplayFor(model => Model.ToList()[i].Project)</th>
+                                <th>&nbsp;@Html.DisplayFor(model => Model.ToList()[i].Remarks)</th>
+
+                                @Html.HiddenFor(model => Model.ToList()[i].EmployeeId)
+                                @Html.HiddenFor(model => Model.ToList()[i].DailyDate)
+                                @Html.HiddenFor(model => Model.ToList()[i].InTime)
+                                @Html.HiddenFor(model => Model.ToList()[i].OutTime)
+                            </tr>
+                        }
+                        <tr>
+                            <td colspan="2">&nbsp;Total Records: @Model.Count()</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+    $(function () {
+        $('.customTimePicker').ptTimeSelect();
+        InitDatePickers();
+        InitDropdownsCommon();
+    });
+
+
+</script>
+<script>
+    $(".chkAllThis").on("click", function () {
+        if ($(this).is(":checked")) {
+            $(this).closest("table").find("tbody input.selectChk").attr("checked", true);
+        }
+        else {
+            $(this).closest("table").find("tbody input.selectChk").attr("checked", false);
+        }
+    });
+
+</script>
+
+<style>
+    .tm {
+        margin-top: -10px;
+        font-size: 1em!important;
+    }
+</style>

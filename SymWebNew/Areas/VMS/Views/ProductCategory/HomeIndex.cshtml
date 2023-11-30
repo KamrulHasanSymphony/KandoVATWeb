@@ -1,0 +1,329 @@
+﻿@{
+    ViewBag.Title = "HomeIndex";
+}
+
+@using SymOrdinary
+@using System.Threading;
+
+@{
+    ShampanIdentity identity = null;
+    try
+    {
+        identity = (ShampanIdentity)Thread.CurrentPrincipal.Identity;
+    }
+    catch (Exception)
+    {
+        Response.Redirect("/VMS/Home/Login");
+        return;
+    }
+}
+
+
+@*<h2>HomeIndex</h2>*@
+<style>
+    .myUL, .myUL ul {
+        list-style-type: none;
+    }
+
+    .myUL {
+        margin: 0;
+        padding: 0;
+    }
+
+    /*a:link, a:visited, a:active, a:hover {
+        color: #42f4c5;
+        background-color: #004b6f;
+        text-decoration: none;
+    }*/
+
+        .myUL li {
+            cursor: pointer;
+            font-size: 20px;
+            border: 2px solid #44fcd4;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 5px;
+            border-radius: 10px;
+        }
+
+            .myUL li:hover {
+                color: white;
+                border: 2px solid #00aa08;
+            }
+
+    ul.myUL .trCaret {
+        cursor: pointer;
+        user-select: none;
+        -webkit-user-select: none; /* Safari 3.1+ */
+        -moz-user-select: none; /* Firefox 2+ */
+        -ms-user-select: none; /* IE 10+ */
+    }
+
+    ul.myUL li {
+        color: #42f4c5;
+        background-color: #004b6f;
+    }
+
+    ul.myUL .trCaret {
+        color: white;
+    }
+
+        ul.myUL .trCaret::before {
+            content: "\25B6";
+            color: #ffb049;
+            display: inline-block;
+            margin-right: 6px;
+        }
+
+    ul.myUL .trCaret-down::before {
+        transform: rotate(90deg);
+    }
+
+    ul.myUL .nested {
+        display: none;
+    }
+
+    ul.myUL .active {
+        display: block;
+    }
+</style>
+
+
+<div class="thinbox">
+    <div class="th_thinbox">
+        <p class="text-center" style=" padding-left: 7%;">Setup</p>
+    </div>
+    <div class="row animated zoomIn faster">
+        <div class="col-md-3 col-md-offset-3">
+
+            <ul class="myUL">
+                @if (identity.IsPermitted("110110"))
+                {
+                    <li>
+                        <span class="trCaret">Item Information</span>
+                        <ul class="nested">
+                            @if (identity.IsPermitted("110110110"))
+                            {
+                                <li class="Group" data-url="/Vms/ProductCategory/Index" onclick="GoTo(this)">Group</li>
+                                @*<li class="Group"> <a href="/VMS/ProductCategory/Index">Group </a></li>*@
+                            }
+
+                            @if (identity.IsPermitted("110110120"))
+                            {
+                                <li class="Product" data-url="/Vms/Product/Index" onclick="GoTo(this)">Product/Item</li>
+                            }
+                            @if (identity.IsPermitted("110110130"))
+                            {
+                                <li class="Overhead" data-url="/Vms/Overhead" onclick="GoTo(this)">Overhead</li>
+                            }
+                            @if (identity.IsPermitted("110110140"))
+                            {
+                                @*<li class="Overhead" data-url="/Vms/TDS/Index" onclick="GoTo(this)">TDS</li>*@
+                            }
+                            @if (identity.IsPermitted("110110150"))
+                            {
+                                <li class="dropdown " data-url="/VMS/HSCode/Index" onclick="GoTo(this)">HSCode</li>
+                            }
+                        </ul>
+                    </li>
+                }
+
+
+                @if (identity.IsPermitted("110120"))
+                {
+                    <li>
+                        <span class="trCaret">Vendor</span>
+                        <ul class="nested">
+                            @if (identity.IsPermitted("110120110"))
+                            {
+                                <li class="Group" data-url="/Vms/VendorGroup/Index" onclick="GoTo(this)">Group</li>
+                            }
+                            @if (identity.IsPermitted("110120120"))
+                            {
+                                <li class="Vendor" data-url="/Vms/Vendor/Index" onclick="GoTo(this)">Vendor</li>
+                            }
+
+                        </ul>
+
+                    </li>
+
+                }
+
+                @if (identity.IsPermitted("110130"))
+                {
+                    <li>
+                        <span class="trCaret">Customer</span>
+                        <ul class="nested">
+                            @if (identity.IsPermitted("180110110"))
+                            {
+                                <li class="Group" data-url="/Vms/CustomerGroup/Index" onclick="GoTo(this)">Group</li>
+                            }
+                            @if (identity.IsPermitted("180110110"))
+                            {
+                                <li class="Customer" data-url="/Vms/Customer/Index" onclick="GoTo(this)">Customer</li>
+                            }
+
+                        </ul>
+
+                    </li>
+
+                }
+
+                @if (identity.IsPermitted("110140"))
+                {
+                    <li>
+                        <span class="trCaret">Bank/Vehicle</span>
+                        <ul class="nested">
+                            @if (identity.IsPermitted("110140110"))
+                            {
+                                <li class="Bank" data-url="/Vms/BankInformation/Index" onclick="GoTo(this)">Bank</li>
+                            }
+                            @if (identity.IsPermitted("110140120"))
+                            {
+                                <li class="Vehicle" data-url="/Vms/Vehicle/Index" onclick="GoTo(this)">Vehicle</li>
+                            }
+
+                        </ul>
+
+                    </li>
+
+                }
+
+                @if (identity.IsPermitted("110150"))
+                {
+                    <li>
+                        <span class="trCaret">Price Declaration</span>
+                        <ul class="nested">
+                            @if (identity.IsPermitted("110150110"))
+                            {
+                                <li class="Vat1" data-url="/Vms/Vat1/Index" onclick="GoTo(this)">VAT-4.3</li>
+                            }
+                            @if (identity.IsPermitted("110150120"))
+                            {
+                                <li class="Service" data-url="/Vms/Service/Index" onclick="GoTo(this)">Service</li>
+                            }
+                            @if (identity.IsPermitted("110150130"))
+                            {
+                                <li class="Tender" data-url="/Vms/Tender/Index" onclick="GoTo(this)">Tender</li>
+                            }
+                        </ul>
+                    </li>
+                }
+
+                @if (identity.IsPermitted("110160"))
+                {
+                    <li>
+                        <span class="trCaret">Company</span>
+                        <ul class="nested">
+                            @if (identity.IsPermitted("110160110"))
+                            {
+                                <li class="CompanyProfile" data-url="/Vms/CompanyProfile/Index" onclick="GoTo(this)">Company Profiles</li>
+                            }
+                            @if (identity.IsPermitted("110160120"))
+                            {
+                                <li class="BranchProfiles" data-url="/Vms/BranchProfiles/Index" onclick="GoTo(this)">Branch Profiles</li>
+                            }
+
+                        </ul>
+                    </li>
+                }
+
+                @if (identity.IsPermitted("110170110"))
+                {
+                    <li class="FiscalYear" data-url="/Vms/FiscalYear/Index" onclick="GoTo(this)">Fiscal Year</li>
+                }
+
+            </ul>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <ul class="myUL">
+                
+                @if (identity.IsPermitted("110180"))
+                {
+                    <li>
+                        <span class="trCaret">Configuration</span>
+                        <ul class="nested">
+                            @if (identity.IsPermitted("110180110"))
+                            {
+                                <li class="Setting" data-url="/Vms/Setting/Index" onclick="GoTo(this)">Setting</li>
+                            }
+                            @if (identity.IsPermitted("110180120"))
+                            {
+                                <li class="Prefix" data-url="/Vms/Prefix/Index" onclick="GoTo(this)">Prefix</li>
+                            }
+
+                        </ul>
+                    </li>
+                }
+
+                <li class="DBUpdate" data-url="/Vms/Setting/DBUpdate" onclick="GoTo(this)">DB Update</li>
+
+
+                @if (identity.IsPermitted("110190110"))
+                {
+                    <li class="Import" data-url="/Vms/Import/Index" onclick="GoTo(this)">Import</li>
+
+                }
+
+                @if (identity.IsPermitted("110200"))
+                {
+                    <li>
+                        <span class="trCaret">Measurement</span>
+                        <ul class="nested">
+                            @if (identity.IsPermitted("110200110"))
+                            {
+                                <li class="UOM" data-url="/Vms/UOM/Index" onclick="GoTo(this)">Name</li>
+                            }
+                            @if (identity.IsPermitted("110200120"))
+                            {
+                                <li class="UOMConversion" data-url="/Vms/UOMConversion/Index" onclick="GoTo(this)">Conversion</li>
+                            }
+                        </ul>
+                    </li>
+                }
+
+                @if (identity.IsPermitted("110210"))
+                {
+                    <li>
+                        <span class="trCaret">Currency</span>
+                        <ul class="nested">
+                            @if (identity.IsPermitted("110210110"))
+                            {
+                                <li class="Currency" data-url="/Vms/Currency/Index" onclick="GoTo(this)">Name</li>
+                            }
+                            @if (identity.IsPermitted("110210120"))
+                            {
+                                <li class="CurrencyConversion" data-url="/Vms/CurrencyConversion/Index" onclick="GoTo(this)">Conversion</li>
+                            }
+                        </ul>
+                    </li>
+
+                }
+
+            </ul>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+    ////expanding menus
+    $(function () {
+        var toggler = document.getElementsByClassName("trCaret");
+        var i;
+
+        for (i = 0; i < toggler.length; i++) {
+            toggler[i].addEventListener("click", function () {
+                this.parentElement.querySelector(".myUL .nested").classList.toggle("active");
+                this.classList.toggle("trCaret-down");
+            });
+        }
+    });
+
+</script>

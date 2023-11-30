@@ -1,0 +1,102 @@
+﻿    <script type="text/javascript">
+        $(document).ready(function () {
+            SelectAllForDelete();
+            $.datepicker.regional[""].dateFormat = 'dd/M/y';
+            $.datepicker.setDefaults($.datepicker.regional['']);
+            var oTable = $('#myDataTable').dataTable({
+                "bServerSide": true,
+                "sAjaxSource": "/Common/JSProfileView/_index",
+                "bProcessing": true,
+                "aLengthMenu": tablelength(),
+                "bJqueryUI": true,
+                "bAutoWidth": false,
+                "sScrollX": '120%',
+                "aoColumns": [
+                                {
+                                    "sName": "Id",
+                                    "bSearchable": false,
+                                    "bSortable": false,
+                                    "sWidth": "10%",
+                                    "sClass":"center",
+                                    "fnRender": function (oObj) {
+                                        return '<a title="Click on for Details" style="text-decoration:none;"    href=\"/Common/JSProfileView/Edit?Id=' + oObj.aData[0] + '\"  class="sym-btn-edit-row"></a>';
+                                    }
+                                }
+                               , { "sName": "ViewType", "sWidth": "14%" }              //01
+                               , { "sName": "ViewDate", "sWidth": "16%" }            //02
+                               , { "sName": "FullName",  "sWidth": "14%" }             //03
+                               , { "sName": "PresentDistrictId", "sWidth": "14%" }        //04
+                               , { "sName": "JobCategoryId", "sWidth": "14%" }            //05
+                               , { "sName": "Website", "sWidth": "14%" }                  //06
+                ]
+            });
+            oTable.columnFilter({
+                sPlaceHolder: "head:after",
+                aoColumns: [{ type: "checkbox", "sClass": "chkAll" }              //00 
+                           , { type: "text" }                                     //01 
+                           , { type: "date-range" }                               //02 
+                           , { type: "text" }                                     //03 
+                           , { type: "text" }                                     //04 
+                           , { type: "text" }                                     //05 
+                           , { type: "text" }                                     //06 
+                ]
+            });
+        });
+    </script>
+@{
+    ViewBag.Title = "Index";
+    ViewBag.Location = "Common=>Info Job Seeker Profile=>Index"; 
+}
+<div class="headrow">
+        <button type="button" title="Add New Job Seeker Profile" data-url="/Common/JSProfileView/Create" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+     <label class="pull-right">Job Seeker Profile Information</label>
+</div>
+    <div class="thinbox">
+        <div class="th_thinbox">
+        <p>Job Seeker Profile List</p>   
+        </div>
+<p></p>
+        <div id="container">
+            <div id="demo">
+                <table id="myDataTable" class="display">
+                    <thead>
+                         <tr>
+                            <th  class="center" >&nbsp;</th>
+                            <th>View Type</th>                <!--  //01    -->  
+                            <th>View Date</th>                <!--  //02    -->
+                            <th>Full  Name</th>               <!--  //03    -->
+                            <th>Present District</th>            <!--  //05    -->
+                            <th>Job Category</th>                  <!--  //06    -->
+                            <th>Website</th>                       <!--  //07    -->
+                        </tr>                                  
+                        <tr>
+                            <th  class="center" >Actions</th>
+                            <th>View Type</th>                 <!--  //01    -->
+                            <th>View Date</th>              <!--  //02    -->
+                            <th>Full  Name</th>              <!--  //03    -->
+                            <th>Present District</th>           <!--  //05    -->
+                            <th>Job Category</th>                 <!--  //06    -->
+                            <th>Website</th>                      <!--  //07    -->
+                        </tr>
+
+@*
+                       //00  //Id
+                       //01  //ViewType
+                       //02  //ViewDate
+                       //03  //FullName
+                       //04  //PresentDistrictId
+                       //05  //JobCategoryId
+                       //06  //Website
+                       
+                        *@
+                    </thead>
+                    <tbody> 
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <br />
+        </div>
+<div class="headrow">
+        <button type="button" title="Add New Job Seeker Profile" data-url="/Common/JSProfileView/Create" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+</div>

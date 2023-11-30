@@ -1,0 +1,102 @@
+﻿@model System.Data.DataTable
+@using UIHelper.MVC
+
+@{
+    Layout = "~/Areas/VMS/Views/Shared/_ModalLayout.cshtml";
+}
+
+
+<div class="HigherModal-content">
+    <div class="HigherModal-header">
+        <span class="closeHigher" onclick="closeModal()">&times;</span>
+        <h2 class="text-center">Details</h2>
+    </div>
+    <div class="HigherModal-body formDesign">
+        <div class="row">
+            <div class="fixedParent">
+                <table class="trkFixTable" id="productPopUpTable_Detail">
+                    <thead>
+                        <tr>
+                            <th>ID              </th>
+                            <th>Item Code       </th>
+                            <th>Item Name       </th>
+                            <th>UOM             </th>
+                            <th>Quantity        </th>
+                            <th>NBR Price       </th>
+                            <th>VAT Rate        </th>
+                            <th>VAT Amount      </th>
+                            <th>SD Rate         </th>
+                            <th>Previous Invoice Date Time</th>
+                            <th>Previous NBR Price      </th>
+                            <th>Previous Quantity       </th>
+                            <th>Previous UOM            </th>
+                            <th>Previous Sub Total      </th>
+                            <th>Previous SD Rate        </th>
+                            <th>Previous SD Amount      </th>
+                            <th>Previous VAT Rate       </th>
+                            <th>Previous VAT Amount     </th>
+                            <th>Reason Of Return        </th>
+
+</tr>
+                    </thead>
+                    <tbody id="popUpTbody_Detail">
+                        @foreach (System.Data.DataRow dr in Model.Rows)
+                        {
+                            <tr>
+                                <td>@dr["ID"]</td>
+                                <td>@dr["Item_Code"]</td>
+                                <td>@dr["Item_Name"]</td>
+                                <td>@dr["UOM"]</td>
+                                <td>@dr["Quantity"]</td>
+                                <td>@dr["NBR_Price"]</td>
+                                <td>@dr["VAT_Rate"]</td>
+                                <td>@dr["VAT_Amount"]</td>
+                                <td>@dr["SD_Rate"]</td>
+
+                                <td>@dr["PreviousInvoiceDateTime"]</td>
+                                <td>@dr["PreviousNBRPrice"]</td>
+                                <td>@dr["PreviousQuantity"]</td>
+                                <td>@dr["PreviousUOM"]</td>
+                                <td>@dr["PreviousSubTotal"]</td>
+                                <td>@dr["PreviousSD"]</td>
+                                <td>@dr["PreviousSDAmount"]</td>
+                                <td>@dr["PreviousVATRate"]</td>
+                                <td>@dr["PreviousVATAmount"]</td>
+                                <td>@dr["ReasonOfReturn"]</td>
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script language="javascript" type="text/javascript">
+
+    function callingFixedPopUpTable_Detail() {
+
+        var args = [200, 200, 200, 150, 100, 150, 100, 150, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100];
+        trkFixedPopUpTable("productPopUpTable_Detail", 3, args);
+    }
+
+
+    $(function () {
+        callingFixedPopUpTable_Detail();
+    })
+</script>

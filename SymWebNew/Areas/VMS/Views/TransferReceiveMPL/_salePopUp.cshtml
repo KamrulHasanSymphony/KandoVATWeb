@@ -1,0 +1,322 @@
+﻿@model VATViewModel.DTOs.PopUpViewModel
+@using UIHelper.MVC
+@{
+    Layout = "~/Areas/VMS/Views/Shared/_ModalLayout.cshtml";
+}
+<style>
+    table.trkFixTable tr.trSelectPopUpIssue td {
+        overflow-x: hidden;
+    }
+    .trkMT10 {
+        margin-top: 10px;
+    }
+
+    .sortableHeader {
+        cursor: pointer;
+    }
+</style>
+
+@Html.HiddenFor(model => model.TransactionType)
+
+<div class="HigherModal-content">
+    <div class="HigherModal-header">
+        <span class="closeHigher">&times;</span>
+        <h2 class="text-center">Sale Search</h2>
+    </div>
+    <div class="HigherModal-body formDesign">
+        <div class="row">
+            <div class="col-md-2">
+                <label>Search Field</label>
+                @Html.SimpleDropDown("SearchField", "/Config/DropDown/SalesColumnSearch", new { @class = " form-control " })
+            </div>
+            <div class="col-md-2">
+                <label>Search Value</label>
+                @Html.TextBox("SearchValue", "", new { @class = " form-control" })
+            </div>
+
+            <div class="trk1_5">
+                <label for="startPopUpDate">Sale Date From</label>
+                <div class="editor-field">
+                    @Html.TextBox("startPopUpDate", null, new { @placeholder = "Date From", @class = "dtFrom customDatePicker form-control" })
+                </div>
+            </div>
+
+            <div class="trk1_5">
+                <label for="endPopUpDate">Sale Date To</label>
+                <div class="editor-field">
+                    @Html.TextBox("endPopUpDate", null, new { @placeholder = "Date To", @class = "dtTo customDatePicker form-control" })
+                </div>
+            </div>
+            <div class="col-md-2">
+                <label>Customer</label>
+                @Html.SimpleDropDown("popUpCustomerId", "/Config/DropDown/Customer", new { @class = "  form-control selectDropdown " })
+            </div>
+            <div class="col-md-1">
+                <label for="popUpSaleType">Type</label>
+                <div class="editor-field">
+                    <select id="popUpSaleType" class="form-control">
+                        <option value=""></option>
+                        <option value="New">New</option>
+                        <option value="Debit">Debit</option>
+                        <option value="Credit">Credit</option>
+                    </select>
+                </div>
+            </div>
+            <div class="trk_5">
+                <label for="printPopUp">Print</label>
+                <div class="editor-field">
+                    <select id="printPopUp" class="form-control">
+                        <option value=""></option>
+                        <option value="Y">Y</option>
+                        <option value="N">N</option>
+                    </select>
+                </div>
+            </div>
+            <div class="trk_5">
+                <label for="postPopUp">Post</label>
+                <div class="editor-field">
+                    <select id="postPopUp" class="form-control">
+                        <option value=""></option>
+                        <option value="Y">Y</option>
+                        <option value="N">N</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-md-1">
+                <label>&nbsp;</label>
+                <div class="editor-field">
+                    <button type="button" title="Click to Search" id="searchBtn" class="sym-btn-search btnPopUpSearch">&nbsp;Search</button>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="fixedParent">
+                <table class="trkFixTable" id="PopUpTable">
+                    <thead>
+                        <tr>
+                            <th>SL</th>
+                            <th>Invoice No</th>
+                            <th>Customer Name</th>
+                            <th>Group Name</th>
+                            <th>Address 1</th>
+                            <th>Post</th>
+                            <th>Vehicle Type</th>
+                            <th>Vehicle No</th>
+                            <th>Grand Total</th>
+                            <th>Total VAT</th>
+                            <th>Ref Number</th>
+                            <th>Sales Date</th>
+                            <th>Sales Type</th>
+                            <th>PID</th>
+                            <th>Is Print</th>
+                            <th>Delivery Date</th>
+                            <th>currency ID</th>
+                            <th>Currency From</th>
+                            <th>Currency Code</th>
+                            <th>Doller Rate</th>
+                            <th>LC Number</th>
+                            <th>Already Print</th>
+                            <th>LC Date</th>
+                            <th>LC Bank</th>
+                        </tr>
+                    </thead>
+                    <tbody id="popUpTbody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    ////function fixedScrollPopUpFixedTable(tableId, leftTotal) {
+    ////    $('#' + tableId + ' tbody').scroll(function (e) {
+    ////        var i;
+    ////        for (i = 1; i <= leftTotal; i++) {
+    ////            $('#' + tableId + ' thead th:nth-child(' + i + ')').css("left", $("#" + tableId + " tbody").scrollLeft());
+    ////            $('#' + tableId + ' tbody td:nth-child(' + i + ')').css("z-index", "1");
+    ////            $('#' + tableId + ' tbody td:nth-child(' + i + ')').css("left", $("#" + tableId + " tbody").scrollLeft());
+    ////        }
+    ////        $('#' + tableId + ' thead').css("left", -$("#" + tableId + " tbody").scrollLeft());
+
+    ////    });
+    ////}
+    ////function settingPopUpFixedColumnWidth(tableId, widthArgs) {
+    ////    if (widthArgs == null) {
+    ////        return;
+    ////    }
+    ////    var i;
+    ////    for (i = 1; i <= widthArgs.length; i++) {
+    ////        $('#' + tableId + ' tr td:nth-child(' + i + ')').css("min-width", widthArgs[i - 1] + "px");
+    ////        $('#' + tableId + ' tr td:nth-child(' + i + ')').css("max-width", widthArgs[i - 1] + "px");
+
+    ////        $('#' + tableId + ' tr th:nth-child(' + i + ')').css("min-width", widthArgs[i - 1] + "px");
+    ////    }
+    ////}
+    ////function fixLeftPopUpColumns(tableId, leftTotal) {
+    ////    var i;
+    ////    for (i = 1; i <= leftTotal; i++) {
+    ////        //fixed column header style
+    ////        $('#' + tableId + ' thead th:nth-child(' + i + ')').css("height", "30px");
+    ////        $('#' + tableId + ' thead th:nth-child(' + i + ')').css("position", "relative");
+    ////        $('#' + tableId + ' thead th:nth-child(' + i + ')').css("z-index", "2");
+    ////        //fixed column rows style
+    ////        $('#' + tableId + ' tbody tr td:nth-child(' + i + ')').css("height", "30px");
+    ////        $('#' + tableId + ' tbody tr td:nth-child(' + i + ')').css("position", "relative");
+    ////    }
+    ////}
+    ////function settingFixedPopUpWidth(tableId) {
+    ////    //var parentWidth = $('.fixedParent').width();
+    ////    var parentWidth = $('#' + tableId).closest('.fixedParent').width();
+    ////    $('#' + tableId + ' thead').width(parentWidth);
+    ////    $('#' + tableId + ' tbody').width(parentWidth);
+    ////}
+    ////function trkFixedPopUpTable(tableId, leftTotal, args) {
+    ////    settingFixedPopUpWidth(tableId);
+    ////    fixLeftPopUpColumns(tableId, leftTotal);
+    ////    fixedScrollPopUpFixedTable(tableId, leftTotal);
+    ////    settingPopUpFixedColumnWidth(tableId, args);
+    ////}
+
+</script>
+
+<script language="javascript" type="text/javascript">
+
+    function callingFixedPopUpTable() {
+        var args = [50, 200, 250, 200, 300, 50, 200, 100, 100, 100, 200, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 200, 100];
+        trkFixedPopUpTable("PopUpTable", 2, args);
+    }
+    $(function () {
+        callingFixedPopUpTable();
+    })
+    ////closing higher modal
+    function closeHigherModal() {
+        $("#myHigherModal").html("");
+        trkmodal.style.display = "none";
+    }
+    var span = document.getElementsByClassName("closeHigher")[0];
+    var trkmodal = document.getElementById('myHigherModal');
+    //When the user clicks on <span> (x), close the trkmodal
+    span.onclick = function () {
+        closeHigherModal();
+    }
+
+    $(function () {
+        $(document).on('click', '.trSelectPopUpIssue', function () {
+            var activeEl = $('tr.active');
+            activeEl.removeClass("active");
+            $(this).addClass(" active");
+        });
+
+        $(document).off('dblclick').on('dblclick', '.trSelectPopUpIssue', function () {
+            var itemNo = $(this).children('td.popUpItemNo').text();
+            var InvoiceDateTime = $(this).children('td.popUpInvoiceDateTime').text();
+
+            selectPopUpValue(itemNo, InvoiceDateTime);
+
+            
+
+        });
+
+        function selectPopUpValue(itemNo, InvoiceDateTime) {
+
+            var target = '@Model.TargetId';
+            $('#' + target).val(itemNo);
+
+            callbackFromModal(itemNo, InvoiceDateTime);
+
+            closeHigherModal();
+        }
+    })
+
+
+
+    @*$(function () {
+        $(document).on('click', '.trSelectPopUpIssue', function () {
+            var activeEl = $('tr.active');
+            activeEl.removeClass("active");
+            $(this).addClass(" active");
+        });
+
+        $(document).off().on('dblclick', '.trSelectPopUpIssue', function () {
+            var itemNo = $(this).children('td.popUpItemNo').text();
+            selectPopUpValue(itemNo, this);
+        });
+
+        function selectPopUpValue(itemNo, sender) {
+            var target = '@Model.TargetId';
+            $('#' + target).val(itemNo);
+            ////callbackFromSaleModal(itemNo, sender)
+            callbackFromPurchaseModal(itemNo);
+
+            closeHigherModal();
+        }
+    })*@
+</script>
+
+<script src="~/assets/javascripts/custom.js"></script>
+
+<script>
+    $(function () {
+        if ('@Model.TransactionType' == 'SaleVDS') {
+            $('#postPopUp').val('Y');
+
+            $('#postPopUp').attr("style", "pointer-events: none;");
+
+        }
+
+        if ('@Model.TransactionType' == 'Credit') {
+            $('#postPopUp').val('Y');
+            $('#printPopUp').val('Y');
+
+            $('#postPopUp').attr("style", "pointer-events: none;");
+            $('#printPopUp').attr("style", "pointer-events: none;");
+
+        }
+
+
+
+        $('.btnPopUpSearch').click(function () {
+
+            var startDate = $('#startPopUpDate').val();
+            var endDate = $('#endPopUpDate').val();
+            var post = $('#postPopUp').val();
+            var isPrint = $('#printPopUp').val();
+            var customerId = $('#popUpCustomerId').val();
+            var saleType = $('#popUpSaleType').val();
+            //var invoiceNo = $('#popUpSaleInvoice').val();
+            //var refNo = $('#popUpRefNo').val();
+            var SearchField = $('#SearchField').val();
+            var SearchValue = $('#SearchValue').val();
+
+            var model = {
+                TransactionType: '@Model.TransactionType',
+                CustomerID: customerId,
+                InvoiceDateTimeFrom: startDate,
+                InvoiceDateTimeTo: endDate,
+                Post: post,
+                IsPrint: isPrint,
+                SaleType: saleType,
+                SearchField: SearchField,
+                SearchValue: SearchValue
+            }
+
+            $.ajax({
+                data: model,
+                url: "/Vms/SaleInvoice/GetFilteredItems",
+                cache: false,
+                beforeSend: function () { $(".loading").show(); },
+                complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                success: function (html) {
+                    $("#popUpTbody").html("");
+                    $("#popUpTbody").html(html);
+                    callingFixedPopUpTable();
+                }
+            });
+
+        });
+    });
+</script>

@@ -1,0 +1,57 @@
+﻿@model IEnumerable<VATViewModel.DTOs.CodeVM>
+@using UIHelper.MVC
+<div class="row">
+    <div class="col-md-4">
+        @using (Html.BeginForm("YearSelector", "Home"))
+    {
+            
+            @Html.SimpleDropDown("Group", "/Config/DropDown/PrefixGroup", new { @class = " form-control trkMT-0", @Id="GroupSel" })
+    }
+    </div>
+</div>
+<div class="thinbox  animated zoomIn faster">
+    <div class="th_thinbox">
+        <p>Prefix</p>
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            <div class="editor-label">
+                <label>Code Group</label>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="editor-label">
+                <label>Code Name</label>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="editor-label">
+                <label>Prefix</label>
+            </div>
+        </div>
+        <div class="col-md-1">
+            <div class="editor-label">
+                <label>Length</label>
+            </div>
+        </div>
+    </div>
+    @foreach (var item in Model)
+    {
+        @Html.Partial("_Prefix", item);
+    }
+</div>
+<script>
+    $(document).ready(function () {
+        var interval = setInterval(function () {
+            if (document.querySelectorAll('#GroupSel option').length > 0) {
+                $('#GroupSel').val('@ViewBag.groupName');
+                clearInterval(interval);
+                }
+            }, 200);
+        });
+    $("#GroupSel").change(function () {
+        var group=$('#GroupSel').val()
+        console.log(group);
+        window.location.href = "/VMS/Prefix/Index?group="+group;
+    });
+</script>

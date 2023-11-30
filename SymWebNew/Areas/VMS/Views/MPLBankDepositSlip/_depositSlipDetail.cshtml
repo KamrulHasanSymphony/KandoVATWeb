@@ -1,0 +1,310 @@
+﻿@model VATViewModel.DTOs.MPLBankDepositSlipHeaderVM
+@using UIHelper.MVC
+@{
+    Layout = "~/Areas/VMS/Views/Shared/_ModalLayout.cshtml";
+    var sl = 1;
+}
+<style>
+    .trkMT10 {
+        margin-top: 10px;
+    }
+</style>
+<div class="HigherModal-content">
+    <div class="HigherModal-header">
+        <span class="closeHigher">&times;</span>
+        <h2 class="text-center"> Bank Deposit Slip </h2>
+    </div>
+    <div class="HigherModal-body formDesign">
+        
+        <div class="row">
+            <div class="col-md-2">
+                <label>Search Field</label>
+                @Html.SimpleDropDown("searchField", "/Config/DropDown/MPLSalesColumnSearch", new { @class = " form-control " })
+            </div>
+            <div class="col-md-2">
+                <label>Search Value</label>
+                @Html.TextBox("searchValue", "", new { @class = " form-control" })
+            </div>
+
+            <div class="trk1_5">
+                <label for="startPopUpDate">From Date </label>
+                <div class="editor-field">
+                    @Html.TextBox("FromDate", null, new { @placeholder = "Date From", @class = "dtFrom customDatePicker form-control" })
+                </div>
+            </div>
+            <div class="trk1_5">
+                <label for="endPopUpDate"> To Date </label>
+                <div class="editor-field">
+                    @Html.TextBox("ToDate", null, new { @placeholder = "Date To", @class = "dtTo customDatePicker form-control" })
+                </div>
+            </div>
+           
+            <div class="trk_5">
+                <div class="editor-field">
+                    <label>&nbsp;</label>
+                    <button type="button" title="Click to Search" id="searchBtn" class="sym-btn-search btnPopUpSearch">&nbsp;</button>
+                </div>
+            </div>
+            <div class="trk_5">
+                <label>&nbsp;</label>
+                <button type="button" title="Clear Data" id="Clear" class=" sym-btn-clear">&nbsp;Clear</button>
+            </div>
+        </div>
+
+        
+
+        <div class="row">
+            <div class="fixedParent">
+                <table class="trkFixTable detailHeadRow" id="customerPopUpTable">
+                    <thead>
+                    <tr>
+                        <th>SL</th>
+                        <th hidden="">Master Id</th>
+                        <th hidden="">SalesInvoiceMPLHeaderId</th>
+                        <th hidden="">BDBankId</th>
+                        <th>Sales Invoice No</th>
+                        <th>Bank Code</th>
+                        <th>Bank Name</th>
+                        <th>Customer Name</th>
+                        <th>Mode of Payment</th>
+                        <th>Instrument No</th>
+                        <th>Instrument Date</th>
+                        <th>Amount</th>
+                        <th hidden="">TType</th>
+                    </tr>
+                    </thead>
+                    <tbody id="popUpTbody">
+                    @foreach (var item in Model.MPLBankDepositSlipDetailVMs)
+                    {
+                        <tr class="trSelectPopUp">
+                            <td>@sl</td>
+                            <td hidden="">@item.Id</td>
+                            <td hidden="">@item.SalesInvoiceMPLHeaderId</td>
+                            <td hidden="">@item.BDBankId</td>
+                            <td>@item.SalesInvoiceNo</td>
+                            <td>@item.BankCode</td>
+                            <td>@item.BDBankName</td>
+                            <td>@item.CustomerName</td>
+                            <td>@item.ModeOfPayment</td>
+                            <td>@item.InstrumentNo</td>
+                            <td>@item.InstrumentDate</td>
+                            <td>@item.Amount</td>
+                            <td hidden="">@item.TType</td>
+
+                        </tr>
+                        sl++;
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script language="javascript" type="text/javascript">
+    function fixedScrollPopUpFixedTable(tableId, leftTotal) {
+        $('#' + tableId + ' tbody').scroll(function (e) {
+            var i;
+            for (i = 1; i <= leftTotal; i++) {
+                $('#' + tableId + ' thead th:nth-child(' + i + ')').css("left", $("#" + tableId + " tbody").scrollLeft());
+                $('#' + tableId + ' tbody td:nth-child(' + i + ')').css("z-index", "1");
+                $('#' + tableId + ' tbody td:nth-child(' + i + ')').css("left", $("#" + tableId + " tbody").scrollLeft());
+            }
+            $('#' + tableId + ' thead').css("left", -$("#" + tableId + " tbody").scrollLeft());
+
+        });
+    }
+    function settingPopUpFixedColumnWidth(tableId, widthArgs) {
+        if (widthArgs == null) {
+            return;
+        }
+        var i;
+        for (i = 1; i <= widthArgs.length; i++) {
+            $('#' + tableId + ' tr td:nth-child(' + i + ')').css("min-width", widthArgs[i - 1] + "px");
+            $('#' + tableId + ' tr td:nth-child(' + i + ')').css("overflow", "hidden");
+            $('#' + tableId + ' tr td:nth-child(' + i + ')').css("max-width", widthArgs[i - 1] + "px");
+
+            $('#' + tableId + ' tr th:nth-child(' + i + ')').css("min-width", widthArgs[i - 1] + "px");
+            $('#' + tableId + ' tr th:nth-child(' + i + ')').css("overflow", "hidden");
+            $('#' + tableId + ' tr th:nth-child(' + i + ')').css("max-width", widthArgs[i - 1] + "px");
+        }
+    }
+    function fixLeftPopUpColumns(tableId, leftTotal) {
+        var i;
+        for (i = 1; i <= leftTotal; i++) {
+            //fixed column header style
+            $('#' + tableId + ' thead th:nth-child(' + i + ')').css("height", "30px");
+            $('#' + tableId + ' thead th:nth-child(' + i + ')').css("position", "relative");
+            $('#' + tableId + ' thead th:nth-child(' + i + ')').css("z-index", "2");
+            //fixed column rows style
+            $('#' + tableId + ' tbody tr td:nth-child(' + i + ')').css("height", "30px");
+            $('#' + tableId + ' tbody tr td:nth-child(' + i + ')').css("position", "relative");
+        }
+    }
+    function settingFixedPopUpWidth(tableId) {
+        //var parentWidth = $('.fixedParent').width();
+        var parentWidth = $('#' + tableId).closest('.fixedParent').width();
+        $('#' + tableId + ' thead').width(parentWidth);
+        $('#' + tableId + ' tbody').width(parentWidth);
+    }
+    function trkFixedPopUpTable(tableId, leftTotal, args) {
+        settingFixedPopUpWidth(tableId);
+        fixLeftPopUpColumns(tableId, leftTotal);
+        fixedScrollPopUpFixedTable(tableId, leftTotal);
+        settingPopUpFixedColumnWidth(tableId, args);
+    }
+    function callingFixedPopUpTable() {
+        debugger;
+        var args = [50, 50, 50, 50, 250, 150, 150, 150, 150, 150, 100, 100, 100];
+        trkFixedPopUpTable("customerPopUpTable", 3, args);
+    }
+    $(function () {
+        callingFixedPopUpTable();
+    })
+</script>
+
+<script>
+    ////closing higher modal
+    function closeHigherModal() {
+        $("#myHigherModal").html("");
+        trkmodal.style.display = "none";
+    }
+    var span = document.getElementsByClassName("closeHigher")[0];
+    var trkmodal = document.getElementById('myHigherModal');
+    //When the user clicks on <span> (x), close the trkmodal
+    span.onclick = function () {
+        closeHigherModal();
+    }
+
+    $(function () {
+        $('#customerPopUpTable').unbind().on('dblclick', '.trSelectPopUpCustomer', function () {
+            var itemName = $(this).children('td.popUpItemName').text();
+            selectPopUpProduct(itemName, this);
+        });
+        function selectPopUpProduct(itemName, sender) {
+            callbackFromCustomerModal(sender);
+            closeHigherModal();
+        }
+        $(document).on('click', '.trSelectPopUpCustomer', function () {
+            var activeEl = $('tr.active');
+            activeEl.removeClass("active");
+            $(this).addClass(" active");
+        });
+    })
+</script>
+
+<script>
+
+       $("#Clear").on('click', function () {
+        debugger;
+        $(".HigherModal-body .Dropdown").select2("val", "");
+        $(".HigherModal-body .form-control").val("");
+    });    
+
+       $('#customerPopUpTable').unbind().on('dblclick', '.trSelectPopUp', function () {
+        debugger;
+        var activeEl = $('tr.active');
+        activeEl.removeClass("active");
+        $(this).addClass(" active");
+        debugger;
+        var tds = $(this).find('td');
+        var rowData = {};
+        tds.each(function (index) {
+            var key = 'column' + index;
+            var value = $(this).text();
+            rowData[key] = value;
+        });   
+        debugger;
+        console.log(rowData);
+        var result = isExistData(rowData.column2);
+        debugger;
+        if (result)
+        {
+            ShowResult("Warning", "Data Already Exist!");
+            return;
+        }
+        debugger;
+        var model = "&RefId=" + rowData.column1;
+        model += "&SalesInvoiceMPLHeaderId=" + rowData.column2;
+        model += "&BDBankId=" + rowData.column3;
+        model += "&SalesInvoiceNo=" + rowData.column4;
+        model += "&BankCode=" + rowData.column5;
+        model += "&BDBankName=" + rowData.column6;
+        model += "&CustomerName=" + rowData.column7;
+        model += "&ModeOfPayment=" + rowData.column8;
+        model += "&InstrumentNo=" + rowData.column9;
+        model += "&InstrumentDate=" + rowData.column10;
+        model += "&Amount=" + rowData.column11;
+        model += "&TType=" + rowData.column12;
+               
+        debugger;
+        console.log(model);
+        $.ajax({
+            data: model,
+            url: "/Vms/MPLBankDepositSlip/BlankItem",
+            cache: false,
+            success: function (html) {
+                debugger;
+                $("#editorItemRows4").append(html);
+                callingFixedTable();
+                SubTotal();
+                NumberFormatCheck();
+            }
+        });
+
+    });
+
+       function isExistData(val) {
+        debugger;
+        var isTrue = false;
+        var rows = $("#itemTable tbody tr");
+        rows.each(function (index, row) {
+            debugger;
+            var invoice = $(row).find('.dSalesInvoiceNo').val();
+            if(invoice == val)
+            {
+                isTrue = true;
+            }            
+        });
+        
+        return isTrue;
+    };
+    
+       $('.btnPopUpSearch').click(function () {
+           debugger;
+           SearchDataList();
+       });
+
+       function SearchDataList() {
+           debugger;
+           var modal = document.getElementById('myHigherModal');
+           var searchField = $('#searchField').val();
+           var searchValue = $('#searchValue').val();
+           var StartDateFrom = $('#FromDate').val();
+           var StartDateTo = $('#ToDate').val();
+
+           var model = {
+               SearchField: searchField,
+               SearchValue: searchValue,
+               FromDate: StartDateFrom,
+               ToDate: StartDateTo
+           }
+           $.ajax({
+               data: model
+               , url: "/Vms/MPLBankDepositSlip/SearchMPLBankPaymentPopUp"
+               , cache: false
+               , beforeSend: function () { $(".loading").show(); }
+               , success: function (html) {
+                   debugger;
+                   $("#popUpTbody").html("");
+                   $("#popUpTbody").html(html);
+                   callingFixedPopUpTable();
+               }
+               , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+           });
+
+       }
+    
+
+</script>

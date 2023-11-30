@@ -1,0 +1,21 @@
+﻿@model IEnumerable<VATViewModel.DTOs.DepositMasterVM>
+@using UIHelper.MVC
+@{
+    Layout = null;
+    var sl = 1;
+}
+@foreach (var Deposit in Model)
+{
+    <tr class="trSelectPopUpProduct">
+        <td>@sl</td>
+        <td class="popUpItemNo">@Deposit.DepositId</td>
+        <td>@Deposit.TreasuryNo</td>
+        <td>@Deposit.DepositDate</td>
+        <td>@Deposit.DepositAmount</td>
+        <td>@Deposit.BankDepositDate</td>
+        <td>@Deposit.Post</td>
+        @{
+    sl++;
+        }
+    </tr>
+}

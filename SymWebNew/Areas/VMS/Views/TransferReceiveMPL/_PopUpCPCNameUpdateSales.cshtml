@@ -1,0 +1,194 @@
+﻿@model VATViewModel.DTOs.SaleDetailVm
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+
+<style>
+    .trkmodal {
+        padding-top: 10%;
+    }
+
+    .trkmodal-content {
+        width: 44%;
+        padding-bottom: 10px;
+    }
+
+    .customDatePicker {
+        background: #fefede url(/Images/calendar.jpg) no-repeat 98% !important;
+    }
+    /*no padding with little margin bttom*/
+    div.trkmodal-body div.npForm {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+        padding-bottom: 0px !important;
+        margin-bottom: 10px;
+    }
+
+        div.trkmodal-body div.npForm div.npForm {
+            margin-bottom: 0px !important;
+        }
+</style>
+
+<div class="trkmodal-content">
+    <div class="trkmodal-header">
+        <span class="close">&times;</span>
+        <h2 class="text-center">Sales Details</h2>
+    </div>
+    <div class="trkmodal-body">
+        @using (Html.BeginForm("PopUpCPCNameUpdateSales", "SaleInvoice", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmPopUpCPCNameUpdateSales" }))
+        {
+            @Html.Hidden("PreviousSDAmount", "", new { @class = " cPreviousSDAmount" })
+            @Html.Hidden("PreviousVATAmount", "", new { @class = " cPreviousVATAmount" })
+            @Html.Hidden("PreviousSubTotal", "", new { @class = " cPreviousSubTotal" })
+
+            @Html.Hidden("UOM", "", new { @class = " cUOM" })
+            @Html.Hidden("Quantity", "", new { @class = " cQuantity" })
+            @Html.Hidden("PromotionalQuantity ", "", new { @class = " cPromotionalQuantity " })
+            @Html.Hidden("NBRPrice", "", new { @class = " cNBRPrice" })
+            @Html.Hidden("SubTotal", "", new { @class = " cSubTotal" })
+            @Html.Hidden("TradingMarkUp", "", new { @class = " cTradingMarkUp" })
+            @Html.Hidden("SD", "", new { @class = " cSD" })
+            @Html.Hidden("SDAmount", "", new { @class = " cSDAmount" })
+            @Html.Hidden("VATRate", "", new { @class = " cVATRate" })
+            @Html.Hidden("VATAmount", "", new { @class = " cVATAmount" })
+            @Html.Hidden("Total", "", new { @class = " cTotal" })
+            @Html.Hidden("Type", "", new { @class = " cType" })
+            @Html.Hidden("UOMPrice", "", new { @class = " cUOMPrice" })
+            @Html.Hidden("UOMc", "", new { @class = " cUOMc" })
+            @Html.Hidden("UOMn", "", new { @class = " cUOMn" })
+            @Html.Hidden("UOMQty", "", new { @class = " cUOMQty" })
+            @Html.Hidden("CurrencyValue", "", new { @class = " cCurrencyValue" })
+            @Html.Hidden("DollerValue", "", new { @class = " cDollerValue" })
+            @Html.Hidden("VatName", "", new { @class = " cVatName" })
+            @Html.Hidden("CConversionDate", "", new { @class = " cCConversionDate" })
+            @Html.Hidden("Weight", "", new { @class = " cWeight" })
+            @Html.Hidden("ValueOnly", "", new { @class = " cValueOnly" })
+            @Html.Hidden("TotalValue", "", new { @class = " cTotalValue" })
+            @Html.Hidden("WareHouseRent", "", new { @class = " cWareHouseRent" })
+            @Html.Hidden("WareHouseVAT", "", new { @class = " cWareHouseVAT" })
+            @Html.Hidden("ATVRate", "", new { @class = " cATVRate" })
+            @Html.Hidden("ATVablePrice", "", new { @class = " cATVablePrice" })
+            @Html.Hidden("ATVAmount", "", new { @class = " cATVAmount" })
+            @Html.Hidden("IsCommercialImporter", "", new { @class = " cIsCommercialImporter" })
+            @Html.Hidden("ProductDescription", "", new { @class = " cProductDescription" })
+            @Html.Hidden("CDNVATAmount", "", new { @class = " cCDNVATAmount" })
+            @Html.Hidden("CDNSDAmount", "", new { @class = " cCDNSDAmount" })
+            @Html.Hidden("CDNSubtotal", "", new { @class = " cCDNSubtotal" })
+
+            @Html.Hidden("ItemNo", "", new { @class = " cItemNo" })
+            @Html.Hidden("TradingD", "", new { @class = " cTradingD" })
+            @Html.Hidden("NonStockD", "", new { @class = " cNonStockD" })
+            @Html.Hidden("SaleTypeD", "", new { @class = " cSaleTypeD" })
+            @Html.Hidden("CommentsD", "", new { @class = " cCommentsD" })
+            @Html.Hidden("InvoiceLineNo", "", new { @class = " cInvoiceLineNo" })
+            @Html.Hidden("PreviousSalesInvoiceNoD", "", new { @class = " cPreviousSalesInvoiceNoD" })
+            @Html.Hidden("PreviousInvoiceDateTime", "", new { @class = " cInvoiceDateTime" })
+            @Html.Hidden("PreviousNBRPrice", "", new { @class = " cPreviousNBRPrice" })
+            @Html.Hidden("PreviousQuantity", "", new { @class = " cPreviousQuantity" })
+            @Html.Hidden("PreviousUOM", "", new { @class = " cPreviousUOM" })
+            @Html.Hidden("PreviousVATRate", "", new { @class = " cPreviousVATRate" })
+            @Html.Hidden("PreviousSD", "", new { @class = " cPreviousSD" })
+            @Html.Hidden("ReasonOfReturn", "", new { @class = " cReasonOfReturn" })
+            @Html.Hidden("TransactionType", "", new { @class = " cTransactionType" })
+            @Html.Hidden("BillingPeriodFrom", "", new { @class = " cBillingPeriodFrom" })
+            @Html.Hidden("BillingPeriodTo", "", new { @class = " cBillingPeriodTo" })
+            @Html.Hidden("BillingDays", "", new { @class = " cBillingDays" })
+            @Html.Hidden("BOMReferenceNo", "", new { @class = " cBOMReferenceNo" })
+            @Html.Hidden("IsFixedVAT", "", new { @class = " cIsFixedVAT" })
+            @Html.Hidden("BOMId", "", new { @class = " cBOMId" })
+
+            <div class="row">
+                <div class="npForm col-md-6">
+                    <label>Product Code</label>
+
+                    @Html.TextBox("ProductCode", "", new { @placeholder = "Product Code", @class = " cProductCode form-control", @readonly = "readonly" })
+
+                </div>
+                <div class="npForm col-md-6">
+                    <label>Product Name</label>
+
+                    @Html.TextBox("ProductName", "", new { @placeholder = "Product Name", @class = " cProductName form-control", @readonly = "readonly" })
+
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="npForm col-md-6">
+
+                    <label>CPCName</label>
+                    @Html.SimpleDropDownFor(m => m.CPCName, "/Config/DropDown/CPCName", new { @class = " dCPCName notClearing  form-control " })
+
+                </div>
+                <div class="npForm col-md-6">
+                    <label>BEItemNo</label>
+
+                    @*@Html.TextBox("PreviousInvoiceDateTime", "", new { @placeholder = "PreviousInvoiceDateTime", @class = " cPreviousInvoiceDateTime customDatePicker form-control" })*@
+                    @Html.TextBox("BEItemNo", "", new { @placeholder = "BEItemNo", @class = " cBEItemNo  form-control" })
+
+
+                </div>
+            </div>
+
+
+
+            <button type="button" class=" btn sym-btn-update trAdd btnUpdate "> Update</button>
+            @*<button type="button" class="sym-btn-close closeBtn pull-right"> Close</button>*@
+        }
+    </div>
+</div>
+
+
+<script src="~/assets/javascripts/custom.js"></script>
+<script>
+
+    $(document).ready(function () {
+        //$('#frmExpFromNo').submit();
+
+        function closeModal() {
+            $("#myHigherModal").html("");
+            trkmodal.style.display = "none";
+        }
+
+        var span = document.getElementsByClassName("close")[0];
+        var trkmodal = document.getElementById('myHigherModal');
+        //When the user clicks on <span> (x), close the trkmodal
+        span.onclick = function () {
+            //closeModal();
+            PreviousInvoiceInformation();
+        }
+
+        //$('.closeBtn').click(function () {
+        //    closeModal();
+        //});
+
+        $('.btnUpdate').click(function () {
+
+            PreviousInvoiceInformation();
+
+        });
+
+        function PreviousInvoiceInformation() {
+            var model = $('.trkmodal-body :input').serialize();
+
+            console.log(model);
+
+            callbackCPCNameUpdateSalesModal(model);
+
+            closeModal();
+        }
+
+
+
+    });
+</script>
+
+<script>
+    $(function () {
+
+        valiDation("frmPopUpCPCNameUpdateSales");
+
+    });
+</script>
+

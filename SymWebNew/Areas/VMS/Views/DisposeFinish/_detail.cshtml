@@ -1,0 +1,72 @@
+﻿@model VATViewModel.DTOs.DisposeFinishDetailVM
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+<tr class="tablerow">
+    @using (Html.BeginCollectionItem("Details"))
+    {
+    <td>
+        <a id="" title="Click to Remove" onclick="RemoveItem(this);" class="sym-btn-remove-row "></a>
+        <a id="" title="Click to Edit" onclick="EditItem(this);" class="sym-btn-edit-row"></a>
+    </td>
+   
+   
+     <td>
+         @*@Html.TextBoxFor(model => model.ItemName, new { @class = "  dItemName   form-control", @readonly = "readonly" })*@
+         @*@Html.TextBoxFor(model => model.ProductName, new { @class = "  dItemName   form-control", @readonly = "readonly" })*@
+        @Html.TextBoxFor(model => model.ProductName, new { @class = "  dItemName   form-control", @readonly = "readonly" })
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.UOM, new { @class = "  dUOM   form-control", @readonly = "readonly" })
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.UsedQuantity, new { @class = "  dUsedQuantity right priceLen  form-control", @readonly = "readonly" })
+    </td>
+
+    <td>
+        <a id="" title="Click to Previous Purchase Search" onclick="PurchsaseItemGet(this);" class="sym-btn-search"></a>
+        <a id="" title="Click to Previous Purchase Add" onclick="PreviousPurchaseItemAdd(this);" class="sym-btn-add-row"></a>
+    </td>
+     <td>
+        @Html.TextBoxFor(model => model.PurchaseNo, new { @class = "  dPurchaseNo   form-control", @readonly = "readonly" })
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.PurchaseQuantity, new { @class = "  dPurchaseQuantity  form-control", @readonly = "readonly" })
+    </td>
+        
+     <td>
+        @Html.TextBoxFor(model => model.VATRate, new { @class = "  dVATRate   form-control", @readonly = "readonly" })
+    </td>
+        
+    <td>
+        @Html.TextBoxFor(model => model.VATAmount, new { @class = "  dVATAmount   form-control", @readonly = "readonly" })
+    </td>
+    @*<td>
+        @Html.TextBoxFor(model => model.RebateRate, new { @class = "  dFinishItemName   form-control", @readonly = "readonly" })
+    </td>*@
+        
+     <td>
+        @Html.TextBoxFor(model => model.RebateRate, new { @class = "  dRebateRate   form-control", @readonly = "readonly" })
+    </td>
+        
+    <td>
+        @Html.TextBoxFor(model => model.RebateVATAmount, new { @class = "  dRebateVATAmount   form-control", @readonly = "readonly" })
+    </td>
+        
+     <td>
+        @Html.TextBoxFor(model => model.Comments, new { @class = "  dComments   form-control", @readonly = "readonly" })
+    </td>
+        
+     <td>
+        @*@Html.HiddenFor(m => m.ItemNo, new { @class = "dItemNo" })*@
+        @Html.TextBoxFor(m => m.ItemNo, new { @class = "dItemNo form-control", @readonly = "readonly" })
+        @*@Html.TextBoxFor(model => model.ProductCode, new { @class = "  dProductCode   form-control", @readonly = "readonly" })*@
+    </td>
+        
+     @*@Html.HiddenFor(m => m.ItemNo, new { @class = " dItemNo" })*@
+        
+    }
+</tr>
+
+

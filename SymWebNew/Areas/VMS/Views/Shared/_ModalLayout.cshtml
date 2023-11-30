@@ -1,0 +1,53 @@
+﻿<style>
+    .trkmodal {
+        padding-top: 5%;
+    }
+
+    .trkmodal-content {
+        width: 50%;
+        padding-bottom: 10px;
+    }
+
+    .customDatePicker {
+        background: #fefede url(/Images/calendar.jpg) no-repeat 98% !important;
+    }
+
+    div.btn-group .btn {
+        padding-top: 0px !important;
+        padding-bottom: 0px !important;
+    }
+    /*no padding with little margin bttom*/
+    div.trkmodal-body div.npForm {
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+        padding-bottom: 0px !important;
+        margin-bottom: 10px;
+    }
+
+    div.trkmodal-body div.npForm div.npForm {
+        margin-bottom: 0px !important;
+    }
+    .fixedParent {
+        margin-left: 0px !important;
+        margin-right: 0px !important;
+    }
+</style>
+@RenderBody()
+
+<script src="~/assets/javascripts/custom.js"></script>
+<script>
+    $(function () {
+        ////for select2 dropdown
+        function textFormat(item) {
+            var itemText = item.text;
+            return '<div title="' + itemText + '">' + itemText + '</div>';
+        }
+        $(".selectDropdown").select2({
+            dropdownAutoWidth: true,
+            formatResult: textFormat,
+            formatSelection: textFormat
+        });
+        $(".selectDropdown").trigger('change');
+        $(".selectDropdown").removeClass('form-control');
+    });
+</script>

@@ -1,0 +1,979 @@
+﻿@model VATViewModel.DTOs.SaleMasterVM
+@using UIHelper.MVC
+@using SymOrdinary
+@using System.Threading;
+@using VATServer.Ordinary
+@{
+    ShampanIdentity identity = null;
+    try
+    {
+        identity = (ShampanIdentity)Thread.CurrentPrincipal.Identity;
+    }
+    catch (Exception)
+    {
+        Response.Redirect("/VMS/Home/Login");
+        return;
+    }
+}
+
+@{
+    ViewBag.Title = "Index";
+}
+
+@Html.HiddenFor(model => model.TransactionType)
+@Html.HiddenFor(model => model.DuplicateInvoiceSave)
+
+
+<div class="headrow">
+    <div style="display: none" id="formAppend"></div>
+    <button type="button" title="Add New" data-url="/VMS/SaleInvoice/Create?tType=@Model.TransactionType" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+
+    @if (Model.TransactionType.ToLower() == "tollfinishissue")
+    {
+        <label class="pull-right">FG Issue (@Model.TransactionType)</label>
+    }
+    else if (Model.TransactionType.ToLower() == "contractorrawissue")
+    {
+        <label class="pull-right">Raw Issue To Client (@Model.TransactionType)</label>
+    }
+    else
+    {
+        <label class="pull-right">Sale Invoice (@Model.TransactionType)</label>
+    }
+
+
+</div>
+
+<div class=" tabMenu">
+    <ul style="font-size: 1.4em;" class="tabDesign nav nav-tabs">
+
+        @if (Model.TransactionType.ToLower() == "tollfinishissue")
+        {
+            <li class="tabDefault active"><a data-toggle="tab" href="#SaleIndex">FG Issue Index</a></li>
+        }
+        else
+        {
+            <li class="tabDefault active"><a data-toggle="tab" href="#SaleIndex">Index</a></li>
+        }
+
+        @if (!OrdinaryVATDesktop.IsUnileverCompany(Convert.ToString(Session["CompanyCode"])))
+        {
+            <li class="tabDefault"><a data-toggle="tab" href="#Excel" class="vdsInfoTab">Excel Upload</a></li>
+        }
+        <li class="tabDefault"><a data-toggle="tab" href="#Integration" class="">Integration</a></li>
+
+    </ul>
+</div>
+
+
+<div class="tab-content">
+    <div id="SaleIndex" class="tab-pane fade  in active">
+        <div class="thinbox  animated zoomIn animated zoomIn faster">
+            <div class="th_thinbox">
+                @if (Model.TransactionType.ToLower() == "other")
+                {
+                    <p>Sale Header</p>
+                }
+                else if (Model.TransactionType.ToLower() == "credit")
+                {
+                    <p>Credit Note Header</p>
+                }
+                else if (Model.TransactionType.ToLower() == "debit")
+                {
+                    <p>Debit Note Header</p>
+                }
+            </div>
+            <div class="dtSearch formDesign">
+                <div class="row">
+                    <div class="trk1_5">
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.SearchField)
+                        </div>
+                        <div class="editor-field">
+                            @Html.SimpleDropDownFor(m => m.SearchField, "/Config/DropDown/SalesColumnSearch", new { @class = " form-control " })
+                        </div>
+                    </div>
+                    <div class="trk1_5">
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.SearchValue)
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(model => model.SearchValue, new { @class = "  form-control" })
+                        </div>
+                    </div>
+
+                    <div class="col-md-1">
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.SaleType)
+                        </div>
+                        <div class="editor-field">
+                            <select id="SaleType" class="form-control">
+                                <option value=""></option>
+                                <option value="Debit">Debit</option>
+                                <option value="Credit">Credit</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="editor-label">
+                            @*@Html.LabelFor(model => model.CustomerID)*@
+                            <label for="CustomerID">Customer</label>
+                        </div>
+                        <div class="editor-field">
+                            @*@Html.SimpleDropDownFor(model => model.CustomerID, "/Config/DropDown/Customer", new { @class = " form-control selectDropdown" })*@
+                            @*@Html.TextBoxFor(model => model.CustomerID, "/Config/DropDown/DropDownByCustomerID/?CustomerID=" + Model.CustomerID + "", new { @class = " trCustomerId required  form-control  selectDropdown" })*@
+                            @Html.TextBoxFor(model => model.CustomerName, new { @class = "trCustomerName  form-control" })
+                            @Html.HiddenFor(model => model.CustomerID, new { @class = "trCustomerId  form-control" })
+
+
+                        </div>
+                    </div>
+                    <div class="trk_5">
+                        <div class="editor-label">
+                            <label>&nbsp;</label>
+                        </div>
+                        <div class="editor-field">
+                            <button type="button" title="Click to Search Customer" id="customerBtn" class="sym-btn-search"></button>
+                        </div>
+                    </div>
+                    @*<div class="col-md-2">
+                            <div class="editor-label">
+                                @Html.LabelFor(model => model.VehicleNo)
+                            </div>
+                            <div class="editor-field">
+                                @Html.TextBoxFor(model => model.VehicleNo, new { @placeholder = "Vehicle No", @class = "  form-control" })
+                            </div>
+                        </div>*@
+                    <div class="trk_5">
+                        <div class="editor-label">
+                            <label>Print</label>
+                        </div>
+                        <div class="editor-field">
+                            <select id="IsPrint" class="form-control">
+                                <option value=""></option>
+                                <option value="Y">Y</option>
+                                <option value="N">N</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="trk_5">
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.Post)
+                        </div>
+                        <div class="editor-field">
+                            <select id="Post" class="form-control">
+                                <option value=""></option>
+                                <option value="Y">Y</option>
+                                <option value="N">N</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="trk1_5">
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.InvoiceDateTimeFrom)
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(model => model.InvoiceDateTimeFrom, new { @placeholder = "Date From", @class = "customDatePicker defaultDate form-control" })
+                        </div>
+                    </div>
+                    <div class="trk1_5">
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.InvoiceDateTimeTo)
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(model => model.InvoiceDateTimeTo, new { @placeholder = "Date To", @class = "customDatePicker defaultDate form-control" })
+                        </div>
+                    </div>
+                    <div class="trk1_5">
+                        <div class="editor-label">
+                            <label>Branch Name</label>
+                        </div>
+                        <div class="editor-field">
+                            @*@Html.SimpleDropDownFor(model => model.BranchId, "/Config/DropDown/BranchProfile", new { @class = " cBranchId form-control" })*@
+                            @*@Html.SimpleDropDownFor(model => model.BranchId, "/Config/DropDown/UserBranchProfile", new { @class = " cBranchId form-control" })*@
+                            @Html.DropDownListFor(model => model.BranchId, new SelectList(Model.BranchList, "BranchID", "BranchName", Model.BranchId), new { @class = "cBranchId form-control" })
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    @*<div class="trk_5">*@
+                    <div class="col-md-1">
+                        <div class="editor-label">
+                            @*@Html.LabelFor(model => model.Post)*@
+                            <label>Institution</label>
+
+                        </div>
+                        <div class="editor-field">
+                            <select id="IsInstitution" class="form-control">
+                                <option value=""></option>
+                                <option value="Y">Y</option>
+                                @*<option value="N">N</option>*@
+                            </select>
+                        </div>
+                    </div>
+                    @*</div>*@
+
+                    <div class="col-md-1">
+                        <div class="editor-label">
+                            <label>Select Top</label>
+
+                        </div>
+                        <div class="editor-field">
+
+                            @Html.SimpleDropDownFor(model => model.SelectTop, "/Config/DropDown/RecordSelectList", new { @class = " cBranchId form-control" })
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-md-7">
+                        <div class="editor-label">
+                            <label>&nbsp;</label>
+                        </div>
+                        <div class="editor-field">
+                            <button type="button" title="Click to Search" id="btnDialog" class="sym-btn-search">&nbsp;Search</button>
+                            <button type="button" title="Clear Data" id="Clear" class=" sym-btn-clear">&nbsp;Clear</button>
+                            @if (Model.TransactionType.ToLower() != "credit" && Model.TransactionType.ToLower() != "tollissue" && Model.TransactionType.ToLower() != "debit")
+                            {
+                                <button type="button" onclick="ReportPreview()" class=" sym-btn-report ">&nbsp;VAT 6.3 (Preview)</button>
+                                <button type="button" onclick="ReportPrint()" class=" sym-btn-report ">&nbsp;VAT 6.3 (Print)</button>
+                            }
+                            @if (Model.TransactionType.ToLower() == "tollissue")
+                            {
+                            }
+                            <button type="button" title="Post Data" onclick="PostData()" class="sym-btn-post">&nbsp;Post</button>
+                            <button type="button" title="Export Data" onclick="ExportExcel()" class="sym-btn-Excel-Export">&nbsp;Export</button>
+                        </div>
+                    </div>
+
+                    <div class="col-md-1">
+                        <div class="editor-label">
+                            <label>Export All</label>
+                        </div>
+                        <div class="editor-field">
+                            @Html.CheckBox("ExportAll", new { id = "idExportAll", @class = "cExportAll form-control", @name = "att[]" })
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <p>&nbsp;</p>
+            <table id="myDataTable" class="display">
+                <thead>
+                    <tr>
+                        <th class="center"><input type="checkbox" class="chkAll" />Action</th>
+                        <th>Sales Invoice No</th>
+                        <th>Customer</th>
+                        <th>Delivery Address</th>
+                        <th>Invoice Date</th>
+                        <th>Total Amount</th>
+                        <th>Total VAT Amount</th>
+                        <th>Is Posted</th>
+                        <th>Import ID</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <br />
+        </div>
+
+        <div class="headrow">
+            <button type="button" title="Add New Sale" data-url="/VMS/SaleInvoice/Create?tType=@Model.TransactionType" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+        </div>
+
+        <form id="ReportForm" method="post" target="_blank"></form>
+
+
+    </div>
+
+    <div id="Excel" class="tab-pane fade  in ">
+        <div class="thinbox row">
+            <div class="th_thinbox">
+                <p>Excel Import</p>
+            </div>
+            @using (Html.BeginForm("ImportExcel", "SaleInvoice", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmSaleImport" }))
+            {
+                @Html.HiddenFor(model => model.TransactionType, new { id = "saleTransactionType" })
+
+                <div class="col-md-offset-6 col-md-6 verticalLine">
+                    <div class="col-md-6">
+                        <label>File</label>@*onclick="pageSubmit('frmSaleImport');"*@
+                        @Html.TextBoxFor(model => model.File, new { @type = "file", @accept = ".xlsx,.xls", @class = " form-control", id = "excelFile" })
+                    </div>
+                    <div class="col-md-6">
+                        <label>&nbsp;</label>
+                        <button type="button" class="sym-btn-file-upload" id="excelUpload">&nbsp;Upload</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div id="Integration" class="tab-pane fade  in formDesign">
+        <div class="thinbox">
+            <div class="th_thinbox">
+                <p>Integration</p>
+            </div>
+
+            @Html.Hidden("TransactionType", Model.TransactionType, new { @class = " clTransactionType" })
+
+
+            @if (Model.TransactionType.ToLower() != "credit")
+            {
+                if (Convert.ToString(Session["CompanyCode"]) == "BCL")
+                {
+                    @Html.Partial("~/Areas/VMS/Views/Integration/_SaleHeader_BCL.cshtml")
+
+                }
+                else if (OrdinaryVATDesktop.IsACICompany(Convert.ToString(Session["CompanyCode"])))
+                {
+                    @Html.Partial("~/Areas/VMS/Views/Integration/_SaleHeader_ACI.cshtml")
+
+                }
+
+                else if (OrdinaryVATDesktop.IsUnileverCompany(Convert.ToString(Session["CompanyCode"])))
+                {
+                    @Html.Partial("~/Areas/VMS/Views/Integration/_SaleHeader_Unilever.cshtml")
+                }
+                else if (Convert.ToString(Session["CompanyCode"]) == "KCCL")
+                {
+                    @Html.Partial("~/Areas/VMS/Views/Integration/_SaleHeader_KCCL.cshtml")
+
+                }
+                else if (Convert.ToString(Session["CompanyCode"]) == "SMC" || Convert.ToString(Session["CompanyCode"]).ToLower() == "smcholding")
+                {
+                    @Html.Partial("~/Areas/VMS/Views/Integration/_SaleHeader_SMC.cshtml")
+
+                }
+
+                else if (Convert.ToString(Session["CompanyCode"]) == "EON" || Convert.ToString(Session["CompanyCode"]).ToLower() == "purofood" || Convert.ToString(Session["CompanyCode"]).ToLower() == "eahpl" || Convert.ToString(Session["CompanyCode"]).ToLower() == "eail" || Convert.ToString(Session["CompanyCode"]).ToLower() == "eeufl" || Convert.ToString(Session["CompanyCode"]).ToLower() == "exfl")
+                {
+                    @Html.Partial("~/Areas/VMS/Views/Integration/_SaleHeader_EON.cshtml")
+
+                }
+                else if (Convert.ToString(Session["CompanyCode"]) == "BERGER")
+                {
+                    @Html.Partial("~/Areas/VMS/Views/Integration/_SaleHeader_BERGER.cshtml")
+
+                }
+                
+                else if (Convert.ToString(Session["CompanyCode"]) == "DECATHLON")
+                {
+                    @Html.Partial("~/Areas/VMS/Views/Integration/_SaleHeader_Decathlon.cshtml")
+
+                }
+
+                else if (Convert.ToString(Session["CompanyCode"]).ToLower() == "shumihotcake")
+                {
+                    @Html.Partial("~/Areas/VMS/Views/Integration/_SaleHeader_ShumiHotCake.cshtml")
+
+                }
+
+                else if (Convert.ToString(Session["CompanyCode"]).ToLower() == "japfa")
+                {
+                    @Html.Partial("~/Areas/VMS/Views/Integration/_SaleHeader_JAPFA.cshtml")
+
+                }
+                 else if (Convert.ToString(Session["CompanyCode"]).ToLower() == "sumictg")
+                {
+                    @Html.Partial("~/Areas/VMS/Views/Integration/_SaleHeader_ShumiHotCakeCtg.cshtml")
+
+                }
+
+            }
+            else if (Model.TransactionType.ToLower() == "credit")
+            {
+                if (Convert.ToString(Session["CompanyCode"]) == "BCL")
+                {
+                    @Html.Partial("~/Areas/VMS/Views/Integration/_SaleHeader_BCL.cshtml")
+
+                    @*@Html.Partial("~/Areas/VMS/Views/Integration/_CreditHeader_BCL.cshtml")*@
+
+                }
+                else if (OrdinaryVATDesktop.IsACICompany(Convert.ToString(Session["CompanyCode"])))
+                {
+                    @Html.Partial("~/Areas/VMS/Views/Integration/_SaleHeader_ACI.cshtml")
+
+                }
+                else if (OrdinaryVATDesktop.IsUnileverCompany(Convert.ToString(Session["CompanyCode"])))
+                {
+                    @Html.Partial("~/Areas/VMS/Views/Integration/_SaleHeader_Unilever.cshtml")
+                }
+
+            }
+
+
+        </div>
+    </div>
+</div>
+
+
+@*<script>
+        $("#SaleIndex .chkAll").click(function () {
+            $('#Integration  .dSelected:input:checkbox').not(this).prop('checked', this.checked);
+        });
+
+
+    </script>*@
+
+
+<script>
+    $(function () {
+
+        //$('.cBranchId').select2('data', { id: '@Model.BranchId', text: '@Model.BranchId' });
+
+    });
+</script>
+
+
+
+<script>
+
+    function ReportPreview() {
+
+        var $Items = $("#SaleIndex .dSelected:input:checkbox:checked");
+
+        if ($Items == null || $Items.length == 0) {
+            ShowResult("Fail", "You are requested to Select before Preview!");
+            return;
+        }
+
+        $("#SaleIndex #ReportForm").empty();
+        $Items.each(function () {
+
+            var ID;
+            ID = $(this).attr("data-Id");
+
+            $('<input type="hidden" name="IDs"/>').val(ID).appendTo('#SaleIndex #ReportForm');
+        });
+        var url = "/VMS/NBRReport/MultiplePreviewReport_VAT6_3";
+
+        $('#SaleIndex #ReportForm').attr('action', url);
+        $("#SaleIndex #ReportForm").submit();
+
+    }
+
+    function ReportPrint() {
+
+        var $Items = $("#SaleIndex .dSelected:input:checkbox:checked");
+
+        if ($Items == null || $Items.length == 0) {
+            ShowResult("Fail", "You are requested to Select before Preview!");
+            return;
+        }
+
+        invoiceNo = "";
+
+        $Items.each(function () {
+
+            var post = $(this).attr("data-post");
+
+            if (post != "Posted") {
+
+                invoiceNo = $(this).attr("data-Id");
+
+            }
+        });
+
+
+        if (invoiceNo != "" && invoiceNo != null) {
+
+            ShowResult("Fail", "You are requested to Post before Print! Invoice No ( " + invoiceNo + " )");
+            return;
+        }
+
+
+        questionMSG = "Are you sure to Print!";
+
+        Ask(questionMSG, function () {
+
+            $("#SaleIndex #ReportForm").empty();
+            $Items.each(function () {
+
+
+                var ID;
+                ID = $(this).attr("data-Id");
+
+                $('<input type="hidden" name="IDs"/>').val(ID).appendTo('#SaleIndex #ReportForm');
+            });
+            var url = "/VMS/NBRReport/MultiplePrintReport_VAT6_3";
+
+            $('#SaleIndex #ReportForm').attr('action', url);
+            $("#SaleIndex #ReportForm").submit();
+
+
+        });
+
+
+    }
+
+    function PostData() {
+
+        var questionMSG = "Are you sure to Post Data!";
+
+        Ask(questionMSG, function () {
+
+            var IDs = [];
+            var $Items = $("#SaleIndex  .dSelected:input:checkbox:checked");
+
+            if ($Items == null || $Items.length == 0) {
+                ShowResult("Fail", "You are requested to Select before Post!");
+                return;
+            }
+
+            $Items.each(function () {
+
+                var ID = $(this).attr("data-Id");
+                IDs.push(ID);
+            });
+
+            var model = {
+                IDs: IDs,
+
+            }
+
+            var url = '/VMS/SaleInvoice/MultipleSalePost';
+
+            $.ajax({
+                url: url
+                , data: model
+                , type: 'Post'
+                , traditional: true
+                , beforeSend: function () { $(".loading").show(); }
+                , success: function (rVM) {
+                    ShowResult(rVM.Status, rVM.Message);
+                }
+                , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+
+            });
+        });
+
+    }
+
+    function ExportExcel() {
+        debugger;
+        var questionMSG = "Are you sure to Export Excel!";
+
+        Ask(questionMSG, function () {
+
+            var SearchField = $('#SearchField').val();
+
+            var SearchValue = $('#SearchValue').val();
+            var SaleType = $('#SaleType').val();
+            var CustomerID = $('#CustomerID').val();
+            var IsPrint = $('#IsPrint').val();
+            var Post = $('#Post').val();
+            var InvoiceDateTimeFrom = $('#InvoiceDateTimeFrom').val();
+            var InvoiceDateTimeTo = $('#InvoiceDateTimeTo').val();
+            var BranchId = $('#BranchId').val();
+            var IsInstitution = $('#IsInstitution').val();
+            var SelectTop = $('#SelectTop').val();
+            var ExportAll = $('#idExportAll').is(":checked");
+            var TransactionType = $('#TransactionType').val();
+            // console.log("TEST EXPORT");
+            // console.log(ExportAll);
+
+            var IDs = [];
+            var $Items = $("#SaleIndex  .dSelected:input:checkbox:checked");
+            if (!ExportAll) {
+
+                if ($Items == null || $Items.length == 0) {
+                    ShowResult("Fail", "You are requested to Select before Export!");
+                    return;
+                }
+            }
+
+
+            $Items.each(function () {
+
+                var ID = $(this).attr("data-Id");
+                IDs.push(ID);
+            });
+
+            var model = {
+                IDs: IDs,
+
+            }
+            debugger;
+
+            var url = '/VMS/SaleInvoice/ExportExcell';
+            var form = $('<form action="' + url + '"></form>');
+
+            IDs.forEach(function (item) {
+                form.append($('<input  value="' + item + '" name="Ids" />'))
+
+            })
+
+            form.append($('<input  value="' + SearchField + '" name="SearchField" />'))
+
+            form.append($('<input  value="' + SearchValue + '" name="SearchValue" />'))
+            form.append($('<input  value="' + SaleType + '" name="SaleType" />'))
+            form.append($('<input  value="' + CustomerID + '" name="CustomerID" />'))
+            form.append($('<input  value="' + IsPrint + '" name="IsPrint" />'))
+            form.append($('<input  value="' + Post + '" name="Post" />'))
+            form.append($('<input  value="' + InvoiceDateTimeFrom + '" name="InvoiceDateTimeFrom" />'))
+            form.append($('<input  value="' + InvoiceDateTimeTo + '" name="InvoiceDateTimeTo" />'))
+            form.append($('<input  value="' + BranchId + '" name="BranchId" />'))
+            form.append($('<input  value="' + IsInstitution + '" name="IsInstitution" />'))
+            form.append($('<input  value="' + SelectTop + '" name="SelectTop" />'))
+            form.append($('<input  value="' + ExportAll + '" name="ExportAll" />'))
+            form.append($('<input  value="' + TransactionType + '" name="TransactionType" />'))
+
+            form.appendTo('#formAppend').submit()
+            //form.appendTo('body').submit()
+
+            //    $.ajax({
+            //        url: url
+            //        , data: model
+            //        , type: 'Get'
+            //        , traditional: true
+            //        , beforeSend: function () { $(".loading").show(); }
+            //        , success: function (rVM) {
+            //            ShowResult(rVM.Status, rVM.Message);
+            //        }
+            //        , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+
+            //    });
+        });
+
+    }
+
+
+</script>
+@*<div id="myModal" class="trkmodal"></div>*@
+
+<div id="myHigherModal" class="HigherModal"></div>
+
+<script language="javascript" type="text/javascript">
+
+    $(document).ready(function () {
+
+        SelectAllForDelete();
+        $.datepicker.regional[""].dateFormat = 'dd/M/y';
+        $.datepicker.setDefaults($.datepicker.regional['']);
+        var oTable = $('#myDataTable').dataTable({
+            "bServerSide": true,
+            "sAjaxSource": "/VMS/SaleInvoice/_index?TransactionType=@Model.TransactionType",
+            "bProcessing": true,
+            "aLengthMenu": tablelength(),
+            "bJqueryUI": true,
+            "bAutoWidth": false,
+
+            "fnServerData": function (sSource, aoData, fnCallback) {
+                $('.dtSearch :input').each(function () {
+                    var Name = $(this).attr("Id")
+                    var Value = $(this).val()
+                    aoData.push({ "name": Name, "value": Value });
+                });
+
+
+                $.getJSON(sSource, aoData, function (json) {
+                    fnCallback(json);
+                });
+            },
+
+            "aoColumns": [
+                            {
+                                "sName": "Id",
+                                "bSearchable": false,
+                                "bSortable": false,
+                                "sWidth": "12%",
+                                "sClass": "center",
+                                "fnRender": function (oObj) {
+
+                                    return ' <input onclick="CheckAll(this)" class="dSelected" type="checkbox" data-Id="' + oObj.aData[1] + '" data-post="' + oObj.aData[7] + '">'
+                                        + '&nbsp; <a title="Click on for Edit" href=\"/VMS/SaleInvoice/Edit/' + oObj.aData[0].split('~')[0] + '?TransactionType=' + oObj.aData[9] + '\" class="sym-btn-edit-row"></a>'
+                                        + '&nbsp; <a title="Click on for Post" data-url="/VMS/SaleInvoice/Post"  onclick=checkValidBranch(this,' + oObj.aData[0].split('~')[2] + '); data-Id="' + oObj.aData[0] + '\" class="sym-btn-post-row"></a>'
+                                    ;
+                                }
+                            }
+                            , { "sName": "ItemNo", "sWidth": "10%" }
+                            , { "sName": "IssueDateTime", "sWidth": "10%" }
+                            , { "sName": "TotalVat", "sWidth": "15%" }
+                            , { "sName": "TotalAmount", "sWidth": "10%" }
+                            , { "sName": "SerialNo", "sWidth": "12%" }
+                            , { "sName": "TotalVATAmount", "sWidth": "12%" }
+                            , { "sName": "Post", "sWidth": "10%" }
+                            , {
+                                "sName": "ImportIDExcel"
+                                , "sWidth": "10%"
+                                , "fnRender": function (oObj) {
+
+                                    var div = '<div  class="wrapword">' + oObj.aData[8] + '</div>';
+
+                                    return div;
+
+                                    ;
+                                }
+                            }
+            ]
+        });
+
+        $('#btnDialog').click(function () {
+            debugger
+            var model = $('.dtSearch :input').serialize();
+            //var BranchId = $('.cBranchId').val();
+            //if (BranchId == null || BranchId == "")
+            //{
+            //    BranchId='0';
+            //}
+            
+            $.ajax({
+                url: "/VMS/SaleInvoice/Index",
+                cache: false,
+                // data: model,
+                success: function (html) {
+                    oTable.fnDraw();
+                }
+            });
+        });
+
+        ////clearing fields
+        $("#Clear").on('click', function () {
+            $(".Dropdown").select2("val", "");
+            $(".form-control").val("");
+        });
+
+
+    });
+
+    function checkValidBranch(element, branchId) {
+        if ('@Session["BranchId"]' != branchId) {
+            ShowResult("Fail", "This Information not for this Branch!");
+            return;
+        }
+
+        btnPost(element);
+    }
+
+
+    $("#excelUpload").on("click",
+        function (e) {
+
+            e.preventDefault();
+
+            var fileUpload = $("#excelFile").get(0);
+            var files = fileUpload.files;
+
+            var data = new FormData();
+            data.append("file", files[0]);
+            data.append("TransactionType", $("#saleTransactionType").val());
+
+
+            $.ajax({
+                url: "/VMS/SaleInvoice/GetSettings?group=SaleWeb&name=Setps",
+                type: "GET",
+                contentType: false,
+                timeout: 600000,
+                processData: false,
+                //beforeSend: function () { $(".loading").show(); },
+                //complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                success: function (result) {
+
+                    if (result === "y") {
+
+                        //setTimeout(function() {
+
+
+
+
+                        //},3000)
+
+
+
+                        $.ajax({
+                            url: "/VMS/SaleInvoice/ProcessExcel",
+                            type: "POST",
+                            data: data,
+                            contentType: false,
+                            timeout: 600000,
+                            processData: false,
+                            beforeSend: function () { $(".loading").show(); },
+                            complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                            success: function (result) {
+
+
+                                result = JSON.parse(result)
+                                console.log(result)
+
+                                if (result.action === "Fail") {
+                                    ShowResult("Fail", "Data Validation Failed");
+                                    return;
+
+                                }
+
+
+                                console.log(result)
+
+                                Ask("Data validation Complete, Are you sure to Save?",
+                                    function () {
+
+                                        $.ajax({
+                                            url: "/VMS/SaleInvoice/SaveTransactions",
+                                            type: "POST",
+                                            data: data,
+                                            contentType: false,
+                                            processData: false,
+                                            timeout: 600000,
+
+                                            beforeSend: function () { $(".loading").show(); },
+                                            complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                                            success: function (result) {
+                                                result = JSON.parse(result)
+                                                console.log(result)
+
+                                                if (result.action == "Success") {
+                                                    ShowResult("Success", "Data Saved Successfully");
+                                                    //window.location = "/VMS/SaleInvoice/Index?TransactionType="+'@Model.TransactionType';
+                                                }
+                                            },
+                                            error: function (err) {
+                                                err = JSON.parse(err)
+                                                console.log(err)
+                                                ShowResult("Fail", err.message);
+
+                                            }
+                                        });
+
+                                    },
+                                    function () {
+                                    })
+
+
+                            },
+                            error: function (err) {
+
+                            }
+                        });
+
+
+                    } else {
+
+
+                        setTimeout(function () {
+
+                            $.ajax({
+                                url: "/VMS/SaleInvoice/ImportExcel",
+                                type: "POST",
+                                data: data,
+                                contentType: false,
+                                timeout: 600000,
+                                processData: false,
+                                beforeSend: function () { $(".loading").show(); },
+                                complete: function () {
+                                    $(".loading").fadeOut(200).hide("slow");
+                                    console.log("end")
+                                },
+                                success: function (result) {
+                                    result = JSON.parse(result)
+                                    console.log(result)
+
+                                    if (result.action == "Success") {
+                                        ShowResult("Success", "Data Saved Successfully");
+                                        window.location = "/VMS/SaleInvoice/Index?TransactionType=" + '@Model.TransactionType';
+                                        console.log(result)
+
+                                    } else {
+                                        ShowResult("Fail", result.message);
+
+                                    }
+                                },
+                                error: function (err) {
+                                    ShowResult("Fail", result.message); //"Something gone wrong"
+                                }
+                            })
+
+
+
+                        }, 3000);
+
+
+
+
+                    }
+
+
+
+                },
+                error: function (err) {
+
+                }
+            })
+
+
+
+
+
+
+
+
+        });
+
+
+    $(function () {
+
+    })
+
+
+
+    function getSettings(group, name) {
+
+        $.ajax({
+            url: "/VMS/SaleInvoice/GetSettings?group=" + group + "&name=" + name,
+            type: "GET",
+            data: data,
+            contentType: false,
+            timeout: 600000,
+            processData: false,
+            beforeSend: function () { $(".loading").show(); },
+            complete: function () { $(".loading").fadeOut(200).hide("slow") },
+            success: function (result) {
+
+
+            },
+            error: function (err) {
+
+            }
+        })
+
+
+
+
+    }
+
+    function callbackFromCustomerModal(sender) {
+        var id = $(sender).children('td.popUpCustomerId').text();
+        var CustomerName = $(sender).children('td.popUpCustomerName').text();
+        //console.log(CustomerName)
+        //console.log(id)
+        $('.trCustomerId').val(id);
+        $('.trCustomerName').val(CustomerName);
+    }
+
+
+
+
+    $('#customerBtn').click(function () {       
+        //var customerName = $('.tr1CustomerId option:selected').text();
+        var customerNames = $('.trCustomerId option:selected').text();
+        //console.log("customerName")
+        var url = "/Vms/Customer/GetCustomerPopUp?CustomerName=" + customerNames;
+        var modal = document.getElementById('myHigherModal');
+        $.ajax({
+            url: url,
+            cache: false,
+            beforeSend: function () { $(".loading").show(); },
+            success: function (html) {
+                modal.style.display = "block";
+                $("#myHigherModal").html(html);
+                console.log(html)
+            }
+        , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+        });
+    });
+
+
+</script>

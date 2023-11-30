@@ -1,0 +1,270 @@
+﻿@*  
+ReferenceNumber
+IssueDate
+Salutation
+EmployeeName
+ShortName/NickName
+Address
+Designation
+Department
+JobGrade
+JobGradeDesignation
+BasicSalary
+HouseRentAllowance
+MedicalAllowance
+ConveyanceAllowance
+GrossSalary
+*@
+
+@model SymViewModel.Common.PreEmployementInformationVM
+@using UIHelper.MVC
+@using (Html.BeginForm("CreateEdit", "PreEmployementInformation", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmPreEmployementInformation" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.Operation)
+
+    <div class="headrow">
+        @if (Model.Operation == "add")
+        {
+            <button type="button" name="btnName" value="Save" title="Save Data" onclick="SaveData()" class="sym-btn-save">&nbsp;Save</button>
+            <label class="pull-right">Pre-Employement Information > Create</label>
+        }
+        else
+        {
+            <button type="button" name="btnName" value="Update" title="Update Data" onclick="SaveData()" class="sym-btn-update">&nbsp;Update</button>
+            <label class="pull-right">Pre-Employement Information > Edit</label>
+        }
+        <button type="button" title="Go To Index" data-url="/Common/PreEmployementInformation" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New Pre-Employement Information" data-url="/Common/PreEmployementInformation/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+
+    </div>
+    <div class="thinbox">
+        <div class="th_thinbox">
+            <p>Pre-Employement Information</p>
+        </div>
+        <div class="PreEmployementInformation">
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.ReferenceNumber)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBox("ReferenceNumber", Model.ReferenceNumber ?? "BESL-HR_", new { @placeholder = "Reference Number", @class = " required form-control" })
+                        @Html.ValidationMessageFor(model => model.ReferenceNumber)
+                    </div>
+                </div>
+
+
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.IssueDate)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.IssueDate, new { @placeholder = "Issue Date", @class = " customDatePicker form-control" })
+                        @Html.ValidationMessageFor(model => model.IssueDate)
+                    </div>
+                </div>
+
+              
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.Salutation)
+                    </div>
+                    <div class="editor-field">
+                        @Html.SimpleDropDownFor(model => model.Salutation, "/Config/DropDown/Salutation", new { @class = " required form-control" })
+                        @Html.ValidationMessageFor(model => model.Salutation)
+                    </div>
+                </div>
+
+                
+
+                <div class="col-md-3">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.EmployeeName)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.EmployeeName, new { @placeholder = "Employee Name", @class = " required form-control" })
+                        @Html.ValidationMessageFor(model => model.EmployeeName)
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.ShortName)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.ShortName, new { @placeholder = "Short Name", @class = "  form-control" })
+                        @Html.ValidationMessageFor(model => model.ShortName)
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.Address)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextAreaFor(model => model.Address, new { @placeholder = "Address", @class = " required form-control" })
+                        @Html.ValidationMessageFor(model => model.Address)
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.Designation)
+                    </div>
+                    <div class="editor-field">
+                        @Html.SimpleDropDownFor(model => model.Designation, "/Config/DropDown/DesignationName", new { @class = "  form-control" })
+                        @Html.ValidationMessageFor(model => model.Designation)
+                    </div>
+                </div>
+
+
+                <div class="col-md-3">
+                    <div class="editor-label">
+                        <label>@Session["DepartmentLabel"]</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.SimpleDropDownFor(model => model.Department, "/Config/DropDown/DepartmentName", new { @class = "  form-control" })
+                        @Html.ValidationMessageFor(model => model.Department)
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.JobGrade)
+                    </div>
+                    <div class="editor-field">
+                        @Html.SimpleDropDownFor(model => model.JobGrade, "/Config/DropDown/GradeName", new { @class = " form-control" })
+                        @Html.ValidationMessageFor(model => model.JobGrade)
+                    </div>
+                </div>
+            </div>
+            
+
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.JobGradeDesignation)
+                    </div>
+                    <div class="editor-field">
+                        @Html.SimpleDropDownFor(model => model.JobGradeDesignation, "/Config/DropDown/OtherInfo?infoType=Other1", new { @class = "  form-control" })
+                        @Html.ValidationMessageFor(model => model.JobGradeDesignation)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.BasicSalary)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.BasicSalary, new { @placeholder = "Basic Salary", @class = " salary form-control" })
+                        @Html.ValidationMessageFor(model => model.BasicSalary)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.HouseRentAllowance)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.HouseRentAllowance, new { @placeholder = "House RentAll owance", @class = " salary  form-control" })
+                        @Html.ValidationMessageFor(model => model.HouseRentAllowance)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.MedicalAllowance)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.MedicalAllowance, new { @placeholder = "Medical Allowance", @class = " salary form-control" })
+                        @Html.ValidationMessageFor(model => model.MedicalAllowance)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.ConveyanceAllowance)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.ConveyanceAllowance, new { @placeholder = "Conveyance Allowance", @class = " salary  form-control" })
+                        @Html.ValidationMessageFor(model => model.ConveyanceAllowance)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.GrossSalary)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.GrossSalary, new { @placeholder = "Gross Salary", @class = " gross  form-control" })
+                        @Html.ValidationMessageFor(model => model.GrossSalary)
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.Remarks)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextAreaFor(model => model.Remarks, new { @placeholder = " Remarks", @class = "  form-control" })
+                        @Html.ValidationMessageFor(model => model.Remarks)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="headrow">
+        @if (Model.Operation == "add")
+        {
+            <button type="button" name="btnName" value="Save" title="Save Data" onclick="SaveData()" class="sym-btn-save">&nbsp;Save</button>
+        }
+        else
+        {
+            <button type="button" name="btnName" value="Update" title="Update Data" onclick="SaveData()" class="sym-btn-update">&nbsp;Update</button>
+        }
+        <button type="button" title="Go To Index" data-url="/Common/PreEmployementInformation" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New Pre-Employement Information" data-url="/Common/PreEmployementInformation/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+
+    </div>
+}
+<script>
+    $(function () {
+        valiDation("frmPreEmployementInformation");
+    });
+
+    $('.salary').change(function () {
+        var gross = 0;
+        $('.salary').each(function () {
+            gross = gross + parseFloat(this.value);
+        })
+        $('.gross').val(gross);
+    });
+
+    var SaveData = function () {
+        var otherSalary = 0;
+        var grossSalary = 0;
+        $('.salary').each(function () {
+            otherSalary = otherSalary + parseFloat(this.value);
+        })
+        grossSalary = parseFloat($('.gross').val());
+
+        if ((grossSalary - otherSalary) != 0) {
+            ShowResult('Fail', 'Gross And Summation of Other Salary are not same!');
+            return;
+        }
+
+        pageSubmit('frmPreEmployementInformation')
+
+    }
+
+    //$(document).keypress(function (e) {
+    //    if (e.which == 13) {
+    //        //var url = "/Home/Login";
+    //        pageSubmit('frmPreEmployementInformation')
+    //        //submit(url);
+    //    }
+    //});
+</script>

@@ -1,0 +1,28 @@
+﻿@model IEnumerable<VATViewModel.DTOs.VendorVM>
+@using UIHelper.MVC
+@{
+    Layout = null;
+    var sl = 1;
+}
+@foreach (var vendor in Model)
+{
+    <tr class="trSelectPopUpCustomer">
+        <td>@sl</td>
+        <td class=" popUpVendorCode">@vendor.VendorCode</td>
+        <td title="@vendor.VendorName">@vendor.VendorName</td>
+        <td>@vendor.VendorGroup</td>
+        <td>@vendor.TINNo</td>
+        <td>@vendor.VATRegistrationNo</td>
+        <td title="@vendor.Address1">@vendor.Address1</td>
+        <td>@vendor.City</td>
+        <td>@vendor.Email</td>
+        <td>@vendor.ContactPerson</td>
+        <td>@vendor.ContactPersonDesignation</td>
+        <td>@vendor.ContactPersonEmail</td>
+        <td>@vendor.ContactPersonTelephone</td>
+        <td hidden class=" popUpVendorId">@vendor.VendorID</td>
+        @{
+    sl++;
+        }
+    </tr>
+}

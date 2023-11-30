@@ -1,0 +1,39 @@
+﻿@model VATViewModel.DTOs.CustomerItemDetailsVM
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+<tr class="tablerow">
+    @using (Html.BeginCollectionItem("Details"))
+    {
+        <td>
+            <a id="" title="Click to Remove" onclick="RemoveItem(this);" class="sym-btn-remove-row "></a>
+            <a id="" title="Click to Edit" onclick="EditItem(this);" class="sym-btn-edit-row"></a>
+        </td>
+        
+        <td>
+            @Html.HiddenFor(m => m.ItemNo, new { @class = "dItemNo" })
+            @Html.TextBoxFor(model => model.ProductCode, new { @class = "  dProductCode   form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.ProductName, new { @class = "  dItemName   form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.UOM, new { @class = "  dUOM   form-control", @readonly = "readonly" })
+        </td>
+        
+        <td>
+            @Html.TextBoxFor(model => model.Value, new { @class = "  dValue right priceLen  form-control", @readonly = "readonly" })
+        </td>
+        
+         <td>
+            @Html.TextBoxFor(model => model.VATRate, new { @class = "  dVATRate right priceLen  form-control", @readonly = "readonly" })
+        </td>
+        
+        <td>
+            @Html.TextBoxFor(model => model.HSCode, new { @class = "  dHSCode form-control", @readonly = "readonly" })
+        </td>
+         
+
+    }
+</tr>

@@ -1,0 +1,157 @@
+﻿@model SymVATWebUI.Areas.VMS.Models.MISViewModel
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+
+<style>
+    .trkmodal{
+        padding-top:2%;
+    }
+    .trkmodal-content {
+        width: 50%;
+        padding-bottom: 10px;
+    }
+    .customDatePicker {
+        background: #fefede url(/Images/calendar.jpg) no-repeat 98% !important;
+    }
+    label{
+        margin-bottom:0px;
+    }
+</style>
+<div class="trkmodal-content">
+    <div class="trkmodal-header">
+        <span class="close">&times;</span>
+        <h2 class="text-center">Report(Purchase)</h2>
+    </div>
+    <div class="trkmodal-body">
+    @using (Html.BeginForm("ReportMIS", "Purchase", FormMethod.Post, new { enctype = "multipart/form-data", @target = "_blank", @Id = "frmMIS" }))
+    {
+        @Html.HiddenFor(m => m.PreviewOnly)
+        @Html.HiddenFor(m=>m.PurchaseId)      
+        <div class="form-group">
+            <label>Purchase No</label>
+            @Html.SimpleDropDownFor(m=>m.PurchaseNo, "/Config/DropDown/Purchase", new { @class = " form-control selectDropdown trItemNo" })
+        </div>
+        <div class="form-group col-md-6">
+            <label>Date From</label>
+            @Html.TextBoxFor(m => m.ReceiveDateFrom, new { @placeholder = "Start Date", @class = "customDatePicker form-control" })
+        </div>
+    <div class="form-group col-md-6">
+        <label>Date To</label>
+        @Html.TextBoxFor(m => m.ReceiveDateTo, new { @placeholder = "End Date", @class = "customDatePicker form-control" })
+    </div>
+    <div class="form-group">
+        <label>Vendor Group</label>
+        @Html.SimpleDropDownFor(m=>m.VendorGroup, "/Config/DropDown/VendorGroup", new { @class = " form-control selectDropdown trVendorGroup" })
+    </div>
+    <div class="form-group">
+        <label>Vendor</label>
+        @Html.SimpleDropDownFor(m=>m.VendorName, "/Config/DropDown/Vendor", new { @class = " form-control selectDropdown trVendor" })
+    </div>
+    <div class="form-group">
+        <label>Product Group</label>
+        @Html.SimpleDropDownFor(m=>m.ProductGroup, "/Config/DropDown/ProductGroup", new { @class = " form-control selectDropdown trVendor" })
+    </div>
+    <div class="form-group">
+        <label>Product</label>
+        @Html.SimpleDropDownFor(m=>m.ProductGroup, "/Config/DropDown/Product", new { @class = " form-control selectDropdown trVendor" })
+    </div>
+    <div class="form-group col-md-6">
+        <label>Post</label>
+        @Html.DropDownListFor(model => model.Post, new List<SelectListItem>
+   {
+       new SelectListItem {Text = "Y", Value="Y"  },
+       new SelectListItem {Text = "N", Value="N"  }
+   }, new { @class = " form-control" })
+    </div>
+    <div class="form-group col-md-6">
+        <label>Report Type</label>
+        @Html.DropDownListFor(model => model.ReportType, new List<SelectListItem>
+   {
+       new SelectListItem {Text = "Detail", Value="Detail"  },
+       new SelectListItem {Text = "Summery", Value="Summery"  },
+       new SelectListItem {Text = "SummeryByProduct", Value="SummeryByProduct"  },
+       new SelectListItem {Text = "Single", Value="Single"  },
+       new SelectListItem {Text = "Monthly", Value="Monthly"  }
+   }, new { @class = " form-control" })
+
+    </div>
+        <button type="button" class=" btn sym-btn-report trPreview"> Preview</button>
+        <button type="button" class="btn btn-danger closeBtn pull-right">Close</button>
+    }
+    </div>
+</div>
+<script src="~/assets/javascripts/custom.js"></script>
+<script>
+    $(document).ready(function () {
+        ////setting first item
+        var interval = setInterval(function () {
+            if (document.querySelectorAll('.trItemNo option').length > 0) {
+                var name = '@Model.ProductName';
+                $('.trItemNo').select2("val", name);
+                clearInterval(interval);
+            }
+        }, 200);
+        ////clicking preview button
+        $('.trPreview').click(function () {
+            //var product = $('.trItemNo :selected').val();
+            //if (product == "") {
+            //    ShowResult("Fail", "Select a product first!");
+            //    return;
+            //}
+            $("#PreviewOnly").val("true");
+            pageSubmit('frmMIS');
+        });
+        ////clicking vat16 button
+        $('.trVAT16').click(function () {
+            //var product = $('.trItemNo :selected').val();
+            //if (product == "") {
+            //    ShowResult("Fail", "Select a product first!");
+            //    return;
+            //}
+            $("#PreviewOnly").val("false");
+            pageSubmit('frmMIS');
+        });
+        ////for dropdown
+        InitDropDowns();
+        ////for select2 dropdown
+        $(".selectDropdown").select2();
+        $(".selectDropdown").trigger('change');
+        $(".selectDropdown").removeClass('form-control');
+
+        function ItemChange() {
+            var value = $('.trName').val().toString();
+            if (value == 0) {
+                $('.trBranch').val("");
+                return;
+            }
+            var url = "/Vms/BankInformation/GetItemInfo?ItemId=" + value;
+
+            $.getJSON(url, function (data) {
+                $('.trBranch').val(data);
+            });
+        }
+        ////changing item
+        $('.trName').change(function () {
+            ItemChange();
+        });
+
+        function closeModal() {
+            $("#myModal").html("");
+            trkmodal.style.display = "none";
+        }
+
+        var span = document.getElementsByClassName("close")[0];
+        var trkmodal = document.getElementById('myModal');
+        //When the user clicks on <span> (x), close the trkmodal
+        span.onclick = function () {
+            closeModal();
+        }
+
+        $('.closeBtn').click(function () {
+            closeModal();
+        });
+        
+    });
+</script>

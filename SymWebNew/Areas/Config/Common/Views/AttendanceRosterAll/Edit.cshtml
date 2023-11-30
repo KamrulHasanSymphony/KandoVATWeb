@@ -1,0 +1,87 @@
+﻿@model SymViewModel.Attendance.AttendanceRosterAllVM
+@using UIHelper.MVC
+
+@{
+    Layout = null;
+    ViewBag.Title = "Edit";
+}
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+
+    <div class="thinbox">
+        <div class="ara">
+        <div class="row">
+            <div class="col=md-4">
+                @Html.LabelFor(model => model.Code)
+            </div>
+            <div class="col=md-8">
+                @Html.TextBoxFor(model => model.Code, null, new { @class = "required form-control" })
+            </div>
+        </div>
+        <div class="row">
+            <div class="col=md-4">
+                @Html.LabelFor(model => model.Name)
+            </div>
+            <div class="col=md-8">
+                @Html.TextBoxFor(model => model.Name, null, new { @class = "required form-control" })
+            </div>
+        </div>
+                      <div class="row">
+            <div class="col=md-4">
+                @Html.LabelFor(model => model.AttendanceGroupId)
+            </div>
+            <div class="col=md-8">
+                @Html.SimpleDropDownFor(model => model.AttendanceGroupId, "/Config/DropDown/GroupList", new {@class = "required form-control" })
+            </div>
+        </div>
+          <div class="row">
+            <div class="col=md-4">
+                @Html.LabelFor(model => model.AttendanceStructureId)
+            </div>
+            <div class="col=md-8">
+                @Html.SimpleDropDownFor(model => model.AttendanceStructureId, "/Config/DropDown/AttendanceStructure", new {@class = "required form-control" })
+            </div>
+        </div>
+        <div class="row">
+            <div class="col=md-4">
+                @Html.LabelFor(model => model.Remarks)
+            </div>
+            <div class="col=md-8">
+                @Html.TextBoxFor(model => model.Remarks, null, new { @class = " form-control" })
+            </div>
+        </div>
+        </div>
+    @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.BranchId)
+        <div class="row">
+            <div class="col-sm-4">
+                <input type="button" value="Edit" onclick="Edit();" class="Edit btn btn-info" />
+                <input type="submit" value="Save"  class=" Save btn btn-info" />
+            </div>
+@*            <div class="col-sm-4">
+                <input type="button" data-url="/Common/Department/Delete/@Model.Id"  value="Delete"  class=" lnkDelete btn btn-info" />
+            </div>*@
+            <div class="col-sm-4">
+                <input type="button" value="Cancel" class="btncancel btn btn-info" />
+            </div>
+        </div>
+    </div>
+}
+<script>
+    $(function () {
+        Edit();
+        InitDropDowns();
+    });
+    function Edit() {
+        fnReadOnly("ara");
+        if ($(".ara").hasClass("readOnly")) {
+            $(".Save").hide();
+            $(".Edit").show();
+        }
+        else {
+            $(".Save").show();
+            $(".Edit").hide();
+        }
+    }
+</script>

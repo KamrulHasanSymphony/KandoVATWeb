@@ -1,0 +1,22 @@
+﻿@model IEnumerable<VATViewModel.DTOs.VehicleVM>
+@using UIHelper.MVC
+@{
+    Layout = null;
+    var sl = 1;
+}
+
+@foreach (var Vehicle in Model)
+{
+    
+    <tr class="trSelectPopUpProduct">
+        <td>@sl</td> 
+        <td class="popUpItemCode" width="30%">@Vehicle.VehicleNo</td>
+        <td class="popUpItemName" title="@Vehicle.VehicleType">@Vehicle.VehicleType</td>
+        <td class="popUpItemDescription" width="18%" title="@Vehicle.Description">@Vehicle.Description</td>
+        <td class="popUpItemComments" width="18%" title="@Vehicle.Comments">@Vehicle.Comments</td>
+
+        @{
+            sl++;
+        }
+    </tr>
+}

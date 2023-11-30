@@ -1,0 +1,125 @@
+﻿@model VATViewModel.DTOs.UserInformationVM
+@using UIHelper.MVC
+@{
+    ViewBag.Title = "Create";
+    ViewBag.Location = "Create";
+}
+<style>
+    div.editor-label label{
+        margin-bottom:0px;
+        margin-top:5px;
+    }
+</style>
+@using (Html.BeginForm("CreateEdit", "UserInformation", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmUserInfo" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.UserID)
+    @Html.HiddenFor(model => model.Operation)
+    <div class="thinbox">
+        <div class="th_thinbox">
+            <p>User Information</p>
+        </div>
+        <div class="VendorGroup">
+            <div>
+                <div class="row">
+                    <div class="editor-label">
+                        <label>User Name</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.UserName, new { @placeholder = "User Name", @class = " required form-control" })
+                    </div>
+                    @Html.ValidationMessageFor(model => model.UserName)
+                </div>
+            </div>
+
+            <div>
+                <div class="row">
+                    <div class="editor-label">
+                        <label>Password</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.UserPassword, new { @placeholder = "Password", @class = " required form-control", @type = "password" })
+                    </div>
+                    @Html.ValidationMessageFor(model => model.UserPassword)
+                </div>
+            </div>
+
+            <div>
+                <div class="row">
+                    <div class="editor-label">
+                        <label>Confirm Password</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBox("ConfirmPassword", null, new { @placeholder = "Confirm Password", @class = " required form-control", @type = "password" })
+                    </div>
+                    @Html.ValidationMessage("ConfirmPassword")
+                </div>
+            </div>
+            <div>
+                <div class="row">
+                    <div class="editor-label">
+                        <label>Group</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.SimpleDropDownFor(model => model.GroupID, "//", new { @class = "form-control trkMT-0" })
+                    </div>
+                    @Html.ValidationMessageFor(model => model.GroupID)
+                </div>
+                <br />
+                <div class="row">
+                    @Html.HiddenFor(m => m.ActiveStatus)
+                    <input id="input-1" type="checkbox">
+                </div>
+            </div>
+        </div>
+    </div>
+       
+     <div class="headrow">
+        @if (Model.Operation == "add")
+        {
+            <label class="col-sm-3">
+                <button type="button" name="btnName" value="Save" title="Save Data" onclick="SaveData()" class="sym-btn-save">&nbsp;Save</button>
+            </label>
+            <label class="col-sm-4">
+                <button type="button" title="Cancel Data" class=" btncancel sym-btn-cancel">&nbsp;Cancel</button>
+            </label>
+        }
+        else
+        {
+            <label class="col-sm-3">
+                <button type="button" name="btnName" value="Update" title="Update Data" onclick="SaveData()" class="sym-btn-update">&nbsp;Update</button>
+            </label>
+            <label class="col-sm-4">
+                <button type="button" title="Cancel Data" class=" btncancel sym-btn-cancel">&nbsp;Cancel</button>
+            </label>
+        }
+    </div>
+}
+
+<script>
+    function SaveData() {
+        var password = $('#UserPassword').val();
+        var confirm = $('#ConfirmPassword').val();
+        if (password == "") {
+            ShowResult("Fail", "Please enter a password");
+            return;
+        }
+        if (confirm == "") {
+            ShowResult("Fail", "Please confirm your password");
+            return;
+        }
+        if (password != confirm) {
+            ShowResult("Fail", "Passwords don't match");
+            return;
+        }
+        pageSubmit('frmUserInfo');
+    }
+    $(function () {
+        valiDation("frmVendorGroup");
+        MyCheckBox('@Model.ActiveStatus', 'input-1', 'ActiveStatus');
+        InitDropDowns();
+
+        
+    });
+</script>
+       

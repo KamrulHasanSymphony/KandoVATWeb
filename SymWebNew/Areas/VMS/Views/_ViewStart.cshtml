@@ -1,0 +1,28 @@
+﻿@{
+
+
+    if (Request.Path.ToUpper().Equals("/VMS/HOME/LOGIN"))
+    {
+        Layout = "~/Areas/VMS/Views/Shared/_loginLayout.cshtml";
+    }
+    else
+    {
+        //if (project.ToLower()=="gdicbde")
+        //{
+        //    Layout = "~/Areas/Sage/Views/Shared/_HomeLayout.cshtml";
+        //}
+        //else
+        //{
+        Layout = "~/Areas/VMS/Views/Shared/_HomeLayout.cshtml";
+        <script>
+            $(function () {
+                var branchId = '@Session["BranchId"]';
+                if (branchId == "0") {
+                    window.location = "/VMS/Home/Index?changeBranch=true";
+                }
+            });
+        </script>
+        //}
+
+    }
+}

@@ -1,0 +1,479 @@
+﻿@model VATViewModel.DTOs.PopUpViewModel
+@using UIHelper.MVC
+@{
+    Layout = "~/Areas/VMS/Views/Shared/_ModalLayout.cshtml";
+}
+<style>
+    .trkMT10 {
+        margin-top: 10px;
+    }
+
+    .sortableHeader {
+        cursor: pointer;
+    }
+
+    table.trkFixTable tr.trSelectPopUpProduct td {
+        overflow-x: hidden;
+    }
+</style>
+<div class="HigherModal-content">
+    <div class="HigherModal-header">
+        <span class="closeHigher">&times;</span>
+        <h2 class="text-center">Sale Search</h2>
+    </div>
+    <div class="HigherModal-body formDesign">
+        <div class="row">
+            @*<div class="col-md-2">
+                <label>Product Group</label>
+                @Html.SimpleDropDownFor(model => model.ProductCategoryId, "/Config/DropDown/ProductCategory", new { @Id = "popUpProductGroup", @class = " form-control  trProductGroup" })
+            </div>*@
+            <div class="col-md-4">
+                <label>Search Value</label>
+                @Html.TextBox("SearchValue", "", new { @class = " form-control" })
+            </div>
+            <div class="col-md-1">
+                <div class="editor-field">
+                    <label>&nbsp;</label>
+                    <button type="button" title="Click to Search" id="searchBtn" class="sym-btn-search btnSaleSearch">&nbsp;Search</button>
+                </div>
+            </div>
+            
+            <div class="col-md-1">
+                <div class="editor-field">
+                    <label>&nbsp;</label>
+                    <button type="button" title="Click to Search" id="btnSaveSale" class="sym-btn-save btnSaveSale">&nbsp;Save</button>
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+            
+
+            </div>
+            <div class="trk1_5">
+                <div class="editor-label">
+                    <label for="DeliveryDate">From Date</label>
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.FromDate, new {@placeholder = "From Date", @class = "  customDatePicker  form-control", disabled=true})
+                </div>
+            </div>
+        <div class="trk1_5">
+            <div class="editor-label">
+                <label for="DeliveryDate">To Date</label>
+            </div>
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.ToDate, new {@placeholder = "To Date", @class = "  customDatePicker  form-control", disabled=true})
+            </div>
+        </div>
+
+        <div class="col-md-1">
+            <div class="editor-label">
+                <label for="" style="word-wrap: break-word">
+                    <input name="mltSearch" id="mltSearch" type="checkbox" />
+                    Multiple Search
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="fixedParent">
+                <table class="trkFixTable" id="productPopUpTable">
+                    <thead>
+                        <tr>
+                            @*<th>SL</th>
+                            <th>Item No</th>
+                            <th>Product Name</th>
+                            <th>Code</th>
+                            <th>UOM</th>
+                            <th>Active Status</th>
+                            <th>Category</th>
+                            <th>Cost Price</th>
+                            <th>NBR Price</th>
+                            <th>Stock</th>
+                            <th>Type</th>
+                            <th>Trading</th>
+                            <th>Non-stock</th>
+                            <th>HS Code</th>
+                            <th>Vat Rate</th>
+                            <th>SD</th>
+                            <th>Rebate</th>
+                            <th>Total Cost</th>
+                            <th>Toll Product</th>*@
+                            
+                            <th>ID                       </th>
+                            <th>CustomerName             </th>
+                            <th>CustomerCode             </th>
+                            <th>Delivery_Address         </th>
+                            <th>Invoice_Date_Time        </th>
+                            <th>Post                     </th>
+                            <th> Item_Code    </th>
+                            <th> Item_Name    </th>
+                            <th>Quantity                 </th>
+                            <th>NBR_Price                </th>
+                            <th>UOM                      </th>
+                            <th>VAT_Rate                 </th>
+                            <th>SD_Rate                  </th>
+                            <th>Non_Stock                </th>
+                            <th>Trading_MarkUp           </th>
+                            <th>Discount_Amount          </th>
+                            <th>Promotional_Quantity     </th>
+                            <th>VAT_Name                 </th>
+                            <th>LC_Number                </th>
+                            <th>Currency_Code            </th>
+                            <th>Sale_Type                </th>
+                            <th>Previous_Invoice_No      </th>
+                            <th>Is_Print                 </th>
+                            <th>Tender_Id                </th>
+                            <th>Reference_No             </th>
+                            <th>SubTotal                 </th>
+                            <th>Type                     </th>
+                        </tr>
+                    </thead>
+                    <tbody id="popUpTbody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*product group loading code*@
+<script>
+    
+    ////if product type is selected but product group is not selected
+</script>
+
+@*fixed table*@
+<script language="javascript" type="text/javascript">
+    function fixedScrollPopUpFixedTable(tableId, leftTotal) {
+        $('#' + tableId + ' tbody').scroll(function (e) {
+            var i;
+            for (i = 1; i <= leftTotal; i++) {
+                $('#' + tableId + ' thead th:nth-child(' + i + ')').css("left", $("#" + tableId + " tbody").scrollLeft());
+                $('#' + tableId + ' tbody td:nth-child(' + i + ')').css("z-index", "1");
+                $('#' + tableId + ' tbody td:nth-child(' + i + ')').css("left", $("#" + tableId + " tbody").scrollLeft());
+            }
+            $('#' + tableId + ' thead').css("left", -$("#" + tableId + " tbody").scrollLeft());
+
+        });
+    }
+    function settingPopUpFixedColumnWidth(tableId, widthArgs) {
+        if (widthArgs == null) {
+            return;
+        }
+        var i;
+        for (i = 1; i <= widthArgs.length; i++) {
+            $('#' + tableId + ' tr td:nth-child(' + i + ')').css("min-width", widthArgs[i - 1] + "px");
+            $('#' + tableId + ' tr td:nth-child(' + i + ')').css("overflow", "hidden");
+            $('#' + tableId + ' tr td:nth-child(' + i + ')').css("max-width", widthArgs[i - 1] + "px");
+
+            $('#' + tableId + ' tr th:nth-child(' + i + ')').css("min-width", widthArgs[i - 1] + "px");
+            $('#' + tableId + ' tr th:nth-child(' + i + ')').css("overflow", "hidden");
+            $('#' + tableId + ' tr th:nth-child(' + i + ')').css("max-width", widthArgs[i - 1] + "px");
+        }
+    }
+    function fixLeftPopUpColumns(tableId, leftTotal) {
+        var i;
+        for (i = 1; i <= leftTotal; i++) {
+            //fixed column header style
+            $('#' + tableId + ' thead th:nth-child(' + i + ')').css("height", "30px");
+            $('#' + tableId + ' thead th:nth-child(' + i + ')').css("position", "relative");
+            $('#' + tableId + ' thead th:nth-child(' + i + ')').css("z-index", "2");
+            //fixed column rows style
+            $('#' + tableId + ' tbody tr td:nth-child(' + i + ')').css("height", "30px");
+            $('#' + tableId + ' tbody tr td:nth-child(' + i + ')').css("position", "relative");
+        }
+    }
+    function settingFixedPopUpWidth(tableId) {
+        //var parentWidth = $('.fixedParent').width();
+        var parentWidth = $('#' + tableId).closest('.fixedParent').width();
+        $('#' + tableId + ' thead').width(parentWidth);
+        $('#' + tableId + ' tbody').width(parentWidth);
+    }
+    function trkFixedPopUpTable(tableId, leftTotal, args) {
+        settingFixedPopUpWidth(tableId);
+        fixLeftPopUpColumns(tableId, leftTotal);
+        fixedScrollPopUpFixedTable(tableId, leftTotal);
+        settingPopUpFixedColumnWidth(tableId, args);
+    }
+    function callingFixedPopUpTable() {
+        var args = [50, 100, 100, 100, 150, 50, 50, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100];
+        trkFixedPopUpTable("productPopUpTable", 3, args);
+    }
+    $(function () {
+        callingFixedPopUpTable();
+    })
+</script>
+
+<script>
+    ////closing higher modal
+    function closeHigherModal() {
+
+        var model = {
+            key: "saleIntegration"
+        }
+
+        $.ajax({
+            data: model
+            , url: "/Vms/SaleInvoice/SetSession"
+            , cache: false
+            , type: "POST"
+            , beforeSend: function () { $(".loading").show(); }
+            , success: function (html) {
+
+                $("#myHigherModal").html("");
+                trkmodal.style.display = "none";
+            }
+            , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+        });
+
+
+    }
+    var span = document.getElementsByClassName("closeHigher")[0];
+    var trkmodal = document.getElementById('myHigherModal');
+    span.onclick = function () {
+        closeHigherModal();
+    }
+
+    $(function () {
+        $('#productPopUpTable').unbind().on('dblclick', '.trSelectPopUpProduct', function () {
+            var refNo = $(this).children('td.refNo').text();
+
+            console.log(refNo)
+
+            selectPopUpSale(refNo, this);
+        });
+        function selectPopUpSale(refNo, sender) {
+            var target = '@Model.TargetId';
+            $('#' + target).val(refNo);
+            //callbackFromProductModal(sender, target);
+            //console.log(target)
+            closeHigherModal();
+
+            redirectToSaleWithId(refNo);
+        }
+        $(document).on('click', '.trSelectPopUpProduct', function () {
+            var activeEl = $('tr.active');
+            activeEl.removeClass("active");
+            $(this).addClass(" active");
+        });
+
+
+
+        $("#searchBtn").on("click", function() {
+
+            var model = {
+                refNo: $("#SearchValue").val(),
+                FromDate: $("#FromDate").val(),
+                ToDate: $("#ToDate").val(),
+            }
+
+            if ($('#mltSearch').is(":checked")) {
+            } else {
+                model.FromDate = null;
+                model.ToDate = null;
+            }
+
+            $.ajax({
+                data: model
+                , url: "/Vms/SaleInvoice/GetSaleData"
+                , cache: false
+                , timeout: 500000
+                , beforeSend: function () { $(".loading").show(); }
+                , success: function (html) {
+                    $("#popUpTbody").html("");
+                    $("#popUpTbody").html(html);
+
+                    //result = JSON.parse(result);
+
+                    callingFixedPopUpTable();
+                }
+                , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+            });
+
+        })
+
+
+        $("#btnSaveSale").on("click", function () {
+
+            var model = {
+                refNo: $("#SearchValue").val(),
+                FromDate: $("#FromDate").val(),
+                ToDate: $("#ToDate").val(),
+            }
+
+            $.ajax({
+                data: model
+                , url: "/Vms/SaleInvoice/SaveSale?transactionType=" + $("#TransactionType").val()
+                , cache: false,
+                method: "POST"
+                , timeout: 500000
+                , beforeSend: function () { $(".loading").show(); }
+                , success: function (result) {
+                    console.log(result)
+
+                    console.log(result)
+
+                    if (result.action == "Success") {
+
+                        if (result.type == "Y") {
+
+
+
+                            Ask("Data validation Complete, Are you sure to Save?",
+                                function () {
+
+                                    var data = new FormData();
+                                    data.append("TransactionType", $("#saleTransactionType").val());
+
+                                    $.ajax({
+                                        url: "/VMS/SaleInvoice/SaveTransactions",
+                                        type: "POST",
+                                        data: data,
+                                        contentType: false,
+                                        processData: false,
+                                        timeout: 600000,
+
+                                        beforeSend: function () { $(".loading").show(); },
+                                        complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                                        success: function (result) {
+                                            result = JSON.parse(result)
+                                            console.log(result)
+                                            if (result.action == "Success") {
+                                                ShowResult("Success", "Data Saved Successfully");
+                                            }
+                                        },
+                                        error: function (err) {
+                                            err = JSON.parse(err)
+
+                                            ShowResult("Fail", err.message);
+
+                                        }
+                                    });
+
+                                },
+                                function () {
+                                })
+
+
+
+
+
+                        } else {
+                            ShowResult("Success", "Data Saved Successfully");
+
+                        }
+                    } else {
+                        ShowResult("Fail", "Something gone wrong");
+
+                    }
+
+
+                },
+                error: function() {
+                    ShowResult("fail", "Something gone wrong");
+                }
+                , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+            });
+
+        })
+
+        $("#mltSearch").on("click", function(sender) {
+
+
+            if ($('#mltSearch').is(":checked")) {
+                $("#SearchValue").val('');
+
+                $("#SearchValue").prop('disabled', true);
+                $("#searchBtn").prop('disabled', true);
+                $("#FromDate").prop('disabled', false);
+                $("#ToDate").prop('disabled', false);
+
+
+            } else {
+
+                $("#SearchValue").prop('disabled', false);
+                $("#searchBtn").prop('disabled', false);
+                $("#FromDate").prop('disabled', true);
+                $("#ToDate").prop('disabled', true);
+
+                $("#FromDate").val('');
+                $("#ToDate").val('');
+
+            }
+
+        })
+    })
+</script>
+
+<script>
+    
+    $(function () {
+
+        $("#Clear").on('click', function () {
+            $(".HigherModal-body .Dropdown").select2("val", "");
+            $(".HigherModal-body .form-control").val("");
+        });
+    });
+</script>
+
+@*for sorting column*@
+<script>
+    function sortTable(n) {
+        var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+        table = document.getElementById("productPopUpTable");
+        switching = true;
+        //Set the sorting direction to ascending:
+        dir = "asc";
+        /*Make a loop that will continue until
+        no switching has been done:*/
+        while (switching) {
+            //start by saying: no switching is done:
+            switching = false;
+            rows = table.rows;
+            if (rows.length > 150) {
+                ShowResult("Fail", "There is too much data to sort");
+                return;
+            }
+            /*Loop through all table rows (except the
+            first, which contains table headers):*/
+            for (i = 1; i < (rows.length - 1) ; i++) {
+                //start by saying there should be no switching:
+                shouldSwitch = false;
+                /*Get the two elements you want to compare,
+                one from current row and one from the next:*/
+                x = rows[i].getElementsByTagName("TD")[n];
+                y = rows[i + 1].getElementsByTagName("TD")[n];
+                /*check if the two rows should switch place,
+                based on the direction, asc or desc:*/
+                if (dir == "asc") {
+                    if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                        //if so, mark as a switch and break the loop:
+                        shouldSwitch = true;
+                        break;
+                    }
+                } else if (dir == "desc") {
+                    if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                        //if so, mark as a switch and break the loop:
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+            }
+            if (shouldSwitch) {
+                /*If a switch has been marked, make the switch
+                and mark that a switch has been done:*/
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+                //Each time a switch is done, increase this count by 1:
+                switchcount++;
+            } else {
+                /*If no switching has been done AND the direction is "asc",
+                set the direction to "desc" and run the while loop again.*/
+                if (switchcount == 0 && dir == "asc") {
+                    dir = "desc";
+                    switching = true;
+                }
+            }
+        }
+    }
+</script>

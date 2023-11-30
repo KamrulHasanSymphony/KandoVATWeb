@@ -1,0 +1,18 @@
+﻿
+/*label {
+    font-size: 14px !important;
+    font-family: calibari;
+}*/
+
+ul {
+    list-style: none;
+}
+
+#pnlEmpProfile label {
+    font-size: 12px !important;
+    font-family: Verdana;
+}
+
+.GridText .k-grid td  {
+    font-size: 13px !important;
+}

@@ -1,0 +1,75 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+<div class="headrow">
+    <button type="button" title="Add New Product" data-url="/VMS/Service/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+    <button type="button" title="View Report" class=" sym-btn-report printBtn">&nbsp;Print</button>
+    <label class="pull-right">Service </label>
+</div>
+<div class="thinbox animated slideInDown faster">
+    <div class="th_thinbox">
+        <p>Service Price Declaration</p>
+    </div>
+    <table id="myDataTable" class="display" style="width:100%">
+        <thead>
+            <tr>
+                <th class="center">Action</th>
+                <th>Product Name</th>
+                <th>UOM</th>
+                <th>Effect Date </th>
+                <th>NBR Price</th>
+                <th>Whole Sale Price</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <br />
+</div>
+<div class="headrow">
+    <button type="button" title="Add New Product" data-url="/VMS/Service/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+    <button type="button" title="View Report" class=" sym-btn-report printBtn">&nbsp;Print</button>
+</div>
+
+<script language="javascript" type="text/javascript">
+    $(document).ready(function () {
+        SelectAllForDelete();
+        $.datepicker.regional[""].dateFormat = 'dd/M/y';
+        $.datepicker.setDefaults($.datepicker.regional['']);
+
+        var oTable = $('#myDataTable').dataTable({
+            "bServerSide": true,
+            "sAjaxSource": "/VMS/Service/_index",
+            "bProcessing": true,
+            "aLengthMenu": tablelength(),
+            "bJqueryUI": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+                            {
+                                "sName": "Id",
+                                "bSearchable": false,
+                                "bSortable": false,
+                                "sWidth": "8%",
+                                "sClass": "center",
+                                "fnRender": function (oObj) {
+                                    return '&nbsp; <a title="Click on for Edit" href=\"/VMS/Service/Edit/' + oObj.aData[0].split('~')[0] + '\" class="sym-btn-edit-row"></a>'
+                                    + '&nbsp; <a title="Click on for Post" data-url="/VMS/Service/Post"  onclick=btnPost(this); data-Id="' + oObj.aData[0] + '\" class="sym-btn-post-row"></a>'
+                                    + '&nbsp; <a title="Click on for Delete"  data-url="/VMS/Service/Delete" onclick="deletedData(this, myDataTable,\'' + oObj.aData[0] + '\');"  class="sym-btn-remove-row"></a>'
+                                    ;
+                                }
+                            }
+                            , { "sName": "FinishItemName", "sWidth": "10%" }
+                            , { "sName": "UOM", "sWidth": "10%" }
+                            , { "sName": "EffectDate", "sWidth": "10%" }
+                            , { "sName": "PNBRPrice", "sWidth": "10%" }
+                            , { "sName": "WholeSalePrice", "sWidth": "10%" }
+
+
+            ]
+        });
+
+    });
+</script>
+
+

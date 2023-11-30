@@ -1,0 +1,207 @@
+﻿
+@model SymViewModel.Vms.DepositViewModel
+@using UIHelper.MVC
+@using (Html.BeginForm("CreateEdit", "Deposit", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmDepositMy" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.Operation)
+    @Html.HiddenFor(model=>model.Post)
+
+    <div class="headrow">
+        @if (Model.Operation == "add")
+        {
+            <button type="button" name="btnName" value="Save" title="Save Data" onclick="pageSubmit('frmDepositMy')" class="sym-btn-save">&nbsp;Save</button>
+            <label class="pull-right">Deposit > Create</label>
+        }
+        else
+        {
+            <button type="button" name="btnName" value="Update" title="Update Data" onclick="pageSubmit('frmDepositMy')" class="sym-btn-update">&nbsp;Update</button>
+            <label class="pull-right">Deposit > Edit</label>
+        }
+        <button type="button" title="Go To Index" data-url="/VMS/Deposit" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New Deposit" data-url="/VMS/Deposit/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+
+    </div>
+    <div class="thinbox">
+        <div class="th_thinbox">
+            <p>Deposit</p>
+        </div>
+        <div class="Deposit">
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        <label>Deposit Id</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.DepositId, new { @placeholder = "Deposit Id", @class = " required form-control" })
+                        @Html.ValidationMessageFor(model => model.DepositId)
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        <label>Treasury No</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.TreasuryNo, new { @placeholder = "Treasury No", @class = " required form-control" })
+                        @Html.ValidationMessageFor(model => model.TreasuryNo)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        <label>Deposit Date</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.DepositDateTime, new { @placeholder = "Deposit DateTime", @class = " trDate customDatePickerChangeable required form-control" })
+                        @Html.ValidationMessageFor(model => model.DepositDateTime)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.DepositType)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.DepositType, new { @placeholder = "Deposit Type", @class = " required form-control" })
+                        @Html.ValidationMessageFor(model => model.DepositType)
+                    </div>
+                </div>
+                
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.DepositAmount)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.DepositAmount, new { @placeholder = "Deposit Amount", @class = " priceLen  form-control" })
+                        @Html.ValidationMessageFor(model => model.DepositAmount)
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.ChequeNo)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.ChequeNo, new { @placeholder = "Cheque No", @class = "   form-control" })
+                        @Html.ValidationMessageFor(model => model.ChequeNo)
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.ChequeBank)
+                    </div>
+                    <div class="editor-field input-group">
+                        @Html.TextBoxFor(model => model.ChequeBank, new { @placeholder = "Sales Price", @class = " form-control" })
+                        @Html.ValidationMessageFor(model => model.ChequeBank)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.ChequeBankBranch)
+                    </div>
+                    <div class="editor-field input-group">
+                        @Html.TextBoxFor(model => model.ChequeBankBranch, new { @placeholder = "ChequeBank Branch", @class = " form-control" })
+                        @Html.ValidationMessageFor(model => model.ChequeBankBranch)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.ChequeDate)
+                    </div>
+                    <div class="editor-field input-group">
+                        @Html.TextBoxFor(model => model.ChequeDate, new { @placeholder = "Cheque Date", @class = " trDate customDatePickerChangeable required form-control" })
+                        @Html.ValidationMessageFor(model => model.ChequeDate)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.BankID)
+                    </div>
+                    <div class="editor-field input-group">
+                        @Html.TextBoxFor(model => model.BankID, new { @placeholder = "Bank ID", @class = "  form-control" })
+                        @Html.ValidationMessageFor(model => model.BankID)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.TreasuryCopy)
+                    </div>
+                    <div class="editor-field input-group">
+                        @Html.TextBoxFor(model => model.TreasuryCopy, new { @placeholder = "Treasury Copy", @class = "  form-control" })
+                        @Html.ValidationMessageFor(model => model.TreasuryCopy)
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.DepositPerson)
+                    </div>
+                    <div class="editor-field input-group">
+                        @Html.TextBoxFor(model => model.DepositPerson, new { @placeholder = "Deposit Person", @class = " form-control" })
+                        @Html.ValidationMessageFor(model => model.DepositPerson)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.DepositPersonDesignation)
+                    </div>
+                    <div class="editor-field input-group">
+                        @Html.TextBoxFor(model => model.DepositPersonDesignation, new { @placeholder = "Person Designation", @class = " form-control" })
+                        @Html.ValidationMessageFor(model => model.DepositPersonDesignation)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.ReverseDepositId)
+                    </div>
+                    <div class="editor-field input-group">
+                        @Html.TextBoxFor(model => model.ReverseDepositId, new { @placeholder = "Reverse Deposit Id", @class = " form-control" })
+                        @Html.ValidationMessageFor(model => model.ReverseDepositId)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.TransactionType)
+                    </div>
+                    <div class="editor-field input-group">
+                        @Html.TextBoxFor(model => model.TransactionType, new { @placeholder = "Transaction Type", @class = " form-control" })
+                        @Html.ValidationMessageFor(model => model.TransactionType)
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.Comments)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextAreaFor(model => model.Comments, new { @placeholder = "Comments", @class = " form-control" })
+                        @Html.ValidationMessageFor(model => model.Comments)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="headrow">
+        @if (Model.Operation == "add")
+        {
+            <button type="button" name="btnName" value="Save" title="Save Data" onclick="pageSubmit('frmDepositMy')" class="sym-btn-save">&nbsp;Save</button>
+        }
+        else
+        {
+            <button type="button" name="btnName" value="Update" title="Update Data" onclick="pageSubmit('frmDepositMy')" class="sym-btn-update">&nbsp;Update</button>
+        }
+        <button type="button" title="Go To Index" data-url="/VMS/Deposit" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New Deposit" data-url="/VMS/Deposit/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+    </div>
+}
+<script>
+    $(function () {
+        valiDation("frmDepositMy");
+    });
+
+
+</script>

@@ -1,0 +1,45 @@
+﻿@model IEnumerable<SymViewModel.Attendance.EmployeeDailyAbsenceVM>
+@using UIHelper.MVC
+@using (Html.BeginForm("Create", "EmployeeDailyAbsence", FormMethod.Post, new { @Id = "frmEmpDailyAbsence" }))
+{
+<div class="thinbox">
+    <div class="th_thinbox">
+        <p>
+            Employee List
+        </p>
+    </div>
+
+    <div id="container">
+        <table id="myDataTable" class="display">
+            <thead>
+                <tr>
+                    <th style="text-align: center">
+                         Select All
+                        <input type="checkbox" class="chkAll" />
+                       </th>
+                    <th>Code</th>
+                    <th>Name</th>
+                    <th>Designation</th>
+                    <th>@Session["DepartmentLabel"]</th>
+                    <th>@Session["ProjectLabel"]</th>
+                    <th>@Session["ProjectLabel"]</th>
+                    <th>Remarks</th>
+
+                </tr>
+            </thead>
+
+            <tbody>
+                 @Html.EditorForModel()
+            </tbody>
+        </table>
+    </div>
+    <br />
+</div>
+}
+
+<script>
+    $(function () {
+        SelectAllForDelete()
+    });
+
+</script>

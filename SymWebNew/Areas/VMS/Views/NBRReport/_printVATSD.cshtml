@@ -1,0 +1,136 @@
+﻿@model SymVATWebUI.Areas.VMS.Models.Vat16ViewModel
+@using System.Configuration
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+
+<style>
+    .trkmodal{
+        padding-top:10%;
+    }
+    .trkmodal-content {
+        width: 50%;
+        padding-bottom: 10px;
+    }
+    .customDatePicker {
+        background: #fefede url(/Images/calendar.jpg) no-repeat 98% !important;
+    }
+    /*no padding with little margin bttom*/
+    div.trkmodal-body div.npForm {
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+        padding-bottom: 0px !important;
+        margin-bottom: 10px;
+    }
+    div.trkmodal-body div.npForm div.npForm {
+        margin-bottom: 0px !important;
+    }
+</style>
+
+@{
+    string NBRAuth = "";
+
+    try
+    {
+        NBRAuth = new AppSettingsReader().GetValue("NBRAuth", typeof(string)).ToString();
+
+    }
+    catch (Exception e)
+    {
+        NBRAuth = "";
+
+    }
+}
+
+
+<div class="trkmodal-content">
+    <div class="trkmodal-header">
+        <span class="close">&times;</span>
+        <h2 class="text-center">Report(SD)</h2>
+    </div>
+    <div class="trkmodal-body">
+    @using (Html.BeginForm("ReportVATSD", "NBRReport", FormMethod.Post, new { enctype = "multipart/form-data", @target = "_blank", @Id = "frmVATSD" }))
+    {
+        <div class="npForm col-md-6" style="padding-left:0px;">
+            <label>Date From</label>
+            @Html.TextBoxFor(m => m.StartDate, new { @placeholder = "Start Date", @class = " customDatePicker defaultDate form-control" })
+        </div>
+    <div class="npForm col-md-6" style="padding-right:0px;">
+        <label>Date To</label>
+        @Html.TextBoxFor(m => m.EndDate, new { @placeholder = "End Date", @class = " customDatePicker defaultDate form-control" })
+    </div>
+        
+        <div class="npForm col-md-2">
+        @Html.SimpleDropDownFor(m => m.FontSize, "/Config/DropDown/Font", new { @class = " form-control selectDropdown" })
+    </div>
+        
+        @Html.HiddenFor(m => m.PreviewOnly);
+
+        <button type="button" class=" btn sym-btn-report trVATSD"> SD Report</button>
+
+        if (string.IsNullOrEmpty(NBRAuth) || NBRAuth.ToLower() == "all")
+        {
+            <button type="button" class=" btn sym-btn-report trPreview"> Preview</button>
+        }
+
+        <button type="button" class="sym-btn-close closeBtn pull-right"> Close</button>
+    }
+    </div>
+</div>
+<script src="~/assets/javascripts/custom.js"></script>
+<script>
+    $(document).ready(function () {
+        ////clicking preview button
+        $('.trPreview').click(function () {
+            $("#PreviewOnly").val("true");
+            $('#frmVATSD').submit();
+            //pageSubmit('frmVATSD');
+        });
+        ////clicking vat16 button
+        $('.trVATSD').click(function () {
+            $("#PreviewOnly").val("false");
+            $('#frmVATSD').submit();
+            //pageSubmit('frmVATSD');
+        });
+        ////for dropdown
+        InitDropDowns();
+        ////for select2 dropdown
+        //$(".selectDropdown").select2();
+        //$(".selectDropdown").trigger('change');
+        //$(".selectDropdown").removeClass('form-control');
+
+
+        function closeModal() {
+            $("#myModal").html("");
+            trkmodal.style.display = "none";
+        }
+
+        var span = document.getElementsByClassName("close")[0];
+        var trkmodal = document.getElementById('myModal');
+        //When the user clicks on <span> (x), close the trkmodal
+        span.onclick = function () {
+            closeModal();
+        }
+
+        $('.closeBtn').click(function () {
+            closeModal();
+        });
+        
+    });
+</script>
+
+<script>
+    $(function () {
+        sessionDateTime()
+    })
+
+    function sessionDateTime() {
+        var date = $(".customDatePicker.defaultDate").val();
+        var today = FormatDate(new Date());
+        if (date == "") {
+            $(".customDatePicker.defaultDate").val(today);
+        }
+    }
+</script>
+

@@ -1,0 +1,21 @@
+﻿@model VATViewModel.DTOs.VATReturnVM
+@using UIHelper.MVC
+@using SymOrdinary
+@using System.Threading;
+
+
+@{
+    ViewBag.Title = "Index";
+}
+
+@Html.HiddenFor(model => model.TransactionType)
+
+
+@if (Model.TransactionType == "chartPie")
+{
+    @Html.Partial("~/Areas/VMS/Views/Chart/_chartPie.cshtml")
+}
+else if (Model.TransactionType == "chartBar")
+{
+    @Html.Partial("~/Areas/VMS/Views/Chart/_chartBar.cshtml")
+}

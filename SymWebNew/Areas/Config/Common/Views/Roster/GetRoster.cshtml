@@ -1,0 +1,163 @@
+﻿@model SymViewModel.Attendance.AttendanceRosterVM
+@using (Html.BeginForm("SetRoster", "Roster", FormMethod.Post, new { @Id = "frmRosetr" }))
+{
+    @Html.ValidationSummary(true)
+
+    
+    <div class="thinbox">
+        <div class="th_thinbox">
+            <p>Roster for month @ViewBag.MonthName @ViewBag.year </p>
+        </div>
+        @Html.HiddenFor(model => model.BranchId)
+        <div class="row">
+            <div class="col-md-2">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.Code)
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.Code, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Code)
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.Name)
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.Name, new { @class = " required form-control" })
+                    @Html.ValidationMessageFor(model => model.Name)
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.StartDate)
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.StartDate, new { @class = "customDatePicker required form-control" })
+                    @Html.ValidationMessageFor(model => model.StartDate)
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.EndDate)
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.EndDate, new { @class = "customDatePicker required form-control" })
+                    @Html.ValidationMessageFor(model => model.EndDate)
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.Remarks)
+                </div>
+                <div class="editor-field">
+                    @Html.TextAreaFor(model => model.Remarks, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Remarks)
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div id="rosterDRows" style="overflow: scroll">
+            <div class="row dateColl">
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.attendanceRosterDetails.FirstOrDefault().AttendanceGroupId)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.attendanceRosterDetails.FirstOrDefault().AttendanceStructureId1)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.attendanceRosterDetails.FirstOrDefault().AttendanceStructureId2)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.attendanceRosterDetails.FirstOrDefault().AttendanceStructureId3)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.attendanceRosterDetails.FirstOrDefault().AttendanceStructureId4)
+                    </div>
+                </div>
+                                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.attendanceRosterDetails.FirstOrDefault().AttendanceStructureId5)
+                    </div>
+                </div>
+                                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.attendanceRosterDetails.FirstOrDefault().AttendanceStructureId6)
+                    </div>
+                </div>
+                                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.attendanceRosterDetails.FirstOrDefault().AttendanceStructureId7)
+                    </div>
+                </div>
+                                                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.attendanceRosterDetails.FirstOrDefault().AttendanceStructureId8)
+                    </div>
+                </div>
+                                                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.attendanceRosterDetails.FirstOrDefault().AttendanceStructureId9)
+                    </div>
+                </div>
+                                                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.attendanceRosterDetails.FirstOrDefault().AttendanceStructureId10)
+                    </div>
+                </div>
+                                                                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.attendanceRosterDetails.FirstOrDefault().AttendanceStructureId11)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.attendanceRosterDetails.FirstOrDefault().Remarks)
+                    </div>
+                </div>
+            </div>
+            @if (Model.attendanceRosterDetails != null)
+            {
+                foreach (var item in Model.attendanceRosterDetails)
+                {
+                    Html.RenderPartial("_roster", item);
+                }
+            }
+        </div>
+       @* <input type="button" onclick="pageSubmit('frmRosetr')" class="btn btn-info" value="Save" />
+        <input type="button" class="btn btn-info" data-url="/Common/Roster" onclick="GoTo(this);" value="Back To List" />*@
+    </div>
+<div class="headrow">
+ <button type="button" title="Save Data" onclick="pageSubmit('frmRosetr')" class="sym-btn-save">&nbsp;Save</button>
+</div>
+}
+
+<script>
+
+    var TotalDays = eval('@Html.Raw(ViewBag.TotalDays)');
+    //var TotalDays = 3
+    $(function () {
+        InitDatePickers();
+        InitDropDowns();
+        $.each($(".dateColl"), function (i, item) {
+            $.each($(item).children('div'), function (j, item2) {
+                if (TotalDays < j && j!=31) {
+                    $(item2).children('div').css("display", "none")
+                    $(item2).children('div').remove();
+                }
+            });  
+        });
+    });
+    //var TotalGroup = eval(Html.Raw(ViewBag.TotalGroup)');
+    //var MonthNumber = eval('Html.Raw(ViewBag.MonthNumber)');
+   // var html = "";
+</script>

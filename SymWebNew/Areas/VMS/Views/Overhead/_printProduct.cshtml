@@ -1,0 +1,117 @@
+﻿@model SymVATWebUI.Areas.VMS.Models.ProductReportViewModel
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+<style>
+    .trkmodal{
+        padding-top:10%;
+    }
+    .trkmodal-content {
+        width: 50%;
+        padding-bottom:10px;
+    }
+</style>
+<div class="trkmodal-content">
+    <div class="trkmodal-header">
+        <span class="close">&times;</span>
+        <h2 class="text-center">Report(Product)</h2>
+    </div>
+    <div class="trkmodal-body">
+    @using (Html.BeginForm("ReportView", "Product", FormMethod.Post, new { enctype = "multipart/form-data", @target="_blank"}))
+    {
+        
+        <div class="form-group">
+            <label>Product Name</label>
+            @Html.SimpleDropDownFor(m => m.ProductName, "/Config/DropDown/ProductName", new { @class = " form-control selectDropdown trItemName" })
+        </div>
+        <div class="form-group">
+            <label>Product Group</label>
+            @Html.SimpleDropDownFor(m=>m.ProductGroup, "/Config/DropDown/ProductCategory", new { @class = " form-control selectDropdown trProductGroup"})
+        </div>
+        <div class="form-group">
+            <label>Product Type</label>
+            @Html.TextBoxFor(m => m.ProductType, new { @placeholder = "Type", @class = " form-control trProductType", @readonly="readonly" })
+        </div>
+        <button type="submit" class=" btn btn-info">Preview</button>
+        <button type="button" class="btn btn-danger closeBtn pull-right">Close</button>
+    }
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        ////for dropdown
+        InitDropDowns();
+        ////for select2 dropdown
+        $(".selectDropdown").select2();
+        $(".selectDropdown").trigger('change');
+        $(".selectDropdown").removeClass('form-control');
+
+        function closeModal() {
+            $("#myModal").html("");
+            trkmodal.style.display = "none";
+        }
+
+        ////product category change method
+        function ProductGroupChange() {
+            $('.trItemName').select2("val", "");
+            var value = $('.trProductGroup').val().toString();
+            var url = "/Config/DropDown/DropDownProductByCategory/?id=" + value;
+            if (value == 0) {
+                url = "/Config/DropDown/ProductName";
+                $('.trProductType').val("");
+            }
+            var productNames = "";
+
+            productNames += "<option value=0>Select</option>";
+            $.getJSON(url, function (data) {
+                $.each(data, function (i, state) {
+                    productNames += "<option value='" + state.Value + "'>" + state.Text + "</option>";
+                });
+
+                $('.trItemName').html(productNames);
+            });
+
+            if (value != 0) {
+                url = "/Vms/Product/GetProductType?groupId=" + value;
+                $.getJSON(url, function (data) {
+                    $('.trProductType').val(data);
+                });
+                
+            }
+        }
+
+        ////Product change method val(8);
+        function ProductChange() {
+            var value = $('.trItemName').val().toString();
+            var url = "/Vms/Product/GetProductGroupId?productCode=" + value;
+            
+            $.getJSON(url, function (data) {
+                var groupId = data.split('~')[0];
+                var type = data.split('~')[1];
+                $('.trProductGroup').select2("val", groupId);
+                $('.trProductType').val(type);
+            });
+        }
+        ////changing product group
+        $('.trProductGroup').change(function () {
+            ProductGroupChange();
+        });
+        ////changing product
+        $('.trItemName').change(function () {
+            ProductChange();
+        });
+
+        var span = document.getElementsByClassName("close")[0];
+        var trkmodal = document.getElementById('myModal');
+        //When the user clicks on <span> (x), close the trkmodal
+        span.onclick = function () {
+            closeModal();
+        }
+
+        $('.closeBtn').click(function () {
+            closeModal();
+        });
+        
+    });
+</script>

@@ -1,0 +1,120 @@
+﻿@model IEnumerable<SymViewModel.Attendance.AttendanceRosterAllVM>
+
+@{
+    ViewBag.Title = "Index";
+}
+@*<div class="row">
+    <div class="col-md-2 ">
+        <input type="text" class="areearDate customDatePicker form-control">
+    </div>
+</div>*@
+
+<div class="headrow">
+    <button type="button" title="Add New Attendance Roster" data-url="/Common/AttendanceRosterAll/Create" id="" class="btnCreate sym-btn-add">&nbsp;New</button>
+    <button type="button" title="Delete Attendance Roster" data-url="/Common/AttendanceRosterAll/Delete" onclick="deletedData(this, 'myDataTable');" id="" class="sym-btn-remove">&nbsp;Delete</button>
+    <label class="pull-right">Attendance Roster</label>
+</div>
+
+
+<div class="thinbox">
+    <div class="th_thinbox">
+        <p>Attendance Roster</p>
+    </div>
+    @*    <input type="button" style="width: 65px;" data-url="/Common/AttendanceRosterAll/Create" id="" class="btnCreate btn btn-info  " value="Add" />
+    <input type="button" style="width: 65px;" data-url="/Common/AttendanceRosterAll/Delete" onclick="deletedData(this, 'myDataTable');" id="" class=" btn btn-info  " value="Delete" />
+    <p></p>*@
+    <table id="myDataTable" class="display">
+        <thead>
+            <tr>
+                <th class="center">
+                    <input type="checkbox" class="chkAll" />
+                    Select All </th>
+                <th>Code</th>
+                <th>Name</th>
+                <th>Attendance Structure</th>
+                <th>Attendance Group</th>
+
+            </tr>
+            <tr>
+                <th class="center">Actions</th>
+                <th>Code</th>
+                <th>Name</th>
+                <th>Attendance Structure</th>
+                <th>Attendance Group</th>
+
+            </tr>
+        </thead>
+
+        <tbody>
+        </tbody>
+    </table>
+    <br />
+</div>
+
+
+<div class="headrow">
+    <button type="button" title="Add New Attendance Roster" data-url="/Common/AttendanceRosterAll/Create" id="" class="btnCreate sym-btn-add">&nbsp;New</button>
+    <button type="button" title="Delete Attendance Roster" data-url="/Common/AttendanceRosterAll/Delete" onclick="deletedData(this, 'myDataTable');" id="" class="sym-btn-remove">&nbsp;Delete</button>
+</div>
+
+
+
+<script>
+    $(function () {
+        $('#myDataTable').dataTable({
+            "bServerSide": true,
+            "sAjaxSource": "/Common/AttendanceRosterAll/_index",
+            "bProcessing": true,
+            "aoColumns": [
+                {
+                    "sName": "Id",
+                    "bSearchable": false,
+                    "bSortable": false,
+                    "sWidth": "12%",
+                    "sClass": "center",
+                    "fnRender": function (oObj) {
+                        return ' <input onclick="CheckAll(this)" type="checkbox" data-Id="' + oObj.aData[0] + '">&nbsp; <a id="lnkEdit1" class="lnkEdit sym-btn-edit-row" href=\"/Common/AttendanceRosterAll/Edit/' + oObj.aData[0] + '\"></a>' //+
+                        //'&nbsp; <a title="Click on for Edit" style="text-decoration:none;" data-url="/Common/Loan/LoanDelete" onclick="deletedData(this, myDataTable,' + oObj.aData[0] + ');"  class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-trash"></i></a>';
+                    }
+                },
+                            //{
+                            //    "sName": "Code",
+                            //    "bSearchable": false,
+                            //    "bSortable": false,
+                            //    "fnRender": function (oObj) {
+                            //        return ' <input onclick="CheckAll(this)" type="checkbox" data-Id="' + oObj.aData[1].split('~')[1] + '">'
+                            //        ;
+                            //    }
+                            //},
+                            //{
+                            //    "sName": "Code",
+                            //    "bSearchable": false,
+                            //    "bSortable": false,
+                            //    "fnRender": function (oObj) {
+                            //        return '<a  class="lnkEdit innerListLink"  href=\"/Common/AttendanceRosterAll/Edit/' + oObj.aData[1].split('~')[1] + '\">' + oObj.aData[1].split('~')[0] + '</a>'
+                            //        ;
+                            //    }
+                            //},
+                            { "sName": "Code" },
+                            { "sName": "Name" },
+                            { "sName": "AttendanceStructure" },
+                            { "sName": "AttendanceGroup" }
+
+
+            ]
+        }).columnFilter({
+            sPlaceHolder: "head:after",
+            aoColumns: [{ type: "checkbox", "sClass": "chkAll" }
+                       , { type: "text" }
+                       , { type: "text" }
+                       , { type: "text" }
+                       , { type: "text" }
+            ]
+
+        });
+        SelectAllForDelete();
+        InitDatePickers();
+    });
+
+</script>
+

@@ -1,0 +1,122 @@
+﻿@{
+    ViewBag.Title = "ImportMonthlyOvertime";
+}
+@using UIHelper.MVC
+<div class="headrow">
+    <label class="pull-right">Employee Monthly Overtime > Import/Export</label>
+</div>
+<div class="thinbox">
+    <div class="th_thinbox">
+        <p>Employee Monthly Overtime</p>
+    </div>
+    <div class="row">
+        <div class="thinbox col-md-12">
+            <div class="th_thinbox">
+                <p>Upload</p>
+            </div>
+            @using (Ajax.BeginForm("ImportMonthlyOvertimeExcel", "EmployeeMonthlyOvertime", null, new AjaxOptions { }, new { enctype = "multipart/form-data", id = "frmImportMonthlyOTExcel" }))
+            { 
+                <div class="col-md-6">
+                    <div class="col-md-6"></div>
+                    <div class="col-md-6">
+                        <label>File</label>
+                        <input type="file" accept=".xlsx" name="file" id="FileUpload" style="width: 200px;" class="required" />
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <label>&nbsp;</label>
+                    <button onclick="pageSubmit('frmImportMonthlyOTExcel');" class="sym-btn-file-upload" value="Upload" style="width: 50%; text-align: center;">&nbsp;Upload</button>
+                </div>
+            }
+        </div>
+        <div class="thinbox">
+            <div class="th_thinbox">
+                <p>Download</p>
+            </div>
+            <div class="row">
+                <div class="col-md-1">
+                    <div class="editor-label">
+                        <label>Year</label>
+                    </div>
+
+                    <div class="editor-field">
+                        <div>@Html.TextBox("fYear", @Session["SessionYear"].ToString(), new { @class = "fiscalyearCom form-control" }) </div>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="editor-label">
+                        @Html.Label("Fiscal Period")
+                    </div>
+                    <div class="editor-field">
+                        <div>
+                            @Html.SimpleDropDown("FiscalPeriodDetailId", "/Config/DropDown/DropDownPeriodByFYear?year=" + @Session["SessionYear"].ToString(), new { @class = "fpDetailsCom required  form-control selectDropdown" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="editor-label">
+                        <label>@Session["DepartmentLabel"]</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.SimpleDropDown("DepartmentId", "/Config/DropDown/Department", new { @class = "departmentsCom form-control selectDropdown" })
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="editor-label">
+                        <label>@Session["SectionLabel"]</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.SimpleDropDown("SectionId", "/Config/DropDown/Section", new { @class = "sectionsCom form-control selectDropdown" })
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        <label>@Session["ProjectLabel"]</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.SimpleDropDown("ProjectId", "/Config/DropDown/Project", new { @class = "projectsCom form-control selectDropdown" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-1">
+                    <label>&nbsp;</label>
+                    <button id="btnSearch" class="sym-btn-Excel-Export" type="button">&nbsp;Download</button>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+<script>
+    $(function () {
+        InitDropdownsCommon();
+        valiDation('frmImportMonthlyOTExcel');
+    });
+
+    $('#btnSearch').click(function () {
+        var fid = $("#FiscalPeriodDetailId :selected").val();
+
+        if (fid == "") {
+            ShowResult("Fail", "Please Select Fiscal Period First!");
+            return;
+        }
+
+        var departmentId = $("#DepartmentId :selected").val();
+        var sectionId = $("#SectionId :selected").val();
+        var projectId = $("#ProjectId :selected").val();
+
+        rptObj = new Object();
+        rptObj.departmentId = departmentId;
+        rptObj.sectionId = sectionId;
+        rptObj.projectId = projectId;
+        rptObj.fid = fid;
+        var rptParam = $.param(rptObj);
+        var url = "/Common/EmployeeMonthlyOvertime/DownloadExcel" + "?" + rptParam;
+
+        window.location = url;
+    });
+</script>

@@ -1,0 +1,82 @@
+﻿@model SymViewModel.Attendance.MonthlyAttendanceVM
+@{
+    ViewBag.Title = "Index";
+}
+
+
+@using UIHelper.MVC
+<div class="thinbox">
+    <div class="th_thinbox">
+        <p>Monthly Attendance</p>
+    </div>
+    <div class="row">
+        <div class="col-md-1">
+            <div class="editor-label">
+                <label>Year</label>
+            </div>
+
+            <div class="editor-field">
+                <div>@Html.TextBox("fYear", @Session["SessionYear"].ToString(), new { @class = "fiscalyearCom form-control" }) </div>
+            </div>
+        </div>
+
+        <div class="col-sm-2">
+            <div class="editor-label">
+                @Html.Label("Fiscal Period")
+            </div>
+            <div class="editor-field">
+                <div>
+                    @Html.SimpleDropDown("FiscalPeriodDetailId", "/Config/DropDown/DropDownPeriodByFYear?year=" + @Session["SessionYear"].ToString(), new { @class = "fpDetailsCom required  form-control selectDropdown" })
+                </div>
+            </div>
+        </div>
+
+
+        @*<div class="col-sm-2">
+            <div class="editor-label">
+                @Html.Label("Fiscal Period")
+            </div>
+            <div class="editor-field">
+                <div>
+                    @Html.SimpleDropDownFor(model => model.FiscalYearDetailId, "/Config/DropDown/DropDownPeriodByFYear?year=" + @Session["SessionYear"].ToString(), new { @class = "fpDetailsCom required  form-control selectDropdown" })
+                </div>
+            </div>
+        </div>*@
+
+    </div>
+</div>
+<div class="headrow">
+    <button type="button" title="Click for Report" data-url="/Common/MonthlyAttendance/SelectToInsert" onclick="selectData(this);" id="" class="sym-btn-save">&nbsp;Process</button>
+    &nbsp;
+    <button title="Clear the Entries" id="Clear" onclick="window.location.reload()" class="sym-btn-clear">&nbsp;Clear</button>
+</div>
+
+<script>
+    $(function () {
+       @* var fid = '@Model.FiscalYearDetailId';
+        setTimeout(function () {
+            if (fid != "") {
+                $("#FiscalYearDetailId").select2("val", fid);
+            }
+        }, 500);*@
+        InitDropdownsCommon();
+      });
+
+    function selectData(sender) {
+        var url = $(sender).attr("data-url");
+        var fid = $("#FiscalPeriodDetailId").val();
+
+        if (fid == "") {
+            ShowResult("Fail", "Please Select Fiscal Period First!");
+            return;
+        }
+
+        selectObj = new Object();
+        selectObj.fid = fid;
+        var selectParam = $.param(selectObj);
+        url = url + "?" + selectParam;
+        window.location = url;
+    }
+</script>
+
+

@@ -1,0 +1,57 @@
+﻿@model SymViewModel.Leave.LeaveStructureDetailVM
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+<div class="row">
+    @using (Html.BeginCollectionItem("leaveStructureDetailVMs"))
+    {
+        @Html.HiddenFor(model => model.Id)
+        <div class="col-md-2">
+            <div class="editor-field" style="margin-top:4px">
+                @Html.SimpleDropDownFor(model => model.LeaveType_E, "/Config/DropDown/LeaveType", new { @class = "required form-control" })
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.LeaveDays, new {@onchange="NumberCheck(this);", @placeholder = "Leave Days", @class = "required form-control" })
+            </div>
+        </div>
+        <div class="col-md-1">
+            <div class="editor-field center">
+                @Html.EditorFor(model => model.IsEarned, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-md-1">
+            <div class="editor-field center">
+                @Html.EditorFor(model => model.IsCompensation, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-md-1">
+            <div class="editor-field center">
+                @Html.EditorFor(model => model.IsCarryForward, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.MaxBalance, new {@onchange="NumberCheck(this);", @class = " right form-control" })
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.Remarks, new { @placeholder = "Remark", @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-md-1" style="margin-top:7px">
+            @*<input type="button" class="RemoveRow btn btn-info" value="Remove" />*@
+            <button type="button" title="Delete Checked" class="RemoveRow sym-btn-remove-row"></button>
+        </div>
+    }
+    <script>
+        $(function () {
+            InitButtons();
+            InitDropDowns();
+
+        });
+    </script>
+</div>

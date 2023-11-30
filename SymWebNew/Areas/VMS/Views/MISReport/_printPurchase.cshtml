@@ -1,0 +1,304 @@
+﻿@model VATViewModel.DTOs.PurchaseMISViewModel
+@using UIHelper.MVC
+@{
+    Layout = "~/Areas/VMS/Views/Shared/_ModalLayout.cshtml";
+}
+<style>
+    label.RadioContainer {
+        margin-right: 15px !important;
+    }
+</style>
+<div class="trkmodal-content">
+    <div class="trkmodal-header">
+        <span class="close">&times;</span>
+        <h2 class="text-center">Report</h2>
+        <div style="display: none" id="formAppend"></div>
+    </div>
+    <div class="trkmodal-body">
+        @using (Html.BeginForm("ReportPurchase", "MISReport", FormMethod.Post, new { enctype = "multipart/form-data", @target = "_blank", @Id = "frmMisPurchase" }))
+        {
+            <div class="npForm col-md-12">
+                <div class="col-md-10 npForm">
+                    <label>Purchase No</label>
+                    @Html.TextBoxFor(m => m.PurchaseNo, new { @class = " form-control trPurchaseNo", @readonly = "readonly" })
+                </div>
+                <div class=" col-md-2 npForm">
+                    <label>&nbsp;</label>
+                    <button type="button" class=" sym-btn-search purchaseBtn">
+                        Search
+                    </button>
+                </div>
+            </div>
+            <div class="npForm col-md-6">
+                <label>Receive Date From</label>
+                @Html.TextBoxFor(m => m.ReceiveDateFrom, new { @placeholder = "Start Date", @class = "customDatePicker form-control" })
+            </div>
+            <div class="npForm col-md-6">
+                <label>Receive Date To</label>
+                @Html.TextBoxFor(m => m.ReceiveDateTo, new { @placeholder = "End Date", @class = "customDatePicker form-control" })
+            </div>
+            <div class="npForm col-md-6">
+                <label>Vendor Group</label>
+                @Html.SimpleDropDownFor(m => m.VendorGroup, "/Config/DropDown/VendorGroup", new { @class = " form-control selectDropdown trVendorGroup" })
+            </div>
+            <div class="npForm col-md-6">
+                <label>Vendor Name</label>
+                @Html.SimpleDropDownFor(m => m.VendorId, "/Config/DropDown/Vendor", new { @class = " form-control selectDropdown trVendor" })
+                @Html.HiddenFor(m => m.VendorName)
+
+            </div>
+            <div class="npForm col-md-12">
+                <div class="col-md-10 npForm">
+                    <label>Product Name</label>
+                    @Html.HiddenFor(m => m.ItemNo)
+                    @Html.HiddenFor(m => m.ReportType)
+                    @Html.TextBoxFor(m => m.ProductName, new { @Id = "PopUPProductName", @class = " form-control trProductName", @readonly = "readonly" })
+                </div>
+                <div class=" col-md-2 npForm">
+                    <label>&nbsp;</label>
+                    <button type="button" class=" sym-btn-search productBtn">
+                        Search
+                    </button>
+                </div>
+            </div>
+            <div class="npForm col-md-6">
+                <label>Product Group</label>
+                @Html.SimpleDropDownFor(m => m.ProductGroupId, "/Config/DropDown/ProductCategory", new { @class = " form-control selectDropdown trProductGroup" })
+            </div>
+            <div class="npForm col-md-6">
+                <label>Product Type</label>
+                @Html.SimpleDropDownFor(m => m.ProductType, "/Config/DropDown/ProductTypes", new { @class = " form-control selectDropdown trProductType" })
+            </div>
+            <div class="npForm col-md-6">
+                <label>Type</label>
+                @Html.SimpleDropDownFor(m => m.VATType, "/Config/DropDown/PurchaseVATType", new { @class = " notClearing form-control trType" })
+            </div>
+             <div class="npForm col-md-6">
+                <label>Branch Name</label>
+                 @*@Html.SimpleDropDownFor(m => m.BranchId, "/Config/DropDown/BranchProfile", new { @class = " form-control selectDropdown cBranchId" })*@
+                @Html.SimpleDropDownFor(m => m.BranchId, "/Config/DropDown/UserBranchProfile", new { @class = " form-control selectDropdown cBranchId" })
+            </div>
+            <div class="npForm col-md-6 chkDesign">
+                @Html.HiddenFor(m => m.Post, new { @class=" chkValue"})
+                <label style="display:inline">Post </label>
+                <input id="input-1" type="checkbox">
+            </div>
+            <div class="npForm col-md-6 chkDesign" style="padding-right:0px;">
+                @Html.HiddenFor(m => m.Duty, new { @class=" chkValue"})
+                <label style="display:inline">Duty </label>
+                <input id="input-2" type="checkbox">
+            </div>
+            <div class="npForm">
+                @*<div class="clearfix"></div>*@
+                <label class="RadioContainer">
+                    Detail
+                    <input type="radio" checked name="rptType">
+                    <span class="checkmark"></span>
+                </label>
+                <label class="RadioContainer">
+                    Summary
+                    <input type="radio" name="rptType">
+                    <span class="checkmark"></span>
+                </label>
+                <label class="RadioContainer">
+                    Summary By Product
+                    <input type="radio" name="rptType">
+                    <span class="checkmark"></span>
+                </label>
+                <label class="RadioContainer">
+                    Single
+                    <input type="radio" name="rptType">
+                    <span class="checkmark"></span>
+                </label>
+                <label class="RadioContainer">
+                    Monthly
+                    <input type="radio" name="rptType">
+                    <span class="checkmark"></span>
+                </label>
+
+                <label class="RadioContainer">
+                    AT
+                    <input type="radio" name="rptType">
+                    <span class="checkmark"></span>
+                </label>
+            </div>
+            <div class="npForm col-md-2">
+                @Html.SimpleDropDownFor(m => m.FontSize, "/Config/DropDown/Font", new { @class = " form-control DRselectDropdown" })
+            </div>
+
+
+            @Html.HiddenFor(m => m.PreviewOnly);
+    <div>
+        <button type="button" class=" btn sym-btn-report trPreview"> Preview</button>
+        <button type="button" onclick="ExportExcel()" class="sym-btn-Excel-Export cDownload"> Download</button>
+        <button type="button" class="sym-btn-close closeBtn pull-right"> Close</button>
+    </div>
+        }
+    </div>
+</div>
+<div id="myHigherModal" class="HigherModal"></div>
+<script>
+    $(document).ready(function () {
+        ////boolean checkbox
+        CheckBoxDesign();
+        MyCheckBox('@Model.Post', 'input-1', 'Post');
+        MyCheckBox('@Model.Duty', 'input-2', 'Duty');
+
+        ///check validation
+        function checkValidation() {
+            var startDate = $('#ReceiveDateFrom').val();
+            var endDate = $('#ReceiveDateTo').val();
+            var vendorName = $('.trVendor').val();
+           
+            var purchaseNo = $('.trPurchaseNo').val();
+            var radioValue = $("input[type='radio'][name='rptType']:checked").closest("label.RadioContainer").text().trim();
+            if (radioValue == "Single" && purchaseNo == "") {
+                ShowResult("Fail", "Select purchase number");
+                return false;
+            }
+            if (radioValue == "Monthly") {
+                if (startDate == "") {
+                    ShowResult("Fail", "Select start date!");
+                    return false;
+                }
+                if (endDate == "") {
+                    ShowResult("Fail", "Select end date!");
+                    return false;
+                }
+                if (vendorName == null || vendorName == "" || vendorName == "0") {
+                    ShowResult("Fail", "Select vendor!");
+                    return false;
+                }
+            }
+            return true;
+        }
+        ////clicking preview button
+        $('.trPreview').click(function () {
+
+
+            var isValid = checkValidation();
+            if (isValid == false) {
+                return;
+            }
+            var radioValue = $("input[type='radio'][name='rptType']:checked").closest("label.RadioContainer").text().trim();
+            $('#ReportType').val(radioValue);
+
+            $('#frmMisPurchase').submit();
+            //pageSubmit('frmMisPurchase');
+        });
+
+        function closeModal() {
+            $("#myModal").html("");
+            trkmodal.style.display = "none";
+        }
+
+        var span = document.getElementsByClassName("close")[0];
+        var trkmodal = document.getElementById('myModal');
+        //When the user clicks on <span> (x), close the trkmodal
+        span.onclick = function () {
+            closeModal();
+        }
+
+        $('.closeBtn').click(function () {
+            closeModal();
+        });
+
+    });
+
+
+    //clicking Download button
+    function ExportExcel() {
+
+        var PurchaseNo = $('#PurchaseNo').val();
+        var ReceiveDateFrom = $('#ReceiveDateFrom').val();
+        var ReceiveDateTo = $('#ReceiveDateTo').val();
+        var VendorGroup = $('#VendorGroup').val();
+        var VendorId = $('#VendorId').val();
+        var VendorName = $('#VendorName').val();
+        var ItemNo = $('#ItemNo').val();
+        var ReportType = $('#ReportType').val();
+        var ProductName = $('#ProductName').val();
+        var ProductGroupId = $('#ProductGroupId').val();
+        var ProductType = $('#ProductType').val();
+        var Post = $('#Post').val();
+        var Duty = $('#Duty').val();
+        //var Duty = $('#VATType').val();
+        var VATType = $('#VATType').val();
+        var branchId = $('#BranchId').val();
+
+
+        var url = '/VMS/MISReport/DownloadMIS_PurchaseReport';
+        var form = $('<form action="' + url + '"></form>');
+
+        form.append($('<input  value="' + PurchaseNo + '" name="PurchaseNo" />'))
+        form.append($('<input  value="' + ReceiveDateFrom + '" name="ReceiveDateFrom" />'))
+        form.append($('<input  value="' + ReceiveDateTo + '" name="ReceiveDateTo" />'))
+        form.append($('<input  value="' + VendorGroup + '" name="VendorGroup" />'))
+        form.append($('<input  value="' + VendorId + '" name="VendorId" />'))
+        form.append($('<input  value="' + VendorName + '" name="ReportType" />'))
+        form.append($('<input  value="' + ItemNo + '" name="ItemNo" />'))
+        form.append($('<input  value="' + ReportType + '" name="ReportType" />'))
+
+        form.append($('<input  value="' + ProductName + '" name="ProductName" />'))
+        form.append($('<input  value="' + ProductGroupId + '" name="ProductGroupId" />'))
+        form.append($('<input  value="' + ProductType + '" name="ProductType" />'))
+        form.append($('<input  value="' + Post + '" name="Post" />'))
+        form.append($('<input  value="' + Duty + '" name="Duty" />'))
+        form.append($('<input  value="' + VATType + '" name="VATType" />'))
+        form.append($('<input  value="' + branchId + '" name="BranchId" />'))
+        form.appendTo('#formAppend').submit()
+    }
+
+
+
+</script>
+@*clicking product or purchase button*@
+<script>
+    function modalInitHigher(url) {
+        var modal = document.getElementById('myHigherModal');
+        $.ajax({
+            url: url,
+            cache: false,
+            beforeSend: function () { $(".loading").show(); },
+            complete: function () { $(".loading").fadeOut(200).hide("slow") },
+            success: function (html) {
+                modal.style.display = "block";
+                $("#myHigherModal").html(html);
+            }
+        });
+    }
+
+    function callbackFromModal(sender) {
+
+        var itemNo = $(sender).children('td.popUpItemNo').text();
+
+        $('#ItemNo').val(itemNo);
+
+    }
+
+    function callbackFromProductModal(sender) {
+
+        var itemNo = $(sender).children('td.popUpItemNo').text();
+
+        $('#ItemNo').val(itemNo);
+
+    }
+
+    ////function callbackFromModal(returnId) {
+    ////    //nothing now
+    ////}
+
+
+    $(function () {
+        $('.purchaseBtn').click(function () {
+            var url = "/Vms/Purchase/GetItemPopUp?targetId=PurchaseNo";
+            modalInitHigher(url);
+        });
+
+        $('.productBtn').click(function () {
+            var url = "/Vms/Product/GetProductPopUp?targetId=PopUPProductName";
+            modalInitHigher(url);
+        });
+    });
+
+</script>

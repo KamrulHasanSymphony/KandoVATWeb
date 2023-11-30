@@ -1,0 +1,595 @@
+﻿@model VATViewModel.DTOs.TrakingSaleVM
+@using UIHelper.MVC
+@{
+    ViewBag.Title = "Traking";
+}
+
+@*<h2>Process6_1_6_2Permanent</h2>*@
+
+<div class=" tabMenu">
+    <ul style="font-size: 1.4em;" class="tabDesign nav nav-tabs">
+
+
+        <li class="tabDefault active"><a data-toggle="tab" href="#SaleTraking">Sale Traking</a></li>
+
+        <li class="tabDefault"><a data-toggle="tab" href="#PurchaseTraking" class="vdsInfoTab">Purchase Traking</a></li>
+        <li class="tabDefault"><a data-toggle="tab" href="#MISTraking" class="vdsInfoTab"> Stock Report </a></li>
+
+    </ul>
+</div>
+
+<div class="tab-content">
+
+    <div id="SaleTraking" class="tab-pane fade  in active">
+
+
+        @using (Html.BeginForm("TrakingSaleExport", "MISReport", FormMethod.Post, new { enctype = "multipart/form-data", @target = "_blank", @Id = "frmProcessdata" }))
+        {
+            
+            @*@Html.HiddenFor(model => model.ProcesType, new { @class = "cProcesType" })*@
+
+            <div class="headrow">
+            </div>
+
+            <div class="col-md-12 trkPX-0">
+                <div class="thinbox animated zoomIn faster">
+                    <div class="th_thinbox">
+                        <p>Sale Traking</p>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+
+                            <div class="row">
+
+                                <label for="" class="col-md-2 control-label text-right trkLabelMargin">Customer </label>
+
+                                    <div class="col-md-4">
+                                        <div class="col-md-8 npForm">
+                                            @*@Html.SimpleDropDownFor(m => m.CustomerID, "/Config/DropDown/Customer", new { @class = " trCustomerId required  form-control  selectDropdown" })*@
+                                            @Html.SimpleDropDownFor(m => m.CustomerID, "/Config/DropDown/DropDownByCustomerID/?CustomerID=" + Model.CustomerID + "", new { @class = " trCustomerId   form-control  selectDropdown" })
+                                        </div>
+                                        <div class=" col-md-2 npForm">
+
+                                            <button type="button" title="Click to Search Customer" id="customerBtn" class="sym-btn-search"></button>
+                                        </div>
+                                    </div>                            
+                              </div>                                  
+
+                                <div class="row">
+                                    <label for="" class="col-md-2 control-label text-right trkLabelMargin">Product Name</label>
+                                    <div class="col-md-4">
+                                        <div class="col-md-8 npForm">
+                                            @Html.HiddenFor(m => m.ItemNo, new { @class = " popUpItemNo" })
+                                            @Html.TextBoxFor(m => m.ProductName, new { @class = " form-control trProductName", @readonly = "readonly" })
+                                        </div>
+                                        <div class=" col-md-2 npForm">
+
+                                            <button type="button" class=" sym-btn-search productBtn">Search</button>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+                            <div class="row">
+                                <label for="" class="col-md-2 control-label text-right trkLabelMargin">Invoice DateTime From</label>
+                                <div class="col-md-3">
+                                    <div class="col-md-8 npForm">
+                                        @Html.TextBoxFor(model => model.InvoiceDateTimeFrom, new { @placeholder = "Invoice DateTime From", @class = " trInvoiceDate trVAT18Date customDatePicker trVAT17Date defaultDate required form-control" })
+                                        @Html.ValidationMessageFor(model => model.InvoiceDateTimeFrom)
+                                    </div>                                 
+                                </div>
+
+                                <label for="" class="col-md-2 control-label text-right trkLabelMargin">Invoice DateTime To</label>
+                                <div class="col-md-3">
+                                    <div class="col-md-8 npForm">
+                                        @Html.TextBoxFor(model => model.InvoiceDateTimeTo, new { @placeholder = "Invoice DateTime To", @class = " trInvoiceDate trVAT18Date customDatePicker trVAT17Date defaultDate required form-control" })
+                                        @Html.ValidationMessageFor(model => model.InvoiceDateTimeTo)
+                                    </div>
+                                </div>                              
+                              </div>
+
+                            </div>
+
+                        <div class="form-group">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="headrow">
+                <button type="button" title="ProcessData" onclick="DownloadData()" class="sym-btn-download-row">&nbsp;Download</button>
+                @*<button type="button" title="Delete_Process" onclick="SaveData('Delete_Process')" class="sym-btn-save">&nbsp;Delete-Process</button>*@
+                @*<button type="button" title="Re-Process" onclick="ExportExcel()" class=" sym-btn-save">&nbsp;Download Negative Data</button>*@
+            </div>
+
+
+
+
+
+        }
+    </div>
+
+    <div id="PurchaseTraking" class="tab-pane fade  in ">
+
+        @using (Html.BeginForm("TrakingPurchaseExport", "MISReport", FormMethod.Post, new { enctype = "multipart/form-data", @target = "_blank", @Id = "frmPurchaseData" }))
+        {
+            <div class="headrow">
+            </div>
+
+            <div class="col-md-12 trkPX-0">
+                <div class="thinbox animated zoomIn faster">
+                    <div class="th_thinbox">
+                        <p>Purchase Traking</p>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+
+                            <div class="row">
+                                <label for="" class="col-md-2 control-label text-right trkLabelMargin">Product Name</label>
+                                <div class="col-md-4">
+                                    <div class="col-md-8 npForm">
+                                        @Html.HiddenFor(m => m.ItemNo, new { @class = " cItemNo" })
+                                        @Html.TextBoxFor(m => m.ProductName, new { @class = " form-control cProductName", @readonly = "readonly" })
+                                    </div>
+                                    <div class=" col-md-2 npForm">
+                                        <button type="button" class=" sym-btn-search productBtn">Search</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <label for="" class="col-md-2 control-label text-right trkLabelMargin">Vendor</label>
+                                <div class="col-md-4">
+                                    <div class="col-md-8 npForm">
+                                        @Html.SimpleDropDownFor(m => m.VendorID, "/Config/DropDown/Vendor", new { @class = " trVendorId  form-control selectDropdown" })
+                                    </div>
+                                    <div class=" col-md-2 npForm">
+                                        <button type="button" title="Click to Search Vendor" id="vendorBtn" class="sym-btn-search"></button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <label for="" class="col-md-2 control-label text-right trkLabelMargin">Invoice DateTime From</label>
+                                <div class="col-md-3">
+                                    <div class="col-md-8 npForm">
+                                        @Html.TextBoxFor(model => model.InvoiceDateTimeFrom, new { @placeholder = "Invoice DateTime From",id="invoiceDatefrom", @class = " trInvoicePDateFrom trVAT18Date customDatePicker trVAT17Date defaultDate required form-control" })
+                                        @Html.ValidationMessageFor(model => model.InvoiceDateTimeFrom)
+                                    </div>
+                                </div>
+
+                                <label for="" class="col-md-2 control-label text-right trkLabelMargin">Invoice DateTime To</label>
+                                <div class="col-md-3">
+                                    <div class="col-md-8 npForm">
+                                        @Html.TextBoxFor(model => model.InvoiceDateTimeTo, new { @placeholder = "Invoice DateTime To",id="invoiceDateto", @class = " trInvoicePDateTo trVAT18Date customDatePicker trVAT17Date defaultDate required form-control" })
+                                        @Html.ValidationMessageFor(model => model.InvoiceDateTimeTo)
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <label for="" class="col-md-2 control-label text-right trkLabelMargin">Receive Date From</label>
+                                <div class="col-md-3">
+                                    <div class="col-md-8 npForm">
+                                        @Html.TextBoxFor(model => model.ReceiveDateFrom, new { @placeholder = "Receive DateTime From", @class = " trReceiveDate trVAT18Date customDatePicker trVAT17Date defaultDate required form-control" })
+                                        @Html.ValidationMessageFor(model => model.ReceiveDateFrom)
+                                    </div>
+                                </div>
+
+                                <label for="" class="col-md-2 control-label text-right trkLabelMargin">Receive Date To</label>
+                                <div class="col-md-3">
+                                    <div class="col-md-8 npForm">
+                                        @Html.TextBoxFor(model => model.ReceiveDateTo, new { @placeholder = "Receive DateTime To", @class = " trReceiveDate trVAT18Date customDatePicker trVAT17Date defaultDate required form-control" })
+                                        @Html.ValidationMessageFor(model => model.ReceiveDateTo)
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <label for="" class="col-md-2 control-label text-right trkLabelMargin">Expire Date From</label>
+                                <div class="col-md-3">
+                                    <div class="col-md-8 npForm">
+                                        @Html.TextBoxFor(model => model.ExpireDateFrom, new { @placeholder = "Expire DateTime From", @class = " trExpireDate trVAT18Date customDatePicker trVAT17Date defaultDate required form-control" })
+                                        @Html.ValidationMessageFor(model => model.ExpireDateFrom)
+                                    </div>
+                                </div>
+
+                                <label for="" class="col-md-2 control-label text-right trkLabelMargin">Expire DateTime To</label>
+                                <div class="col-md-3">
+                                    <div class="col-md-8 npForm">
+                                        @Html.TextBoxFor(model => model.ExpireDateTo, new { @placeholder = "Expire DateTime To", @class = " trExpireDate trVAT18Date customDatePicker trVAT17Date defaultDate required form-control" })
+                                        @Html.ValidationMessageFor(model => model.ExpireDateTo)
+                                    </div>
+                                </div>
+                            </div>                    
+
+                        </div>
+
+                        <div class="form-group">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="headrow">
+                @*<button type="button" title="Process" onclick="DeleteData()" class="sym-btn-save">&nbsp;DeleteProcess</button>*@
+                <button type="button" title="ProcessData" onclick="DownloadPurchaseData()" class="sym-btn-download-row">&nbsp;Download</button>
+               
+            </div>
+
+        }
+
+    </div>
+
+    <div id="MISTraking" class="tab-pane fade  in ">
+
+        @using (Html.BeginForm("MISStockReport", "MISReport", FormMethod.Post, new { enctype = "multipart/form-data", @target = "_blank", @Id = "frmMISStockReport" }))
+        {
+            <div class="headrow">
+            </div>
+
+            @*<div class="col-md-12 trkPX-0">
+                <div class="thinbox animated zoomIn faster">
+                    <div class="th_thinbox">
+                        <p>Purchase Traking</p>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+
+                            <div class="row">
+                                <label for="" class="col-md-2 control-label text-right trkLabelMargin">Product Name</label>
+                                <div class="col-md-4">
+                                    <div class="col-md-8 npForm">
+                                        @Html.HiddenFor(m => m.ItemNo, new { @class = " cItemNo" })
+                                        @Html.TextBoxFor(m => m.ProductName, new { @class = " form-control cProductName", @readonly = "readonly" })
+                                    </div>
+                                    <div class=" col-md-2 npForm">
+                                        <button type="button" class=" sym-btn-search productBtn">Search</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <label for="" class="col-md-2 control-label text-right trkLabelMargin">Vendor</label>
+                                <div class="col-md-4">
+                                    <div class="col-md-8 npForm">
+                                        @Html.SimpleDropDownFor(m => m.VendorID, "/Config/DropDown/Vendor", new { @class = " trVendorId  form-control selectDropdown" })
+                                    </div>
+                                    <div class=" col-md-2 npForm">
+                                        <button type="button" title="Click to Search Vendor" id="vendorBtn" class="sym-btn-search"></button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <label for="" class="col-md-2 control-label text-right trkLabelMargin">Invoice DateTime From</label>
+                                <div class="col-md-3">
+                                    <div class="col-md-8 npForm">
+                                        @Html.TextBoxFor(model => model.InvoiceDateTimeFrom, new { @placeholder = "Invoice DateTime From", id = "invoiceDatefrom", @class = " trInvoicePDateFrom trVAT18Date customDatePicker trVAT17Date defaultDate required form-control" })
+                                        @Html.ValidationMessageFor(model => model.InvoiceDateTimeFrom)
+                                    </div>
+                                </div>
+
+                                <label for="" class="col-md-2 control-label text-right trkLabelMargin">Invoice DateTime To</label>
+                                <div class="col-md-3">
+                                    <div class="col-md-8 npForm">
+                                        @Html.TextBoxFor(model => model.InvoiceDateTimeTo, new { @placeholder = "Invoice DateTime To", id = "invoiceDateto", @class = " trInvoicePDateTo trVAT18Date customDatePicker trVAT17Date defaultDate required form-control" })
+                                        @Html.ValidationMessageFor(model => model.InvoiceDateTimeTo)
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <label for="" class="col-md-2 control-label text-right trkLabelMargin">Receive Date From</label>
+                                <div class="col-md-3">
+                                    <div class="col-md-8 npForm">
+                                        @Html.TextBoxFor(model => model.ReceiveDateFrom, new { @placeholder = "Receive DateTime From", @class = " trReceiveDate trVAT18Date customDatePicker trVAT17Date defaultDate required form-control" })
+                                        @Html.ValidationMessageFor(model => model.ReceiveDateFrom)
+                                    </div>
+                                </div>
+
+                                <label for="" class="col-md-2 control-label text-right trkLabelMargin">Receive Date To</label>
+                                <div class="col-md-3">
+                                    <div class="col-md-8 npForm">
+                                        @Html.TextBoxFor(model => model.ReceiveDateTo, new { @placeholder = "Receive DateTime To", @class = " trReceiveDate trVAT18Date customDatePicker trVAT17Date defaultDate required form-control" })
+                                        @Html.ValidationMessageFor(model => model.ReceiveDateTo)
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <label for="" class="col-md-2 control-label text-right trkLabelMargin">Expire Date From</label>
+                                <div class="col-md-3">
+                                    <div class="col-md-8 npForm">
+                                        @Html.TextBoxFor(model => model.ExpireDateFrom, new { @placeholder = "Expire DateTime From", @class = " trExpireDate trVAT18Date customDatePicker trVAT17Date defaultDate required form-control" })
+                                        @Html.ValidationMessageFor(model => model.ExpireDateFrom)
+                                    </div>
+                                </div>
+
+                                <label for="" class="col-md-2 control-label text-right trkLabelMargin">Expire DateTime To</label>
+                                <div class="col-md-3">
+                                    <div class="col-md-8 npForm">
+                                        @Html.TextBoxFor(model => model.ExpireDateTo, new { @placeholder = "Expire DateTime To", @class = " trExpireDate trVAT18Date customDatePicker trVAT17Date defaultDate required form-control" })
+                                        @Html.ValidationMessageFor(model => model.ExpireDateTo)
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+
+                        </div>
+                    </div>
+                </div>
+            </div>*@
+
+
+            <div class="headrow">
+                @*<button type="button" title="Process" onclick="DeleteData()" class="sym-btn-save">&nbsp;DeleteProcess</button>*@
+                <button type="button" title="ProcessData" onclick="MISStockReport()" class="sym-btn-download-row">&nbsp;Download</button>
+
+            </div>
+
+        }
+
+    </div>
+
+</div>
+
+<div id="myHigherModal" class="HigherModal"></div>
+
+
+<script>
+
+
+    function callbackFromProductModal(sender) {
+        var code = $(sender).children('td.popUpItemCode').text();
+        var itemNo = $(sender).children('td.popUpItemNo').text();
+        $('.trProductCode').val(code);
+        $('.trItemNo').val(itemNo);
+        ProductNameChange(code);
+        //$('.trProduct').select2('val', code);
+        $('.trProduct').select2('val', itemNo);
+
+        $(function () {
+            var interval = setInterval(function () {
+                if ($('.trUOM').val() != "") {
+
+                    UomOptions();
+
+                    clearInterval(interval);
+                }
+            }, 200);
+        });
+    }
+
+    function modalInitHigher(url) {
+        var modal = document.getElementById('myHigherModal');
+        $.ajax({
+            url: url,
+            cache: false,
+            beforeSend: function () { $(".loading").show(); },
+            complete: function () { $(".loading").fadeOut(200).hide("slow") },
+            success: function (html) {
+                modal.style.display = "block";
+                $("#myHigherModal").html(html);
+            }
+        });
+    }
+    function callbackFromProductModal(sender) {
+        var itemNo = $(sender).children('td.popUpItemNo').text();
+        var ItemName = $(sender).children('td.popUpItemName').text();
+        $('#ItemNo').val(itemNo);
+        $('.cItemNo').val(itemNo);
+        $('.cProductName').val(ItemName);
+    }
+
+    function callbackFromVendorModal(sender) {
+        var id = $(sender).children('td.popUpVendorId').text();
+        $('.trVendorId').select2('val', id);//robin
+    }
+
+    function callbackFromCustomerModal(sender) {
+        var id = $(sender).children('td.popUpCustomerId').text();
+        var CustomerName = $(sender).children('td.popUpCustomerName').text();
+
+        CustomerSelect(id);
+
+        //$('.trCustomerId').select2('val', id);
+
+    }
+
+    $(function () {
+        $('.productBtn').click(function () {
+            var url = "/Vms/Product/GetProductPopUp?targetId=ProductName";
+            modalInitHigher(url);
+        });
+    });
+
+    $('#vendorBtn').click(function () {
+        var vendorName = $('.trVendorId option:selected').text();
+        var url = "/Vms/Vendor/GetVendorPopUp?VendorName=" + vendorName;
+        var modal = document.getElementById('myHigherModal');
+        $.ajax({
+            url: url,
+            cache: false,
+            beforeSend: function () { $(".loading").show(); },
+            success: function (html) {
+                modal.style.display = "block";
+                $("#myHigherModal").html(html);
+            }
+            , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+        });
+    });
+
+
+    function CustomerSelect(CustomerID) {
+
+        $('.trCustomerId').val("");
+
+           @*var value = '@Model.CustomerID';*@
+
+           var value = CustomerID;
+
+        var CustomerNames = "";
+
+        var url = "/Config/DropDown/DropDownByCustomerID/?CustomerID=" + value;
+        CustomerNames += "<option value=0>Select</option>";
+        $.getJSON(url, function (data) {
+            $.each(data, function (i, state) {
+                CustomerNames += "<option value='" + state.Value + "'>" + state.Text + "</option>";
+            });
+
+            $('.trCustomerId').html(CustomerNames);
+
+            $('.trCustomerId').select2('val', CustomerID);
+
+                
+
+            //CustomerChange();
+            //var CustomerId = $('.trCustomerId :selected').val();
+
+            //console.log(CustomerId);
+
+        });
+    }
+
+</script>
+
+<script>
+    $(function () {
+        var date = $('.trVAT17Date').val();
+        if (date != null && date != "") {
+            $('#StartDate').val(date);
+            $('#EndDate').val(date);
+        }
+        var productName = $('tr.active .dItemName').val();
+        if (productName == null || productName == "") {
+            return;
+        }
+        $('.trProductName').val(productName);
+        var itemNo = $('tr.active .dItemNo').val();
+
+        $('.trProductName1').val(productName);
+        var itemNo = $('tr.active .dItemNo').val();
+
+        $('.popUpItemNo').val(itemNo);
+
+    })
+</script>
+
+<script>
+
+    $(function () {
+        valiDation("frmProcessdata");
+
+    });
+
+    function DownloadData() {
+
+        //var Productname = $('.trProductName').val();
+        ////alert(vendor);
+        //if (Productname == "" || Productname == "0") {
+        //    ShowResult("Fail", "Please Select a ProductNaame");
+        //    return;
+        //}
+
+        pageSubmit('frmProcessdata');
+        //window.open(url, "_blank");
+        // window.open("_blank");
+        location.reload();
+    }
+
+
+    function DownloadPurchaseData() {
+
+        //var Productname = $('.cProductName').val();
+       
+        //if (Productname == "" || Productname == "0") {
+        //    ShowResult("Fail", "Please Select a ProductNaame");
+        //    return;
+        //}
+
+        //var VendorName = $('.trVendorId').val();
+
+        //if (VendorName == "" || VendorName == "0") {
+        //    ShowResult("Fail", "Please Select a Vendor");
+        //    return;
+        //}
+
+        pageSubmit('frmPurchaseData');
+
+        location.reload();
+
+      
+    }
+
+    function MISStockReport() {
+
+       
+
+        pageSubmit('frmMISStockReport');
+
+        location.reload();
+
+
+    }
+
+
+    function ExportExcel() {
+
+        var questionMSG = "Are you sure to Export Excel!";
+
+        Ask(questionMSG, function () {
+            var url = '/VMS/NBRReport/ExportNegaiveData';
+            var form = $('<form action="' + url + '"></form>');
+            form.appendTo('#frmProcessdata').submit()
+        });
+    }
+
+    $(function () {
+        $('.trCustomerId').change(function () {
+            CustomerChange();
+        });
+    });
+
+    function CustomerChange() {
+
+        var CustomerId = $('.trCustomerId :selected').val();
+
+        if (CustomerId == null || CustomerId == "") {
+            return;
+        }
+
+        var url = "/Vms/SaleInvoice/getCustomerAddress?CustomerId=" + CustomerId;
+        $.getJSON(url, function (data) {
+
+            ////alert(data.Address1);
+
+            $('.cDeliveryAddress1').val(data.Address1);
+
+        });
+    }
+    $('#customerBtn').click(function () {
+        var customerName = $('.trCustomerId option:selected').text();
+        var url = "/Vms/Customer/GetCustomerPopUp?CustomerName=" + customerName;
+        var modal = document.getElementById('myHigherModal');
+        $.ajax({
+            url: url,
+            cache: false,
+            beforeSend: function () { $(".loading").show(); },
+            success: function (html) {
+                modal.style.display = "block";
+                $("#myHigherModal").html(html);
+            }
+        , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+        });
+    });
+
+</script>

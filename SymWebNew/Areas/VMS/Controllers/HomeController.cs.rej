@@ -1,0 +1,10 @@
+diff a/SymWebNew/Areas/VMS/Controllers/HomeController.cs b/SymWebNew/Areas/VMS/Controllers/HomeController.cs	(rejected hunks)
+@@ -124,7 +124,7 @@
+             try
+             {
+                 string SessionDate = vm.SessionDate;
+-                Session["SoftwareVersion"] = "15-Mar-2023"; //"2020-Nov-01";
++                Session["SoftwareVersion"] = "16-Mar-2023"; //"2020-Nov-01";
+ 
+                 Session["SessionDate"] = SessionDate;
+ 

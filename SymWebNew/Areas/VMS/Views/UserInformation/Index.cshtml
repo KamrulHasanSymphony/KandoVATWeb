@@ -1,0 +1,69 @@
+﻿<div class="headrow">
+    <button type="button" title="Add New User" data-url="/VMS/UserInformation/Create" id="" class="btnCreate sym-btn-add ">&nbsp;New</button>
+    @*<button type="button" title="Delete Vendor" data-url="/VMS/UserInformation/Delete" onclick="deletedData(this, 'myDataTable');" id="" class="sym-btn-remove">&nbsp;Delete</button>*@
+    <label class="pull-right">UserInformation</label>
+</div>
+<div class="thinbox animated slideInDown faster">
+    <div class="th_thinbox">
+        <p>UserInformation List</p>
+    </div>
+    <table id="myDataTable" class="display">
+        <thead>
+            <tr>
+                <th class="center">
+                    <input type="checkbox" class="chkAll" />Select All
+                </th>
+                <th>User Name</th>
+                <th>Group Name</th>
+                <th>Last Login DateTime</th>
+                <th>Last Modified By</th>
+                <th>Last Modified On</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <br />
+</div>
+<div class="headrow">
+        <button type="button" title="Add New User" data-url="/VMS/UserInformation/Create" id="" class="btnCreate sym-btn-add ">&nbsp;New</button>
+        @*<button type="button" title="Delete UserInformation" data-url="/VMS/UserInformation/Delete" onclick="deletedData(this, 'myDataTable');" id="" class="sym-btn-remove">&nbsp;Delete</button>*@
+</div>
+<div id="myModal" class="trkmodal"></div>
+
+<script language="javascript" type="text/javascript">
+    $(document).ready(function () {
+        SelectAllForDelete();
+        $.datepicker.regional[""].dateFormat = 'dd/M/y';
+        $.datepicker.setDefaults($.datepicker.regional['']);
+
+        var oTable = $('#myDataTable').dataTable({
+            "bServerSide": true,
+            "sAjaxSource": "/VMS/UserInformation/_index",
+            "bProcessing": true,
+            "aLengthMenu": tablelength(),
+            "bJqueryUI": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+                            {
+                                "sName": "Id",
+                                "bSearchable": false,
+                                "bSortable": false,
+                                "sWidth": "8%",
+                                "sClass": "center",
+                                "fnRender": function (oObj) {
+                                    return ' <input onclick="CheckAll(this)" type="checkbox" data-Id="' + oObj.aData[0] + '">'
+                                        + '&nbsp; <a id=""  title="Click on for Edit"  style="text-decoration:none;"   href=\"/VMS/UserInformation/Edit/' + oObj.aData[0] + '\" class=" innerListLink sym-btn-edit-row"></a>'
+                                    ////+ '&nbsp; <a title="Click on for Delete"  data-url="/VMS/UserInformation/Delete" onclick="deletedData(this, myDataTable,\'' + oObj.aData[0] + '\');"  class="sym-btn-remove-row"></a>'
+                                    ;
+                                }
+                                //"sName": "Id", "sWidth": "12%"
+                            }
+                            , { "sName": "UserName", "sWidth": "12%" }
+                            , { "sName": "GroupName", "sWidth": "10%" }
+                            , { "sName": "LastLoginDateTime", "sWidth": "8%" }
+                            , { "sName": "LastModifiedBy", "sWidth": "8%" }
+                            , { "sName": "LastModifiedOn", "sWidth": "5%" }
+            ]
+        });
+    });
+</script>

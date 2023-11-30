@@ -1,0 +1,91 @@
+﻿@{
+    ViewBag.Title = "Report";
+}
+@using UIHelper.MVC
+<div class="thinbox">
+    <div class="th_thinbox">
+        <p>Employee Monthly Overtime</p>
+    </div>
+    <div class="row">
+        <div class="col-md-1">
+            <div class="editor-label">
+                <label>Year</label>
+            </div>
+
+            <div class="editor-field">
+                <div>@Html.TextBox("fYear", @Session["SessionYear"].ToString(), new { @class = "fiscalyearCom form-control" }) </div>
+            </div>
+        </div>
+
+        <div class="col-sm-2">
+            <div class="editor-label">
+                @Html.Label("Fiscal Period")
+            </div>
+            <div class="editor-field">
+                <div>
+                    @Html.SimpleDropDown("FiscalPeriodDetailId", "/Config/DropDown/DropDownPeriodByFYear?year=" + @Session["SessionYear"].ToString(), new { @class = "fpDetailsCom required  form-control selectDropdown" })
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-3">
+            <div class="editor-label">
+                <label>@Session["DepartmentLabel"]</label>
+            </div>
+            <div class="editor-field">
+                @Html.SimpleDropDown("DepartmentId", "/Config/DropDown/Department", new { @class = "departmentsCom form-control selectDropdown" })
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="editor-label">
+                <label>@Session["SectionLabel"]</label>
+            </div>
+            <div class="editor-field">
+                @Html.SimpleDropDown("SectionId", "/Config/DropDown/Section", new { @class = "sectionsCom form-control selectDropdown" })
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="editor-label">
+                <label>@Session["ProjectLabel"]</label>
+            </div>
+            <div class="editor-field">
+                @Html.SimpleDropDown("ProjectId", "/Config/DropDown/Project", new { @class = "projectsCom form-control selectDropdown" })
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="headrow">
+    <button type="button" name="D" title="Click for Report" data-url="/Common/EmployeeMonthlyOvertime/ReportView" onclick="reportData(this);" id="" class="sym-btn-report">&nbsp;Detail</button>
+    <button type="button" name="S" title="Click for Report" data-url="/Common/EmployeeMonthlyOvertime/ReportView" onclick="reportData(this);" id="" class="sym-btn-report">&nbsp;Summary</button>
+    &nbsp;
+    <button title="Clear the Entries" id="Clear" onclick="window.location.reload()" class="sym-btn-clear">&nbsp;Clear</button>
+</div>
+
+<script>
+    $(function () {
+        InitDropdownsCommon();
+    });
+    function reportData(sender) {
+        var url = $(sender).attr("data-url");
+        var reportType = $(sender).attr("name");
+        var fid = $("#FiscalPeriodDetailId :selected").val();
+        if (fid == "") {
+            ShowResult("Fail", "Please Select Fiscal Period First!");
+            return;
+        }
+        var departmentId = $("#DepartmentId :selected").val();
+        var sectionId = $("#SectionId :selected").val();
+        var projectId = $("#ProjectId :selected").val();
+        rptObj = new Object();
+        rptObj.departmentId = departmentId;
+        rptObj.sectionId = sectionId;
+        rptObj.projectId = projectId;
+        rptObj.fid = fid;
+        rptObj.reportType = reportType;
+        var rptParam = $.param(rptObj);
+        url = url + "?" + rptParam;
+        var win = window.open(url, '_blank');
+    }
+</script>

@@ -1,0 +1,43 @@
+﻿@{
+    ViewBag.Title = "_detailStock";
+}
+
+@model VATViewModel.DTOs.ProductStockVM
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+<tr class="tablerow">
+    @using (Html.BeginCollectionItem("Details"))
+    {
+        <td>
+            <a id="" title="Click to Remove" onclick="RemoveData(this);" class="sym-btn-remove-row "></a>
+            <a id="" title="Click to Edit" onclick="EditItem1(this);" class="sym-btn-edit-row"></a>
+        </td>
+        
+        @*<td>
+            @Html.TextBoxFor(model => model.BranchId, new { @class = "  dBranchId   form-control", @readonly = "readonly" })
+            
+        </td>*@
+         <td>
+            @Html.TextBoxFor(model => model.BranchName, new { @class = "  dBranchName   form-control", @readonly = "readonly" })
+            
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.StockQuantity, new { @class = "  dStockQuantity   form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.StockValue, new { @class = "  dStockValue   form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.Comments, new { @class = "  dComments   form-control", @readonly = "readonly" })
+        </td>
+        
+        
+        
+        @Html.HiddenFor(m => m.ItemNo, new { @class = " dItemNo" })
+        @Html.HiddenFor(m => m.StockId, new { @class = " dStockId" })
+        @Html.HiddenFor(m => m.BranchId, new { @class = " dBranchId" })
+        
+    }
+</tr>

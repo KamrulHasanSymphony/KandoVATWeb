@@ -1,0 +1,186 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+@using UIHelper.MVC
+<div class="headrow">
+    <button type="button" title=" Import/Export" id="" class="sym-btn-ExportImport" data-url="/Common/EmployeeMonthlyOvertime/ImportMonthlyOvertime" onclick="GoTo(this)">&nbsp;Import/Export</button>
+    <label class="pull-right">Monthly Overtime</label>
+</div>
+
+
+<div class="thinbox">
+    <div class="th_thinbox">
+        <p>Employee Monthly Overtime</p>
+    </div>
+    <div class="row">
+        <div class="col-md-1">
+            <div class="editor-label">
+                <label>Year</label>
+            </div>
+
+            <div class="editor-field">
+                <div>@Html.TextBox("fYear", @Session["SessionYear"].ToString(), new { @class = "fiscalyearCom form-control" }) </div>
+            </div>
+        </div>
+
+        <div class="col-sm-2">
+            <div class="editor-label">
+                @Html.Label("Fiscal Period")
+            </div>
+            <div class="editor-field">
+                <div>
+                    @Html.SimpleDropDown("FiscalPeriodDetailId", "/Config/DropDown/DropDownPeriodByFYear?year=" + @Session["SessionYear"].ToString(), new { @class = "fpDetailsCom required  form-control selectDropdown" })
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="editor-label">
+                <label>@Session["DepartmentLabel"]</label>
+            </div>
+            <div class="editor-field">
+                @Html.SimpleDropDown("DepartmentId", "/Config/DropDown/Department", new { @class = "departmentsCom form-control selectDropdown" })
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="editor-label">
+                <label>@Session["SectionLabel"]</label>
+            </div>
+            <div class="editor-field">
+                @Html.SimpleDropDown("SectionId", "/Config/DropDown/Section", new { @class = "sectionsCom form-control selectDropdown" })
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="editor-label">
+                <label>@Session["ProjectLabel"]</label>
+            </div>
+            <div class="editor-field">
+                @Html.SimpleDropDown("ProjectId", "/Config/DropDown/Project", new { @class = "projectsCom form-control selectDropdown" })
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="headrow">
+    &nbsp;
+    <button title="Click to Show Employee List" id="searchBtn" class="btn sym-btn-search">&nbsp;Search</button>
+    &nbsp;
+    <button type="button" title="Save Data" id="" class="saveJSON sym-btn-save" hidden="hidden">&nbsp;Save</button>
+    @*&nbsp;
+    <button type="button" title="Save From Daily Overtime" id="" class="saveJSONDaily sym-btn-save" hidden="hidden">&nbsp;Save From Daily Overtime</button>*@
+
+
+    &nbsp;
+    <button title="Clear the Entries" id="Clear" class="sym-btn-clear">&nbsp;Clear</button>
+</div>
+
+<div id="detailsDiv">
+</div>
+<div class="headrow" hidden="hidden">
+    <button type="button" title="Save Data" id="" class="saveJSON sym-btn-save">&nbsp;Save</button>
+    @*<button type="button" title="Save From Daily Overtime" id="" class="saveJSONDaily sym-btn-save">&nbsp;Save From Daily Overtime</button>*@
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(function () {
+            InitDatePickers();
+            InitDropdownsCommon();
+        });
+        $('#Clear').click(function () {
+            location.reload()
+        });
+        $('.saveJSON').click(function () {
+            var fid = $("#FiscalPeriodDetailId :selected").val();
+            if (fid == "") {
+                ShowResult("Fail", "Please Select Fiscal Period First!");
+                return;
+            }
+            if (pageSubmitJSON('frmEmpMonthlyOvertime') == 0) {
+                var myData = $('#frmEmpMonthlyOvertime').serialize();
+                var url = "/Common/EmployeeMonthlyOvertime/Create?fid=" + fid;
+
+                //if (submit(url, myData) == true) {
+                  
+                //}
+
+                $.ajax({
+                    type: 'POST',
+                    data: myData,
+                    url: url,
+                    beforeSend: function () { $(".loading").show(); },
+                    success: function (result) {
+                        var msg1 = result.split('~')[0];
+                        var msg2 = result.split('~')[1];
+                        ShowResult(msg1, msg2);
+
+                        $(".saveJSON").hide();
+                        $(".saveJSONDaily").hide();
+                        Searching();
+
+                    },
+                    complete: function () { $(".loading").fadeOut(200).hide("slow") }
+
+                });
+            }
+        });
+
+
+        $('.saveJSONDaily').click(function () {
+            var fid = $("#FiscalPeriodDetailId :selected").val();
+            if (fid == "") {
+                ShowResult("Fail", "Please Select Fiscal Period First!");
+                return;
+            }
+            var url = "/Common/EmployeeMonthlyOvertime/CreateFromDailyOvertime?fid=" + fid;
+            Ask("Are you sure to Save From Daily Overtime!", function () {
+                if (pageSubmitJSON('frmEmpMonthlyOvertime') == 0) {
+                    submit(url);
+                    $(".saveJSON").hide();
+                    $(".saveJSONDaily").hide();
+                }
+
+            }, function () { })
+        });
+
+
+        $("#searchBtn").click(function () {
+            var fid = $("#FiscalPeriodDetailId :selected").val();
+            if (fid == "") {
+                ShowResult("Fail", "Please Select Fiscal Period First!");
+                return;
+            }
+            Searching();
+        });
+
+        function Searching() {
+            var ProjectId = $("#ProjectId :selected").val();
+            var DepartmentId = $("#DepartmentId :selected").val();
+            var SectionId = $("#SectionId :selected").val();
+            var DesignationId = $("#DesignationId :selected").val();
+            var FiscalPeriodDetailId = $("#FiscalPeriodDetailId :selected").val();
+
+            //debugger;
+
+            var url = '/Common/EmployeeMonthlyOvertime/_indexPartial?ProjectId=' + ProjectId
+                  + '&DepartmentId=' + DepartmentId
+                  + '&SectionId=' + SectionId
+                  + '&fid=' + FiscalPeriodDetailId
+
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                beforeSend: function () { $(".loading").show(); },
+                complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                success: function (data) {
+                    $(' #detailsDiv').html(data);
+                    $(".saveJSON").show();
+                    $(".saveJSONDaily").show();
+                    $(".headrow").show();
+                    ShowResult("Info", " Data load Complete");
+                },
+            });
+        }
+    </script>
+}

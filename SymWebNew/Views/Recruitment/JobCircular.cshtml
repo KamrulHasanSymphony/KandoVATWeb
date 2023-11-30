@@ -1,0 +1,95 @@
+﻿@{
+    ViewBag.Title = "JobCircular";
+}
+<style>
+    table {
+        font-weight:normal!important;
+        font-size:12px!important;
+    }
+    td {
+         font-weight:normal!important;
+        font-size:12px!important;
+    }
+</style>
+<div class="content">
+<div class="thinbox">
+    <div class="th_thinbox">
+        <p>Job Circular List</p>
+    </div>
+    <p></p>
+    <div class="row">
+        <div id="container">
+            <div id="demo">
+                <table id="myDataTable" class="display">
+                    <thead>
+                      <tr>
+                            
+                            <th>Job Title</th>
+                           
+                            <th>Description</th>
+                            <th >Apply</th>
+                          
+                        </tr>
+                      
+                        </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+    </div>
+<script>
+    $(document).ready(function () {
+        var oTable = $('#myDataTable').dataTable({
+            "bServerSide": true,
+            "sAjaxSource": "/Recruitment/_JobCircularindex",
+            "bProcessing": true,
+            "aLengthMenu": tablelength(),
+            "bJqueryUI": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+                            {
+                                "sName": "Job Title",
+                                "bSearchable": false,
+                                "bSortable": false,
+                                "sWidth": "30%",
+                                "fnRender": function (oObj) {
+                                    return '<h1>' + oObj.aData[0] + '</h1> ';
+                            }
+                                },
+                            {
+                                "sName": "Description",
+                                "bSearchable": false,
+                                "bSortable": false,
+                                "sWidth": "70%",
+                                "fnRender": function (oObj) {
+                                    return ' <h3>Position :' + oObj.aData[1] + '</h3> <p>Expriance : ' + oObj.aData[2] + '</p> <p> Description :' + oObj.aData[4] + '</p> '
+                                +' <p  class=" alert alert-primary">Last Application Date :' + oObj.aData[3] + '</p> '
+                            }
+                                },
+                                {
+                                "sName": "Apply",
+                                "bSearchable": false,
+                                "bSortable": false,
+                                "sWidth": "10%",
+                                "sClass":"center",
+                                "fnRender": function (oObj) {
+                                    return '<a  title="Apply" href=\"/Recruitment/ApplyCreate/' + oObj.aData[5] + '\" id="" class=" sym-btn-add ">&nbsp;Apply</a>';
+                                
+                            }
+                                }
+                            
+                            //, { "sName": "JobTitle", "sWidth": "30%" }
+                            //, { "sName": "DesignationName", "sWidth": "15%" }
+                            //, { "sName": "Expriance", "sWidth": "10%" }
+                            //, { "sName": "Deadline", "sWidth": "10%" }
+                            //, { "sName": "Description", "sWidth": "30%" }
+                            //, { "sName": "Active", "sWidth": "10%" }
+            ]
+        });
+ 
+        SelectAllForDelete();
+    });
+    </script>

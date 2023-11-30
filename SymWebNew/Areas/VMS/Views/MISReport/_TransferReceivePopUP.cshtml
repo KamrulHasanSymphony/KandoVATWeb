@@ -1,0 +1,187 @@
+﻿@model SymVATWebUI.Areas.VMS.Models.ReportCommonVM
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+
+<style>
+    .trkmodal{
+        padding-top:10%;
+    }
+    .trkmodal-content {
+        width: 50%;
+        padding-bottom: 10px;
+    }
+    .customDatePicker {
+        background: #fefede url(/Images/calendar.jpg) no-repeat 98% !important;
+    }
+    /*no padding with little margin bttom*/
+    div.trkmodal-body div.npForm {
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+        padding-bottom: 0px !important;
+        margin-bottom: 10px;
+    }
+
+    div.trkmodal-body div.npForm div.npForm {
+        margin-bottom: 0px !important;
+    }
+</style>
+<div class="trkmodal-content">
+    <div class="trkmodal-header">
+        <span class="close">&times;</span>
+        <h2 class="text-center">Transfer Receive MIS</h2>
+    </div>
+    <div class="trkmodal-body">
+    @using (Html.BeginForm("ReportTransferReceiveMis", "TransferReceive", FormMethod.Post, new { enctype = "multipart/form-data", @target = "_blank", @Id = "frmChakka" }))
+{
+           @Html.HiddenFor(model => model.TransactionType)
+        <div class="npForm col-md-11">
+        <label>TransferIssue No</label>
+        @Html.TextBoxFor(m => m.IssueNo, new { @placeholder = "TransferIssue No", @class = "trIssueNo form-control" })
+    </div>
+        <div class="trk_5">
+                <div class="editor-label">
+                    <label>&nbsp;</label>
+                </div>
+                <div class="editor-field">
+                    <button type="button" title="Click to Search IssueNo" id="IssueNoBtn" class="sym-btn-search"></button>
+                </div>
+            </div>
+    <div class="npForm col-md-6">
+        <label>Date From</label>
+        @Html.TextBoxFor(m => m.StartDate, new { @placeholder = "Start Date", @class = "customDatePicker form-control" })
+    </div>
+    <div class="npForm col-md-6">
+        <label>Date To</label>
+        @Html.TextBoxFor(m => m.EndDate, new { @placeholder = "End Date", @class = "customDatePicker form-control" })
+    </div>
+
+    <div class="npForm col-md-12">
+        <label>Branch To</label>
+        @Html.SimpleDropDownFor(m => m.Branch, "/Config/DropDown/BranchProfile", new { @class = " form-control selectDropdown" })
+    </div>
+
+    <div class="npForm col-md-12">
+        <label>Branch Form</label>
+        @Html.SimpleDropDownFor(m => m.TransferBranch, "/Config/DropDown/BranchProfile", new { @class = " form-control selectDropdown" })
+    </div>
+    <div class="npForm col-md-12">
+        <label>R.Types</label>
+        @Html.SimpleDropDownFor(m => m.TransactionType, "/Config/DropDown/TransferIsuueTypes", new { @class = " form-control selectDropdown" })
+    </div>
+        
+    @*<div class="npForm col-md-2">
+        @Html.SimpleDropDownFor(m => m.FontSize, "/Config/DropDown/Font", new { @class = " form-control DRselectDropdown" })
+    </div>*@
+        @Html.HiddenFor(m => m.PreviewOnly);
+
+        <button type="button" class=" btn sym-btn-report trPreview"> Preview</button>
+        <button type="button" class="sym-btn-close closeBtn pull-right"> Close</button>
+    }
+    </div>
+</div>
+<div id="myHigherModal" class="HigherModal"></div>
+<script src="~/assets/javascripts/custom.js"></script>
+<script>
+    function modalInitHigher(url) {
+
+        var ProductType = $(".cProductType :selected").val();
+        var ProductCategoryId = $(".cProductCategoryId :selected").val();
+        var ProductCategory = $(".cProductCategoryId :selected").text();
+
+        url = url
+            + "&ProductType=" + ProductType
+            + "&ProductCategoryId=" + ProductCategoryId
+            + "&ProductCategory=" + ProductCategory
+        ;
+
+        var modal = document.getElementById('myHigherModal');
+        $.ajax({
+            url: url,
+            cache: false,
+            beforeSend: function () { $(".loading").show(); },
+            complete: function () { $(".loading").fadeOut(200).hide("slow") },
+            success: function (html) {
+                modal.style.display = "block";
+                $("#myHigherModal").html(html);
+            }
+        });
+    }
+    $(document).ready(function () {
+        ///check validation
+        function checkValidation() {
+            var Issue = $('.trIssueNo').val();
+
+            if (!Issue) {
+                var startDate = $('#StartDate').val();
+                if (startDate == "") {
+                    ShowResult("Fail", "Select start date!");
+                    return false;
+                }
+                var endDate = $('#EndDate').val();
+                if (endDate == "") {
+                    ShowResult("Fail", "Select end date!");
+                    return false;
+                }
+
+            }
+            return true;
+        }
+        ////clicking preview button
+        $('.trPreview').click(function () {
+            var isValid = checkValidation();
+            if (isValid == false) {
+                return;
+            }
+            $("#PreviewOnly").val("true");
+            $('#frmChakka').submit();
+            //pageSubmit('frmChakka');
+        });
+        ////clicking vat16 button
+        $('.trVAT18').click(function () {
+            var isValid = checkValidation();
+            if (isValid == false) {
+                return;
+            }
+            $("#PreviewOnly").val("false");
+            $('#frmChakka').submit();
+            //pageSubmit('frmChakka');
+        });
+
+        function closeModal() {
+            $("#myModal").html("");
+            trkmodal.style.display = "none";
+        }
+
+        var span = document.getElementsByClassName("close")[0];
+        var trkmodal = document.getElementById('myModal');
+        //When the user clicks on <span> (x), close the trkmodal
+        span.onclick = function () {
+            closeModal();
+        }
+
+        $('.closeBtn').click(function () {
+            closeModal();
+        });
+
+        $('#IssueNoBtn').click(function () {
+            var productCode = $('.trIssueNo').val();
+            var tType = '@Model.TransactionType';
+            var url = "/Vms/TransferReceive/GetReceiveNoPopUp?TransactionType=" + tType;
+            modalInitHigher(url);
+        });
+        
+    });
+</script>
+@*for selecting from and to date*@
+<script>
+    $(function () {
+        var challandate = $('.trVAT18Date').val();
+        if (challandate == null || challandate == "") {
+            return;
+        }
+        $('#StartDate').val(challandate);
+        $('#EndDate').val(challandate);
+    })
+</script>

@@ -1,0 +1,207 @@
+﻿@{
+    ViewBag.Title = "ApplyCreate";
+}
+@model SymViewModel.Common.PublicApplicantVM
+@using UIHelper.MVC
+
+<div class="content">
+    @using (Html.BeginForm("ApplyCreate", "Recruitment", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmRecruitment" }))
+    {
+        @Html.ValidationSummary(true)
+        @Html.HiddenFor(model => model.JobCircularId)
+
+        <div class="thinbox">
+            <div class="th_thinbox">
+                <p>Job Circular</p>
+            </div>
+            <div class="row">
+                <section>
+                    <div class="wizard">
+                        <div class="wizard-inner">
+                            <div class="connecting-line"></div>
+                            <ul class="nav nav-tabs" role="tablist">
+
+                                <li role="presentation" class="active">
+                                    <a href="#step1" data-toggle="tab" aria-controls="step1" role="tab" title="Step 1">
+                                        <span class="round-tab">
+                                            <i class="glyphicon glyphicon-pencil"></i>
+
+                                        </span>
+                                    </a>
+                                </li>
+                                <li role="presentation" class="disabled">
+                                    <a href="#step2" data-toggle="tab" aria-controls="step2" role="tab" title="Step 2">
+                                        <span class="round-tab">
+                                            <i class="glyphicon glyphicon-folder-open"></i>
+                                        </span>
+                                    </a>
+                                </li>
+                                @*  <li role="presentation" class="disabled">
+                        <a href="#step3" data-toggle="tab" aria-controls="step3" role="tab" title="Step 3">
+                            <span class="round-tab">
+                                <i class="glyphicon glyphicon-picture"></i>
+                            </span>
+                        </a>
+                    </li>*@
+
+                                <li role="presentation" class="disabled">
+                                    <a href="#complete" data-toggle="tab" aria-controls="complete" role="tab" title="Complete">
+                                        <span class="round-tab">
+                                            <i class="glyphicon glyphicon-ok"></i>
+                                        </span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+
+                        <div class="tab-content">
+                            <div class="tab-pane active" role="tabpanel" id="step1">
+                                <h3>Step 1</h3>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="editor-label">
+                                            @Html.LabelFor(model => model.ApplicantName)
+                                        </div>
+                                        <div class="editor-field">
+                                            @Html.TextBoxFor(model => model.ApplicantName, new { @placeholder = "Applicant Name ", @class = "required form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="editor-label">
+                                            @Html.LabelFor(model => model.ApplicantEmail)
+                                        </div>
+                                        <div class="editor-field">
+                                            @Html.TextBoxFor(model => model.ApplicantEmail, new { @placeholder = "Applicant Email ", @type = "email", @class = "required form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="editor-label">
+                                            @Html.LabelFor(model => model.Expriance)
+                                        </div>
+                                        <div class="editor-field">
+                                            @Html.TextBoxFor(model => model.Expriance, new { @placeholder = "Expriance Years ", @type = "numeric", @class = "required form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="editor-label">
+                                            @Html.LabelFor(model => model.Description)
+                                        </div>
+                                        <div class="editor-field">
+                                            @Html.TextAreaFor(model => model.Description, new { @placeholder = "Description", @class = "required form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane" role="tabpanel" id="step2">
+                                <h3>Step 2</h3>
+                                @Html.TextBoxFor(model => model.file, new { @placeholder = "Expriance Years ", @type = "file", accept = ".pdf,.doc,.docx", @class = "required form-control" })
+                                @*<input type="file" onchange="CheckFileSize(this);" name="file" id="file" style="width: 200px;" />*@
+
+                            </div>
+
+                            <div class="tab-pane" role="tabpanel" id="complete">
+                                <h3>Step 3</h3>
+                               @*<h4>@Session["result"].ToString().Split('~')[1]</h4>*@
+                            </div>
+                            <ul class="list-inline pull-right">
+                                <li><button type="button" class="btn btn-default prev-step">Previous</button></li>
+                                <li> <button type="button" class="btn btn-primary next-step">continue</button></li>
+                                <li> <button type="button" id="saveJSON" class="btn btn-primary save">Save</button></li>
+                            </ul>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    }
+</div>
+<script>
+    $(document).ready(function () {
+        //Initialize tooltips
+       // $('.nav-tabs > li a[title]').tooltip();
+        var tt=0;
+        checktab();
+        function checktab(){
+            if (tt ==0) {
+                $(".next-step").show();
+                $(".prev-step").hide();
+                $(".save").hide();
+            }
+            else if (tt ==1) {
+                $(".prev-step").show();
+                $(".next-step").hide();
+                
+                $(".save").show();
+            }
+           
+        }
+     
+        //Wizard
+        $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
+            var $target = $(e.target);
+            if ($target.parent().hasClass('disabled')) {
+                return false;
+            }
+        });
+       
+            
+        $(".next-step").click(function (e) {
+            var $active = $('.wizard .nav-tabs li.active');
+            $active.next().removeClass('disabled');
+            nextTab($active);
+            tt +=1;
+             checktab();
+        });
+        $(".prev-step").click(function (e) {
+            var $active = $('.wizard .nav-tabs li.active');
+            prevTab($active);
+            tt -=1;
+             checktab();
+        });
+    });
+    function nextTab(elem) {
+        $(elem).next().find('a[data-toggle="tab"]').click();
+    }
+    function prevTab(elem) {
+        $(elem).prev().find('a[data-toggle="tab"]').click();
+    }
+    var isChange = false;
+    $('.form-control').change(function () {
+        isChange = true;
+    });
+    $('#saveJSON').click(function () {
+        if (isChange == true) {
+         var values = $("#frmRecruitment").serializeArray();
+values.push({
+    name: "file",
+    value: $("input[type='file']")[0]
+});
+            debugger;
+            alert(JSON.stringify(values));
+            var url='@Url.Action("ApplyCreate","Recruitment")';
+             $.ajax({
+                url: url,
+                type: 'POST',
+                 data:values,
+                beforeSend: function () { $(".loading").show(); },
+                complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                success: function (data) {
+                
+                    ShowResult("Info", " Data load Complete");
+                },
+            });
+            if (pageSubmit('frmRecruitment') == 0) {
+                 var $active = $('.wizard .nav-tabs li.active');
+            $active.next().removeClass('disabled');
+            nextTab($active);
+            }
+            isChange = false;
+        }
+        else {
+            ShowResult("Success", "You have no changes for save");
+        }
+    });
+</script>
+

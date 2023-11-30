@@ -1,0 +1,72 @@
+﻿@model VATViewModel.DTOs.MPLZoneBranchMappingVM
+@using UIHelper.MVC
+@using (Html.BeginForm("CreateEdit", "MPLZoneBranchMapping", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmZone" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.Operation)
+
+    <div class="headrow">
+        @if (Model.Operation == "add")
+        {
+            <button type="button" name="btnName" value="Save" title="Save Data" onclick="pageSubmit('frmZone')" class="sym-btn-save">&nbsp;Save</button>
+            <label class="pull-right">Zone Mapping > Create</label>
+        }
+        else
+        {
+            <button type="button" name="btnName" value="Update" title="Update Data" onclick="pageSubmit('frmZone')" class="sym-btn-update">&nbsp;Update</button>
+            <label class="pull-right">Zone Mapping > Edit</label>
+        }
+        <button type="button" title="Go To Index" data-url="/VMS/MPLZoneBranchMapping" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New Zone" data-url="/VMS/MPLZoneBranchMapping/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+
+    </div>
+    
+    <div class="col-md-12 trkPX-0 trkPR-2">
+        <div class="thinbox animated zoomIn faster">
+            <div class="row">
+                <div class="form-group">
+                    <label class="col-md-2 control-label text-right trkLabelMargin">Zone Name</label>
+                    <div class="form-group">
+                        <div class="col-md-2" style="margin-top: 6px;">
+                            @Html.SimpleDropDownFor(m => m.ZoneId, "/Config/DropDown/ZoneProfile", new { @class = " trNavigateMenu form-control required" })
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-md-4 control-label text-right trkLabelMargin">Branch Name</label>
+                    <div class="form-group">
+                        <div class="col-md-2" style="margin-top: 6px;">
+                            @Html.SimpleDropDownFor(m => m.BranchId, "/Config/DropDown/BranchProfile", new { @class = " trNavigateMenu form-control required" })
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    
+    
+    <div class="headrow">
+        @if (Model.Operation == "add")
+        {
+            <button type="button" name="btnName" value="Save" title="Save Data" onclick="pageSubmit('frmZone')" class="sym-btn-save">&nbsp;Save</button>
+        }
+        else
+        {
+            <button type="button" name="btnName" value="Update" title="Update Data" onclick="pageSubmit('frmZone')" class="sym-btn-update">&nbsp;Update</button>
+        }
+        <button type="button" title="Go To Index" data-url="/VMS/MPLZoneBranchMapping" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New Zone" data-url="/VMS/MPLZoneBranchMapping/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+
+    </div>
+}
+<script>
+    $(function () {
+        valiDation("frmZone");
+    });
+
+
+</script>

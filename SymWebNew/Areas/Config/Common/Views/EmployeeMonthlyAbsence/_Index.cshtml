@@ -1,0 +1,74 @@
+﻿@model IEnumerable<SymViewModel.Attendance.EmployeeMonthlyAbsenceVM>
+@using UIHelper.MVC
+@using (Html.BeginForm("Create", "EmployeeMonthlyAbsence", FormMethod.Post, new { @Id = "frmEmpMonthlyAbsence" }))
+{
+<div class="thinbox">
+    <div class="th_thinbox">
+        <p>
+            Employee List
+        </p>
+    </div>
+
+    <div id="container">
+        <table id="myDataTable" class="display">
+            <thead>
+                <tr>
+                    <th style="width:9%">Code</th>
+                    <th style="width:14%">Name</th>
+                    <th style="width:9%">Absent Days</th>
+                    <th style="width:9%">Late In Days</th>
+                    <th style="width:9%">Early Out Days</th>
+                    <th style="width:9%">Designation</th>
+                    <th style="width:14%">Department</th>
+                    <th style="width:9%">Section</th>
+                    <th style="width:9%">Project</th>
+                    <th style="width:9%">Remarks</th>
+
+                </tr>
+            </thead>
+
+           <tbody>
+                 @Html.EditorForModel()
+            </tbody>
+        </table>
+    </div>
+</div>
+}
+
+@*<script>
+    $(function () {
+
+
+        var oTable = $('#myDataTable').dataTable({
+
+            "bServerSide": true,
+            "sAjaxSource": "/Common/EmployeeMonthlyAbsence/_Index?DepartmentId=@Model.DepartmentId&SectionId=@Model.SectionId&ProjectId=@Model.ProjectId&fid=@Model.FiscalYearDetailId",
+            "bProcessing": true,
+            "aLengthMenu": tablelength(),
+            "bJqueryUI": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+                             { "sName": "Code", "sWidth": "10%" }
+                             , {
+                                 "sName": "Id",
+                                 "sWidth": "12%",
+                                 "sClass": "center",
+                                 "fnRender": function (oObj) {
+                                     return ' <input class="form-control" id="days" value="' + oObj.aData[2] + '"  type="text" data-Id="' + oObj.aData[1] + '"  >&nbsp; ' //+
+                                 }
+                             }
+                            , { "sName": "AbsentDays", "sWidth": "15%", "bVisible": false },
+                            { "sName": "EmpName", "sWidth": "15%" }
+                            , { "sName": "Designation", "sWidth": "15%" }
+                            , { "sName": "Department", "sWidth": "15%" }
+                            , { "sName": "Section", "sWidth": "12%" }
+                            , { "sName": "Project", "sWidth": "12%" }
+
+            ]
+        });
+
+        SelectAllForDelete();
+    });
+
+
+</script>*@

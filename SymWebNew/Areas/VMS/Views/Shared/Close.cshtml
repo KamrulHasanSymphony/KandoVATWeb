@@ -1,0 +1,46 @@
+﻿@{
+    ViewBag.Title = "Close";
+    Layout = null;
+}
+<link href="~/assets/css/toastr.css" rel="stylesheet" />
+
+<h2>This will close automatically</h2>
+<script src="~/assets/javascripts/jquery-1.8.2.min.js"></script>
+<script src="~/assets/javascripts/toastr.js"></script>
+<script>
+    $(document).ready(function () {
+        toastr.options.positionClass = 'toast-top-center';
+        var result = '@Session["result"]';
+        result = result.split("~");
+        if (result[0] == "Success") {
+            toastr.success(result[1], 'Shampan VAT')
+            @{ Session["result"] = null; }
+        }
+        else if (result[0] == "Fail") {
+            toastr.error(result[1], 'Shampan VAT')
+            @{ Session["result"] = null; };
+        }
+        else if (result[0] == "Info") {
+            toastr.info(result[1], 'Shampan VAT')
+            @{ Session["result"] = null; };
+        }
+        else if (result[0] == "Warning") {
+            toastr.warning(result[1], 'Shampan VAT')
+            @{ Session["result"] = null; };
+        }
+        if ('@Session["result"]' != "") {
+            var msg = '@Session["result"]';
+
+            TempData.Remove("msg");
+            msg = msg.split("~");
+            ShowResult(msg[0], msg[1]);
+        }
+    })
+</script>
+<script>
+    $(function () {
+        setTimeout(function () {
+            window.close();
+        },3000)
+    })
+</script>

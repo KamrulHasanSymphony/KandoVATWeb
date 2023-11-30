@@ -1,0 +1,25 @@
+﻿@model IEnumerable<VATViewModel.DTOs.SalesInvoiceMPLCRInfoVM>
+@using UIHelper.MVC
+@{
+    Layout = null;
+    var sl = 1;
+}
+@foreach (var CR in Model)
+{
+    <tr class="trSelectPopUpCustomer">
+        <td>@sl</td>
+        <td class=" popUpSalesInvoiceNo">@CR.SalesInvoiceNo</td>
+        <td class="popUpCustomerName" title="@CR.CustomerName">@CR.CustomerName</td>
+        <td class="popUpCustomerCode" title="@CR.CustomerCode">@CR.CustomerCode</td>
+        <td class="popUpCRCode">@CR.CRCode</td>
+        <td class="popUpCRDate">@CR.CRDate</td>
+        <td class="popUpCRAmount">@CR.Amount</td>
+        <td class="popUpIsUsed">@CR.Used</td>
+        <td style="display: none;" class="popUpSalesInvoiceMPLHeaderId">@CR.SalesInvoiceMPLHeaderId</td>
+
+        
+        @{
+    sl++;
+        }
+    </tr>
+}

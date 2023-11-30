@@ -1,0 +1,27 @@
+﻿@model IEnumerable<VATViewModel.DTOs.SaleMasterVM>
+@using UIHelper.MVC
+
+@{
+    Layout = null;
+    var sl = 1;
+}
+
+@foreach (var Exp in Model)
+{
+
+    <tr class="trSelectPopUpExp">
+        @*<td width="30%">@sl</td>*@
+        <td class="SerialNo" title="SerialNo">@Exp.SerialNo</td>
+        <td class="EXPFormDate" title="EXPFormDate">@Exp.EXPFormDate</td>
+        <td class="LCNumber" title="LCNumber">@Exp.LCNumber</td>
+        <td class="LCBank" title="LCBank">@Exp.LCBank</td>
+        <td class="LCDate" title="LCDate">@Exp.LCDate</td>
+        <td class="PINo" title="PINo">@Exp.PINo</td>
+        <td class="PIDate" title="PIDate">@Exp.PIDate</td>
+       
+        
+        @*@{
+    sl++;
+        }*@
+    </tr>
+}

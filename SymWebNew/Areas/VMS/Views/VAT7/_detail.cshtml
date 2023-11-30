@@ -1,0 +1,38 @@
+﻿@model VATViewModel.DTOs.VAT7VM
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+<tr class="tablerow ">
+    @using (Html.BeginCollectionItem("Details"))
+    {
+    <td>
+        <input onclick="CheckAll(this)" type="checkbox" class="deleteCheckBox">
+        <a id="" title="Click to Remove" onclick="RemoveItem(this);" class="sym-btn-remove-row "></a>
+        <a id="" title="Click to Edit" onclick="EditItem(this);" class="sym-btn-edit-row"></a>
+    </td>
+    <td>
+        @Html.TextBoxFor(model=>model.FinishItemName, new { @class = "  dFinishItemName   form-control", @readonly = "readonly"})
+    </td>
+    <td>
+        @Html.HiddenFor(m => m.FinishItemNo, new { @class = "  dFinishItemNo" })
+        @Html.HiddenFor(m => m.FinishItemCode, new { @class = "  dFinishItemCode" })
+        @Html.TextBoxFor(model => model.FinishUOM, new { @class = "  dFinishUOM   form-control", @readonly = "readonly"})
+    </td>
+    <td>
+        @Html.HiddenFor(m => m.ItemNo, new { @class = "dItemNo  " })
+        @Html.TextBoxFor(model => model.ItemCode, new { @class = "  dItemCode   form-control", @readonly = "readonly" })
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.ItemName, new { @class = "  dItemName  form-control", @readonly = "readonly" })
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.ItemUOM, new { @class = "  dItemUOM form-control", @readonly = "readonly" })
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.Quantity, new { @class = "  dQuantity  priceLen right form-control", @readonly = "readonly" })
+    </td>
+    }
+</tr>
+
+

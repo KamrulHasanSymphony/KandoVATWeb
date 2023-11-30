@@ -1,0 +1,110 @@
+﻿@model SymViewModel.Common.StructureGroupVM
+@using UIHelper.MVC
+@using (Html.BeginForm("Edit", "StructureGroup", FormMethod.Post, new {  @Id = "frmStructureG" }))
+{
+    @Html.ValidationSummary(true)
+    <div class="thinbox">
+        <div class="StructureG">
+             @Html.HiddenFor(model => model.Id)
+                    @Html.HiddenFor(model => model.BranchId)
+              <div class="row">
+                <label class="col-sm-3">
+                    @Html.LabelFor(model => model.Name)
+                 
+                </label>
+                <div class="col-sm-9">
+                    @Html.TextBoxFor(model => model.Name, new {@placeholder = "Structure Group Name", @class ="required form-control" })
+                </div>
+            </div>
+            <div class="row">
+                <label class="col-sm-3">
+                   Employee Group
+                </label>
+                <div class="col-sm-9">
+                  @Html.SimpleDropDownFor(model => model.EmployeeGroupId, "/Config/DropDown/EmployeeGroupList", new { @class = " form-control" })
+                </div>
+            </div>
+
+            <div class="row">
+                <label class="col-sm-3">
+                  Leave
+                </label>
+                <div class="col-sm-9">
+                  @Html.SimpleDropDownFor(model => model.LeaveStructureId, "/Config/DropDown/LeaveStructure", new { @class = " form-control" })
+                </div>
+            </div>
+             <div class="row">
+                <label class="col-sm-3">
+                   Salary
+                </label>
+                <div class="col-sm-9">
+                  @Html.SimpleDropDownFor(model => model.SalaryStructureId, "/Config/DropDown/SalaryStructureList", new { @class = " form-control" })
+                </div>
+            </div>
+                  <div class="row">
+                <label class="col-sm-3">
+                  PF
+                </label>
+                <div class="col-sm-9">
+                  @Html.SimpleDropDownFor(model => model.PFStructureId, "/Config/DropDown/PFStructureList", new { @class = " form-control" })
+                </div>
+            </div>   
+             <div class="row">
+                <label class="col-sm-3">
+                  Tax
+                </label>
+                <div class="col-sm-9">
+                  @Html.SimpleDropDownFor(model => model.TaxStructureId, "/Config/DropDown/TaxStructureList", new { @class = " form-control" })
+                </div>
+            </div>   
+             <div class="row">
+                <label class="col-sm-3">
+                  Bonus
+                </label>
+                <div class="col-sm-9">
+                  @Html.SimpleDropDownFor(model => model.BonusStructureId, "/Config/DropDown/BonusStructureList", new { @class = " form-control" })
+                </div>
+            </div>     
+            <div class="row">
+                <label class="col-sm-3">
+                    @Html.LabelFor(model => model.Remarks)
+                </label>
+                <div class="col-sm-9">
+                    @Html.TextAreaFor(model => model.Remarks, new {@placeholder = "Remarks", @class ="form-control" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3">
+                    <input type="button" value="Edit" onclick="Edit();" class="Edit btn btn-primary" />
+                    <input type="button" onclick="pageSubmit('frmStructureG');" value="Save" class=" Save btn btn-primary" />
+                </div>
+@*                <div class="col-sm-3">
+                    <input type="button" data-url="/Common/Section/Delete/@Model.Id"  value="Delete"  class=" lnkDelete btn btn-primary" />
+                </div>*@
+                <div class="col-sm-4">
+                    <input type="button" value="Cancel" class="btncancel btn btn-primary" />
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+    <script>
+        $(function () {
+            Edit();
+            valiDation("frmStructureG");
+            InitDropDowns();
+        });
+        function Edit() {
+            fnReadOnly("StructureG");
+            if ($(".StructureG").hasClass("readOnly")) {
+                $(".Save").hide();
+                $(".Edit").show();
+            }
+            else {
+                $(".Save").show();
+                $(".Edit").hide();
+            }
+        }
+
+    </script>

@@ -1,0 +1,101 @@
+﻿@model SymViewModel.Attendance.DownloadDataVM
+@using UIHelper
+
+@using (Html.BeginForm("Create", "DownloadData", FormMethod.Post, new { @Id = "frmDownloadData" }))
+{
+    @Html.ValidationSummary(true)
+ 
+    <div class="headrow">
+        <button type="button" title="Save Data" onclick="pageSubmit('frmDownloadData')" class="sym-btn-save">&nbsp;Save</button>
+        <label class="pull-right">Download Data > Create</label>
+    </div>
+
+    <div class="thinbox">
+        <div class="th_thinbox">
+            <p>Download Data</p>
+        </div>
+        <div class="DownloadData">
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.PunchData)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.PunchData, new { @class = " required form-control" })
+                        @Html.ValidationMessageFor(model => model.PunchData)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.ProxyID)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.ProxyID, new { @class = " required form-control" })
+                        @Html.ValidationMessageFor(model => model.ProxyID)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.PunchDate)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.PunchDate, new { @class = "customDatePicker required form-control" })
+                        @Html.ValidationMessageFor(model => model.PunchDate)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.PunchTime)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.PunchTime, new { @class = " customTimePicker required form-control" })
+                        @Html.ValidationMessageFor(model => model.PunchTime)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.NodeID)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.NodeID, new { @class = " required form-control" })
+                        @Html.ValidationMessageFor(model => model.NodeID)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.IsMigrate)
+                    </div>
+                    <div class="editor-field">
+                        @Html.CheckBoxFor(model => model.IsMigrate, new { @class = " required form-control" })
+                        @Html.ValidationMessageFor(model => model.IsMigrate)
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-10">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.Remarks)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextAreaFor(model => model.Remarks, new { @placeholder = "Remarks", @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Remarks)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="headrow">
+        <button type="button" title="Save Data" onclick="pageSubmit('frmDownloadData')" class="sym-btn-save">&nbsp;Save</button>
+    </div>
+}
+<script>
+    $(function () {
+        $('.customTimePicker').ptTimeSelect();
+        fromWriteColor("DownloadData");
+        valiDation("frmDownloadData");
+    });
+    </script>
+
+

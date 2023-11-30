@@ -1,0 +1,75 @@
+﻿@*@model IList<VATViewModel.DTOs.SaleDeliveryTrakingVM>*@
+@model VATViewModel.DTOs.SaleDeliveryTrakingVM
+
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+
+@*@foreach (var vm in Model)
+    {*@
+<tr class="tablerow_Trackings ">
+
+    @using (Html.BeginCollectionItem("DeliveryTrackingDetails"))
+    {
+        <td>
+            @*@Html.CheckBox("IsSelect", new { @class = "dIsSelect   form-control", @readonly = "readonly" })*@
+            @*@Html.CheckBox("IsSelect", Model.IsSelect, new { @class = "dIsSelect   form-control", @readonly = "readonly" })*@
+            @*@Html.CheckBox("IsSelect", Model.IsSelect, new { @class = "dIsSelect   form-control", @readonly = "readonly" })*@
+
+            <a id="" title="Click to Remove" onclick="RemoveItem(this);" class="sym-btn-remove-row "></a>
+            <a id="" title="Click to Edit" onclick="EditItem2(this);" class="sym-btn-edit-row"></a>
+
+
+        </td>
+
+        @*<td>
+                @Html.Hidden("ItemNo", vm.ItemNo, new { @class = "dItemNoT   form-control", @readonly = "readonly" })
+            </td>*@
+        @*<td>
+            @Html.TextBox("ProductName", vm.ProductName, new { @class = "ddItemName   form-control", @readonly = "readonly" })
+        </td>
+
+        <td>
+            @Html.TextBox("Quantity", vm.Quantity, new { @class = "ddQuantity   form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBox("UnitPrice", vm.UnitPrice, new { @class = "ddUnitPrice   form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBox("SubTotal", vm.SubTotal, new { @class = "ddSubTotal   form-control", @readonly = "readonly" })
+        </td>
+
+        <td>
+            @Html.TextBox("PartialDescription", vm.PartialDescription, new { @class = "ddPartialDescription   form-control", @readonly = "readonly" })
+        </td>
+
+        @Html.Hidden("ProductCode", vm.ProductCode, new { @class = "ddProductCode" })
+        @Html.Hidden("ItemNo", vm.ItemNo, new { @class = "ddItemNo" })*@
+        
+        <td>
+            @Html.TextBox("ProductName", Model.ProductName, new { @class = "ddItemName   form-control", @readonly = "readonly" })
+        </td>
+
+        <td>
+            @Html.TextBox("Quantity", Model.Quantity, new { @class = "ddQuantity   form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBox("UnitPrice", Model.UnitPrice, new { @class = "ddUnitPrice   form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBox("SubTotal", Model.SubTotal, new { @class = "ddSubTotal   form-control", @readonly = "readonly" })
+        </td>
+
+        <td>
+            @Html.TextBox("PartialDescription", Model.PartialDescription, new { @class = "ddPartialDescription   form-control", @readonly = "readonly" })
+        </td>
+
+        @Html.Hidden("ProductCode", Model.ProductCode, new { @class = "ddProductCode" })
+        @Html.Hidden("ItemNo", Model.ItemNo, new { @class = "ddItemNo" })
+        @Html.Hidden("Post", Model.Post, new { @class = "ddPost" })
+        
+    }
+
+</tr>
+@*}*@

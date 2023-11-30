@@ -1,0 +1,2219 @@
+﻿@model VATViewModel.DTOs.SaleMasterVM
+@using UIHelper.MVC
+@using (Html.BeginForm("CreateEdit", "SaleInvoice", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmSaleInvoice" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.Post)
+    @Html.HiddenFor(model => model.Operation)
+    @Html.HiddenFor(model => model.TransactionType)
+    @*@Html.HiddenFor(model => model.VehicleNo)*@
+    @Html.HiddenFor(model => model.VehicleID)
+
+    @Html.HiddenFor(model => model.BranchId)
+
+    @Html.HiddenFor(model => model.DeliveryAddress2)
+    @Html.HiddenFor(model => model.DeliveryAddress3)
+    @Html.HiddenFor(model => model.SerialNo)
+    @Html.HiddenFor(model => model.SaleType)
+    @Html.HiddenFor(model => model.PreviousSalesInvoiceNo)
+    @Html.HiddenFor(model => model.Trading)
+    @Html.HiddenFor(model => model.IsPrint)
+    @Html.HiddenFor(model => model.TenderId)
+    //@Html.HiddenFor(model=>model.CurrencyID)
+    @Html.HiddenFor(model => model.ReturnId)
+    @Html.HiddenFor(model => model.LCDate)
+    @Html.HiddenFor(model => model.PIDate)
+
+    @Html.HiddenFor(model => model.EXPFormDate)
+    @Html.HiddenFor(model => model.LCNumber)
+    @Html.HiddenFor(model => model.LCBank)
+    @Html.HiddenFor(model => model.PINo)
+
+    @Html.HiddenFor(m => m.CurrencyRateFromBDT)
+
+    <div class="headrow">
+        @if (Model.Operation == "update")
+        {
+            <button type="button" title="Update Data" onclick="SaveData()" class="sym-btn-update">&nbsp;Update</button>
+    <button type="button" onclick="window.open('/VMS/NBRReport/Report_VAT6_3?SalesInvoiceNo=@Model.SalesInvoiceNo &TransactionType=@Model.TransactionType' )" class=" sym-btn-report cVAT6_3Report">&nbsp;VAT 6.4 (Preview)</button>
+
+            <button type="button" title="Post Data" onclick="PostData(this)" class="sym-btn-post">&nbsp;Post</button>
+            <label class="pull-right">Sale > Edit (@Model.TransactionType)</label>
+        }
+        else if (Model.Operation == "add")
+        {
+            <button type="button" title="Save Data" onclick="SaveData()" class="sym-btn-save">&nbsp;Save</button>
+            <label class="pull-right">Sale  > Create (@Model.TransactionType)</label>
+        }
+
+        <button type="button" class=" sym-btn-report vat11Report">&nbsp;VAT 6.4</button>
+        <button type="button" class=" sym-btn-report saleReport">&nbsp;MIS</button>
+     
+
+        @*<button type="button" class=" sym-btn-report vat18Report">&nbsp;VAT 18</button>*@
+        <button type="button" title="Go To Index" data-url="/VMS/SaleInvoice?TransactionType=@Model.TransactionType" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New Issue" data-url="/VMS/SaleInvoice/Create?tType=@Model.TransactionType" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+
+        @*@if (Convert.ToString(Session["CompanyCode"]) == "ACI")
+        {
+
+            <button type="button" class=" sym-btn-add saleIntegration" id="saleIntegration">&nbsp;Pull Data</button>
+        }*@
+        @*else if (Convert.ToString(Session["CompanyCode"]) == "BCL")
+            {
+
+                <button type="button" class=" sym-btn-add saleIntegration_BCL" id="">&nbsp;Integration</button>
+            }*@
+
+    </div>
+    if (Model.Operation == "update")
+    {
+        <div class="col-sm-12 col-md-12">
+            <div class="input-group   col-lg-8  col-md-8  col-sm-8 col-xs-12 text-color col-md-offset-2" style="">
+                <a class="input-group-addon btn btn-primary hidden-xs changePage" data-pager-action='first' id="first"><i class="fa fa-angle-double-left"></i>First</a>
+                <a class="input-group-addon btn btn-primary hidden-xs changePage" data-pager-action='previous' id="precode"><i class="fa fa-angle-left"></i>Previous</a>
+                @Html.SimpleDropDown("", "/Config/DropDown/IdNameTtype?tableName=SalesInvoiceHeaders&Id=Id&Name=SalesInvoiceNo&type=" + Model.TransactionType + "&code=SalesInvoiceNo", new { @class = " trNavigateMenu form-control selectDropdown " })
+                <a class="input-group-addon btn btn-primary changePage" data-pager-action='current' id="current"><i class="fa fa-search"></i></a>
+                <a class="input-group-addon btn btn-primary hidden-xs changePage" data-pager-action='next' id="nextcode">Next <i class="fa  fa-angle-right"></i></a>
+                <a class="input-group-addon btn btn-primary hidden-xs changePage" data-pager-action='last' id="last">Last <i class="fa  fa-angle-double-right"></i></a>
+            </div>
+        </div>
+    }
+    <div class="clearfix"></div>
+    <div class="thinbox formDesign trkMY-0">
+        <div class="th_thinbox">
+            <p>Basic</p>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <div class="editor-label">
+                    <label>Challan No</label>
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.SalesInvoiceNo, new { @placeholder = "New", @class = "trSalesInvoiceNo form-control", @readonly = "readonly" })
+                    @Html.ValidationMessageFor(model => model.SalesInvoiceNo)
+                </div>
+            </div>
+
+            <div class="trk1_5">
+                <div class="editor-label">
+                    <label for="DeliveryDate">Delivery Date</label>
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.DeliveryDate, new { @placeholder = "Delivery Date", @class = "cDeliveryDate  customDatePicker defaultDate form-control" })
+                    @Html.ValidationMessageFor(model => model.DeliveryDate)
+                </div>
+            </div>
+
+            <div class="trk1_5">
+                <div class="editor-label">
+                    <label for="InvoiceDateTime">Challan Date</label>
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.InvoiceDateTime, new { @placeholder = "Invoice Date", @class = " trInvoiceDate trVAT18Date customDatePicker trVAT17Date  required form-control" })
+                    @Html.ValidationMessageFor(model => model.InvoiceDateTime)
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="editor-label">
+                    <label for="CustomerID">Customer</label>
+                </div>
+                <div class="editor-field s2">
+                    @*@Html.SimpleDropDownFor(m => m.CustomerID, "/Config/DropDown/Customer", new { @class = " trCustomerId required  form-control  selectDropdown" })*@
+                    @Html.SimpleDropDownFor(m => m.CustomerID, "/Config/DropDown/DropDownByCustomerID/?CustomerID=" + Model.CustomerID + "", new { @class = " trCustomerId required  form-control  selectDropdown" })
+                </div>
+            </div>
+
+            <div class="trk_5">
+                <div class="editor-label">
+                    <label>&nbsp;</label>
+                </div>
+                <div class="editor-field">
+                    <button type="button" title="Click to Search Customer" id="customerBtn" class="sym-btn-search"></button>
+                </div>
+            </div>
+
+            <div class="trk_5">
+                <div class="editor-label">
+                    <label>&nbsp;</label>
+                </div>
+                <div class="editor-field">
+                    <button type="button" title="Click to add Customer" class="sym-btn-add trkXSBtn" onclick="window.open('/VMS/Customer/Create')"></button>
+                    <button type="button" title="Click to load Customers" class="sym-btn-refresh trkXSBtn" data-url="/Config/DropDown/Customer" onclick="refreshDropdown(this, 'CustomerID')"></button>
+                </div>
+            </div>
+
+            <div class="trk1_5">
+                <div class="editor-label">
+                    <label for="ConversionDate">Conversion Date</label>
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.ConversionDate, null, new { @class = " cConversionDateMaster customDatePicker customDatePickerChangeable   form-control" })
+                </div>
+            </div>
+
+            <div class="col-md-1">
+                <div class="editor-label">
+                    <label>Currency</label>
+                </div>
+                <div class="editor-field">
+                    @Html.SimpleDropDownFor(m => m.CurrencyID, "/Config/DropDown/DefaultCurrencyList", new { @class = " trCurrencyId form-control required " })
+
+                    @*<select class="form-control trCurrencyId">
+                            <option value="260">BDT</option>
+                        </select>*@
+                </div>
+            </div>
+
+            <label class="col-md-1 control-label text-right trkLabelMargin">CW(BOM)</label>
+            <div class="col-md-1 trkPX-0 CBOM">
+
+                @Html.CheckBox("CustomerWiseBOM", new { id = "iCustomerWiseBOM", @class = "cCustomerWiseBOM form-control", @name = "att[]" })
+
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="editor-label">
+                    <label for="DeliveryAddress1">Address</label>
+                </div>
+                <div class="editor-field">
+                    @Html.TextAreaFor(model => model.DeliveryAddress1, new { @placeholder = "Address", @class = "cDeliveryAddress1 form-control" })
+                    @Html.ValidationMessageFor(model => model.DeliveryAddress1)
+                </div>
+            </div>
+
+            <div class="trk_5">
+                <div class="editor-label">
+                    <label>&nbsp;</label>
+                </div>
+                <div class="editor-field">
+                    <button type="button" title="Click to Search Customer Address" id="customerAddressBtn" class="sym-btn-search"></button>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="editor-label">
+                    <label>Shift</label>
+                </div>
+                <div class="editor-field">
+                    @Html.SimpleDropDownFor(m => m.ShiftId, "/Config/DropDown/ShiftName", new { @class = " cShiftName notClearing form-control " })
+
+                </div>
+            </div>
+
+
+            @if (Model.TransactionType != "Service" && Model.TransactionType != "ServiceNS")
+            {
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        <label for="VehicleID">Vehicle</label>
+                    </div>
+                    <div class="editor-field s2">
+                        @*@Html.SimpleDropDownFor(m => m.VehicleID, "/Config/DropDown/Vehicle", new { @class = " trVehicle form-control  selectDropdown" })*@
+
+                        @Html.TextBoxFor(m => m.VehicleNo, null, new { @placeholder = "Vehicle No", @class = "cVehicleNo  form-control", @id = "IdVehicleNo" })
+
+                    </div>
+                </div>
+                <div class="trk_5">
+                    <div class="editor-label">
+                        <label>&nbsp;</label>
+                    </div>
+                    <div class="editor-field">
+                        <button type="button" title="Click to add Vehicle" class="sym-btn-add trkXSBtn" onclick="window.open('/VMS/Vehicle/Create')"></button>
+                        <button type="button" title="Click to load Vehicles" class="sym-btn-refresh trkXSBtn" data-url="/Config/DropDown/Vehicle" onclick="refreshDropdown(this, 'VehicleID')"></button>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        <label for="VehicleType">Vehicle Type</label>
+                    </div>
+                    <div class="editor-field">
+                        @*@Html.TextBoxFor(m => m.VehicleType, null, new { @placeholder = "Type", @class = "trVehicleType  form-control", @readonly = "readonly" })*@
+                        @Html.TextBoxFor(m => m.VehicleType, null, new { @placeholder = "Type", @class = "cVehicleType  form-control" })
+                    </div>
+                </div>
+
+            }
+
+            @*<div class="col-md-2">
+                    <div class="editor-label">
+                        <label for="EXPNo">EXPNo</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBox("EXPFormNo", null, new { @placeholder = "EXPNo", @class = " cEXPFormNo  form-control"})
+                    </div>
+                </div>*@
+
+        </div>
+
+        @*<div class="row">
+            <div class="col-md-2">
+                <div class="editor-label">
+                    <label for="TDBalance">C.A. Balance</label>
+                </div>
+                <div class="editor-field">
+                    @Html.TextBox("TDBalance", null, new { @placeholder = "TDBalance", @class = " trTDBalance  form-control", @readonly = "readonly" })
+                </div>
+            </div>
+
+            <div class="trk1_5">
+                <div class="editor-label">
+                    <label for="EXPNo">EXPNo</label>
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.EXPFormNo, "", new { @class = " cEXPFormNo   form-control", data_code = "" })
+                </div>
+            </div>
+            <div class="trk_5">
+                <div class="editor-label">
+                    <label>&nbsp;</label>
+                </div>
+                <div class="editor-field">
+                    <button type="button" title="Click to Search EXPFormNo" id="btnEXPFormNo" class="sym-btn-add"></button>
+                </div>
+            </div>
+
+
+           
+
+            }
+        </div>*@
+
+    </div>
+
+    <div class="thinbox col-md-12 formDesign trkMY-0">
+        <div class="th_thinbox">
+            <p>Product</p>
+        </div>
+        <div class=" detailHeadRow ">
+            <div class="row">
+                <div class="col-md-1">
+                    <div class="editor-label">
+                        <label>Product Type</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.SimpleDropDownFor(m => m.ProductType, "/Config/DropDown/ProductTypes", new { @class = " form-control notClearing cProductType" })
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        <label>Product Group</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.SimpleDropDownFor(m => m.ProductCategoryId, "/Config/DropDown/ProductCategory?IsRaw=" + @Model.ProductType, new { @class = " cProductCategoryId form-control selectDropdown " })
+                    </div>
+                </div>
+               
+
+            </div>
+
+            <div class="row">
+              
+                <div class="col-md-3">
+                    <div class="editor-label">
+                        <label for="Product">Product</label>
+                    </div>
+                    <div class="editor-field" id="mydiv" data-myval="ProCode">
+                        @Html.SimpleDropDown("Product", "/Config/DropDown/Product?IsRaw=" + @Model.ProductType, new { @class = " trProduct  form-control selectDropdown" })
+                    </div>
+                </div>
+
+                <div class="trk_5">
+                    <div class="editor-label">
+                        <label>&nbsp;</label>
+                    </div>
+                    <div class="editor-field">
+                        <button type="button" title="Click to Search Product" id="productBtn" class="sym-btn-search"></button>
+                    </div>
+                </div>
+
+                <div class="trk_5">
+                    <div class="editor-label">
+                        <label>&nbsp;</label>
+                    </div>
+                    <div class="editor-field">
+                        <button type="button" title="Click to add Product" class="sym-btn-add trkXSBtn" onclick="window.open('/VMS/Product/Create')"></button>
+                        <button type="button" title="Click to load Products" class="sym-btn-refresh trkXSBtn" data-url="/Config/DropDown/Product" onclick="refreshDropdown(this,'Product')"></button>
+                    </div>
+                </div>
+
+                @*<input id="ConvFactor" type="hidden" />*@
+                @Html.Hidden("ProductName", "", new { @class = " trProductName" })
+                @Html.Hidden("CConversionDate", "", new { @class = " cDate" })
+                @Html.Hidden("UOMc", "1", new { @class = " cUOMc" })
+                @Html.Hidden("ItemNo", "", new { @class = " trItemNo" })
+                @Html.Hidden("ProductCode", "", new { @class = " trProductCode" })
+                @Html.Hidden("BOMId", "", new { @class = " cBOMId" })
+                @Html.Hidden("BillingPeriodFrom", "", new { @class = " cBillingPeriodFrom" })
+                @Html.Hidden("BillingPeriodTo", "", new { @class = " cBillingPeriodTo" })
+                @Html.Hidden("BillingDays", "", new { @class = " cBillingDays" })
+                @Html.HiddenFor(m => m.VatName, new { @class = " trVAT1Name" })
+                @Html.Hidden("Quantity", "", new { @class = " trQuantity" })
+
+
+                <div class="col-md-1">
+                    <div class="editor-label">
+                        <label for="HSCode">HS Code</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBox("HSCode", null, new { @placeholder = "HS Code", @class = " trHSCode right   form-control", @readonly = "readonly" })
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="editor-label">
+                        <label for="UOM">UOM</label>
+                    </div>
+                    <div class="editor-field input-group">
+                        @Html.TextBox("UOMn", null, new { @placeholder = "UOM", @class = " trUOM right   form-control", @readonly = "readonly" })
+                    </div>
+                </div>
+
+                <div class="col-md-1">
+                    <div class="editor-label">
+                        <label>Pkt Size</label>
+                    </div>
+                    <div class="editor-field">
+                        <select class="Dropdown form-control DropdownInited trPackSize" id="PackSize" name="UOM"></select>
+                    </div>
+                </div>
+
+                <div class="col-md-1">
+                    <div class="editor-label">
+                        <label for="NBRPrice">Unit Price</label>
+                    </div>
+                    <div class="editor-field">
+                        <input type="hidden" class="trUnitPrice" />
+                        <input type="hidden" class=" NBRPrice" />
+                        @Html.TextBox("NBRPrice", "0", new { @class = " trNBRPrice priceLen NumberCheck right  form-control" })
+                    </div>
+                </div>
+
+                <div class="col-md-1">
+                    <div class="editor-label">
+                        <label for="HPS">HPS Rate</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBox("HPSRate", "", new { @placeholder = "HPS Rate", @class = " cHPSRate   form-control" })
+                    </div>
+                </div>
+                <div class="trk2_5">
+                    <div class="editor-label">
+                        <label for="ProductDescription">C.Name</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBox("ProductDescription", "", new { @placeholder = "Product Description", @class = " trProductDescription   form-control", data_code = "", @readonly = "readonly" })
+                    </div>
+                </div>
+
+                <div class="trk_5">
+                    <div class="editor-label">
+                        <label>&nbsp;</label>
+                    </div>
+                    <div class="editor-field">
+                        <button type="button" title="Click to Search ProductDescription" id="productDescriptionBtn" class="sym-btn-search"></button>
+                    </div>
+                </div>
+
+
+            </div>
+
+
+            <div class="row ">
+                @*<div class="col-md-1">
+                    <div class="editor-label">
+                        <label for="SD">SD Rate</label>
+                    </div>
+                    <div class="editor-field input-group">
+                        @Html.TextBox("SD", null, new { @placeholder = "SD Rate", @class = " trSDRate NumberCheckAddDetail  form-control", })
+                        <span class="input-group-addon">%</span>
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="editor-label">
+                        <label for="VATRate">VAT Rate</label>
+                    </div>
+                    <div class="editor-field input-group">
+                        @Html.TextBox("VATRate", null, new { @placeholder = "VAT Rate", @class = " trVATRate NumberCheckAddDetail   form-control", })
+                        <span class="input-group-addon">%</span>
+                    </div>
+                </div>*@
+                <div class="col-md-1">
+                    <div class="editor-label">
+                        <label for="Quantity">Quantity</label>
+                    </div>
+                    <div class="editor-field">
+                        @*@Html.TextBox("Quantity", "0", new { @class = " trQuantity priceLen right   form-control" })*@
+                        @Html.TextBox("SaleQuantity", "0", new { @class = " cSaleQuantity priceLen right   form-control" })
+                    </div>
+                </div>
+
+                <div class="trk1_5">
+                    <div class="editor-label">
+                        <label for="Qty">P. Qty</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBox("PromotionalQuantity", "", new { @placeholder = "P. Qty", @class = " cPQty   form-control" })
+                    </div>
+                </div>
+
+                @if (Model.TransactionType != "ServiceNS")
+                {
+                <div class="col-md-1">
+                    <div class="editor-label">
+                        <label for="Stock">Stock</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBox("Stock", null, new { @placeholder = "Stock", @class = " trStock NumberCheckAddDetail right   form-control", @readonly = "readonly" })
+                    </div>
+                </div>
+
+                }
+
+                <div class="col-md-1">
+                    <div class="editor-label">
+                        <label for="DiscountRate">Discount</label>
+                    </div>
+                    <div class="editor-field input-group">
+                        @Html.TextBox("DiscountRate", "0", new { @class = " trDiscount priceLen right   form-control" })
+                    </div>
+                </div>
+
+                <div class="trk_5">
+                    <div class="editor-label">
+                        <label>&nbsp;</label>
+                        <input type="hidden" id="discountType" value="True">
+                    </div>
+                    <div class="editor-field">
+                        <button type="button" class="btn trkbtn discountType">%</button>
+                    </div>
+                </div>
+
+                <div class="col-md-1">
+                    <div class="editor-label">
+                        <label for="PktPrice">Pkt Unit Price</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBox("SalesPrice", "0", new { @class = "  priceLen NumberCheck right   form-control" })
+                    </div>
+                </div>
+
+                <div class="trk1_5">
+                    <div class="editor-label">
+                        <label>Type</label>
+                    </div>
+                    <div class="editor-field">
+                        @if (Model.TransactionType == "Export")
+                        {
+                            @Html.TextBoxFor(m => m.Type, null, new { @class = " notClearing form-control trType", @readonly = "readonly" })
+                        }
+                        else
+                        {
+                            @Html.SimpleDropDownFor(m => m.Type, "//", new { @class = " notClearing trType form-control selectDropdown", @id = "IdType" })
+
+
+                        }
+                    </div>
+                </div>
+
+                @*<div class="trk1_5">
+                    <div class="editor-label">
+                        <label>Price Declaration</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.SimpleDropDownFor(m => m.VatName, "/Config/DropDown/PriceDeclaration", new { @class = " trVAT1Name notClearing  form-control " })
+                    </div>
+                </div>*@
+
+                <div class="trk1_5">
+                    <div class="editor-label">
+                        <label>BOM ReferenceNo</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.SimpleDropDown("BOMReferenceNo", "//", new { @class = " cBOMReferenceNo  form-control " })
+                    </div>
+                </div>
+
+                <div class="col-md-1">
+                    <div class="editor-label">
+                        <label for="Weight">Weight</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBox("Weight", "0", new { @class = " trWeight priceLen NumberCheck right  form-control" })
+                    </div>
+                </div>
+
+          
+
+
+
+            </div>
+
+            <div class="row ">
+
+
+
+                @if (Model.TransactionType == "ServiceNS")
+                {
+
+                <div class="trk1_5">
+                    <div class="editor-label">
+                        <label for="HPS">&nbsp;</label>
+                    </div>
+
+                </div>
+
+                }
+
+
+
+              
+
+                <div class="col-md-1 pull-right">
+                    @*<div class="editor-label">
+                <label>&nbsp;</label>
+            </div>*@
+                    <div class="editor-field">
+                        <div id="ItemExist" title="Add Detail" data-url="/Vms/SaleInvoice/BlankItem" class="sym-btn-add-row AddRow" data-container="editorItemRows4">&nbsp;Add</div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div>
+            <div class="fixedParent">
+
+                @if (Model.Details != null)
+                {
+                <table class="trkFixTable" id="itemTable">
+                    <thead>
+                        <tr>
+                            <th onclick="CopyItemTableText(this)">Action</th>
+                            <th>Code</th>
+                            <th>Product Name</th>
+                            <th>UOM</th>
+                            <th>Quantity</th>
+                            <th>P Quantity</th>
+                            <th>Unit Price</th>
+                            <th>SubTotal</th>
+                            <th>SD</th>
+                            <th>SDAmount</th>
+                            <th>VAT Rate</th>
+                            <th>VAT Amount</th>
+                            <th>Total</th>
+                            <th>HPS Rate</th>
+                            <th>HPS Amount</th>
+                            <th>Trading</th>
+                            <th>Type</th>
+                            <th>Base Price</th>
+                            <th>Convt. Factor</th>
+                            <th>Base UOM</th>
+                            <th>Base Qty</th>
+                            <th>BDT Value</th>
+                            <th>Dollar Value</th>
+                            <th>VAT Name</th>
+                            <th>BOMId</th>
+                            <th>BOM ReferenceNo</th>
+
+                            <th>C Conv Date</th>
+                            <th>Weight</th>
+                            <th>Value only</th>
+                            <th>TotalValue</th>
+                            <th>WareHouseRent</th>
+                            <th>WareHouseVAT</th>
+                            <th>ATVRate</th>
+                            <th>ATVablePrice</th>
+                            <th>ATVAmount</th>
+                            <th>IsCommercialImporter</th>
+                            <th>VDSAmount</th>
+
+                            <th>ProductDescription</th>
+
+                            <th>IsFixedVAT</th>
+                            <th>FixedVATAmount</th>
+                            <th>BE Number</th>
+
+                            <th>PeriodFrom</th>
+                            <th>PeriodTo</th>
+                            <th>Days</th>
+                            <th>CPC Name</th>
+                            <th>BE ItemNo</th>
+
+                        </tr>
+                    </thead>
+
+                    <tbody id="editorItemRows4">
+                        @foreach (var item in Model.Details)
+                            {
+                                Html.RenderPartial("_detail", item);
+                            }
+                    </tbody>
+                </table>
+
+                }
+            </div>
+
+            <hr />
+            <div class="row trkBelowDiv">
+                <div class="col-md-2 trkLabelTopRight">
+                    <label>Total Amount</label>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-field">
+                        <strong>@Html.TextBox("SubTotal", null, new { @class = " totalAmount NumberCheck right form-control", @readonly = "readonly" })</strong>
+                    </div>
+                </div>
+
+                <div class="col-md-2 trkLabelTopRight">
+                    <label>SD Total</label>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-field">
+                        <strong>@Html.TextBox("SDTotal", null, new { @class = " cSDTotal NumberCheck right form-control", @readonly = "readonly" })</strong>
+                    </div>
+                </div>
+
+                <div class="col-md-2 trkLabelTopRight">
+                    <label>VAT Total</label>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-field">
+                        <strong>@Html.TextBoxFor(m => m.TotalVATAmount, null, new { @class = " cVATTotal NumberCheck right form-control", @readonly = "readonly" })</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row trkBelowDiv">
+                <div class="col-md-2 trkLabelTopRight">
+                    <label>Grand Total</label>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-field">
+                        <strong>@Html.TextBoxFor(model => model.TotalAmount, null, new { @class = " cGrandTotal NumberCheck right form-control", @readonly = "readonly" })</strong>
+                    </div>
+                </div>
+
+                <div class="col-md-2 trkLabelTopRight">
+                    <label>Comments</label>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-field">
+                        @Html.TextArea("Comments", null, new { @class = "Comments form-control" })
+                    </div>
+                </div>
+
+                <div class="col-md-2 trkLabelTopRight">
+                    <label>Import ID</label>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-field">
+                        <strong>@Html.TextBoxFor(m => m.ImportIDExcel, new { @class = "cImportIDExcel right form-control" })</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row trkBelowDiv">
+                <div class="col-md-2 trkLabelTopRight">
+                    <label>Ref/Trip #</label>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-field">
+                        <strong>@Html.TextBoxFor(m => m.SerialNo, new { @class = "cSerialNo right form-control" })</strong>
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="editor-field">
+                        <button type="button" title="Click to Search Trip" id="tripSearch" class="sym-btn-search" @*data-url="/Vms/SaleInvoice/SelectTrip" onclick="GoTo(this)"*@></button>
+
+                    </div>
+                </div>
+
+
+                <div class="col-md-1 trkLabelTopRight">
+                    <label>HPS Total</label>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-field">
+                        <strong>@Html.TextBoxFor(m => m.HPSTotalAmount, new { @class = "cHPSTotal form-control", @readonly = "readonly" })</strong>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+    <div class="headrow">
+        @if (Model.Operation == "update")
+        {
+        <button type="button" title="Update Data" onclick="SaveData()" class="sym-btn-update">&nbsp;Update</button>
+           <button type="button" onclick="window.open('/VMS/NBRReport/Report_VAT6_3?SalesInvoiceNo=@Model.SalesInvoiceNo &TransactionType=@Model.TransactionType' )" class=" sym-btn-report cVAT6_3Report">&nbsp;VAT 6.4 (Preview)</button>
+
+
+        <button type="button" title="Post Data" onclick="PostData(this)" class="sym-btn-post">&nbsp;Post</button>
+        }
+        else if (Model.Operation == "add")
+        {
+        <button type="button" title="Save Data" onclick="SaveData()" class="sym-btn-save">&nbsp;Save</button>
+        }
+
+        <button type="button" class=" sym-btn-report vat11Report">&nbsp;VAT 6.4</button>
+        <button type="button" class=" sym-btn-report saleReport">&nbsp;MIS</button>
+        @*<button type="button" class=" sym-btn-report vat17Report">&nbsp;VAT 6.2</button>
+        <button type="button" class=" sym-btn-report vat6_2_1Report">&nbsp;VAT 6.2.1</button>*@
+
+
+
+        @*<button type="button" class=" sym-btn-report vat18Report">&nbsp;VAT 18</button>*@
+        <button type="button" title="Go To Index" data-url="/VMS/SaleInvoice?TransactionType=@Model.TransactionType" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New Petty Cash" data-url="/VMS/SaleInvoice/Create?tType=@Model.TransactionType" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+    </div>
+}
+<div id="myModal" class="trkmodal"></div>
+<div id="productDetails" class="trkmodal">
+    <div class="trkmodal-content">
+    </div>
+</div>
+
+<div id="myHigherModal" class="HigherModal"></div>
+@section Scripts {
+
+    @Scripts.Render("~/bundles/jqueryval")
+
+    @*--------------------------Autocomplete--------------------------*@
+    <script>
+        $(function () {
+            //alert(1);
+            $('#IdVehicleNo').autocomplete({ source: '@Url.Action("AutocompleteVehicle", "Autocomplete", new { area = "Config" })', minLength: 2 });
+
+        });
+
+        $(document).ready(function () {
+            $('#IdVehicleNo').on('autocompletechange selected ', function () {
+                //var VehicleNo = this.value;
+                //alert(VehicleNo);
+                vehicleChange();
+            })
+        });
+
+        $(function () {
+            $('.trCustomerId').change(function () {
+                CustomerChange();
+            });
+        });
+
+        function CustomerChange() {
+
+            var CustomerId = $('.trCustomerId :selected').val();
+
+            if (CustomerId == null || CustomerId == "") {
+                return;
+            }
+
+            var url = "/Vms/SaleInvoice/getCustomerAddress?CustomerId=" + CustomerId;
+            $.getJSON(url, function (data) {
+
+                ////alert(data.Address1);
+
+                $('.cDeliveryAddress1').val(data.Address1);
+
+            });
+        }
+
+    </script>
+
+    @*--------------------------Integration--------------------------*@
+
+    <script>
+        $(function () {
+
+            $('.saleIntegration_BCL').click(function () {
+
+                var url = "/Vms/Integration/ViewSaleForm_BCL";
+
+                var modal = document.getElementById('myHigherModal');
+                $.ajax({
+                    url: url,
+                    cache: false,
+                    beforeSend: function () { $(".loading").show(); },
+                    success: function (html) {
+                        modal.style.display = "block";
+                        $("#myHigherModal").html(html);
+                    }
+                    , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+                });
+
+            });
+        });
+
+    </script>
+
+    @*--------------------------FormMaker--------------------------*@
+    <script>
+        $(function () {
+            FormMaker();
+        });
+
+
+        function FormMaker() {
+            var tType = '@Model.TransactionType';
+            switch (tType) {
+                case "Other":
+                    {
+
+
+
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+    </script>
+
+    @*--------------------------addrow and changing product and vehicles--------------------------*@
+    <script>
+        ////Clicking add button
+        $('.AddRow').on("click", function () {
+            var product = $('.trProductName').val();
+            if (product == "0" || product == "") {
+                ShowResult("Fail", "Select a product first!");
+                return;
+            }
+
+            ////var quantity = parseFloat($('.trQuantity').val().replace(/\,/g, ''));
+            ////if (isNaN(quantity) || quantity <= 0) {
+            ////    ShowResult("Fail", "Quantity can not be zero");
+            ////    $('.trQuantity').css('background-color', 'yellow');
+            ////    return;
+            ////}
+            var SaleQuantity = parseFloat($('.cSaleQuantity').val().replace(/\,/g, ''));
+            if (isNaN(SaleQuantity) || SaleQuantity <= 0) {
+                ShowResult("Fail", "Quantity can not be zero");
+                $('.cSaleQuantity').css('background-color', 'yellow');
+                return;
+            }
+            var convFact = GetConvFact();
+            var itemNo = $('.trProductCode').val();
+            var count = 0;
+
+            $('.dItemNo').each(function () {
+                var existing = $(this).val();
+                if (itemNo == existing) {
+                    count++;
+                }
+            });
+
+
+
+            if (count > 0) {
+                ShowResult("Fail", "Item already exists!");
+                return;
+            }
+
+            var container = $(this).attr('data-container');
+            var url = $(this).attr('data-url');
+            AddRow(container, url)
+            return false;
+        });
+
+        ////add row method
+        function AddRow(container, url) {
+            var uomConv = 1;//unit conversion initial value
+
+            var cDate = $('.cConversionDateMaster').val();
+            $('#CConversionDate').val(cDate);
+
+            var InvoiceDate = $('.trInvoiceDate').val();
+
+            var BillingPeriodFrom = $('#BillingPeriodFrom').val();
+            var BillingPeriodTo = $('#BillingPeriodTo').val();
+
+            if (BillingPeriodFrom == null || BillingPeriodFrom == "") {
+                $('#BillingPeriodFrom').val(InvoiceDate);
+            }
+            if (BillingPeriodTo == null || BillingPeriodTo == "") {
+                $('#BillingPeriodTo').val(InvoiceDate);
+            }
+
+            uomConv = $('#UOMc').val();
+            var UOM= $('.trUOM').val();
+            var UOMn = $('.trPackSize').val();
+
+            if (uomConv == 0 && UOM == UOMn) {
+                $('#UOMc').val(1);
+            }
+
+            var model = $('.detailHeadRow :input').serialize();
+            var FixedVat = $('#IsFixedVat').is(":checked");
+
+            model += "&IsFixedVAT=" + (FixedVat ? "Y" : "N");
+            model += "&TransactionType=" + '@Model.TransactionType';
+
+            $.ajax({
+                data: model,
+                url: url,
+
+                cache: false,
+                success: function (html) {
+                    $("#" + container).append(html);
+                    callingFixedTable();
+                    SubTotal();
+                    NumberFormatCheck();
+
+                    $('.detailHeadRow :input').not('.notClearing').val("");
+                    $('.trProduct').select2("val", "");
+
+                }
+            });
+        }
+
+    </script>
+
+    @*--------------------------for editing and removing a product row--------------------------*@
+    <script>
+        ////removing all selected row
+        function RemoveMultiple() {
+            var rows = $('.deleteCheckBox:checkbox:checked');
+            if (rows.length == 0) {
+                ShowResult("Fail", "Select a row first!");
+                return;
+            }
+            Ask("Are you sure to Delete the item!", function () {
+                rows.each(function () {
+                    $(this).parents("tr:first").remove();
+                });
+            });
+        }
+
+        $(".cChkExpLoc").change(function () {
+            if (this.checked) {
+                $('#ChkLoc').text("Export");
+
+            }
+            else {
+                $('#ChkLoc').text("Local");
+
+            }
+
+            Type();
+
+        });
+
+        $(".chkAll").click(function () {
+            $('input:checkbox').not(this).prop('checked', this.checked);
+        });
+
+        ////edit a row
+        function EditItem(sender) {
+            ////setting the value
+            var $closestRow = $(sender).closest('.tablerow');
+
+            var itemName = $closestRow.find('.dItemName').val();
+            var code = $closestRow.find('.dItemNo').val();
+            var BOMReferenceNo = $closestRow.find('.dBOMReferenceNo').val();
+            var NBRPrice = $closestRow.find('.dSalesPrice').val().replace(/\,/g, '');
+            var UOM = $closestRow.find('.dUOM').val();
+            var VATRate = $closestRow.find('.dVATRate').val();
+            var SDRate = $closestRow.find('.dSD').val();
+            var Quantity = $closestRow.find('.dQuantity').val();
+            var Weight = $closestRow.find('.dWeight').val();
+            var ProductDescription = $closestRow.find('.dProductDescription').val();
+            var FixedVATAmount = $closestRow.find('.dFixedVATAmount').val();
+
+            var HPSRate = $closestRow.find('.dHPSRate').val();
+            var Type = $closestRow.find('.dType').val();
+            var PQty = $closestRow.find('.dPQuantity').val();
+            var IsFixedVat = $closestRow.find('.dIsFixedVAT').val();
+            var unitPrice = $closestRow.find('.dSalesPrice').val().replace(/\,/g, '');
+            var ConversionDate = $closestRow.find('.dCConversionDate').val();
+
+            var BillingPeriodFrom = $closestRow.find('.dBillingPeriodFrom').val();
+            var BillingPeriodTo = $closestRow.find('.dBillingPeriodTo').val();
+            var BillingDays = $closestRow.find('.dBillingDays').val();
+            var SaleQuantity = $closestRow.find('.dSaleQuantity').val();
+
+            $(".cSaleQuantity").val(SaleQuantity);
+            $('#BillingPeriodFrom').val(BillingPeriodFrom);
+            $('#BillingPeriodTo').val(BillingPeriodTo);
+            $('#BillingDays').val(BillingDays);
+            $('.cConversionDateMaster').val(ConversionDate);
+
+
+
+            $('.trProductName').val(itemName);
+
+            var issueDate = $(".trInvoiceDate").val();
+            var vatName = $closestRow.find('.dVatName').val(); //// $(".trVAT1Name").val();
+            if (vatName != "" && vatName != null && vatName != "null") {
+                
+                $(".trVAT1Name").val(vatName);
+            }
+            else {
+
+            }
+
+            if (code == null || code == "" || code == "null") {
+                return;
+            }
+
+            var url = "/Vms/SaleInvoice/SelectProductDetails?productCode=" + code + "&IssueDate=" + issueDate + "&vatName=" + vatName;
+
+            $.getJSON(url, function (data) {
+
+                $('.trProductCode').val(data.ProductCode);
+                $('.trStock').val(data.Stock);
+                $('.trHSCode').val(data.HSCodeNo);
+                $('.trProductName').val(data.ProductName);
+                $('.trItemNo').val(data.ItemNo);
+                $('.cProductType').val(data.ProductType);
+
+                $('.NBRPrice').val(NBRPrice);
+                $('.trNBRPrice').val(NBRPrice);
+                $('.trUOM').val(UOM);
+                $('.trVATRate').val(VATRate);
+                $('.trSDRate').val(SDRate);
+                $(".trQuantity").val(Quantity);
+                $(".trWeight").val(Weight);
+                $(".trProductDescription").val(ProductDescription);
+                $(".trFixedVATAmount").val(FixedVATAmount);
+                $(".cHPSRate").val(HPSRate);
+                $(".trType").val(Type);
+                $(".cPQty").val(PQty);
+
+                $("#IsFixedVat").attr("checked", IsFixedVat == "Y" ? true : false);
+
+
+                $('.trNBRPrice').val(unitPrice);
+
+                //setting discount
+                var discountAmount = data.SalesPrice - unitPrice;
+                $('#discountType').val("False");
+                $('.discountType').removeClass("btn-blue");
+                $('.trDiscount').val(discountAmount);
+
+                BOMReferenceNoLoad(BOMReferenceNo);
+
+                LoadcProductCategoryDropDown(data.ProductType, data.CategoryID)
+                LoadcProductDropDown(data.CategoryID, data.ProductType, data.ItemNo);
+
+                $(".trType").select2("val", Type);
+
+
+                //////if (IsFixedVat === "N") {
+
+                //////    var checkBox = $("#IsFixedVat")
+
+                //////    checkBox.attr("checked", false);
+
+                //////}
+                //////else if (IsFixedVat === "Y") {
+
+                //////    var checkBox = $("#IsFixedVat")
+
+                //////    checkBox.attr("checked", true);
+
+                //////}
+
+            })
+
+            //////$(".cConversionDate").val(ConversionDate);
+
+            $(sender).parents("tr:first").remove();
+
+            SubTotal();
+
+            $(function () {
+                var interval = setInterval(function () {
+                    if ($('.trUOM').val() != "") {
+                        //////alert(4);
+                        UomOptions();
+                        clearInterval(interval);
+                    }
+                }, 200);
+            });
+        }
+
+        ////removing a row
+        function RemoveItem(sender) {
+            Ask("Are you sure to Delete the item!", function () {
+                $(sender).parents("tr:first").remove();
+                SubTotal();
+                //////ShowHide();
+            });
+        }
+    </script>
+
+    @*--------------------------for subtotal and save method--------------------------*@
+    <script>
+        function SubTotal() {
+            var TotalAmount = 0;
+            var SDTotal = 0;
+            var VATTotal = 0;
+            var GrandTotal = 0;
+
+
+            var HPSTotal = 0;
+            var HPSAmount = 0;
+
+            $(".tablerow").each(function () {
+                TotalAmount += parseFloat($(this).find(".dSubTotal").val().replace(/\,/g, ''));
+                SDTotal += parseFloat($(this).find(".dSDAmount").val().replace(/\,/g, ''));
+                VATTotal += parseFloat($(this).find(".dVATAmount").val().replace(/\,/g, ''));
+
+                HPSTotal += parseFloat($(this).find(".dHPSAmount").val().replace(/\,/g, ''));
+
+            });
+
+            GrandTotal = TotalAmount + SDTotal + VATTotal;
+
+            $(".totalAmount").val(TotalAmount);
+            $(".cSDTotal").val(SDTotal);
+            $(".cVATTotal").val(VATTotal);
+            $(".cGrandTotal").val(GrandTotal);
+            $(".cHPSTotal").val(HPSTotal);
+
+        }
+
+        function SaveData() {
+            @*var branchId = '@Session["BranchId"]';
+var searchBranchId = $('#BranchId').val();
+if (branchId != searchBranchId) {
+console.log(searchBranchId + " ~" + branchId);
+ShowResult("Fail", "This Information not for this Branch!");
+return;
+}*@
+            var Post = $("#Post").val();
+            if (Post.toLowerCase() == 'true' || Post.toLowerCase() == 'y') {
+                ShowResult("Fail", "Data Already Posted. Can't Update!");
+                return;
+            }
+
+            var a = requiredFields('frmSaleInvoice');
+
+
+            var CustomerId = $(".trCustomerId :selected").val();
+            if (CustomerId == "" || CustomerId == null) {
+                ShowResult("Fail", "Please Select Customer!");
+                return;
+            }
+            if ('@Model.TransactionType' != "Service" && '@Model.TransactionType' != "ServiceNS") {
+
+                //var VehicleId = $(".trVehicle :selected").val();
+                //if (VehicleId == "" || VehicleId == null) {
+                //    ShowResult("Fail", "Please Select Vehicle!");
+                //    return;
+                //}
+
+                var VehicleNo = $(".cVehicleNo").val();
+                if (VehicleNo == "" || VehicleNo == null) {
+                    ShowResult("Fail", "Please Add Vehicle No!");
+                    return;
+                }
+                var VehicleType = $(".cVehicleType").val();
+                if (VehicleType == "" || VehicleType == null) {
+                    ShowResult("Fail", "Please Add Vehicle Type!");
+                    return;
+                }
+
+            }
+
+            var items = $(".dItemName").length;
+            if (items == 0) {
+                ShowResult("Fail", "Please Add Product Details!");
+                $(".accordionProduct").trigger("click");
+                return;
+            }
+
+            if (a != 0) {
+                return;
+            }
+
+
+            pageSubmit('frmSaleInvoice');
+        }
+    </script>
+
+    @*--------------------------for post method--------------------------*@
+    <script>
+        function PostData(sender) {
+            var Id = $("#Id").val();
+            var Post = $("#Post").val();
+            if (Post.toLowerCase() == 'true' || Post.toLowerCase() == 'y') {
+                ShowResult("Fail", "Data Already Posted!");
+                return;
+            }
+            var branchId = '@Session["BranchId"]';
+            var searchBranchId = $('#BranchId').val();
+            if (branchId != searchBranchId) {
+                ShowResult("Fail", "This Information not for this Branch!");
+                return;
+            }
+            var url = '/Vms/SaleInvoice/Post?ids=' + Id + '~';
+            var questionMSG = "Are you sure to Post Data!";
+            singlePostDlete(questionMSG, url);
+        }
+    </script>
+
+    @*--------------------------fixed header column table--------------------------*@
+    <script>
+        function fixedScrolltrkFixedTable(tableId, leftTotal) {
+            $('#' + tableId + ' tbody').scroll(function (e) {
+                var i;
+                var j = 2;
+                for (i = 1; i <= leftTotal; i++) {
+                    $('#' + tableId + ' tbody td:nth-child(' + i + ')').css("z-index", "1");
+                    $('#' + tableId + ' thead th:nth-child(' + i + ')').css("left", $("#" + tableId + " tbody").scrollLeft());
+
+                    $('#' + tableId + ' tbody td:nth-child(' + j + ')').css("z-index", "1");
+                    $('#' + tableId + ' tbody td:nth-child(' + j + ')').css("left", $("#" + tableId + " tbody").scrollLeft());
+                    $('#' + tableId + ' tbody td:nth-child(' + j + ')').css("left", $("#" + tableId + " tbody").scrollLeft());
+                    j++;
+                }
+                $('#' + tableId + ' thead').css("left", -$("#" + tableId + " tbody").scrollLeft());
+                //$('#' + tableId + ' thead th:nth-child(2)').css("left", $("#" + tableId + " tbody").scrollLeft());
+
+            });
+        }
+        function settingtrkFixedColumnWidth(tableId, widthArgs) {
+            if (widthArgs == null) {
+                return;
+            }
+            var i;
+            var j = 2;
+            for (i = 1; i <= widthArgs.length; i++) {
+                $('#' + tableId + ' tr td:nth-child(' + j + ')').css("min-width", widthArgs[i - 1] + "px");
+                $('#' + tableId + ' tr th:nth-child(' + i + ')').css("min-width", widthArgs[i - 1] + "px");
+                j++;
+            }
+        }
+        function fixLeftColumns(tableId, leftTotal) {
+            var i;
+            var j = 2;
+            for (i = 1; i <= leftTotal; i++) {
+                //fixed column header style
+                $('#' + tableId + ' thead th:nth-child(' + i + ')').css("height", "20px");
+                $('#' + tableId + ' thead th:nth-child(' + i + ')').css("position", "relative");
+                $('#' + tableId + ' thead th:nth-child(' + i + ')').css("z-index", "2");
+                //fixed column rows style
+                $('#' + tableId + ' tbody tr td:nth-child(' + j + ')').css("height", "20px");
+                $('#' + tableId + ' tbody tr td:nth-child(' + j + ')').css("position", "relative");
+                j++;
+            }
+        }
+        function settingWidth(tableId) {
+            //var parentWidth = $('.fixedParent').width();
+            var parentWidth = $('#' + tableId).closest('.fixedParent').width();
+            $('#' + tableId + ' thead').width(parentWidth);
+            $('#' + tableId + ' tbody').width(parentWidth);
+        }
+        function trkFixedTable(tableId, leftTotal, args) {
+            settingWidth(tableId);
+            fixLeftColumns(tableId, leftTotal);
+            fixedScrolltrkFixedTable(tableId, leftTotal);
+            settingtrkFixedColumnWidth(tableId, args);
+        }
+        function callingFixedTable() {
+            var args = [150, 100, 200, 100, 100, 100, 100, 150, 100, 100, 100, 150, 150, 150, 100, 100, 150, 150, 100, 100, 150, 100, 100, 100, 100, 100, 100, 100, 100, 150, 200, 150, 150, 150, 150, 150, 150, 150, 150,150,150,150,150,150,150,150,150,150];
+            trkFixedTable("itemTable", 3, args);
+        }
+        $(function () {
+            callingFixedTable();
+        })
+    </script>
+
+    @*--------------------------for navigation--------------------------*@
+    <script>
+        function navigatePage() {
+            var interval = setInterval(function () {
+                if (document.querySelectorAll('.trNavigateMenu option').length > 0) {
+                    var id = '@Model.Id';
+                    $('.trNavigateMenu').select2("val", id);
+                    clearInterval(interval);
+                }
+            }, 200);
+            ////navigating previous-next
+            $('.changePage').click(function () {
+                var id = '@Model.Id';
+                var ttype = '@Model.TransactionType';
+                var btn = $(this).attr("data-pager-action");
+                if (btn.toLocaleLowerCase() == "current") {
+                    var targetId = $('.trNavigateMenu').val();
+                    if (id == targetId) {
+                        return;
+                    }
+                    id = targetId;
+                }
+                window.location = "/VMS/SaleInvoice/Navigate?id=" + id + "&btn=" + btn + "&ttype=" + ttype;
+            });
+        }
+    </script>
+
+    @*for showing product details and toggle accordion*@
+    <script>
+        function showProductDetail() {
+            var productDetail = document.getElementById('productDetails');
+            $(document).on("dblclick", '.tablerow', function () {
+                var code = $(this).find('input.dItemNo').val();
+                var url = "/Vms/Product/ShowProduct?code=" + code;
+                $.ajax({
+                    url: url,
+                    cache: false,
+                    beforeSend: function () { $(".loading").show(); },
+                    complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                    success: function (html) {
+                        productDetail.style.display = "block";
+                        $(".trkmodal-content").html(html);
+                    }
+                });
+            });
+        }
+    </script>
+
+    @*Initial function*@
+    <script>
+        $(function () {
+            valiDation("frmSaleInvoice");
+
+            Type();
+
+
+            $('.customDatePicker').prop("readonly", false);
+            ////for navigation
+
+            var operation = '@Model.Operation';
+
+            if (operation == "update") {
+
+                navigatePage();
+
+                ////CustomerSelect('@Model.CustomerID');
+
+                $('.trCustomerId').select2('data', { id: '@Model.CustomerID', text: '@Model.CustomerName' });
+
+                $('.trVehicle').select2('data', { id: '@Model.VehicleID', text: '@Model.VehicleNo' });
+
+            }
+
+            setCABalance();
+
+            SubTotal();
+
+            ////for counting discount amount based on % symbol
+            MyToggleBox('discountType');
+
+            ////initializing modal
+            showProductDetail();
+
+            /////closing modal
+            window.onclick = function (event) {
+
+                var productDetail = document.getElementById('productDetails');
+
+                if (event.target == productDetail) {
+                    $(".trkmodal-content").html("");
+                    productDetail.style.display = "none";
+                }
+                //var modal = document.getElementById('myModal');
+                //if (event.target == modal) {
+                //    $("#myModal").html("");
+                //    modal.style.display = "none";
+                //}
+            }
+
+        });
+
+        function CustomerSelect(CustomerID) {
+
+            $('.trCustomerId').val("");
+
+            @*var value = '@Model.CustomerID';*@
+
+            var value = CustomerID;
+
+            var CustomerNames = "";
+
+            var url = "/Config/DropDown/DropDownByCustomerID/?CustomerID=" + value;
+            CustomerNames += "<option value=0>Select</option>";
+            $.getJSON(url, function (data) {
+                $.each(data, function (i, state) {
+                    CustomerNames += "<option value='" + state.Value + "'>" + state.Text + "</option>";
+                });
+
+                $('.trCustomerId').html(CustomerNames);
+
+                $('.trCustomerId').select2('val', CustomerID);
+
+                
+
+                CustomerChange();
+                //var CustomerId = $('.trCustomerId :selected').val();
+
+                //console.log(CustomerId);
+
+            });
+        }
+
+
+
+    </script>
+
+    @*for calculating discount*@
+    <script>
+        $(function () {
+            $('.discountType').click(function () {
+                setTimeout(function () {
+                    calculateDiscount();
+                }, 500);
+            });
+            $(".trDiscount").blur(function () {
+                calculateDiscount();
+            });
+        })
+        function calculateDiscount() {
+            var status = $('#discountType').val();
+            var nbrprice = parseFloat($('.NBRPrice').val().replace(/\,/g, ''));
+            var discount = parseFloat($('.trDiscount').val().replace(/\,/g, ''));
+            if (isNaN(discount)) {
+                discount = 0;
+            }
+            if (isNaN(nbrprice)) {
+                nbrprice = 0;
+            }
+            var disountedNBRPrice = 0;
+            if (status == 'True') {
+                disountedNBRPrice = nbrprice - (nbrprice * discount / 100);
+            }
+            else {
+                disountedNBRPrice = nbrprice - discount;
+            }
+            if (disountedNBRPrice < 0) {
+                ShowResult("Fail", "Discount can't be greater than price!");
+                $('.trNBRPrice').val(nbrprice);
+                $('.trDiscount').val("0");
+                return;
+            }
+            $('.trNBRPrice').val(disountedNBRPrice);
+        }
+    </script>
+
+    @*for setting products and ca balance*@
+    <script>
+        ////Setting C.A Balance
+        function setCABalance() {
+            var interval = setInterval(function () {
+                var challanDate = $('.trInvoiceDate').val();
+                if (challanDate != "") {
+                    var url = "/Vms/SaleInvoice/getCABalance?startDate=" + challanDate;
+                    $.getJSON(url, function (data) {
+                        $('.trTDBalance').val(data);
+                    });
+                    clearInterval(interval);
+                }
+            }, 500);
+
+        }
+    </script>
+
+    @*--------------------------MISC Functions--------------------------*@
+    <script>
+
+        ////Getting uom conversion
+        function GetConvFact() {
+
+            //////alert(3);
+            var uomConv = 1;
+            var uomFrom = $('.trUOM').val();
+            var uomTo = $('.trPackSize').val();
+            if (uomFrom != uomTo) {
+                uomConv = $('#ConvFactor').val();
+            }
+            return uomConv;
+        }
+
+        ////changing vehicle
+        $(function () {
+            $('.trVehicle').change(function () {
+                vehicleChange();
+            });
+        });
+
+        ////vehicle change method
+        function vehicleChange() {
+
+            var vehicleId = $('.trVehicle :selected').val();
+
+            var VehicleNo = $('#IdVehicleNo').val();
+
+            if (VehicleNo == null || VehicleNo == "") {
+                return;
+            }
+            $('#VehicleID').val("");
+            $('.cVehicleType').val("");
+
+            //if (vehicleId == null || vehicleId == "") {
+            //    return;
+            //}
+            var url = "/Vms/SaleInvoice/getVehicleDetails?vehicleId=" + VehicleNo;
+            $.getJSON(url, function (data) {
+
+                $('#VehicleID').val(data.VehicleID);
+                $('.cVehicleType').val(data.VehicleType);
+
+            });
+        }
+
+        ////product category change method
+        function ProductGroupChange() {
+            $('.trProductName').val("");
+            var value = $('#ItemGroup').val().toString();
+            var productNames = "";
+
+            var url = "/Config/DropDown/DropDownProductByCategory/?id=" + value;
+            productNames += "<option value=0>Select</option>";
+            $.getJSON(url, function (data) {
+                $.each(data, function (i, state) {
+                    productNames += "<option value='" + state.Value + "'>" + state.Text + "</option>";
+                });
+
+                $('.trProductName').html(productNames);
+            });
+        }
+
+        ////product change method
+        function ProductNameChange(code, ItemEdit) {
+            var issueDate = $(".trInvoiceDate").val();
+            var vatName = $(".trVAT1Name").val();
+            if (code == null || code == "" || code == "null") {
+                return;
+            }
+
+            var url = "/Vms/SaleInvoice/SelectProductDetails?productCode=" + code + "&IssueDate=" + issueDate + "&vatName=" + vatName + "&TransactionType=" + '@Model.TransactionType';
+            $.getJSON(url, function (data) {
+                $('.trProductCode').val(data.ProductCode);
+                $('.trStock').val(data.Stock);
+                $('.trHSCode').val(data.HSCodeNo);
+
+                //trProductDescription
+                $('.NBRPrice').val(data.SalesPrice);
+                $('.trNBRPrice').val(data.SalesPrice);
+                $('.trUOM').val(data.UOM);
+                $('.trProductName').val(data.ProductName);
+                $('.trVATRate').val(data.VATRate);
+                $('.trSDRate').val(data.SD);
+                $('.trItemNo').val(data.ItemNo);
+
+                BOMReferenceNoLoad();
+
+                NumberFormatCheck();
+
+                //var html = "<option value=" + data.UOM + ">" + data.UOM + "</option>";
+                //$('#PackSize').html(html);
+            });
+        }
+
+        ////changing product
+        $(function () {
+            $('.trProduct').change(function () {
+                var Productname = $('.trProduct :selected').text();
+
+                $('.trProductDescription').val(Productname);
+
+                var productCode = $(this).val();
+
+
+                $('#ProductDescription').attr('data-code', productCode); //setter
+
+                if (productCode == "") {
+                    return;
+                }
+
+                ProductNameChange(productCode);
+
+                $(function () {
+                    var interval = setInterval(function () {
+                        if ($('.trUOM').val() != "") {
+
+                            UomOptions();
+
+                            clearInterval(interval);
+                        }
+                    }, 200);
+                });
+
+            });
+        })
+
+
+        function BOMReferenceNoLoad(BOMReferenceNo) {
+            var ItemNo = $(".trItemNo").val();
+            var VatName = $(".trVAT1Name").val();
+            var EffectDate = $(".trInvoiceDate").val();
+            var CustomerID = $(".trCustomerId").val();
+
+            var url = "/Config/DropDown/DropDownBOMReferenceNo";
+            url = url + "?" + "ItemNo=" + ItemNo
+             + "&VatName=" + VatName
+             + "&EffectDate=" + EffectDate
+             + "&CustomerID=" + CustomerID;
+
+
+            var $Dropdown = $(".cBOMReferenceNo");
+
+            DropdownLoad($Dropdown, url, BOMReferenceNo);
+
+        }
+
+
+        ////changing uom to/packet size
+        $('.trPackSize').change(function () {
+
+            GetConvFactor();
+        });
+
+        ////uom conversion method
+        function GetConvFactor() {
+
+            //////alert(1);
+            var uomFrom = $('.trUOM').val();
+            var uomTo = $('.trPackSize').val();
+            if (uomFrom == uomTo) {
+                $('#UOMc').val(1);
+                return;
+            }
+            var actionUrl = "/Vms/SaleInvoice/GetConvFactor?uomFrom=" + uomFrom + "&UomTo=" + uomTo;
+            $.getJSON(actionUrl, function (data) {
+                uomConv = parseFloat(data);
+                $('#UOMc').val(uomConv);
+            });
+        }
+
+        ////uom option method
+        function UomOptions() {
+            //////alert(5);
+            var uom = $('.trUOM').val();
+            var url = "/Vms/SaleInvoice/GetUomOption?uomFrom=" + uom;
+            $.ajax({
+                url: url,
+                cache: false,
+                success: function (uoms) {
+                    var html = "";
+
+                    if (uoms == null || uoms.length === 0) {
+                        html += "<option value='" + uom + "'>" + uom + "</option>";
+                    }
+                    else {
+                        html += "<option value='" + uom + "'>" + uom + "</option>";
+
+                        uoms.forEach(function (item) {
+                            html += "<option value='" + item.UOMTo + "'>" + item.UOMTo + "</option>";
+                        });
+                    }
+
+                    $('#PackSize').html(html);
+                    GetConvFactor();
+                }
+            });
+        }
+
+
+    </script>
+
+
+    @*--------------------------Modal--------------------------*@
+
+    <script>
+        $(function () {
+            function modalInit(url) {
+                var modal = document.getElementById('myModal');
+                $.ajax({
+                    url: url,
+                    cache: false,
+                    beforeSend: function () { $(".loading").show(); },
+                    complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                    success: function (html) {
+                        modal.style.display = "block";
+                        $("#myModal").html(html);
+                    }
+                });
+            }
+
+            $('.ProductDsc').click(function () {
+                var url = "/VMS/SaleInvoice/ProductDscripition";
+
+                modalInit(url);
+            });
+
+        });
+    </script>
+
+
+    @*calling higher products modal*@
+
+    <script>
+
+        function modalInitHigher(url) {
+
+            var ProductType = $(".cProductType :selected").val();
+            var ProductCategoryId = $(".cProductCategoryId :selected").val();
+            var ProductCategory = $(".cProductCategoryId :selected").text();
+
+            url = url
+            + "&ProductType=" + ProductType
+            + "&ProductCategoryId=" + ProductCategoryId
+            + "&ProductCategory=" + ProductCategory
+            ;
+
+            var modal = document.getElementById('myHigherModal');
+            $.ajax({
+                url: url,
+                cache: false,
+                beforeSend: function () { $(".loading").show(); },
+                success: function (html) {
+                    modal.style.display = "block";
+                    $("#myHigherModal").html(html);
+                }
+            , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+            });
+        }
+
+        function callbackFromProductModal(sender) {
+            var code = $(sender).children('td.popUpItemCode').text();
+            var itemNo = $(sender).children('td.popUpItemNo').text();
+            $('.trProductCode').val(code);
+            $('.trItemNo').val(itemNo);
+            ProductNameChange(code);
+            //$('.trProduct').select2('val', code);
+            $('.trProduct').select2('val', itemNo);
+
+            $(function () {
+                var interval = setInterval(function () {
+                    if ($('.trUOM').val() != "") {
+
+                        UomOptions();
+
+                        clearInterval(interval);
+                    }
+                }, 200);
+            });
+        }
+
+        function redirectToSaleWithId(refNo) {
+
+            window.location = "/VMS/SaleInvoice/SelectSale?refNo=" + refNo;
+        }
+
+        function callbackFromCustomerModal(sender) {
+            var id = $(sender).children('td.popUpCustomerId').text();
+            var CustomerName = $(sender).children('td.popUpCustomerName').text();
+
+            CustomerSelect(id);
+
+            //$('.trCustomerId').select2('val', id);
+
+        }
+
+        function callbackFromCustomerAddressModal(sender) {
+            var CustomerAddress = $(sender).children('td.popUpCustomerAddress').text();
+            $('.cDeliveryAddress1').val(CustomerAddress);
+
+        }
+
+        $(function () {
+            $('#productBtn').click(function () {
+                var productCode = $('.trProduct').val();
+                var ItemNo = $('.trItemNo').val();
+
+
+                var url = "/Vms/Product/GetProductPopUp?targetId=ProductName&ProductCode=" + productCode;
+
+                modalInitHigher(url);
+            });
+
+            $('#saleIntegration').click(function () {
+
+                var url = "/Vms/SaleInvoice/GetSaleIntegration";
+
+                var modal = document.getElementById('myHigherModal');
+                $.ajax({
+                    url: url,
+                    cache: false,
+                    beforeSend: function () { $(".loading").show(); },
+                    success: function (html) {
+                        modal.style.display = "block";
+                        $("#myHigherModal").html(html);
+                    }
+                    , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+                });
+
+            });
+
+            //1
+            $('#customerBtn').click(function () {
+                var customerName = $('.trCustomerId option:selected').text();
+                var url = "/Vms/Customer/GetCustomerPopUp?CustomerName=" + customerName;
+                var modal = document.getElementById('myHigherModal');
+                $.ajax({
+                    url: url,
+                    cache: false,
+                    beforeSend: function () { $(".loading").show(); },
+                    success: function (html) {
+                        modal.style.display = "block";
+                        $("#myHigherModal").html(html);
+                    }
+                , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+                });
+            });
+
+            $('#customerAddressBtn').click(function () {
+                var customerName = $('.trCustomerId option:selected').text();
+                var customerId = $('.trCustomerId option:selected').val();
+                var url = "/Vms/Customer/GetCustomerAddressPopUp?CustomerName=" + customerName + "&CustomerId=" + customerId;
+                var modal = document.getElementById('myHigherModal');
+                $.ajax({
+                    url: url,
+                    cache: false,
+                    beforeSend: function () { $(".loading").show(); },
+                    success: function (html) {
+                        modal.style.display = "block";
+                        $("#myHigherModal").html(html);
+                    }
+                , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+                });
+            });
+
+
+        });
+
+        $(function () {
+            $('#productDescriptionBtn').click(function () {
+                var productCode = $('.trProductCode').val();
+                console.log(productCode);
+                if (productCode === "") {
+                    ShowResult("Fail", "Please Select Procduct First! ");
+                    return;
+                }
+                var url = "/Vms/Product/GetProductNamesPopUp?targetId=ProductName&ProductCode=" + productCode;
+                console.log(url);
+
+                modalInitHigher(url);
+            });
+
+            //$('#customerBtn').click(function () {
+            //    var customerName = $('.trCustomerId option:selected').text();
+            //    var url = "/Vms/Customer/GetCustomerPopUp?CustomerName=" + customerName;
+            //    var modal = document.getElementById('myHigherModal');
+            //    $.ajax({
+            //        url: url,
+            //        cache: false,
+            //        beforeSend: function () { $(".loading").show(); },
+            //        success: function (html) {
+            //            modal.style.display = "block";
+            //            $("#myHigherModal").html(html);
+            //        }
+            //    , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+            //    });
+            //});
+
+
+
+            $('#btnEXPFormNo').click(function () {
+
+                ///
+                var url = "/Vms/SaleInvoice/GetEXPFormNoPopUp";
+                //console.log(url)
+                //modalInitHigher(url);
+
+                var modal = document.getElementById('myHigherModal');
+
+                $.ajax({
+                    url: url,
+                    cache: false,
+                    beforeSend: function () { $(".loading").show(); },
+                    success: function (html) {
+                        modal.style.display = "block";
+                        $("#myHigherModal").html(html);
+                    }
+                , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+
+                });
+
+
+            });
+
+
+
+            $('#SearchEXPbtn').click(function () {
+
+                ///
+                var url = "/Vms/SaleInvoice/PopUpGetEXP";
+                //console.log(url)
+                //modalInitHigher(url);
+
+                var modal = document.getElementById('myHigherModal');
+
+                $.ajax({
+                    url: url,
+                    cache: false,
+                    beforeSend: function () { $(".loading").show(); },
+                    success: function (html) {
+                        modal.style.display = "block";
+                        $("#myHigherModal").html(html);
+                    }
+                , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+
+                });
+
+
+            });
+
+
+
+
+
+        });
+
+
+
+    </script>
+
+    <script>
+
+
+
+        function Type() {
+
+            var ChkLoc = $('.cChkExpLoc:checked').val();
+
+            if (ChkLoc) {
+                var url = "/Config/DropDown/EnumVATExport";
+            }
+            else {
+                var url = "/Config/DropDown/EnumVAT";
+            }
+
+            var $Dropdown = $(".trType");
+
+            DropdownLoad($Dropdown, url, '@Model.Type');
+
+        }
+
+        $(function () {
+            $(".cProductType").on("change", function () {
+                ProductTypeChange(this);
+            });
+        });
+
+        function ProductTypeChange(sender) {
+            var ProductType = $(sender).val();
+            if (ProductType != null && ProductType != "") {
+                LoadcProductCategoryDropDown(ProductType);
+                LoadcProductDropDown("0", ProductType);
+            }
+        }
+
+        function LoadcProductCategoryDropDown(ProductType, ProductGroup) {
+            $DropDownProductCategory = $(".cProductCategoryId");
+            $('select.cProductCategoryId').html("");
+
+            var url = "/Config/DropDown/ProductCategory?IsRaw=" + ProductType;
+            $DropDownProductCategory.append($("<option />").val("").text("Select"));
+            $DropDownProductCategory.select2("val", '');
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                beforeSend: function () { $(".loading").show(); },
+                success: function (data) {
+                    $.each(data, function (i, state) {
+                        $DropDownProductCategory.append($("<option />").val(state.Value).text(state.Text));
+                    });
+                    if (ProductGroup != null || ProductGroup != "" || ProductGroup != "0") {
+                        $DropDownProductCategory.select2("val", ProductGroup);
+                    }
+                },
+                complete: function () { $(".loading").fadeOut(200).hide("slow") }
+
+            });
+        }
+
+
+    </script>
+
+    <script>
+        $(function () {
+            $(".cProductCategoryId").on("change", function () {
+                ProductCategoryChange(this);
+            });
+        });
+
+        function ProductCategoryChange(sender) {
+
+            var ProductCategoryId = $(sender).val();
+
+            if (ProductCategoryId != null && ProductCategoryId != "") {
+                LoadcProductDropDown(ProductCategoryId);
+            }
+        }
+
+        function LoadcProductDropDown(ProductCategoryId, IsRaw, ProductCode) {
+            $DropDownProduct = $(".trProduct");
+            $('select.trProduct').html("");
+            if (IsRaw == null) {
+                IsRaw = "";
+            }
+            var url = "/Config/DropDown/Product?CategoryID=" + ProductCategoryId + "&IsRaw=" + IsRaw;
+            $DropDownProduct.append($("<option />").val("").text("Select"));
+            $DropDownProduct.select2("val", '');
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                beforeSend: function () { $(".loading").show(); },
+                success: function (data) {
+                    $.each(data, function (i, state) {
+                        $DropDownProduct.append($("<option />").val(state.Value).text(state.Text));
+                    });
+                    if (ProductCode != null || ProductCode != "" || ProductCode != "0") {
+                        $(".trProduct").select2("val", ProductCode);
+                    }
+                },
+                complete: function () { $(".loading").fadeOut(200).hide("slow") }
+            });
+        }
+
+
+    </script>
+
+    @*for reporting*@
+
+
+    <script>
+        function modalInit(url) {
+            var modal = document.getElementById('myModal');
+            $.ajax({
+                url: url,
+                cache: false,
+                beforeSend: function () { $(".loading").show(); },
+                success: function (html) {
+                    modal.style.display = "block";
+                    $("#myModal").html(html);
+                },
+                complete: function () { $(".loading").fadeOut(200).hide("slow") }
+
+            });
+        }
+        $(function () {
+            $('.vat11Report').click(function () {
+                var post = $('#Post').val();
+                //var IdCheek=$('#Id').val()
+                //console.log(post);
+                if (post == "N" || post == "") {
+                    ShowResult("Fail", "Data Not Posted!");
+                    return;
+                }
+                //if (IdCheek == null) {
+                //    ShowResult("Fail", "Please select Invoice No");
+                //    return;
+                //}
+
+                var SalesInvoiceNo = $('.trSalesInvoiceNo').val();
+
+                var url = "/Vms/NBRReport/PrintVAT11?SalesInvoiceNo=" + SalesInvoiceNo + "&Ids=" + '@Model.Id';
+                modalInit(url);
+            });
+            $('.saleReport').click(function () {
+                var url = "/Vms/MISReport/PrintSale";
+                modalInit(url);
+            });
+            $('.vat17Report').click(function () {
+                //var url = "/Vms/NBRReport/PrintVAT17";
+                var ItemNo = $('.trItemNo').val();
+
+
+                var url = "/Vms/NBRReport/PrintVAT17?itemNo=" + ItemNo;
+                modalInit(url);
+            });
+            $('.vat6_2_1Report').click(function () {
+                //var url = "/Vms/NBRReport/PrintVAT17";
+                var ItemNo = $('.trItemNo').val();
+                console.log(ItemNo)
+                
+                var url = "/Vms/NBRReport/PrintVAT6_2_1?itemNo=" + ItemNo;
+                modalInit(url);
+            });
+            $('.vat18Report').click(function () {
+                var url = "/Vms/NBRReport/PrintVAT18";
+                modalInit(url);
+            });
+        })
+    </script>
+
+    <script>
+
+        $(function () {
+
+            $("#tripSearch").on("click", function () {
+
+                var tripNo = $(".cSerialNo").val();
+
+
+                $.getJSON("/vms/SaleInvoice/Searchtrip?tripNo=" + tripNo,
+                function (data) {
+
+                    if (data.productName && data.code && data.quantity) {
+
+                        var newOption = new Option(data.productName, data.code, false, false);
+
+                        //$(".trQuantity").val(data.quantity);
+                        $('.trProduct').append(newOption);
+                        $('.trProduct').val(data.code);
+                        $('.trProduct').trigger('change');
+
+                        ProductNameChange(data.code);
+
+                    } else if (data.message) {
+
+                        ShowResult("Fail", data.message);
+                    }
+
+
+                });
+
+            })
+
+
+
+        });
+
+    </script>
+
+
+
+
+
+
+
+
+}
+
+<style>
+    .CBOM {
+        margin-top: -2%;
+        margin-left: 2%;
+    }
+
+    .ChkLoc {
+        padding-top: 1%;
+    }
+</style>

@@ -1,0 +1,94 @@
+﻿@model System.Data.DataTable
+@using System.Data
+@using UIHelper.MVC
+@{
+    Layout = null;
+    var sl = 1;
+}
+@foreach (DataRow sale in Model.Rows)
+{
+    <tr class="trSelectPopUpProduct">
+        
+        <td class="saleRow"  > @sale["ID"]    </td>
+        <td class="saleRow"  > @sale["Customer_Name"]     </td>
+        <td class="saleRow"  > @sale["Customer_Code"]     </td>
+        <td class="saleRow"  > @sale["Delivery_Address"]    </td>
+        <td class="saleRow"  > @sale["Invoice_Date_Time"]    </td>
+        <td class="saleRow"  > @sale["Post"]</td>
+        <td class="saleRow"  > @sale["Item_Code"]    </td>
+        <td class="saleRow"  > @sale["Item_Name"]    </td>
+        <td class="saleRow"  > @sale["Quantity"]    </td>
+        <td class="saleRow"  > @sale["NBR_Price"]    </td>
+        <td class="saleRow"  > @sale["UOM"]</td>
+        <td class="saleRow"  > @sale["VAT_Rate"]    </td>
+        <td class="saleRow"  > @sale["SD_Rate"]    </td>
+        <td class="saleRow"  > @sale["Non_Stock"]    </td>
+        <td class="saleRow"  > @sale["Trading_MarkUp"]    </td>
+        <td class="saleRow"  > @sale["Discount_Amount"]    </td>
+        <td class="saleRow"  > @sale["Promotional_Quantity"]    </td>
+        <td class="saleRow"  > @sale["VAT_Name"]    </td>
+        <td class="saleRow"  > @sale["LC_Number"]    </td>
+        <td class="saleRow"  > @sale["Currency_Code"]    </td>
+        <td class="saleRow"  > @sale["Sale_Type"]    </td>
+        <td class="saleRow"  > @sale["Previous_Invoice_No"]    </td>
+        <td class="saleRow"  > @sale["Is_Print"]    </td>
+        <td class="saleRow"  > @sale["Tender_Id"]    </td>
+        <td class="saleRow refNo"  > @sale["Reference_No"]             </td>
+        <td class="saleRow"  > @sale["SubTotal"]                 </td>
+        <td class="saleRow"  > @sale["Type"]                     </td>
+
+    </tr>
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ty 
+
+
+
+
+
+
+
+
+
+o 
+
+
+
+
+
+
+
+
+

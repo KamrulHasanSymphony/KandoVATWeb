@@ -1,0 +1,338 @@
+﻿@model VATViewModel.DTOs.MPLZoneProfileVM
+@using UIHelper.MVC
+@using (Html.BeginForm("CreateEdit", "MPLZoneProfile", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmZone" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.ZoneID)
+    @Html.HiddenFor(model => model.Operation)
+
+    <div class="headrow">
+        @if (Model.Operation == "add")
+        {
+            <button type="button" name="btnName" value="Save" title="Save Data" onclick="pageSubmit('frmZone')" class="sym-btn-save">&nbsp;Save</button>
+            <label class="pull-right">Zone > Create</label>
+        }
+        else
+        {
+            <button type="button" name="btnName" value="Update" title="Update Data" onclick="pageSubmit('frmZone')" class="sym-btn-update">&nbsp;Update</button>
+            <label class="pull-right">Zone > Edit</label>
+        }
+        <button type="button" title="Go To Index" data-url="/VMS/MPLZoneProfile" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New Zone" data-url="/VMS/MPLZoneProfile/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+        @if (Model.ZoneID > 0)
+        {
+            <button type="button" title="Add New Mapping Zone" id="mappingZone" class=" sym-btn-add ">&nbsp;New Zone Mapping </button>
+        }
+        
+    </div>
+    
+    <div class="col-md-6 trkPX-0 trkPR-2">
+        <div class="thinbox animated zoomIn faster">
+            <div class="th_thinbox">
+                <p>Basic</p>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label for="ZoneCode" class="col-md-4 control-label text-right trkLabelMargin">Code</label>
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.ZoneCode, new { @placeholder = "Zone Code", @class = " required form-control" })
+                        @Html.ValidationMessageFor(model => model.ZoneCode)
+                    </div>
+                    <label for="ZoneName" class="col-md-4 control-label text-right trkLabelMargin">Name</label>
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.ZoneName, new { @placeholder = "Zone Name", @class = " required form-control" })
+                        @Html.ValidationMessageFor(model => model.ZoneName)
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="ZoneLegalName" class="col-md-4 control-label text-right trkLabelMargin">Legal Name</label>
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.ZoneLegalName, new { @placeholder = "Zone Legal Name", @class = " form-control" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="BanglaLegalName" class="col-md-4 control-label text-right trkLabelMargin">Bangla Legal Name</label>
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.BanglaLegalName, new { @placeholder = "Zone Bangla Legal Name", @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.BanglaLegalName)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="VatRegistrationNo" class="col-md-4 control-label text-right trkLabelMargin">Vat Registration No</label>
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.VatRegistrationNo, new { @placeholder = "Vat Registration Number", @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.VatRegistrationNo)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="BIN" class="col-md-4 control-label text-right trkLabelMargin">BIN</label>
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.BIN, new { @placeholder = "BIN", @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.BIN)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="TINNo" class="col-md-4 control-label text-right trkLabelMargin">TIN No</label>
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.TINNo, new { @placeholder = "TIN Number", @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.TINNo)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="thinbox animated zoomIn faster">
+            <div class="th_thinbox">
+                <p>Contact Person</p>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label for="ContactPerson" class="col-md-4 control-label text-right trkLabelMargin">Name</label>
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.ContactPerson, new { @placeholder = "Contact Person", @class = "   form-control" })
+                        @Html.ValidationMessageFor(model => model.ContactPerson)
+                    </div>
+                    <label for="ContactPersonDesignation" class="col-md-4 control-label text-right trkLabelMargin">Designation</label>
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.ContactPersonDesignation, new { @placeholder = "Designation", @class = " form-control" })
+                        @Html.ValidationMessageFor(model => model.ContactPersonDesignation)
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="ContactPersonTelephone" class="col-md-4 control-label text-right trkLabelMargin">Telephone</label>
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.ContactPersonTelephone, new { @placeholder = "Telephone No.", @class = " form-control" })
+                        @Html.ValidationMessageFor(model => model.ContactPersonTelephone)
+                    </div>
+                    <label for="ContactPersonEmail" class="col-md-4 control-label text-right trkLabelMargin">Email</label>
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.ContactPersonEmail, new { @placeholder = "Email", @class = " form-control" })
+                        @Html.ValidationMessageFor(model => model.ContactPersonEmail)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 trkPX-0">
+    <div class="thinbox animated zoomIn faster">
+        <div class="th_thinbox">
+            <p>Detail</p>
+        </div>
+        <div class="row">
+           
+
+            <div class="form-group">
+                <label for="ZipCode" class="col-md-4 control-label text-right trkLabelMargin">Zip Code</label>
+                <div class="col-md-8">
+                    @Html.TextBoxFor(model => model.ZipCode, new { @placeholder = "Zip Code", @class = "  form-control" })
+                    @Html.ValidationMessageFor(model => model.ZipCode)
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="Address" class="col-md-4 control-label text-right trkLabelMargin">Address</label>
+                <div class="col-md-8">
+                    @Html.TextBoxFor(model => model.Address, new { @placeholder = "Address", @class = "  form-control" })
+                    @Html.ValidationMessageFor(model => model.Address)
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                <label for="BanglaAddress" class="col-md-4 control-label text-right trkLabelMargin">Bangla Address</label>
+                <div class="col-md-8">
+                    @Html.TextBoxFor(model => model.BanglaAddress, new { @placeholder = "Bangla Address", @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.BanglaAddress)
+                </div>
+                <label for="City" class="col-md-4 control-label text-right trkLabelMargin">City</label>
+                <div class="col-md-8">
+                    @Html.TextBoxFor(model => model.City, new { @placeholder = "City", @class = " form-control" })
+                    @Html.ValidationMessageFor(model => model.City)
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="Email" class="col-md-4 control-label text-right trkLabelMargin">Email</label>
+                <div class="col-md-8">
+                    @Html.TextBoxFor(model => model.Email, new { @placeholder = "Email", @class = " form-control" })
+                    @Html.ValidationMessageFor(model => model.Email)
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="FaxNo" class="col-md-4 control-label text-right trkLabelMargin">Fax No</label>
+                <div class="col-md-8">
+                    @Html.TextBoxFor(model => model.FaxNo, new { @placeholder = "Fax Number", @class = " form-control" })
+                    @Html.ValidationMessageFor(model => model.FaxNo)
+                </div>
+                <label for="TelephoneNo" class="col-md-4 control-label text-right trkLabelMargin">Telephone No</label>
+                <div class="col-md-8">
+                    @Html.TextBoxFor(model => model.TelephoneNo, new { @placeholder = "Telephone No.", @class = " form-control" })
+                    @Html.ValidationMessageFor(model => model.TelephoneNo)
+                </div>
+            </div>
+
+            <div class="form-group">
+
+                <label for="Comments" class="col-md-4 control-label text-right trkLabelMargin">Comments</label>
+                <div class="col-md-8">
+                    @Html.TextAreaFor(model => model.Comments, new { @placeholder = "Comments", @class = " form-control" })
+                    @Html.ValidationMessageFor(model => model.Comments)
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-4 control-label text-right trkLabelMargin">Is Active</label>
+                <div class="form-group">
+                    <div class="col-md-2" style="margin-top: 6px;">
+                        @Html.SimpleDropDownFor(m => m.ActiveStatus, "/Config/DropDown/DecisionList", new { @class = " trNavigateMenu form-control required" })
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+            <br />
+        </div>
+    </div>
+    </div>
+    
+    <div class="headrow">
+        @if (Model.Operation == "add")
+        {
+            <button type="button" name="btnName" value="Save" title="Save Data" onclick="pageSubmit('frmZone')" class="sym-btn-save">&nbsp;Save</button>
+        }
+        else
+        {
+            <button type="button" name="btnName" value="Update" title="Update Data" onclick="pageSubmit('frmZone')" class="sym-btn-update">&nbsp;Update</button>
+        }
+        <button type="button" title="Go To Index" data-url="/VMS/MPLZoneProfile" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New Zone" data-url="/VMS/MPLZoneProfile/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+
+    </div>
+
+}
+
+<div class="thinbox animated slideInDown faster" id="zoneMapBlock" style="display: none">
+    <div class="th_thinbox">
+        <p>Zone Mapping Information List</p>
+    </div>
+    <table id="myDataTable" class="display">
+        <thead>
+            <tr>
+                <th class="center">
+                    Action
+                </th>
+                <th>Branch Name</th>
+                <th>Branch Address</th>
+
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <br />
+</div>
+
+
+<div id="myHigherModal" class="HigherModal"></div>
+
+<script>
+    $(function () {
+        valiDation("frmZone");
+    });
+</script>
+
+<script language="javascript" type="text/javascript">
+    $(document).ready(function () {
+
+        var zoneID = '@Model.ZoneID';
+        if (zoneID > 0)
+        {
+            var oTable = $('#myDataTable').dataTable({
+                "bServerSide": true,
+                "sAjaxSource": "/VMS/MPLZoneBranchMapping/GetZoneCodeWise?ZoneID=@Model.ZoneID",
+                "bProcessing": true,
+                "aLengthMenu": tablelength(),
+                "bJqueryUI": true,
+                "bAutoWidth": false,
+                "aoColumns": [
+                                {
+                                    "sName": "Id",
+                                    "bSearchable": false,
+                                    "bSortable": false,
+                                    "sWidth": "8%",
+                                    "sClass": "center",
+                                    "fnRender": function (oObj) {
+                                      return'<a id="" title="Click on for Edit" style="text-decoration:none;" onclick=EditData("'+oObj.aData[3]+'")  class=" innerListLink sym-btn-edit-row"></a>'
+                                        ;
+                                    }
+                                }
+                                , { "sName": "BranchName", "sWidth": "45%" }
+                                , { "sName": "BranchAddress", "sWidth": "45%" }
+
+
+                ]
+            });
+            
+            $('#zoneMapBlock').show();
+        }
+        else
+        {
+            $('#zoneMapBlock').hide();
+        }
+        
+    });
+</script>
+
+<script>
+    
+    var masterId = 0;
+    var zoneId = 0;
+    var branchId = 0;
+
+    $('#mappingZone').click(function () {
+        debugger;
+        var operation = "add";
+        zoneId = $('#ZoneID').val();
+        masterId = 0;
+        ShowModal(operation);
+    });
+    
+    function ShowModal(data) {
+        debugger;
+        var modal = document.getElementById('myHigherModal');   
+        var url = "/Vms/MPLZoneBranchMapping/GetZonePopUp?operation=" + data + "&MappingZoneId=" + zoneId + "&MappingBranchId=" + branchId + "&Id=" + masterId + "";
+        $.ajax({
+            url: url,
+            cache: false,
+            beforeSend: function () { $(".loading").show(); },
+            success: function (html) {
+                modal.style.display = "block";
+                $("#myHigherModal").html(html);
+                debugger;
+                if (data == "update")
+                {
+                    $('#Id').val(masterId);
+                    $('#MappingZoneId').val(zoneId);
+                    $('#MappingBranchId').val(branchId);
+                }                
+            }
+        , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+        });
+    };
+    
+    
+
+    function EditData(data) {
+        debugger;
+        data = data.split("~");
+        var operation = "update";        
+        masterId = parseInt(data[0]);
+        zoneId = parseInt(data[1]);
+        branchId = parseInt(data[2]);
+        ShowModal(operation);
+    };    
+
+</script>

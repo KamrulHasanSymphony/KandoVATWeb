@@ -1,0 +1,41 @@
+﻿@model IEnumerable<VATViewModel.DTOs.HSCodeVM>
+@using UIHelper.MVC
+@{
+    Layout = null;
+    var sl = 1;
+}
+@foreach (var Hscode in Model)
+{
+    <tr class="trSelectPopUpHSCode">
+        <td>@sl</td>
+        @*<td class="">@customer.CustomerGroupName</td>
+            <td class=" popUpCustomerCode">@customer.CustomerCode</td>
+            <td class="popUpCustomerName" title="@customer.CustomerName">@customer.CustomerName</td>
+            <td class="popUpCustomerAddress" title="@customer.CustomerAddress">@customer.CustomerAddress</td>
+            <td class="">@customer.CustomerVATRegNo</td>
+            <td hidden class=" popUpCustomerId">@customer.CustomerID</td>*@
+        <td class=" popUpHSCode">@Hscode.HSCode</td>
+        <td class=" popUpdescription">@Hscode.Description</td>
+        <td class=" popUpCd">@Hscode.CD</td>
+        <td class=" popUpRd">@Hscode.RD</td>
+        <td class=" popUpSd">@Hscode.SD</td>
+        <td class=" popUpVat">@Hscode.VAT</td>
+        <td class=" popUpAt">@Hscode.AT</td>
+        <td class=" popUpAit">@Hscode.AIT</td>
+        <td class=" popUpOteherSd">@Hscode.OtherSD</td>
+        <td class=" popUpOtherVat">@Hscode.OtherVAT</td>
+        <td class=" popUpFixedcd">@Hscode.IsFixedCD</td>
+        <td class=" popUpFixedRd">@Hscode.IsFixedRD</td>
+        <td class=" popUpFixedSd">@Hscode.IsFixedSD</td>
+        <td class=" popUpFixedVat">@Hscode.IsFixedVAT</td>
+        <td class=" popUpFixedAt">@Hscode.IsFixedAT</td>
+        <td class=" popUpFixedAit">@Hscode.IsFixedAIT</td>
+        <td class=" popUpFixedothersd">@Hscode.IsFixedOtherSD</td>
+        <td class=" popUpFixedOtherVat">@Hscode.IsFixedOtherVAT</td>
+        <td class=" popUpVds">@Hscode.IsVDS</td>
+
+        @{
+    sl++;
+        }
+    </tr>
+}

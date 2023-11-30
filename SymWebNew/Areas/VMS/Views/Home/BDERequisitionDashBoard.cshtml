@@ -1,0 +1,108 @@
+﻿@model SymViewModel.Sage.GLReportVM
+@using UIHelper.MVC
+@using SymOrdinary
+@using System.Threading;
+@{ 
+    
+    ShampanIdentity identity = null;
+    try
+    {
+        identity = (ShampanIdentity)Thread.CurrentPrincipal.Identity;
+    }
+    catch (Exception)
+    {
+        Response.Redirect("/Sage/Home/Login");
+        return;
+    }
+}
+@{
+    ViewBag.Title = "DashBoard";
+}
+
+<h2>Dash Board</h2>
+<div class="row">
+    <div class="thinbox col-md-4 BDERequisitionDetailsBarChart">
+        @Html.Partial("_chartBDEReq1", Model)
+    </div>
+    <div class="thinbox col-md-4 BDERequisitionDetailsBarChart2">
+        @Html.Partial("_chartBDEReq2", Model)
+    </div>
+
+
+</div>
+
+
+<style>
+    /*#header {
+				border-bottom: 5px solid #37474F;
+				color: #37474F;
+				margin-bottom: 1.5rem;
+				padding: 1rem 0;
+			}*/
+
+    #revenue-tag {
+        font-weight: inherit !important;
+        border-radius: 0px !important;
+    }
+
+    .card {
+        border: 0rem;
+        border-radius: 0rem;
+    }
+
+    .card-header {
+        background-color: #37474F;
+        border-radius: 0 !important;
+        color: white;
+        margin-bottom: 0;
+        padding: 1rem;
+    }
+
+    .card-block {
+        border: 1px solid #cccccc;
+        box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12), 0 3px 5px -1px rgba(0, 0, 0, 0.2);
+    }
+
+    .shadow {
+        box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12), 0 3px 5px -1px rgba(0, 0, 0, 0.2);
+    }
+
+    #revenue-column-chart, #products-revenue-pie-chart, #orders-spline-chart {
+        height: 300px;
+        width: 100%;
+    }
+</style>
+<script>
+    function bkColor() {
+        var backgroundColor = [
+           "#2ecc71",
+           "#3498db",
+           "#95a5a6",
+           "#9b59b6",
+           "#f1c40f",
+           "#e74c3c",
+           "#34495e"
+        ];
+        return backgroundColor;
+    }
+
+    $(function () {
+        @* //var fydid = '@Model.GLFiscalYearDetailId';*@
+        //alert(fydid);
+        //var PeriodName = "";
+        //var url = "/Sage/FiscalYear/SelectPeriodName?fydid=" + fydid;
+        //$.getJSON(url, function (data) {
+        //    PeriodName = data;
+        //});
+
+        //setTimeout(function () { loadsPie() }, 0);
+        //setTimeout(function () { loadsbar() }, 0);
+
+        //loadsbar(fydid);
+
+    });
+</script>
+
+
+
+

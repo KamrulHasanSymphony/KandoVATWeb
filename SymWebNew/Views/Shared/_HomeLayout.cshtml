@@ -1,0 +1,235 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>ShampanERP-@ViewBag.Title</title>
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width" />
+    <script src="~/assets/javascripts/jquery.min.js"></script>
+    <script src="~/assets/javascripts/jquery-1.8.2.min.js"></script>
+    <script src="~/assets/javascripts/jquery-ui-1.8.24.min.js"></script>
+
+    <link href="~/assets/css/jquery-ui.css" rel="stylesheet" />
+    <script src="~/assets/javascripts/jquery.dataTables.columnFilter.js"></script>
+    <link href="~/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="~/assets/javascripts/bootstrap.js"></script>
+    <script src="~/assets/js/jquery.isotope.js"></script>
+    @*<link href="~/assets/css/style.css" rel="stylesheet" />*@
+
+    <link href="~/assets/NewFolder1/dataTables/demo_table.css" rel="stylesheet" />
+    <link href="@Url.Content("~/assets/css/demo_table.css")" rel="stylesheet" type="text/css" />
+
+    <link href="@Url.Content("~/assets/css/demo_table_jui.css")" rel="stylesheet" type="text/css" />
+    <link href="~/assets/stylesheets/dataTables.responsive.css" rel="stylesheet" />
+    <link href="~/assets/stylesheets/normalize.css" rel="stylesheet" />
+    <link href="~/assets/css/SymphonyBtn.css" rel="stylesheet" />
+
+    <link href="~/Content/Menu/SidebarMenu.css" rel="stylesheet" />
+    @*<link href="~/assets/stylesheets/common.css" rel="stylesheet" />*@
+    <link href="~/assets/css/menu.css" rel="stylesheet" />
+    <link href="~/assets/css/toastr.css" rel="stylesheet" />
+    <script>
+        $(function () {
+            InitDateTimePickers();
+            toastr.options.positionClass = 'toast-top-center';
+            var result = '@Session["rollPermission"]';
+            if (result != null) {
+                if (result.toLowerCase() == "deny") {
+                    toastr.error('You Do not have permission to access this module', 'Permission deny')
+                }
+                @{ Session["rollPermission"] = null; }
+            }
+
+            var permission = '@Session["permission"]';
+            if (permission == "False") {
+                toastr.error('You Do not have permission to access', 'Permission deny')
+                @{ Session["permission"] = null; };
+            }
+            else {
+            }
+            var result = '@Session["result"]';
+            result = result.split("~");
+            if (result[0] == "Success") {
+                console.log(result);
+                toastr.success(result[1], 'Shampan VAT')
+                @{ Session["result"] = null; }
+            }
+            else if (result[0] == "Fail") {
+                console.log(result);
+                toastr.error(result[1], 'Shampan VAT')
+                @{ Session["result"] = null; };
+            }
+            else if (result[0] == "Info") {
+                toastr.info(result[1], 'Shampan VAT')
+                @{ Session["result"] = null; };
+            }
+            else if (result[0] == "Warning") {
+                toastr.warning(result[1], 'Shampan VAT')
+                @{ Session["result"] = null; };
+            }
+        })
+        function InitDateTimePickers() {
+            $(".customDatePicker").datepicker({
+                changeYear: true, changeMonth: true, dateFormat: 'dd-M-yy', yearRange: '-90:+9', maxYear: '100'
+            });
+            $('.customTimePicker').prop("readonly", "readonly");
+            $('.customDatePicker').prop("readonly", "readonly");
+        }
+    </script>
+    <link href="~/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    @RenderSection("head", required: false)
+
+    <style>
+        body {
+            background-color: #f9fcff;
+            background-image: url('../../Images/1.png');
+        }
+
+        .avatar {
+            vertical-align: middle;
+            width: 47px;
+            height: 47px;
+            border-radius: 50%;
+            float: right;
+            margin-top: 0px;
+        }
+
+        #btnLogOff {
+            padding-top: 5px;
+            border-radius: 80% !important;
+            color: White;
+            background-color: cornflowerblue;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar navbar-inverse">
+        <div class="container-fluid" style="padding-right: 0px !important; padding-left: 0px !important;">
+            <div class="col-md-5 col-xs-5" style="padding-right: 0px !important; padding-left: 0px !important;">
+                <img src="~/Images/symphonyLogo.png" style="float: left; width: 100px; height: 32px; margin-top: 10px; margin-right: 5px;" />
+                &nbsp;
+                &nbsp;
+                <img src="~/images/chat/usr1.jpg" id="userPhoto" class="avatar" style="float: left">
+                <div style="text-align: right; float: left" class="form-group form-group-custom">
+                    &nbsp;
+                    <label id="lblWelcome" style="color: white; font-family: century gothic"></label>
+                </div>
+                @*notification list*@
+                <div id="divNotifications" class="displayNone"></div>
+            </div>
+            <div class="col-md-7 col-xs-7" style="padding-left: 0">
+                <div class="navbar-header ">   @*Navbar Header*@
+                    <ul class="nav col-xs-4 visible-xs">
+                        <li class="dropdown1" style="padding-top: 4px">
+                            <a href="#" class=" btn btn-warning">HRM </a>
+                        </li>
+                    </ul>
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span> @*copy from old*@
+                         <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+                <div class="navbar-collapse collapse" id="cssmenu" style="float: right;">
+                    <ul style="float: left; list-style-type: none; padding: 0px; margin-top: 2px;">
+                        <li>
+                            <a href="/Home">Home</a>
+                        </li>
+                        <li>
+                            <a href="/Home/AboutUs">About us</a>
+                        </li>
+                        <li>
+                            <a href="/Home/Client">Client</a>
+                        </li>
+                        <li>
+                            <a href="/Home/ContactUs">Contact Us</a>
+                        </li>
+                        <li>
+                            <a href="/Recruitment/JobCircular">Job Circular</a>
+
+                        </li>
+                        @*<li class='liDashboard'><a href='../Home/Home'><span class="glyphicon glyphicon-home"></span> DASHBOARD</a></li>*@
+                    </ul>
+                    <ul class="menu" id="kendoMenu" style="float: left;"></ul>
+                    <ul style="float: left; list-style-type: none; padding: 0px; margin-top: 2px;">
+                        <li class='liLogout'><a href='../Home/LogOff'><span class="glyphicon glyphicon-log-out"></span> LOGOUT</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="margin-bottom: 4px;"></div>
+    <div>
+        <nav class="navbar navbar-inverse sidebar" role="navigation" id="navSidebarMenu11" style="left: -146px; position: absolute; z-index: 9999999;">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-sidebar-navbar-collapse-1">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#" style="font-family: cursive;">SYM ERP<span class="fa fa-angle-double-right" style="float:right; cursor: pointer;"></span></a>
+                </div>
+                <div class="collapse navbar-collapse" id="bs-sidebar-navbar-collapse-1">
+                    <ul class="nav navbar-nav" id="ulMenu"></ul>
+                </div>
+            </div>
+        </nav>
+        <div class="row randerBody" style="margin-left: 60px; margin-right: 0px !important;">
+            <div class="col-md-12 col-xs-12">
+                @RenderBody()
+            </div>
+        </div>
+        <footer class="footer-area navbar-fixed-bottom">
+            <div class="row" style="height: 20px">
+                <div class="col-md-6 col-xs-6"></div>
+                <div class="col-md-6 col-xs-6" style="float: right; text-align: right">&copy; @DateTime.Now.Year - All right reserved Symphony LTD., Developed By Al Rakib</div>
+            </div>
+        </footer>
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+
+
+    <script src="~/assets/javascripts/jquery.min.js"></script>
+    <script src="~/assets/javascripts/jquery-1.8.2.min.js"></script>
+    <script src="~/assets/javascripts/jquery-ui-1.8.24.min.js"></script>
+    <script src="~/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/assets/NewFolder1/jquery.dataTables.min.js"></script>
+    <script src="~/assets/javascripts/jquery.dataTables.columnFilter.js"></script>
+    <script src="~/assets/js/dataTables.colVis.js"></script>
+    <script src="~/assets/javascripts/toastr.js"></script>
+    <script src="~/assets/javascripts/custom.js"></script>
+
+    @*<div class="content title">
+        <div class="row">
+            <div class="col-sm-6 ">
+                <img src="~/Images/symphonyLogo.png" width="280" />
+            </div>
+
+        </div>
+    </div>
+    @Html.Partial("_navbar")
+    @RenderBody()
+    <div class="clearfix"></div>
+    <div class="content black">
+        <p><i class="fa fa-asterisk"></i>Powered By <a href="http://symphonysoftt.com/" target="_blank">Symphony</a>.</p>
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @RenderSection("scripts", required: false)
+
+
+    <script src="~/assets/javascripts/jquery.min.js"></script>
+    <script src="~/assets/javascripts/jquery-1.8.2.min.js"></script>
+    <script src="~/assets/javascripts/jquery-ui-1.8.24.min.js"></script>
+    <script src="~/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/assets/NewFolder1/jquery.dataTables.min.js"></script>
+    <script src="~/assets/javascripts/jquery.dataTables.columnFilter.js"></script>
+    <script src="~/assets/js/dataTables.colVis.js"></script>
+    <script src="~/assets/javascripts/toastr.js"></script>
+    <script src="~/assets/javascripts/custom.js"></script>*@
+</body>
+</html>

@@ -1,0 +1,205 @@
+﻿@model VATViewModel.DTOs.CustomsHouseVM
+@using UIHelper.MVC
+@{
+    Layout = "~/Areas/VMS/Views/Shared/_ModalLayout.cshtml";
+}
+<style>
+    .trkMT10 {
+        margin-top: 10px;
+    }
+</style>
+<div class="HigherModal-content">
+    <div class="HigherModal-header">
+        <span class="closeHigher">&times;</span>
+        <h2 class="text-center">CustomHouse Search</h2>
+    </div>
+    <div class="HigherModal-body formDesign">
+        @*<div class="row">         
+            <div class="trk_5">
+                <div class="editor-field">
+                    <label>&nbsp;</label>
+                    <button type="button" title="Click to Search" id="searchBtn" class="sym-btn-search btnPopUpSearch">&nbsp;</button>
+                </div>
+            </div>
+            <div class="trk_5">
+                <label>&nbsp;</label>
+                <button type="button" title="Clear Data" id="Clear" class=" sym-btn-clear">&nbsp;Clear</button>
+            </div>
+        </div>*@
+        <div class="row">
+            <div class="fixedParent">
+                <table class="trkFixTable" id="CustomHousePopUpTable">
+                    <thead>
+                        <tr>
+                            <th>SL</th>
+                            <th>Code</th>
+                            <th>CustomHouseName</th>
+                            <th>CustomHouseAddress</th>
+                            <th>ActiveStatus</th> 
+                        </tr>
+                    </thead>
+                    <tbody id="popUpTbody1"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*fixed table*@
+<script language="javascript" type="text/javascript">
+    function fixedScrollPopUpFixedTable(tableId, leftTotal) {
+        $('#' + tableId + ' tbody').scroll(function (e) {
+            var i;
+            for (i = 1; i <= leftTotal; i++) {
+                $('#' + tableId + ' thead th:nth-child(' + i + ')').css("left", $("#" + tableId + " tbody").scrollLeft());
+                $('#' + tableId + ' tbody td:nth-child(' + i + ')').css("z-index", "1");
+                $('#' + tableId + ' tbody td:nth-child(' + i + ')').css("left", $("#" + tableId + " tbody").scrollLeft());
+            }
+            $('#' + tableId + ' thead').css("left", -$("#" + tableId + " tbody").scrollLeft());
+
+        });
+    }
+    function settingPopUpFixedColumnWidth(tableId, widthArgs) {
+        if (widthArgs == null) {
+            return;
+        }
+        var i;
+        for (i = 1; i <= widthArgs.length; i++) {
+            $('#' + tableId + ' tr td:nth-child(' + i + ')').css("min-width", widthArgs[i - 1] + "px");
+            $('#' + tableId + ' tr td:nth-child(' + i + ')').css("overflow", "hidden");
+            $('#' + tableId + ' tr td:nth-child(' + i + ')').css("max-width", widthArgs[i - 1] + "px");
+
+            $('#' + tableId + ' tr th:nth-child(' + i + ')').css("min-width", widthArgs[i - 1] + "px");
+            $('#' + tableId + ' tr th:nth-child(' + i + ')').css("overflow", "hidden");
+            $('#' + tableId + ' tr th:nth-child(' + i + ')').css("max-width", widthArgs[i - 1] + "px");
+        }
+    }
+    function fixLeftPopUpColumns(tableId, leftTotal) {
+        var i;
+        for (i = 1; i <= leftTotal; i++) {
+            //fixed column header style
+            $('#' + tableId + ' thead th:nth-child(' + i + ')').css("height", "30px");
+            $('#' + tableId + ' thead th:nth-child(' + i + ')').css("position", "relative");
+            $('#' + tableId + ' thead th:nth-child(' + i + ')').css("z-index", "2");
+            //fixed column rows style
+            $('#' + tableId + ' tbody tr td:nth-child(' + i + ')').css("height", "30px");
+            $('#' + tableId + ' tbody tr td:nth-child(' + i + ')').css("position", "relative");
+        }
+    }
+    function settingFixedPopUpWidth(tableId) {
+        //var parentWidth = $('.fixedParent').width();
+        var parentWidth = $('#' + tableId).closest('.fixedParent').width();
+        $('#' + tableId + ' thead').width(parentWidth);
+        $('#' + tableId + ' tbody').width(parentWidth);
+    }
+    function trkFixedPopUpTable(tableId, leftTotal, args) {
+        settingFixedPopUpWidth(tableId);
+        fixLeftPopUpColumns(tableId, leftTotal);
+        fixedScrollPopUpFixedTable(tableId, leftTotal);
+        settingPopUpFixedColumnWidth(tableId, args);
+    }
+    function callingFixedPopUpTable() {
+        var args = [50, 100, 300, 100, 100, 200, 200, 200, 200, 200, 200, 200, 200];
+        trkFixedPopUpTable("CustomHousePopUpTable", 3, args);
+    }
+    $(function () {
+        callingFixedPopUpTable();
+    })
+</script>
+@*events of the modal*@
+<script>
+    ////closing higher modal
+    function closeHigherModal() {
+        $("#myHigherModal").html("");
+        trkmodal.style.display = "none";
+    }
+    var span = document.getElementsByClassName("closeHigher")[0];
+    var trkmodal = document.getElementById('myHigherModal');
+    span.onclick = function () {
+        closeHigherModal();
+    }
+
+    $(function () {
+        $('#CustomHousePopUpTable').unbind().on('dblclick', '.trSelectPopUpCustomer', function () {
+           
+            selectPopUpProduct(this);
+        });
+        function selectPopUpProduct(sender) {
+            callbackFromCustomHouseModal(sender);
+            closeHigherModal();
+        }
+        $(document).on('click', '.trSelectPopUpCustomer', function () {
+            var activeEl = $('tr.active');
+            activeEl.removeClass("active");
+            $(this).addClass(" active");
+        });
+    })
+</script>
+@*for search action*@
+<script>
+
+    @*function showSelectedVendor() {
+        var vendorname = '@Model.CustomsHouseName';
+        if (vendorname.trim().toLowerCase() == "select") {
+            return;
+        }
+        var interval = setInterval(function () {
+            if (document.querySelectorAll('#SearchField option').length > 0) {
+                $('#SearchField').val("VendorName");
+                $('#SearchValue').val(vendorname);
+                SearchVendors();
+                clearInterval(interval);
+            }
+        }, 200);
+    }*@
+    function SearchCustomHouse() {
+        //var SearchField = $('#SearchField').val();
+        //var SearchValue = $('#SearchValue').val();
+        //var VendorGroupID = $('#popUpVendorGroup').val();
+        //var StartDateFrom = $('#startPopUpDate').val();
+        //var StartDateTo = $('#endPopUpDate').val();
+        //var activePopUp = $('#activePopUp').val();
+        //var ActiveStatus;
+        //if (activePopUp == "Y") {
+        //    ActiveStatus = true;
+        //}
+        //if (activePopUp == "N") {
+        //    ActiveStatus = false;
+        //}
+
+        //var model = {
+        //    //SearchField: SearchField,
+        //    //SearchValue: SearchValue,
+        //    //VendorGroupID: VendorGroupID,
+        //    //StartDateFrom: StartDateFrom,
+        //    //StartDateTo: StartDateTo,
+        //    //IsActive: activePopUp
+        //}
+        $.ajax({
+            //data: model
+             url: "/Vms/CustomsHouse/GetFilteredCustomHouse"
+            , cache: false
+            , beforeSend: function () { $(".loading").show(); }
+            , success: function (html) {
+                console.log(html);
+                $("#popUpTbody1").html("");
+                $("#popUpTbody1").html(html);
+                callingFixedPopUpTable();
+            }
+            , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+        });
+    }
+    $(function () {
+        //showSelectedVendor();
+        SearchCustomHouse();
+
+        ////$('.btnPopUpSearch').click(function () {
+        ////    SearchCustomHouse();
+        ////});
+        ////$("#Clear").on('click', function () {
+        ////    $(".HigherModal-body .Dropdown").select2("val", "");
+        ////    $(".HigherModal-body .form-control").val("");
+        ////});
+    });
+</script>
+

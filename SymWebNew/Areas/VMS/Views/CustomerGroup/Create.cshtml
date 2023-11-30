@@ -1,0 +1,130 @@
+﻿
+@model VATViewModel.DTOs.CustomerGroupVM
+@using UIHelper.MVC
+@{
+
+    ViewBag.Title = "Create";
+    ViewBag.Location = "Create"; 
+}
+
+@using (Html.BeginForm("CreateEdit", "CustomerGroup", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmCustomerGroup" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.CustomerGroupID)
+    @Html.HiddenFor(model => model.Operation)
+    <div class="thinbox ">
+        <div class="th_thinbox">
+            <p>Customer Group</p>
+        </div>
+        <div class="CustomerGroup">
+
+            <div>
+                <div class="row">
+                    <div class="editor-label">
+                        @*@Html.LabelFor(model => model.CustomerGroupID)*@
+                        <label for="CustomerGroupID" class="col-md-2 control-label text-right trkLabelMargin">CustomerGroupID</label>
+
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.CustomerGroupID, new { @placeholder = "~~~ New ~~~", @class = "cCustomerGroupID form-control", @readonly = "readonly" })
+                        @Html.ValidationMessageFor(model => model.CustomerGroupID)
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="row">
+                    <div class="editor-label">
+                        @*@Html.LabelFor(model => model.CustomerGroupName)*@
+                        <label for="CustomerGroupName" class="col-md-2 control-label text-right trkLabelMargin">CustomerGroupName</label>
+
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.CustomerGroupName, new { @placeholder = "Name", @class = " required form-control" })
+                        @Html.ValidationMessageFor(model => model.CustomerGroupName)
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="row">
+                    <div class="editor-label">
+                        @*@Html.LabelFor(model => model.GroupType)*@
+                        <label for="GroupType" class="col-md-2 control-label text-right trkLabelMargin">GroupType</label>
+
+                    </div>
+                    <div class="editor-field">
+                        @Html.SimpleDropDownFor(model => model.GroupType, "/Config/DropDown/Types", new { @class = " required form-control " })
+                        @Html.ValidationMessageFor(model => model.GroupType)
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="row">
+                    <div class="editor-label">
+                        @*@Html.LabelFor(model => model.CustomerGroupDescription)*@
+                        <label for="CustomerGroupDescription" class="col-md-2 control-label text-right trkLabelMargin">CustomerGroupDescription</label>
+
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextAreaFor(model => model.CustomerGroupDescription, new { @placeholder = "Description", @class = "  form-control" })
+                        @Html.ValidationMessageFor(model => model.CustomerGroupDescription)
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="row">
+                    <div class="editor-label">
+                        @*@Html.LabelFor(model => model.Comments)*@
+                        <label for="Comments" class="col-md-2 control-label text-right trkLabelMargin">Comments</label>
+
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextAreaFor(model => model.Comments, new { @placeholder = "Comments", @class = "  form-control" })
+                        @Html.ValidationMessageFor(model => model.Comments)
+                    </div>
+                </div>
+
+                <div class="row" style="margin-top:6px;">
+                    <div class="editor-label">
+                        <label for="ActiveStatus" class="col-md-2 control-label text-right trkLabelMargin">ActiveStatus</label>
+
+                    </div>
+                    <div class="editor-field">
+                        @Html.SimpleDropDownFor(m => m.ActiveStatus, "/Config/DropDown/DecisionList", new { @class = " trNavigateMenu form-control required" })
+                        @Html.ValidationMessageFor(model => model.ActiveStatus)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="headrow">
+        @if (Model.Operation == "add")
+        {
+            <label class="col-sm-3">
+                <button type="button" name="btnName" value="Save" title="Save Data" onclick="pageSubmit('frmCustomerGroup')" class="sym-btn-save">&nbsp;Save</button>
+            </label>
+            <label class="col-sm-4">
+                <button type="button" title="Cancel Data" class=" btncancel sym-btn-cancel">&nbsp;Cancel</button>
+            </label>
+        }
+        else
+        {
+            <label class="col-sm-3">
+                <button type="button" name="btnName" value="Update" title="Update Data" onclick="pageSubmit('frmCustomerGroup')" class="sym-btn-update">&nbsp;Update</button>
+            </label>
+            <label class="col-sm-4">
+                <button type="button" title="Cancel Data" class=" btncancel sym-btn-cancel">&nbsp;Cancel</button>
+            </label>
+        }
+    </div>
+}
+<script>
+    $(function () {
+        valiDation("frmCustomerGroup");
+        InitDropDowns();
+
+    });
+
+</script>

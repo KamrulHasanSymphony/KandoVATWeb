@@ -1,0 +1,418 @@
+﻿@model VATViewModel.DTOs.VATReturnVM
+@using UIHelper.MVC
+@{
+    ViewBag.Title = "ChartBar";
+}
+
+<style>
+    /*#header {
+                border-bottom: 5px solid #37474F;
+                color: #37474F;
+                margin-bottom: 1.5rem;
+                padding: 1rem 0;
+            }*/
+
+    #revenue-tag {
+        font-weight: inherit !important;
+        border-radius: 0px !important;
+    }
+
+    .card {
+        border: 0rem;
+        border-radius: 0rem;
+    }
+
+    .card-header {
+        background-color: #37474F;
+        border-radius: 0 !important;
+        color: white;
+        margin-bottom: 0;
+        padding: 1rem;
+    }
+
+    .card-block {
+        border: 1px solid #cccccc;
+        box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12), 0 3px 5px -1px rgba(0, 0, 0, 0.2);
+    }
+
+    .shadow {
+        box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12), 0 3px 5px -1px rgba(0, 0, 0, 0.2);
+    }
+
+    #revenue-column-chart, #products-revenue-pie-chart, #orders-spline-chart {
+        height: 300px;
+        width: 100%;
+    }
+
+    .btnMargin {
+        margin-left: 45px;
+    }
+</style>
+
+
+<div class="thinbox animated zoomIn faster formDesign ">
+    <div class="th_thinbox ">
+        <p>VAT 9.1</p>
+    </div>
+    @using (Html.BeginForm("VAT9_1ChartBar", "Home", FormMethod.Post, new { enctype = "multipart/form-data", @target = "_blank", @Id = "frmChartBar" }))
+    {
+        <div class="row">
+            <div class="col-md-2">
+                <div class="editor-label">
+                    <label>Month - Year</label>
+                </div>
+                <div class="editor-field">
+
+                    @*@Html.TextBoxFor(m => m.PeriodName, new { @class = "cPeriodName customDatePicker form-control defaultDate" })*@
+                    @Html.SimpleDropDownFor(m => m.PeriodName, "//", new { @class = "cPeriodName form-control selectDropdown" })
+
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="editor-label">
+                    <label>Branch</label>
+                </div>
+                <div class="editor-field">
+                    @Html.SimpleDropDownFor(m => m.BranchId, "/Config/DropDown/BranchProfile", new { @class = " form-control selectDropdown" })
+                </div>
+            </div>
+
+
+            <div class="col-md-3">
+                <div class="editor-label">
+                    <label>&nbsp;</label>
+                </div>
+                <div class="editor-field btnMargin">
+                    <button type="button" name="Load" class=" sym-btn-refresh btnLoad"> Load</button>
+                </div>
+            </div>
+
+        </div>
+
+    }
+</div>
+
+@*<div class="headrow">
+    </div>*@
+
+<div class="container col-md-12">
+    <h2 class="card-header ">
+        <label id="lblPeriodName">VAT 9.1</label>
+    </h2>
+    <div class="card-block">
+        <canvas id="myChartBarMultiple" height="10" width="20"></canvas>
+    </div>
+</div>
+
+<div class="container col-md-12">
+    <h2 class="card-header ">
+        <label id="lblPeriodName2">VAT 9.1</label>
+    </h2>
+    <div class="card-block">
+        <canvas id="myChartBarMultiple2" height="10" width="20"></canvas>
+    </div>
+</div>
+
+<div class="container col-md-12">
+    <h2 class="card-header ">
+        <label id="lblPeriodName3">VAT 9.1</label>
+    </h2>
+    <div class="card-block">
+        <canvas id="myChartBarMultiple3" height="10" width="20"></canvas>
+    </div>
+</div>
+
+
+<script>
+
+    $(function () {
+        DropdownLoad($('#PeriodName'), "/Config/DropDown/FiscalPeriod", '@Model.PeriodName')
+    });
+
+
+
+
+    $(function () {
+
+        $(".btnLoad").click(function () {
+            var PeriodName = $('#PeriodName').val();
+            var BranchId = $('#BranchId').val();
+
+            //loadsChartBar(PeriodName, BranchId, i, chartId);
+            //loadsChartBar(PeriodName, BranchId);
+
+            var chartId = "";
+
+
+            var i;
+            for (i = 0; i < 3; i++) {
+
+                if (i === 0) {
+
+                    loadsChartBar(PeriodName, BranchId,i);
+                }
+                if (i === 1) {
+
+                    loadsChartBar2(PeriodName, BranchId, i);
+                }
+                if (i === 2) {
+
+                    loadsChartBar3(PeriodName, BranchId, i);
+                }
+            }
+
+            //loadsMultiple();
+        });
+
+    });
+
+
+
+
+    @*$(function () {
+        $("#submit").click(function () {
+             filterJoindate();
+        });
+
+        function filterJoindate() {
+            var FormDate = $("FormDate").val();
+            var ToDate = $("ToDate").val();
+            $.ajax({
+                url: "@Url.Action("JoinDate","Home",  new { area="HRM"})" + "?FormDate=" + FormDate + "&ToDate=" + ToDate,
+                type: 'GET',
+                beforeSend: function () { $(".loading").show(); },
+                complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                success: function (data) {
+                    $("#JoinDetail").html(data);
+                }
+            });
+        };
+    });*@
+
+</script>
+
+<script>
+    //$(function () {
+
+    //    loadsChartBar("","");
+
+    //});
+
+    function loadsChartBar(PeriodName, BranchId,previousmonth)
+    {
+        $(function () {
+            var backgroundColor = [
+                               "#2ecc71",
+                               "#3498db",
+                               "#95a5a6",
+                               "#9b59b6",
+                               "#f1c40f",
+                               "#e74c3c",
+                               "#34495e"
+            ];
+
+            setTimeout(function () { loadsMultiple() }, 0);
+
+            function loadsMultiple() {
+
+                var Descriptions = [];
+                //var Genders = [];
+                //var labels = [];
+                //var vpersons = [];
+                var datamulti = [];
+
+                var url = "/VMS/Chart/VAT9_1ChartBar";
+                url = url + "?" + "BranchId=" + BranchId + "&PeriodName=" + PeriodName + "&previousmonth=" + previousmonth;
+
+                //alert(previousmonth);
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    beforeSend: function () { $(".loading").show(); },
+                    complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                    success: function (data) {
+                        //console.log(data[0]);
+                        $.each(data[0], function (index, value) {
+                            Descriptions.push(value);
+                        });
+                        $.each(data[2], function (index, value) {
+                            ////alert(JSON.stringify(value));
+                            //alert(value.PeriodName);
+                            document.getElementById('lblPeriodName').innerHTML = 'VAT 9.1' + ' (' +value.PeriodName+')';
+                            datamulti.push(
+                             {
+                                 label: value.Section,
+                                 data: value.values,
+                                 backgroundColor: backgroundColor[index]
+                             }
+                            )
+                        });
+
+                        //var ctx = document.getElementById("myChartBarMultiple").getContext('2d');
+                        var ctx = document.getElementById("myChartBarMultiple").getContext('2d');
+                        var myChart = new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: Descriptions,
+                                datasets: datamulti
+                            }
+                        });
+
+                    },
+                });
+
+
+            }
+        });
+
+    }
+
+
+
+
+
+    function loadsChartBar2(PeriodName, BranchId, previousmonth) {
+        $(function () {
+            var backgroundColor2 = [
+                               "#2ecc71",
+                               "#3498db",
+                               "#95a5a6",
+                               "#9b59b6",
+                               "#f1c40f",
+                               "#e74c3c",
+                               "#34495e"
+            ];
+
+            setTimeout(function () { loadsMultiple2() }, 0);
+
+            function loadsMultiple2() {
+
+                var Descriptions = [];
+
+                var datamulti = [];
+
+                //alert(previousmonth);
+
+                var url = "/VMS/Chart/VAT9_1ChartBar";
+                url = url + "?" + "BranchId=" + BranchId + "&PeriodName=" + PeriodName + "&previousmonth=" + previousmonth;
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    beforeSend: function () { $(".loading").show(); },
+                    complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                    success: function (data) {
+                        //console.log(data[0]);
+                        $.each(data[0], function (index, value) {
+                            Descriptions.push(value);
+                        });
+                        $.each(data[2], function (index, value) {
+                            //alert(JSON.stringify(value));
+                            document.getElementById('lblPeriodName2').innerHTML = 'VAT 9.1' + ' (' + value.PeriodName + ')';
+
+                            datamulti.push(
+                             {
+                                 label: value.Section,
+                                 data: value.values,
+                                 backgroundColor: backgroundColor2[index]
+                             }
+                            )
+                        });
+
+                        var ctx = document.getElementById("myChartBarMultiple2").getContext('2d');
+                        var myChart = new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: Descriptions,
+                                datasets: datamulti
+                            }
+                        });
+
+                    },
+                });
+
+
+            }
+        });
+
+    }
+
+
+
+
+    function loadsChartBar3(PeriodName, BranchId, previousmonth) {
+        $(function () {
+            var backgroundColor3 = [
+                               "#2ecc71",
+                               "#3498db",
+                               "#95a5a6",
+                               "#9b59b6",
+                               "#f1c40f",
+                               "#e74c3c",
+                               "#34495e"
+            ];
+
+            setTimeout(function () { loadsMultiple3() }, 0);
+
+            function loadsMultiple3() {
+
+                var Descriptions = [];
+
+                var datamulti = [];
+
+                //alert(previousmonth);
+
+                var url = "/VMS/Chart/VAT9_1ChartBar";
+                url = url + "?" + "BranchId=" + BranchId + "&PeriodName=" + PeriodName + "&previousmonth=" + previousmonth;
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    beforeSend: function () { $(".loading").show(); },
+                    complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                    success: function (data) {
+                        //console.log(data[0]);
+                        $.each(data[0], function (index, value) {
+                            Descriptions.push(value);
+                        });
+                        $.each(data[2], function (index, value) {
+                            //alert(JSON.stringify(value));
+                            document.getElementById('lblPeriodName3').innerHTML = 'VAT 9.1' + ' (' + value.PeriodName + ')';
+
+                            datamulti.push(
+                             {
+                                 label: value.Section,
+                                 data: value.values,
+                                 backgroundColor: backgroundColor3[index]
+                             }
+                            )
+                        });
+
+                        var ctx = document.getElementById("myChartBarMultiple3").getContext('2d');
+                        var myChart = new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: Descriptions,
+                                datasets: datamulti
+                            }
+                        });
+
+                    },
+                });
+
+
+            }
+        });
+
+    }
+
+
+
+
+</script>
+
+
+
+

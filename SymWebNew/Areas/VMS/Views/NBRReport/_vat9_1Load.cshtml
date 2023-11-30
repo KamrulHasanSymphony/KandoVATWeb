@@ -1,0 +1,115 @@
+﻿@model System.Data.DataTable
+
+
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+<style>
+    label {
+        min-height: 28px !important;
+    }
+</style>
+
+<table id="myDataTable" class="display dataTable" aria-describedby="myDataTable_info">
+    <thead>
+        <tr role="row">
+            <th style="width:40%">Note Description</th>
+            <th style="width:10%">Note No</th>
+            <th style="width:10%">Line A</th>
+            <th style="width:10%">Line B</th>
+            <th style="width:10%">Line C</th>
+            <th style="width:10%">Sub Form Name</th>
+            <th style="width:10%">Action</th>
+        </tr>
+    </thead>
+    <tbody role="alert" aria-live="polite" aria-relevant="all">
+        @foreach (System.Data.DataRow row in Model.Rows)
+        {
+            <tr class="tablerow">
+
+                <td class="cNoteDescription">@row["NoteDescription"]</td>
+                <td class="cNoteNo">@row["NoteNo"]</td>
+                <td class="right NumberCheck">@row["LineA"]</td>
+                <td class="right NumberCheck">@row["LineB"]</td>
+                <td class="right NumberCheck">@row["LineC"]</td>
+                <td class="cSubFormName">
+                    @row["SubFormName"]
+                </td>
+                <td class="cSubFormName">
+
+                    @if (@row["SubFormName"].ToString() == "-" ? false : true)
+                    {
+                        <button type="button" title="Click to Print" id="" data-url="/VMS/NBRReport/PrintVAT9_1SubForm" class="sym-btn-print-row btnSubForm">&nbsp;</button>
+                        <button type="button" title="Click to Download" id="@row["NoteNo"]" data-url="/VMS/NBRReport/DownloadVAT9_1SubForm" class="sym-btn-download-row btnSubForm">&nbsp;</button>
+                            <div title="Summary" style="margin-left:10%">                                                 
+                                @Html.CheckBox("ckbox", true, new { @Id = "Idckbox-" + row["NoteNo"], @value = "", @class = " form-control  " })                               
+                            </div>
+                        
+                    }
+
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+
+
+    $(function () {
+        NumberFormatCheckText();
+
+        CumulitiveRowColor();
+
+        function CumulitiveRowColor() {
+            var $CumulitiveRows = $("tr:contains('Total')");
+            $CumulitiveRows.css("background-color", "lightgrey")
+            $CumulitiveRows.children().css("font-weight", "bold");
+        }
+
+        $('.btnSubForm').click(function () {
+
+            var url = $(this).attr("data-url");
+            var id = $(this).attr("id");
+
+
+            var $closestRow = $(this).closest('.tablerow');
+
+            var SubFormName = $closestRow.find('.cSubFormName').text();
+            //alert(SubFormName);
+            if (SubFormName.trim() == "-") {
+                return;
+            }
+            var NoteNo = $closestRow.find('.cNoteNo').text();
+
+            var PeriodName = $('#PeriodName').val();
+            var BranchId = $('#BranchId').val();
+            var Post = $('#Post').val();
+
+            var isSummery = $("#Idckbox-" + id).is(":checked");
+
+            //console.log(isSummery);
+
+            var qString = "NoteNo=" + NoteNo + "&PeriodName=" + PeriodName + "&BranchId=" + BranchId + "&Post=" + Post + "&IsSummary=" + isSummery;
+
+
+            url = url + "?" + qString;
+
+            window.open(url, '_blank');
+
+        });
+
+
+
+    })
+
+
+
+</script>
+
+
+
+
+

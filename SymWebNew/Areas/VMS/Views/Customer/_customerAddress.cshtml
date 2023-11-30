@@ -1,0 +1,26 @@
+﻿@{
+    ViewBag.Title = "_detail";
+}
+
+@model VATViewModel.DTOs.CustomerAddressVM
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+<tr class="tablerow">
+    @using (Html.BeginCollectionItem("Details"))
+    {
+        <td>
+            <a id="" title="Click to Remove" onclick="RemoveItem(this);" class="sym-btn-remove-row "></a>
+            <a id="" title="Click to Edit" onclick="EditItem(this);" class="sym-btn-edit-row"></a>
+        </td>
+
+        <td>
+            @Html.TextBoxFor(model => model.CustomerAddress, new { @class = "  dCustomerAddress  form-control", @readonly = "readonly" })
+        </td>
+
+        @Html.HiddenFor(m => m.CustomerID, new { @class = " dCustomerID" })
+        @Html.HiddenFor(m => m.Id, new { @class = " dId" })
+
+    }
+</tr>

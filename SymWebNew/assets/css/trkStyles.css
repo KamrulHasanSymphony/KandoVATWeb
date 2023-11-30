@@ -1,0 +1,644 @@
+﻿/*start overrides*/
+.sym-btn-search{
+    /*padding:5px 12px !important;*/
+    padding:3px 12px !important;
+}
+.sym-btn-add-row{
+    /*padding:4px 12px !important;*/
+    padding:3px 12px !important;
+}
+label{
+    margin-bottom:0px !important;
+}
+.Dropdown{
+    margin:0px !important;
+    border:1px solid #a8a6a6;
+    border-radius:0px !important;
+}
+div.btn-group .btn {
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
+}
+.sym-btn-add-row{
+    margin:0px !important;
+}
+.form-control {
+    /*height:23px !important;*/
+    height:22px !important;
+    padding:1px 2px !important;
+}
+textarea.form-control {
+    margin-bottom:0px !important;
+}
+.form-control.Dropdown {
+    padding-top:2px !important;
+    padding-bottom:2px !important;
+}
+.form-control:focus {
+    border-color:#01e82c;
+    box-shadow: none;
+    background-color: #fff !important;
+    -webkit-box-shadow: none;
+}
+a.btn.active.btn-danger {
+    background-color:#c9302c !important;
+}
+a.btn.active.btn-success {
+    background-color:#449d44 !important;
+}
+table.display th, td {
+    /*white-space: nowrap;*/
+}
+.thinbox{
+    margin:0px !important;
+}
+.form-control{
+    border:1px solid #a8a6a6;
+    border-radius:0px;
+    box-shadow:none !important;
+    webkit-box-shadow: none !important;
+}
+.select2-container .select2-choice{
+    border:1px solid #a8a6a6;
+    border-radius:0px !important;
+    box-shadow:none !important;
+    webkit-box-shadow: none !important;
+    background-image:none !important;
+}
+.input-group-addon {
+    padding:3px 2px !important;
+}
+/*end overrides*/
+
+/*grid classs start*/
+.trk_5{
+    width:4.16666%;
+    float:left;
+    padding:0px 1px;
+}
+.trk1_5{
+    width:12.5%;
+    float:left;
+    padding:0px 1px;
+}
+.trk2_5{
+    width:20.833333%;
+    float:left;
+    padding:0px 1px;
+}
+.trkPX-0 .col-xs-1,.trkPX-0 .col-sm-1,.trkPX-0 .col-md-1,.trkPX-0 .col-lg-1,.trkPX-0 .col-xs-2,.trkPX-0 .col-sm-2,.trkPX-0 .col-md-2,.trkPX-0 .col-lg-2,.trkPX-0 .col-xs-3,.trkPX-0 .col-sm-3,.trkPX-0 .col-md-3,.trkPX-0 .col-lg-3,.trkPX-0 .col-xs-4,.trkPX-0 .col-sm-4,.trkPX-0 .col-md-4,.trkPX-0 .col-lg-4,.trkPX-0 .col-xs-5,.trkPX-0 .col-sm-5,.trkPX-0 .col-md-5,.trkPX-0 .col-lg-5,.trkPX-0 .col-xs-6,.trkPX-0 .col-sm-6,.trkPX-0 .col-md-6,.trkPX-0 .col-lg-6,.trkPX-0 .col-xs-7,.trkPX-0 .col-sm-7,.trkPX-0 .col-md-7,.trkPX-0 .col-lg-7,.trkPX-0 .col-xs-8,.trkPX-0 .col-sm-8,.trkPX-0 .col-md-8,.trkPX-0 .col-lg-8,.trkPX-0 .col-xs-9,.trkPX-0 .col-sm-9,.trkPX-0 .col-md-9,.trkPX-0 .col-lg-9,.trkPX-0 .col-xs-10,.trkPX-0 .col-sm-10,.trkPX-0 .col-md-10,.trkPX-0 .col-lg-10,.trkPX-0 .col-xs-11,.trkPX-0 .col-sm-11,.trkPX-0 .col-md-11,.trkPX-0 .col-lg-11,.trkPX-0 .col-xs-12,.trkPX-0 .col-sm-12,.trkPX-0 .col-md-12,.trkPX-0 .col-lg-12 {
+  padding-right:0px!important;
+  padding-left:0px!important;
+  /*margin-bottom:-7px!important;*/
+}
+/*grid class end*/
+
+/*start higher modal*/
+.closeHigher {
+        color: white;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+.closeHigher:hover,
+.closeHigher:focus {
+        color: #ff0505;
+        text-decoration: none;
+        cursor: pointer;
+    }
+div.HigherModal-body table.trkFixTable tbody {
+        max-height: 350px;/*maximum height of popup table body*/
+    }
+div.HigherModal-body table.trkFixTable tbody tr:hover td {
+        background-color: white !important;
+    }
+div.HigherModal-body table.trkFixTable tbody tr.active td {
+        background-color: yellow !important;
+    }
+.HigherModal {
+    display: none; /* Hidden by default for modal intializing*/
+    position: fixed; /* Stay in place */
+    z-index: 6; /* Sit on top */
+    padding-top: 30px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+.HigherModal-content {
+    position: relative;
+    background-color: #fefefe;
+    margin: auto;
+    padding: 0;
+    border: 1px solid #888;
+    width: 80%;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s
+}
+.HigherModal-header {
+    padding: 2px 16px;
+    background-color: #00d10a;
+    color: white;
+}
+.HigherModal-header h2 {
+    color:white !important;
+    padding-bottom:5px;
+}
+.HigherModal-body {
+   padding: 2px 16px;
+   background-color:#fff;
+}
+/*end higher modal*/
+
+/*start radio button*/
+.RadioContainer {
+        display:inline !important;
+        position: relative;
+        padding-left: 25px;
+        margin-bottom: 12px;
+        cursor: pointer;
+        font-size: 16px;
+        user-select: none;
+        margin-right: 40px;
+    }
+.RadioContainer input {/* Hide the browser's default radio button */
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+    }
+.RadioContainer .checkmark {/* Create a custom radio button */
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 20px;
+        width: 20px;
+        background-color: #eee;
+        border-radius: 50%;
+    }
+.RadioContainer:hover input ~ .checkmark {/* On mouse-over, add a grey background color */
+        background-color: #ccc;
+    }
+.RadioContainer input:checked ~ .checkmark {/* When the radio button is checked, add a blue background */
+        background-color: #2196F3;
+    }
+.RadioContainer .checkmark:after {/* Create the indicator (the dot/circle - hidden when not checked) */
+        content: "";
+        position: absolute;
+        display: none;
+    }
+.RadioContainer input:checked ~ .checkmark:after {/* Show the indicator (dot/circle) when checked */
+        display: block;
+    }
+.RadioContainer .checkmark:after {/* Style the indicator (dot/circle) */
+        top: 6px;
+        left: 6px;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: white;
+    }
+/*end radio button*/
+
+/*start checkbox*/
+.ChecboxContainer {
+        display: inline-block ;
+        position: relative;
+        padding-left: 35px;
+        margin-bottom: 12px;
+        cursor: pointer;
+        font-size: 16px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+.ChecboxContainer input {/* Hide the browser's default checkbox */
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+.ChecboxContainer .checkmark {/* Create a custom checkbox */
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 25px;
+            width: 25px;
+            background-color: #eee;
+        }
+.ChecboxContainer:hover input ~ .checkmark {/* On mouse-over, add a grey background color */
+        background-color: #ccc;
+    }
+.ChecboxContainer input:checked ~ .checkmark {/* When the checkbox is checked, add a blue background */
+        background-color: #2196F3;
+    }
+.ChecboxContainer .checkmark:after {/* Create the checkmark/indicator (hidden when not checked) */
+        content: "";
+        position: absolute;
+        display: none;
+    }
+.ChecboxContainer input:checked ~ .checkmark:after {/* Show the checkmark when checked */
+        display: block;
+    }
+.ChecboxContainer .checkmark:after {/* Style the checkmark/indicator */
+        left: 9px;
+        top: 5px;
+        width: 5px;
+        height: 10px;
+        border: solid white;
+        border-width: 0 3px 3px 0;
+        -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        transform: rotate(45deg);
+    }
+/*end checkbox*/
+
+/*start nbr report menu*/
+ul.reportMenu{
+    list-style:none;
+}
+ul.reportMenu li{
+    padding:10px;
+    margin-top:5px;
+    margin-bottom:5px;
+    margin-left:40%;
+    margin-right:40%;
+    font-weight:bold;
+    font-size:16px;
+    border-radius:5px;
+}
+.input-group .form-control{
+            z-index:1 !important;
+        }
+/*end nbr report menu*/
+
+/* start common fixed table trkFixTable*/
+table.trkFixTable td:hover::after,
+table.trkFixTable th:hover::after {
+        all: unset;
+    }
+table.trkFixTable{
+        position: relative!important;
+        overflow: hidden!important;
+        border-collapse: collapse!important;
+    }
+table.trkFixTable thead {
+        position: relative!important;
+        display: block!important;
+        overflow: visible;
+    }
+table.trkFixTable thead th {
+        min-width: 80px;
+        height: 32px;
+        background-color: #abea6b;
+        text-align: center;
+    }
+table.trkFixTable tbody {
+        position: relative!important;
+        display: block!important;
+        overflow: scroll!important;
+        max-height: 200px;
+    }
+table.trkFixTable tbody td {
+        min-width: 80px;
+        border: 1px solid #222;
+        background-color: #e2e2e2;
+        text-align: center;
+        padding:0px !important;
+    }
+table.trkFixTable tbody td input{
+        border-color:white !important;
+    }
+.fixedParent{
+    margin-left:-15px !important;
+    margin-right:-15px !important;
+}
+/* end common fixed table trkFixTable*/
+
+/*datatable search box style*/
+div.dataTables_filter input{
+    /*margin-top:5px;*/
+    margin-top:2px;
+    padding:0px;
+    border-radius:5px;
+}
+/*start trkformDesign*/
+.trkformDesign label,p{
+    margin:0px;
+}
+.trkformDesign div.form-group{
+    margin:0px !important;
+}
+.trkformDesign .form-control.Dropdown{
+    margin-top:0px !important;
+}
+.trkformDesign .select2-container{
+    margin-bottom:5px !important;
+}
+.trkformDesign input.form-control{
+    margin-bottom:5px !important;
+}
+/*end trkformDesign*/
+
+/*No left padding div*/
+.trkNPLDiv{
+    padding-left:0px !important;
+    padding-right:0px !important;
+}
+.trkNPRDiv{
+    padding-right:0px !important;
+}
+
+/*calendar icon in datepicker input*/
+.customDatePicker {
+        background: #fefede url(/Images/calendar.jpg) no-repeat 98% !important;
+    } 
+
+/*Media queries*/
+@media only screen and (max-width:1007px) {
+    .trkPL-0 {
+        padding-right:0px;
+    }
+    .text-right {
+        text-align:left;
+    }
+    .formDesign .col-md-1,.formDesign .col-md-2,.formDesign .col-md-3,.formDesign .col-md-4,.col-md-5 {
+        margin-bottom:2px !important;
+    }
+}
+
+@media 
+only screen and (max-width: 760px),
+(min-device-width: 768px) and (max-device-width: 1024px)  {
+
+	/* Force table to not be like tables anymore */
+	table.display, table.display thead, table.display tbody, table.display th, table.display td, table.display tr { 
+		display: block; 
+	}
+	
+	/* Hide table headers (but not display: none;, for accessibility) */
+	table.display thead tr { 
+		position: absolute;
+		top: -9999px;
+		left: -9999px;
+	}
+	
+	table.display tr { border: 1px solid #ccc; }
+	
+	table.display td { 
+		/* Behave  like a "row" */
+		border: none;
+		border-bottom: 1px solid #eee; 
+		position: relative;
+		padding-left: 50%; 
+	}
+	
+	table.display td:before { 
+		/* Now like a table header */
+		position: absolute;
+		/* Top/left values mimic padding */
+		top: 6px;
+		left: 6px;
+		width: 45%; 
+		padding-right: 10px; 
+		/*white-space: nowrap;*/
+	}
+	
+	/*
+	Label the data
+	*/
+	/*td:nth-of-type(1):before { content: "First Name"; }
+	td:nth-of-type(2):before { content: "Last Name"; }
+	td:nth-of-type(3):before { content: "Job Title"; }
+	td:nth-of-type(4):before { content: "Favorite Color"; }
+	td:nth-of-type(5):before { content: "Wars of Trek?"; }
+	td:nth-of-type(6):before { content: "Secret Alias"; }
+	td:nth-of-type(7):before { content: "Date of Birth"; }
+	td:nth-of-type(8):before { content: "Dream Vacation City"; }
+	td:nth-of-type(9):before { content: "GPA"; }
+	td:nth-of-type(10):before { content: "Arbitrary Data"; }*/
+}
+
+/*start trkmodal*/
+.trkmodal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 5; /* Sit on top */
+    padding-top: 30px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+.trkmodal-content {
+    position: relative;
+    background-color: #fefefe;
+    margin: auto;
+    padding: 0;
+    border: 1px solid #888;
+    width: 80%;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s
+}
+div.trkmodal div.mainDiv {
+    padding-left:10px;
+    padding-right:10px;
+}
+.trkmodal-header .close{
+    opacity:1 !important;
+}
+.close {
+    color: white;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+.close:hover,
+.close:focus {
+    color: #ff0505;
+    text-decoration: none;
+    cursor: pointer;
+}
+div.trkmodal-body table.display {
+    background-color: #ffffff !important;
+}
+div.trkmodal-body div.dataTables_wrapper {
+    background-color: white !important;
+}
+div.trkmodal-body table.display tbody tr td {
+    padding:8px 10px !important;
+}
+div.trkmodal-body table.display tbody tr.active,div.trkmodal-body table.display tbody tr.active > .sorting_1 {
+    background-color:#67e50d !important;
+}
+.trkmodal-header {
+    padding: 2px 16px;
+    background-color: #00d10a;
+    color: white;
+}
+.trkmodal-header h2 {
+    color:white !important;
+    padding-bottom:5px;
+}
+.trkmodal-body {
+    padding: 2px 16px;background-color:#fff;
+
+}
+.trkmodal-footer {
+    padding: 2px 16px;
+    background-color: #5cb85c;
+    color: white;
+}
+/*end trkmodal*/
+/* Add Animation */
+@-webkit-keyframes animatetop {
+    from {top:-300px; opacity:0} 
+    to {top:0; opacity:1}
+}
+@keyframes animatetop {
+    from {top:-300px; opacity:0}
+    to {top:0; opacity:1}
+}
+/*start utility styles*/
+.trkMT5{
+    margin-top:5px !important;
+}
+.trkMT8{
+    margin-top:8px !important;
+}
+.trkMT2{
+    margin-top:2px !important;
+}
+.trkPR-2{
+    padding-right:2px !important;
+}
+.trkMT10{
+    margin-top:10px !important;
+}
+.trkML100 {
+    margin-left: 100px !important;
+}
+.trkWidth150{
+    width:150px;
+    float:left;
+}
+.trkWidth50{
+    width:50px;
+    float:left;
+}
+.trkXSBtn {
+    padding: 2px 2px !important;
+    margin:0px !important;
+    margin-top:2px !important;
+    display: inline !important;
+    border-radius:50% !important;
+}
+.trkMY-0{
+    margin-top:0px !important;
+    margin-bottom:0px !important;
+}
+.trkbtn {
+    /*height:28px !important;*/
+    height:22px !important;
+    /*padding-top:2px !important;*/
+    padding-top:0px !important;
+    padding-bottom:2px !important;
+}
+.trkPX-0 {
+    padding-left:0px !important;
+    padding-right:0px !important;
+}
+.trkPY-0 {
+    padding-top:0px !important;
+    padding-bottom:0px !important;
+}
+.trkMT-0 {
+    margin-top:0px !important;
+}
+.trkPL-0 {
+    padding-left:0px !important;
+}
+div.trkPX-0 label.trkLabelMargin{
+    padding-right:5px !important;
+}
+/*end utility styles*/
+.trkBelowDiv {
+    font-size: 1.2em !important;
+    margin-top:10px !important;
+}
+.trkLabelright {
+    text-align:right;
+    margin-right:0px !important;
+    padding-right:10px !important
+}
+.LabelrightNP {
+    text-align:right;
+    margin-right:0px !important;
+    padding-right:0px !important
+}
+.trkMT12 {
+    margin-top:12px !important;
+}
+.trkLabelTopRight {/*styles for inline label*/
+    text-align: right !important; 
+    margin-right:0px !important;
+    padding-right:0px !important;
+    /*margin-top: 5px !important;*/
+    margin-top: 0px !important;
+}
+label.trkLabelMargin {
+    margin-bottom:0px !important;
+    margin-top:8px !important;;
+    padding-right:10px !important;
+}
+.trkLabelTopMargin {
+    text-align:right !important;
+    margin-top:5px !important;
+}
+/*start blue button*/ 
+.btn-blue{
+    color:white !important;
+    background: #007fff;
+}
+.btn-blue:hover {
+    color:white;
+    background: #07b8ff;
+}
+.btn-green{
+    color:black !important;
+    background: #52f2a4;
+}
+.btn-green:hover {
+    color:white;
+    background: #13f487;
+}
+/*end blue button*/
+
+
+.wrap { 
+   white-space: pre-wrap;      /* CSS3 */   white-space: -moz-pre-wrap; /* Firefox */    white-space: -pre-wrap;     /* Opera <7 */   white-space: -o-pre-wrap;   /* Opera 7 */    word-wrap: break-word;      /* IE */
+}
+
+.wrapword {
+    white-space: -moz-pre-wrap !important;  /* Mozilla, since 1999 */
+    white-space: -webkit-pre-wrap;          /* Chrome & Safari */ 
+    white-space: -pre-wrap;                 /* Opera 4-6 */
+    white-space: -o-pre-wrap;               /* Opera 7 */
+    white-space: pre-wrap;                  /* CSS3 */
+    word-wrap: break-word;                  /* Internet Explorer 5.5+ */
+    word-break: break-all;
+    white-space: normal;
+}

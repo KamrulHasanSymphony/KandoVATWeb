@@ -1,0 +1,70 @@
+﻿
+@using UIHelper.MVC
+@using (Html.BeginForm("Download", "DBUpdate", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmUpdate" }))
+{
+    <div class="thinbox">
+        <div class="th_thinbox">
+            <p>Update Databa</p>
+        </div>
+        <div class="Currency">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="editor-label">
+                        <label>Table</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.SimpleDropDown("DItemNo", "/Config/DropDown/Table", new { @class = " tableName  form-control" })
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        <label>&nbsp</label>
+                    </div>
+                    <div class="editor-field">
+                        <button style="" class="form-control btn btn-primary">Download</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="editor-label">
+                        <label>Update Query</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextArea("Query", new { @placeholder = "query", @class = " query form-control" })
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        <label>&nbsp</label>
+                    </div>
+                    <div class="editor-field">
+                        <button class="form-control btn btn-warning execute" data-url="/Vms/DBUpdate/Update" >Execute</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+<script>
+    $(function () {
+        valiDation("frmUpdate");
+        $('.execute').on("click", function () {
+            var query = $('query').val();
+            var url = $(this).attr('data-url');
+
+            $.ajax({
+                data: query,
+                url: url,
+                cache: false,
+                success: function () {
+                    $('query').val("");
+                }
+            });
+        });
+    });
+
+</script>

@@ -1,0 +1,374 @@
+﻿@model SymViewModel.Vms.IssueHeaderViewModel
+@using UIHelper.MVC
+@using (Html.BeginForm("CreateEdit", "IssueHeader", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmIssueHeader" }))
+{   
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.Post)
+    @Html.HiddenFor(model => model.Operation)
+    @Html.HiddenFor(model => model.TransactionType)
+    <div class="headrow">
+        @if (Model.Operation == "update")
+        {
+            <button type="button" title="Update Data" onclick="SaveData()" class="sym-btn-update">&nbsp;Update</button>
+            <button type="button" title="Post Data" onclick="PostData(this)" class="sym-btn-post">&nbsp;Post</button>
+            <label class="pull-right">Issue > Edit</label>
+        }
+        else if (Model.Operation == "add")
+        {
+            <button type="button" title="Save Data" onclick="SaveData()" class="sym-btn-save">&nbsp;Save</button>
+            <label class="pull-right">Issue  > Create</label>
+        }
+        <button type="button" title="Go To Index" data-url="/VMS/IssueHeader?tType=@Model.TransactionType" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New Issue" data-url="/VMS/IssueHeader/Create?tType=@Model.TransactionType" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+    </div>
+    <div class="thinbox">
+        <div class="th_thinbox">
+            <p>Issue Header</p>
+        </div>
+        <div class="row">
+
+            <div class="col-md-3">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.IssueNo)
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.IssueNo, new { @placeholder = "Issue No", @class = " required form-control" })
+                    @Html.ValidationMessageFor(model => model.IssueNo)
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.IssueDateTime)
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.IssueDateTime, new { @placeholder = "Transaction Date", @class = " trDate customDatePickerChangeable required form-control" })
+                    @Html.ValidationMessageFor(model => model.IssueDateTime)
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.SerialNo)
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.SerialNo, new { @placeholder = "Serial No", @class = " form-control" })
+                    @Html.ValidationMessageFor(model => model.SerialNo)
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.Comments)
+                </div>
+                <div class="editor-field">
+                    @Html.TextAreaFor(model => model.Comments, new { @placeholder = "Comments", @class = "required form-control" })
+                    @Html.ValidationMessageFor(model => model.Comments)
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    <div id="" class="thinbox col-md-12 formDesign">
+        <div class="th_thinbox">
+            <p>Issue Details</p>
+        </div>
+        <div id="IssueDetail" class="row">
+            <div class="col-md-2">
+                <div class="editor-label">
+                    @Html.Label("", "Item No")
+                </div>
+                <div class="editor-field">
+                    @Html.SimpleDropDown("DItemNo", "/Config/DropDown/Product", new { @class = " itemNo  form-control" })
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="editor-label">
+                    @Html.Label("", "Quantity")
+                </div>
+                <div class="editor-field">
+                    @Html.TextBox("Quantity", null, new { @placeholder = "Quantity", @class = " trQuantity NumberCheckAddDetail right   form-control" })
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="editor-label">
+                    @Html.Label("", "Cost Price")
+                </div>
+                <div class="editor-field input-group">
+                    <span class="input-group-addon">&#2547</span>
+                    @Html.TextBox("CostPrice", null, new { @placeholder = "Cost Price", @class = " trCostPrice NumberCheckAddDetail right   form-control" })
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="editor-label">
+                    @Html.Label("", "NBR Price")
+                </div>
+                <div class="editor-field input-group">
+                    <span class="input-group-addon">&#2547</span>
+                    @Html.TextBox("NBRPrice", null, new { @placeholder = "NBR Price", @class = " trNBRPrice NumberCheckAddDetail right   form-control" })
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="editor-label">
+                    @Html.Label("", "VAT Rate")
+                </div>
+                <div class="editor-field input-group">
+                    @Html.TextBox("VATRate", null, new { @placeholder = "VAT Rate", @class = " trVATRate NumberCheckAddDetail right   form-control" })
+                    <span class="input-group-addon">%</span>                    
+                </div>
+            </div>
+            <div style="margin-top: 7px;" class="col-md-1">
+                <div class="editor-label">
+                    &nbsp;
+                </div>
+                <div class="editor-field">
+                    <div id="ItemExist" title="Add Detail" data-url="/Vms/IssueHeader/BlankItem" class="sym-btn-add-row AddRow" data-container="editorItemRows4">&nbsp;Add</div>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="">
+            <div id="editorItemRows4">
+                @if (Model.issueDetailVMs != null)
+                {
+                    <div class="row">
+                        <div class="col-md-1">
+                            <div class="editor-label">
+                                <label>Action</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="editor-label">
+                                @Html.Label("", "Item")
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="editor-label">
+                                @Html.Label("", "Quantity")
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="editor-label">
+                                @Html.Label("", "Cost Price")
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="editor-label">
+                                @Html.Label("", "NBR Price")
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="editor-label">
+                                @Html.Label("", "Sub Total")
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="editor-label">
+                                @Html.Label("", "VAT Rate")
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="editor-label">
+                                @Html.Label("", "VAT Amount")
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="editor-label">
+                                @Html.Label("", "Comments")
+                            </div>
+                        </div>
+                    </div>
+                    foreach (var item in Model.issueDetailVMs)
+                    {
+                        Html.RenderPartial("_detail", item);
+                    }
+                }
+            </div>
+            <hr style="margin-top: 10px!important; margin-bottom: 10px!important;" />
+            <div style="font-size: 1.2em;" class="row">
+                <div style="text-align: right; margin-top: 10px;" class="col-md-2">
+                    @Html.Label("", "Total VAT")
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-field input-group">
+                    <span class="input-group-addon">&#2547</span>
+                        <strong>@Html.TextBoxFor(model => model.TotalVATAmount, null, new { @class = "totalVat NumberCheck right form-control", @readonly = "readonly" })</strong>
+                    </div>
+                </div>
+                <div style="text-align: right; margin-top: 10px;" class="col-md-2">
+                    @Html.Label("", "Total Amount")
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-field input-group">
+                    <span class="input-group-addon">&#2547</span>
+                        <strong>@Html.TextBoxFor(model => model.TotalAmount, null, new { @class = "totalAmount NumberCheck right form-control", @readonly = "readonly" })</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="headrow">
+        @if (Model.Operation == "update")
+        {
+            <button type="button" title="Update Data" onclick="SaveData()" class="sym-btn-update">&nbsp;Update</button>
+            <button type="button" title="Post Data" onclick="PostData(this)" class="sym-btn-post">&nbsp;Post</button>
+        }
+        else if (Model.Operation == "add")
+        {
+            <button type="button" title="Save Data" onclick="SaveData()" class="sym-btn-save">&nbsp;Save</button>
+        }
+        <button type="button" title="Go To Index" data-url="/VMS/IssueHeader?tType=@Model.TransactionType" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New Petty Cash" data-url="/VMS/IssueHeader/Create?tType=@Model.TransactionType" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+    </div>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(function () {
+
+            valiDation("frmIssueHeader");
+            $('.customDatePicker').prop("readonly", false);
+            ShowHide();
+            SubTotal();
+
+        });
+
+        $('.AddRow:not(.AddRowInited)').on("click", function () {
+
+            var count = 0;
+            $(".row.detailRow").each(function () {
+                count++;
+            });
+
+            var container = $(this).attr('data-container');
+            var url = $(this).attr('data-url');
+            AddRow(container, url)
+            return false;
+        }).addClass("AddRowInited");
+
+        function AddRow(container, url) {
+            var ItemExist = 0;
+            var Quantity = parseFloat($('.trQuantity').val().replace(/\,/g, ''));
+            var CostPrice = parseFloat($('.trCostPrice').val().replace(/\,/g, ''));
+            var NBRPrice = parseFloat($('.trNBRPrice').val().replace(/\,/g, ''));
+            var sTotal = Quantity + CostPrice;
+            var VATRate=parseFloat($('.trVATRate').val().replace(/\,/g, ''));
+            var VATAmount = (sTotal * VATRate) / 100;
+            var ItemNo = $('.itemNo :selected').val();
+
+            if (ItemNo == "") {
+                ShowResult("Fail", "Please Select Item!");
+                return;
+            }
+
+            var model = {
+                Quantity: Quantity,     
+                CostPrice: CostPrice,
+                SubTotal: sTotal,
+                VATRate: VATRate,
+                ItemNo: ItemNo,
+                NBRPrice:NBRPrice,
+                VATAmount:VATAmount
+            };
+
+            $.ajax({
+                //type: "POST",
+                data: model,
+                url: url,
+                cache: false,
+                success: function (html) {
+                    $("#" + container).append(html);
+
+                    SubTotal();
+                }
+            });
+
+            $('#detail').show();
+
+            $(".trQuantity").val("");
+            $(".trCostPrice").val(""); 
+            $(".trVATRate").val("");
+            $(".trNBRPrice").val("");
+            $(".itemNo").val("");
+        }
+
+        function EditItem(sender) {
+            var Quantity = $(sender).parents().parents().find('.dQuantity').val();
+            var CostPrice = $(sender).parents().parents().find('.dCostPrice').val();
+            var VATRate = $(sender).parents().parents().find('.dVATRate').val();
+            var NBRPrice = $(sender).parents().parents().find('.dNBRPrice').val();
+
+            $(".trQuantity").val(Quantity);
+            $(".trCostPrice").val(CostPrice);
+            $(".trVATRate").val(VATRate);
+            $(".trNBRPrice").val(NBRPrice);
+
+            $(sender).parents("div.row:first").remove();
+            SubTotal();
+            ShowHide();
+        }
+
+        function RemoveItem(sender) {
+            Ask("Are you sure to Delete the item!", function () {
+                $(sender).parents("div.row:first").remove();
+                SubTotal();
+                ShowHide();
+            });
+        }
+
+        function ShowHide() {
+            var item = $('.dAccountId').val();
+            if (item == null) {
+                $('#detail').hide();
+            }
+            else {
+                $('#detail').show();
+
+            }
+        }
+
+        function SubTotal() {
+            var trSubtotal = 0;
+            var trVat = 0;
+
+            var TotalAmount = 0;
+            var TotalVAT = 0;
+
+            $(".row.detailRow").each(function () {
+                trSubtotal = parseFloat($(this).find(".dSubTotal").val().replace(/\,/g, ''));
+                trVat = parseFloat($(this).find(".dVATAmount").val().replace(/\,/g, ''));
+                TotalAmount += trSubtotal;
+                TotalVAT += trVat;
+            });
+
+            $(".totalAmount").val(TotalAmount);
+            $(".totalVat").val(TotalVAT);
+        }
+
+        function SaveData() {
+            var Post = $("#Post").val();
+            if (Post.toLowerCase() == 'true') {
+                ShowResult("Fail", "Data Already Posted. Can't Update!");
+                return;
+            }
+
+            var trDate = $(".trDate").val();
+            if (trDate == "") {
+                ShowResult("Fail", "Please Select Issue Date!");
+                return;
+            }
+            pageSubmit('frmIssueHeader');
+        }
+
+        function PostData(sender) {
+            var Id = $("#Id").val();
+            var Post = $("#Post").val();
+            if (Post.toLowerCase() == 'true') {
+                ShowResult("Fail", "Data Already Posted!");
+                return;
+            }
+            var url = '/Vms/IssueHeader/Post?ids=' + Id + '~';
+            var questionMSG = "Are you sure to Post Data!";
+            singlePostDlete(questionMSG, url);
+        }
+    </script>
+}

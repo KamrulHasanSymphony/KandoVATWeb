@@ -1,0 +1,240 @@
+﻿@model VATViewModel.DTOs.HSCodeVM
+@using UIHelper.MVC
+@{
+    Layout = "~/Areas/VMS/Views/Shared/_ModalLayout.cshtml";
+}
+<style>
+    .trkMT10 {
+        margin-top: 10px;
+    }
+</style>
+<div class="HigherModal-content">
+    <div class="HigherModal-header">
+        <span class="closeHigher">&times;</span>
+        <h2 class="text-center">HSCode Search</h2>
+    </div>
+
+    <div class="HigherModal-body formDesign">
+        <div class="row">
+            <div class="col-md-2">
+                <label>Search Field</label>
+                @Html.SimpleDropDown("SearchField", "/Config/DropDown/HSCodeColumnSearch", new { @class = " form-control "})
+            </div>
+            <div class="col-md-2">
+                <label>Search Value</label>
+                @Html.TextBox("SearchValue", "", new { @class = " form-control" })
+            </div>
+            <div class="col-md-2">
+                <label>FiscalYear</label>
+                @Html.SimpleDropDownFor(model => model.FiscalYear, "/Config/DropDown/FiscalYear", new { @class = " form-control"})
+            </div>
+            <div class="trk1_5">
+                <label for="startPopUpDate">Select Top</label>
+                <div class="editor-field">
+                    @Html.SimpleDropDownFor(model => model.SelectTop, "/Config/DropDown/RecordSelectList", new { @class = "  form-control"})
+
+                </div>
+            </div>
+            @*<div class="col-md-1 ">
+                <label>Acive</label>
+                <select id="activePopUp" class="form-control">
+                    <option value="Y">Y</option>
+                    <option value="N">N</option>
+                </select>
+            </div>*@
+            <div class="trk_5">
+                <div class="editor-field">
+                    <label>&nbsp;</label>
+                    <button type="button" title="Click to Search" id="searchBtn" class="sym-btn-search btnPopUpSearch">&nbsp;</button>
+                </div>
+            </div>
+            <div class="trk_5">
+                <label>&nbsp;</label>
+                <button type="button" title="Clear Data" id="Clear" class=" sym-btn-clear">&nbsp;Clear</button>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="fixedParent">
+                <table class="trkFixTable" id="HScodePopUpTable2">
+                    <thead>
+                        <tr>
+                            <th>SL</th>                          
+                            <th>HSCode</th> 
+                            <th>Description</th>  
+                            <th>CD</th>
+                            <th>RD</th>
+                            <th>SD</th>
+                            <th>VAT</th>
+                            <th>AT</th>
+                            <th>AIT</th>
+                            <th>OtherSD</th>
+                            <th>OtherVAT</th>
+                            <th>IsFixedCD</th>
+                            <th>IsFixedRD</th>
+                            <th>IsFixedSD</th>
+                            <th>IsFixedVAT</th>
+                            <th>IsFixedAT</th>
+                            <th>IsFixedAIT</th>
+                            <th>IsFixedOtherSD</th>
+                            <th>IsFixedOtherVAT</th>
+                            <th>IsVDS</th>                        
+                        </tr>
+                    </thead>
+                    <tbody id="popUpTbody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*fixed table*@
+<script language="javascript" type="text/javascript">
+    function fixedScrollPopUpFixedTable(tableId, leftTotal) {
+        $('#' + tableId + ' tbody').scroll(function (e) {
+            var i;
+            for (i = 1; i <= leftTotal; i++) {
+                $('#' + tableId + ' thead th:nth-child(' + i + ')').css("left", $("#" + tableId + " tbody").scrollLeft());
+                $('#' + tableId + ' tbody td:nth-child(' + i + ')').css("z-index", "1");
+                $('#' + tableId + ' tbody td:nth-child(' + i + ')').css("left", $("#" + tableId + " tbody").scrollLeft());
+            }
+            $('#' + tableId + ' thead').css("left", -$("#" + tableId + " tbody").scrollLeft());
+
+        });
+    }
+    function settingPopUpFixedColumnWidth(tableId, widthArgs) {
+        if (widthArgs == null) {
+            return;
+        }
+        var i;
+        for (i = 1; i <= widthArgs.length; i++) {
+            $('#' + tableId + ' tr td:nth-child(' + i + ')').css("min-width", widthArgs[i - 1] + "px");
+            $('#' + tableId + ' tr td:nth-child(' + i + ')').css("overflow", "hidden");
+            $('#' + tableId + ' tr td:nth-child(' + i + ')').css("max-width", widthArgs[i - 1] + "px");
+
+            $('#' + tableId + ' tr th:nth-child(' + i + ')').css("min-width", widthArgs[i - 1] + "px");
+            $('#' + tableId + ' tr th:nth-child(' + i + ')').css("overflow", "hidden");
+            $('#' + tableId + ' tr th:nth-child(' + i + ')').css("max-width", widthArgs[i - 1] + "px");
+        }
+    }
+    function fixLeftPopUpColumns(tableId, leftTotal) {
+        var i;
+        for (i = 1; i <= leftTotal; i++) {
+            //fixed column header style
+            $('#' + tableId + ' thead th:nth-child(' + i + ')').css("height", "30px");
+            $('#' + tableId + ' thead th:nth-child(' + i + ')').css("position", "relative");
+            $('#' + tableId + ' thead th:nth-child(' + i + ')').css("z-index", "2");
+            //fixed column rows style
+            $('#' + tableId + ' tbody tr td:nth-child(' + i + ')').css("height", "30px");
+            $('#' + tableId + ' tbody tr td:nth-child(' + i + ')').css("position", "relative");
+        }
+    }
+    function settingFixedPopUpWidth(tableId) {
+        //var parentWidth = $('.fixedParent').width();
+        var parentWidth = $('#' + tableId).closest('.fixedParent').width();
+        $('#' + tableId + ' thead').width(parentWidth);
+        $('#' + tableId + ' tbody').width(parentWidth);
+    }
+    function trkFixedPopUpTable(tableId, leftTotal, args) {
+        settingFixedPopUpWidth(tableId);
+        fixLeftPopUpColumns(tableId, leftTotal);
+        fixedScrollPopUpFixedTable(tableId, leftTotal);
+        settingPopUpFixedColumnWidth(tableId, args);
+    }
+    function callingFixedPopUpTable() {
+        var args = [50, 200, 100, 100, 100, 200, 200, 200, 200, 200, 200, 200, 200,200,200,200,200,200,200,200];
+        trkFixedPopUpTable("HScodePopUpTable2", 3, args);
+    }
+    $(function () {
+        callingFixedPopUpTable();
+    })
+</script>
+
+<script>
+    ////closing higher modal
+    function closeHigherModal() {
+        $("#myHigherModal").html("");
+        trkmodal.style.display = "none";
+    }
+    var span = document.getElementsByClassName("closeHigher")[0];
+    var trkmodal = document.getElementById('myHigherModal');
+    //When the user clicks on <span> (x), close the trkmodal
+    span.onclick = function () {
+        closeHigherModal();
+    }
+
+    $(function () {
+        $('.trkFixTable').unbind().on('dblclick', '.trSelectPopUpHSCode', function () {
+            var HSCode = $(this).children('td.PopUpHSCode').text();
+            console.log(HSCode)
+            selectPopUpProduct(HSCode, this);
+        });
+        function selectPopUpProduct(HSCode, sender) {
+            callbackFromHSCodeModal(sender);
+            closeHigherModal();
+        }
+        $(document).on('click', '.trSelectPopUpHSCode', function () {
+            var activeEl = $('tr.active');
+            activeEl.removeClass("active");
+            $(this).addClass(" active");
+        });
+    })
+</script>
+
+<script>
+    ShowSelectedCustomer();
+    function ShowSelectedCustomer() {
+        SearchCustomers();
+    }
+
+    function SearchCustomers() {
+       var SearchField = $('#SearchField').val();
+        var SearchValue = $('#SearchValue').val();
+        var FiscalYear = $('#FiscalYear').val();
+        var SelectTop = $('#SelectTop').val();
+        //var ActiveStatus;
+        //if (activePopUp == "Y") {
+        //    ActiveStatus = true;
+        //}
+        //if (activePopUp == "N") {
+        //    ActiveStatus = false;
+        //}
+
+        var model = {
+            SearchField: SearchField,
+                SearchValue: SearchValue,
+                FiscalYear: FiscalYear,
+                SelectTop: SelectTop
+                
+
+        }
+        $.ajax({
+            data: model,
+            url: "/Vms/HSCode/GetFilteredHsCode"
+            , cache: false
+            , beforeSend: function () { $(".loading").show(); }
+            , success: function (html) {
+                $("#popUpTbody").html("");
+                $("#popUpTbody").html(html);
+                callingFixedPopUpTable();
+            }
+            , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+        });
+
+    }
+    $(function () {
+        ////ShowSelectedCustomer();
+        $('.btnPopUpSearch').click(function () {
+            SearchCustomers();
+        });
+        $("#Clear").on('click', function () {
+            //$(".Dropdown").select2("val", "");
+            $("#SearchField").val("");
+            $("#SearchValue").val("");
+            $("#FiscalYear").val("");
+            $("#SelectTop").val("");
+        });
+    });
+</script>
+

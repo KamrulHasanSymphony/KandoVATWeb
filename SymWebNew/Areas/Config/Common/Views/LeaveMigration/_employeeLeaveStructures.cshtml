@@ -1,0 +1,63 @@
+﻿@model SymViewModel.Leave.EmployeeLeaveVM
+@using UIHelper.MVC
+<div class="row thinbox">
+        <div class="th_thinbox">
+            <p>Employee leave Opening Balance</p>
+        </div>
+        <div class="row col-sm-12">
+            <div class="col-sm-1">
+                <div class="editor-label">
+                 @Html.LabelFor(model => model.EmployeeLeaveStructures.First().EmpCode)
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.EmployeeLeaveStructures.First().EmpName)
+                </div>
+            </div>
+            <div class="col-sm-1">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.EmployeeLeaveStructures.First().LeaveYear)
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.EmployeeLeaveStructures.First().LeaveType_E)
+                </div>
+            </div>
+            <div class="col-sm-1">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.EmployeeLeaveStructures.First().OpeningDays)
+                </div>
+            </div>
+            <div class="col-sm-1">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.EmployeeLeaveStructures.First().LeaveDays)
+                </div>
+            </div>
+            <div class="col-sm-1">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.EmployeeLeaveStructures.First().MaxBalance)
+                </div>
+            </div>
+            <div class="col-sm-1">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.EmployeeLeaveStructures.First().IsEarned)
+                </div>
+            </div>
+            <div class="col-sm-1">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.EmployeeLeaveStructures.First().IsCompensation)
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+
+            @foreach (var item in Model.EmployeeLeaveStructures)
+            {
+                Html.RenderPartial("_openingBalanceSingle", item);
+            }
+        </div>
+        <br />
+    </div>

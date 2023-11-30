@@ -1,0 +1,490 @@
+﻿@{ Layout = "_HomeLayout1.cshtml";}
+@model VATViewModel.DTOs.VendorVM
+@using UIHelper.MVC
+@using VATServer.Ordinary
+
+<script src="~/assets/KendoCommonJs/KendoJs.js"></script>
+<link href="~/assets/stylesheets/KendoStyle.css" rel="stylesheet" />
+
+
+<div class="headrow bs-example">
+    <div class="panel-body">
+        <div style="display: none" id="formAppend"></div>
+        <button type="button" title="Add New Vendor" data-url="/VMS/Vendor/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+        <button type="button" title="View Report" class=" sym-btn-report printBtn">&nbsp;Print</button>
+        @*<button type="button" title="Delete Vendor" data-url="/VMS/Vendor/Delete" onclick="deletedData(this, 'myDataTable');" id="" class="sym-btn-remove">&nbsp;Delete</button>*@
+        @if (OrdinaryVATDesktop.IsACICompany(Convert.ToString(Session["CompanyCode"])))
+        {
+            @*<button type="button" title="Sync Customer" data-url="/VMS/Vendor/SyncVendor" onclick="GoTo(this)" class=" sym-btn-refresh">&nbsp;Sync</button>*@
+        }
+        <label class="pull-right">Vendor</label>
+    </div>
+
+</div>
+
+<div class="thinbox animated slideInDown faster bs-example" id="vendorIndex">
+    <div class="th_thinbox">
+        <p>Vendor List</p>
+    </div>
+    <div class="dtSearch formDesign">
+        <div class="row">
+            <div class="col-md-2">
+                <label>Search Field</label>
+                @Html.SimpleDropDown("SearchField", "/Config/DropDown/VendorColumnSearch", new { @class = "kSearchDropdown", @style = "width: 100%;" })
+                @*@Html.SimpleDropDown("SearchField", "/Config/DropDown/VendorColumnSearch", new { @class = " form-control " })*@
+            </div>
+            <div class="col-md-2">
+                <label>Search Value</label>
+                @Html.TextBox("SearchValue", "", new { @class = "kTextbox" })
+            </div>
+            <div class="col-md-2">
+                <div class="editor-label">
+                    @Html.Label("Vendor Group", new { @style = "margin-left: -7px;" })
+                </div>
+                <div class="editor-field clsVendorGrp">
+                    @*@Html.TextBoxFor(model => model.VendorGroupID, new { @class = "kVgrpDropdown" })*@
+                    @Html.SimpleDropDownFor(model => model.VendorGroupID, "/Config/DropDown/VendorGroup", new { @class = "kVgrpDropdown selectDropdown", @style = "width:95%;" })
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="editor-label">
+                    @Html.Label("Start Date From")
+                </div>
+                <div class="editor-field" style="margin-left:6px;">
+                    @Html.TextBoxFor(model => model.StartDateFrom, new { @placeholder = "Start Date From", @class = "kDatePicker trDate", @style = "width: 100%;" })
+
+                    @*@Html.TextBoxFor(model => model.StartDateFrom, new { @placeholder = "Start Date From", @class = "customDatePicker  form-control" })*@
+                </div>
+            </div>
+            <div class="col-md-2" style="margin-left:12px;">
+                <div class="editor-label" style="margin-left:22px;">
+                    @Html.Label("Start Date To")
+                </div>
+                <div class="editor-field" style="margin-left:11px;">
+                    @Html.TextBoxFor(model => model.StartDateTo, new { @placeholder = "Start Date To", @class = "kDatePicker trDate", @style = "width: 100%;" })
+
+
+                    @*@Html.TextBoxFor(model => model.StartDateTo, new { @placeholder = "Start Date To", @class = "kDatePicker customDatePicker  form-control" })*@
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <div class="editor-label">
+                    @Html.Label("Active Status")
+                </div>
+                <div class="editor-field">
+                    @Html.SimpleDropDownFor(m => m.ActiveStatus, "/Config/DropDown/DecisionList", new { @class = " clsIsActive", @style = "width: 100%;" })
+                    @*@Html.TextBoxFor(model => model.ActiveStatus, new { @class = "clsIsActive", @style = "width: 100%;" })*@
+                    @*<input name="IsRegister" style="width: 100%; height: 21px;" class="cIsRegister required">*@
+                </div>
+
+
+                @*<div class="editor-label">
+                        @Html.Label("Active Status")
+                    </div>
+                    <div class="editor-field">
+                        <select id="IsActive" class="form-control">
+                            <option value=""></option>
+                            <option value="Y">Y</option>
+                            <option value="N">N</option>
+                        </select>
+                    </div>*@
+
+
+
+
+            </div>
+            <div class="col-md-2">
+                <div class="editor-label">
+                    <label>Select Top</label>
+                </div>
+                <div class="editor-field" style="margin-left:10px;">
+                    @Html.SimpleDropDownFor(model => model.SelectTop, "/Config/DropDown/RecordSelectList", new { @class = " cSelectTop", @style = "width: 100%;" })
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="editor-label">
+                    <label>&nbsp;</label>
+                </div>
+                <div class="editor-field" style="margin-left:10px;">
+                    <button type="button" title="Click to Search" id="btnDialog" class="sym-btn-search">&nbsp;Search</button>
+                    <button type="button" title="Clear Data" id="Clear" class=" sym-btn-clear">&nbsp;Clear</button>
+                </div>
+            </div>
+
+
+
+            @*<div class="col-md-2">
+                <div class="editor-label" style="margin-left: -202px;">
+                    <label class="lblExport">Export All</label>
+                </div>
+                <div class="editor-field">
+                    @Html.CheckBox("ExportAll", new { id = "idExportAll", @class = "kCheckBox cExportAll", @name = "att[]" })
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="editor-label">
+                    &nbsp;
+                </div>
+                <div class="editor-field">
+                    <button type="button" title="Export Data" onclick="ExportExcel()" class="sym-btn-Excel-Export">&nbsp;Export</button>
+                </div>
+            </div>*@
+
+        </div>
+    </div>
+    <p>&nbsp;</p>
+
+    <div class="sapcer4"></div>
+    <div class="thinbox animated slideInDown faster bs-example" id="vendorIndex">
+        <div class="th_thinbox">
+            <p>Vendor Summary</p>
+        </div>
+        <div id="gridVendor"></div>
+    </div>
+    @*<div class="row">
+        
+    </div>*@
+    @*<table id="myDataTable" class="display">
+            <thead>
+                <tr>
+                    <th class="center">
+                        <input type="checkbox" class="chkAll" />Select All
+                    </th>
+                    <th>Vendor Code</th>
+                    <th>Vendor Name</th>
+                    <th>Address 1 </th>
+                    <th>Telephone No</th>
+                    <th>Email</th>
+                    <th>VDS Percent</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>*@
+    <br />
+</div>
+<div class="spacer4"></div>
+<div class="headrow bs-example panel-body">
+    <div class="col-md-12">
+        <button type="button" title="Add New Vendor" data-url="/VMS/Vendor/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+        <button type="button" title="View Report" class=" sym-btn-report printBtn">&nbsp;Print</button>
+    </div>
+
+    @*<button type="button" title="Delete Vendor" data-url="/VMS/Vendor/Delete" onclick="deletedData(this, 'myDataTable');" id="" class="sym-btn-remove">&nbsp;Delete</button>*@
+</div>
+<div id="myModal" class="trkmodal"></div>
+
+<script>
+    $(function () {
+
+        //Drop down
+
+        var searchDataSource = new kendo.data.DataSource({
+            transport: {
+                read: {
+                    url: "/Config/DropDown/VendorColumnSearch",
+                    dataType: "json"
+                }
+            }
+        });
+        $(".kSearchDropdown").kendoDropDownList({
+            filter: "contains",
+            optionLabel: '--Select--',
+            dataSource: searchDataSource,
+            dataTextField: "Text",
+            dataValueField: "Value",
+            dataType: "json",
+            index: 0
+        });
+
+        var vendorDataSource = new kendo.data.DataSource({
+            //data: "/Config/DropDown/VendorGroup"
+            transport: {
+                read: {
+                    url: "/Config/DropDown/VendorGroup",
+                    dataType: "json"
+                }
+            }
+        });
+        //console.log(vendorDataSource);
+        $(".kVgrpDropdown").kendoDropDownList({
+            filter: "contains",
+            optionLabel: '--Select--',
+            dataSource: vendorDataSource,
+            dataTextField: "Text",
+            dataValueField: "Value",
+            dataType: "json",
+            index: 0
+        });
+        var dataSourceIsRegister = new kendo.data.DataSource({
+            transport: {
+                read: {
+                    url: "/Config/DropDown/DecisionList",
+                    dataType: "json"
+                }
+            }
+        });
+        $(".clsIsActive").kendoDropDownList({
+            optionLabel: '--Select--',
+            dataSource: dataSourceIsRegister,
+            dataTextField: "Text",
+            dataValueField: "Value"
+        });
+
+        var selectDataSource = new kendo.data.DataSource({
+            transport: {
+                read: {
+                    url: "/Config/DropDown/RecordSelectList",
+                    dataType: "json"
+                }
+            }
+        });
+        $(".cSelectTop").kendoDropDownList({
+            filter: "contains",
+            optionLabel: '--Select--',
+            dataSource: selectDataSource,
+            dataTextField: "Text",
+            dataValueField: "Value",
+            dataType: "json",
+            index: 0
+        });
+
+        //Grid view for vendor
+        debugger;
+        var gridDataSource = new kendo.data.DataSource({
+            //type: "json",
+            serverPaging: true,
+            serverSorting: true,
+            serverFiltering: true,
+            allowUnsort: false,
+            pageSize: 10,
+            transport: {
+                read: {
+                    url: "/VMS/Vendor/_index",
+                    dataType: "json",
+                    contentType: "application/json;",
+                    cache: false,
+                    async: false
+                },
+                parameterMap: function (options) {
+                    return JSON.stringify(options);
+                }
+            },
+            batch: true,
+            schema: {
+                model: {
+
+                },
+                data: "Items", total: "TotalCount"
+            }
+        });
+        
+        return gridDataSource;
+
+
+        $("#gridVendor").kendoGrid({
+            dataSource: gridDataSource,
+            pageable: {
+                refresh: true,
+                serverPaging: true,
+                serverFiltering: true,
+                serverSorting: true
+            },
+            filterable: true,
+            sortable: true,
+            persistSelection: true,
+            toolbar: ["search"],
+            search: {
+                fields: ["VendorName", "VendorCode"]
+            },
+            columns: [
+                { selectable: true, width: "50px" },
+                { field: "VendorID", hidden: true },
+                { field: "BranchId", hidden: true },
+                { field: "VendorCode", title: "Vendor Code", sortable: true },
+                { field: "VendorName", title: "Vendor Name", sortable: true },
+                { field: "VendorGroupName", title: "Vendor Group Name", sortable: true, hidden: true },
+                { field: "StartDateTime", title: "Start Date", template: '#= kendo.toString(kendo.parseDate(StartDateTime), "dd-MM-yyyy") #' },
+                { field: "Address1", title: "Address", sortable: true },
+                { field: "VatRegistrationNo", title: "Registration No", sortable: true, hidden: true },
+                { field: "TelephoneNo", title: "Telephone No", sortable: true },
+                { field: "Email", title: "Email", sortable: true },
+                { field: "VDSPercent", title: "VDS Percent", sortable: true },
+                { field: "NIDNo", title: "NID", hidden: true },
+                { field: "ShortName", title: "Short Name", sortable: true, hidden: true },
+                {
+                    command: [{
+                        name: "edit", text: "", iconClass: "k-icon k-i-plus", className: "k-success"//, click: VendorInfoSummaryHelper.ClickEventForVendor
+                    }],
+                    title: "&nbsp;"
+                }
+
+            ],
+            editable: false,
+            selectable: "row",
+            navigatable: true
+
+        });
+        
+    });
+</script>
+@*<script language="javascript" type="text/javascript">
+    //$(document).ready(function () {
+    //    SelectAllForDelete();
+    //    $.datepicker.regional[""].dateFormat = 'dd/M/y';
+    //    $.datepicker.setDefaults($.datepicker.regional['']);
+
+    //    function modalInit() {
+    //        var modal = document.getElementById('myModal');
+    //        $('.printBtn').click(function () {
+    //            var url = "/Vms/Vendor/PrintVendor";
+    //            $.ajax({
+    //                url: url,
+    //                cache: false,
+    //                beforeSend: function () { $(".loading").show(); },
+    //                complete: function () { $(".loading").fadeOut(200).hide("slow") },
+    //                success: function (html) {
+    //                    modal.style.display = "block";
+    //                    $("#myModal").html(html);
+    //                }
+    //            });
+    //        });
+    //    }
+    //    modalInit();
+
+    //    var oTable = $('#myDataTable').dataTable({
+    //        "bServerSide": true,
+    //        "sAjaxSource": "/VMS/Vendor/_index",
+    //        "bProcessing": true,
+    //        "aLengthMenu": tablelength(),
+    //        "bJqueryUI": true,
+    //        "bAutoWidth": false,
+
+    //        "fnServerData": function (sSource, aoData, fnCallback) {
+    //            $('.dtSearch :input').each(function () {
+    //                var Name = $(this).attr("Id")
+    //                var Value = $(this).val()
+    //                aoData.push({ "name": Name, "value": Value });
+    //            });
+    //            $.getJSON(sSource, aoData, function (json) {
+    //                fnCallback(json);
+    //            });
+    //        },
+
+    //        "aoColumns": [
+    //                        {
+    //                            "sName": "Id",
+    //                            "bSearchable": false,
+    //                            "bSortable": false,
+    //                            "sWidth": "8%",
+    //                            "sClass": "center",
+    //                            "fnRender": function (oObj) {
+    //                                console.log(oObj);
+    //                                return ' <input onclick="CheckAll(this)" type="checkbox" data-Id="' + oObj.aData[1] + '"class="dSelected">'
+    //                                    + '&nbsp; <a id=""  title="Click on for Edit"  style="text-decoration:none;"   href=\"/VMS/Vendor/Edit/' + oObj.aData[0] + '\" class=" innerListLink sym-btn-edit-row"></a>'
+    //                                //// + '&nbsp; <a title="Click on for Delete"  data-url="/VMS/Vendor/Delete" onclick="deletedData(this, myDataTable,\'' + oObj.aData[0] + '\');"  class="sym-btn-remove-row"></a>'
+    //                                ;
+    //                            }
+    //                            //"sName": "Id", "sWidth": "12%"
+    //                        }
+    //                        , { "sName": "VendorCode", "sWidth": "5%" }
+    //                        , { "sName": "VendorName", "sWidth": "12%" }
+    //                        , { "sName": "Address1", "sWidth": "10%" }
+    //                        , { "sName": "TelephoneNo", "sWidth": "8%" }
+    //                        , { "sName": "Email", "sWidth": "8%" }
+    //                        , { "sName": "VDSPercent", "sWidth": "5%" }
+
+
+    //        ]
+    //    });
+    //    $('#btnDialog').click(function () {
+    //        var model = $('.dtSearch :input').serialize();
+    //        $.ajax({
+    //            url: "/VMS/Vendor/Index",
+    //            cache: false,
+    //            data: model,
+    //            success: function (html) {
+    //                oTable.fnDraw();
+    //            }
+    //        });
+    //    });
+    //    ////clearing fields
+    //    $("#Clear").on('click', function () {
+    //        $(".Dropdown").select2("val", "");
+    //        $(".form-control").val("");
+    //    });
+    //});
+
+
+
+
+    //function ExportExcel() {
+    //    var questionMSG = "Are you sure to Export Excel!";
+
+    //    Ask(questionMSG, function () {
+    //        var ExportAll = $('#idExportAll').is(":checked");
+    //        console.log("TEST EXPORT");
+    //        // console.log(ExportAll);
+
+    //        var IDs = [];
+    //        var $Items = $("#vendorIndex  .dSelected:input:checkbox:checked");
+    //        if (!ExportAll) {
+    //            if ($Items == null || $Items.length == 0) {
+    //                ShowResult("Fail", "You are requested to Select before Export!");
+    //                return;
+    //            }
+    //        }
+
+
+    //        $Items.each(function () {
+
+    //            var ID = $(this).attr("data-Id");
+    //            IDs.push(ID);
+    //        });
+
+    //        var model = {
+    //            IDs: IDs,
+
+    //        }
+
+    //        var url = '/VMS/Vendor/ExportExcell';
+    //        var form = $('<form action="' + url + '"></form>');
+
+    //        IDs.forEach(function (item) {
+    //            form.append($('<input  value="' + item + '" name="VendorIDs" />'))
+    //        })
+    //        form.append($('<input  value="' + ExportAll + '" name="ExportAll" />'))
+    //        form.appendTo('#formAppend').submit()
+    //    });
+
+    //}
+
+
+</script>*@
+<style>
+    .k-textbox {
+        margin-left: 9px;
+    }
+
+    .clsVendorGrp {
+        margin-left: 8px;
+    }
+
+    .k-list-filter > .k-textbox {
+        margin-left: 0px;
+    }
+
+    .lblMargin {
+        margin-left: -183px;
+    }
+
+    .lblExport {
+        margin-left: -202px;
+    }
+    .panel-body{
+        height:29px;
+    }
+</style>

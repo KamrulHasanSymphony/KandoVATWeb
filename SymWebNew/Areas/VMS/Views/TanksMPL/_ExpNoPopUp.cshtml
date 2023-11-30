@@ -1,0 +1,178 @@
+﻿@model VATViewModel.DTOs.SaleMasterVM
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+
+<style>
+    .trkmodal {
+        padding-top: 10%;
+    }
+
+    .trkmodal-content {
+        width: 50%;
+        padding-bottom: 30px;
+    }
+
+    .customDatePicker {
+        background: #fefede url(/Images/calendar.jpg) no-repeat 98% !important;
+    }
+    /*no padding with little margin bttom*/
+    div.trkmodal-body div.npForm {
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+        padding-bottom: 0px !important;
+        margin-bottom: 10px;
+    }
+
+        div.trkmodal-body div.npForm div.npForm {
+            margin-bottom: 0px !important;
+        }
+</style>
+
+<div class="trkmodal-content">
+    <div class="trkmodal-header">
+        <span class="close">&times;</span>
+        <h2 class="text-center">Exp No./LC/TT/PI Information</h2>
+    </div>
+    <div class="trkmodal-body">
+        @using (Html.BeginForm("GetEXPFormNoPopUp", "ExpFromNo", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmExpFromNo" }))
+        {
+
+            <div class="row">
+                <div class="npForm col-md-6">
+                    <label>EXP Form Date</label>
+                    @*@Html.TextBoxFor(m => m.EXPFormDate, new { @placeholder = "EXP Form Date", @class = " cEXPFormDate customDatePicker form-control" })*@
+
+                    @Html.TextBox("EXP_FormDate", null, new { @placeholder = "EXP Form Date", @class = " cEXPFormDate customDatePicker form-control" })
+
+                </div>
+                <div class="npForm col-md-6">
+                    <label>LC/TT #</label>
+                    @Html.TextBoxFor(m => m.LCNumber, new { @placeholder = "LC/TT #", @class = " cLCNumber form-control" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="npForm col-md-6">
+                    <label>LC/TT Bank</label>
+                    @Html.TextBoxFor(m => m.LCBank, new { @placeholder = "LC/TT Bank", @class = "cLCBank form-control" })
+                </div>
+
+                <div class="npForm col-md-6">
+                    <label>LC/TT Date</label>
+                    @Html.TextBox("LC_Date", null, new { @placeholder = "LC/TT Date", @class = " cLC_Date customDatePicker form-control" })
+                    @* @Html.TextBoxFor(m => m.LCDate, new { @placeholder = "LC/TT Date", @class = " cLCDate1 customDatePicker form-control" })*@
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="npForm col-md-6">
+                    <label>PI #</label>
+                    @Html.TextBoxFor(m => m.PINo, new { @placeholder = "PI #", @class = "cPINo form-control" })
+                </div>
+
+                <div class="npForm col-md-6">
+                    <label>PI Date</label>
+                    @*@Html.TextBoxFor(m => m.PIDate, new { @placeholder = "PI Date", @class = "cPI_Date customDatePicker form-control" })*@
+                    @Html.TextBox("PI_Date", null, new { @placeholder = "PI Date", @class = "cPI_Date customDatePicker form-control" })
+                </div>
+
+            </div>
+
+
+            <div class="row">
+                <div class="npForm col-md-6">
+                    <label>BOe</label>
+                    @*@Html.TextBoxFor(m => m.PIDate, new { @placeholder = "PI Date", @class = "cPI_Date customDatePicker form-control" })*@
+                    @Html.TextBoxFor(m => m.BOe, new { @placeholder = "BOe #", @class = "cBOe form-control" })
+
+                    @*@Html.TextBox("PI_Date",null, new { @placeholder = "PI Date", @class = "cPI_Date customDatePicker form-control" })*@
+                </div>
+
+            </div>
+            
+                <button type="button" class=" btn sym-btn-add trAdd addbtn "> Add</button>
+          
+            @*<button type="button" class="sym-btn-close closeBtn pull-right"> Close</button>*@
+        }
+
+    </div>
+</div>
+
+
+<script src="~/assets/javascripts/custom.js"></script>
+<script>
+
+    $(function () {
+
+        var EXPFormDate = $("#EXPFormDate").val();
+        var LCNumber = $("#LCNumber").val();
+        var LCBank = $("#LCBank").val();
+        var LC_Date = $("#LCDate").val();
+        var PINo = $("#PINo").val();
+        var PI_Date = $("#PIDate").val();
+        var BOe = $("#BOe").val();
+
+
+        $(".cEXPFormDate").val(EXPFormDate);
+        $(".cLCNumber").val(LCNumber);
+        $(".cLCBank").val(LCBank);
+        $(".cLC_Date").val(LC_Date);
+        $(".cPINo").val(PINo);
+        $(".cPI_Date").val(PI_Date);
+        $(".cBOe").val(BOe);
+
+    });
+
+    $(document).ready(function () {
+        //$('#frmExpFromNo').submit();
+
+        function closeModal() {
+            $("#myHigherModal").html("");
+            trkmodal.style.display = "none";
+        }
+
+        var span = document.getElementsByClassName("close")[0];
+        var trkmodal = document.getElementById('myHigherModal');
+        //When the user clicks on <span> (x), close the trkmodal
+        span.onclick = function () {
+            closeModal();
+        }
+
+        //$('.closeBtn').click(function () {
+        //    closeModal();
+        //});
+
+        $('.addbtn').click(function () {
+
+            var model = $('.trkmodal-body :input').serialize();
+            //console.log(model);
+
+
+            var EXPFormDate = $(".cEXPFormDate").val();
+            var LCNumber = $(".cLCNumber").val();
+            var LCBank = $(".cLCBank").val();
+            var LC_Date = $(".cLC_Date").val();
+            var PINo = $(".cPINo").val();
+            var PI_Date = $(".cPI_Date").val();
+            var BOe = $(".cBOe").val();
+
+   
+            $("#EXPFormDate").val(EXPFormDate);
+            $("#LCNumber").val(LCNumber);
+            $("#LCBank").val(LCBank);
+            $("#LCDate").val(LC_Date);
+            $("#PINo").val(PINo);
+            $("#PIDate").val(PI_Date);
+            $("#BOe").val(BOe);
+
+            closeModal();
+
+        });
+
+
+    });
+</script>
+
+
+

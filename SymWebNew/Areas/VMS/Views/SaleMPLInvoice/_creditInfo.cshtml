@@ -1,0 +1,38 @@
+﻿@model VATViewModel.DTOs.SalesInvoiceMPLCRInfoVM
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+<tr class="crtablerow ">
+    @using (Html.BeginCollectionItem("SalesInvoiceMPLCRInfoVMs"))
+    {
+        @*<td>
+                <a id="" title="Click to Remove" onclick="RemoveCRItem(this);" class="sym-btn-remove-row "></a>
+                <a id="" title="Click to Edit" onclick="EditCRItem(this);" class="sym-btn-edit-row btnSize"></a>
+            </td>*@
+        <td>
+            @Html.TextBoxFor(model => model.SalesInvoiceNo, new { @class = "  dCRCode   form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.CRCode, new { @class = "  dCRCode   form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.CRDate, new { @class = "  dCRDate   form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.Amount, new { @class = "  dAmount right   form-control", @readonly = "readonly" })
+        </td>
+
+        @Html.HiddenFor(m => m.Id, new { @class = "dId" })
+        @Html.HiddenFor(m => m.SalesInvoiceMPLHeaderId, new { @class = "dSalesInvoiceMPLHeaderId" })
+        @Html.HiddenFor(m => m.BranchId, new { @class = "dBranchId" })
+        @Html.HiddenFor(m => m.CRCode, new { @class = "dCRCode" })
+
+    }
+</tr>
+
+<style>
+    .btnSize {
+        font-size: 1em !important;
+    }
+</style>

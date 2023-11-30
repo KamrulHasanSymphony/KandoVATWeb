@@ -1,0 +1,97 @@
+﻿@*@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>*@
+
+@model VATViewModel.DTOs.CPCDetailsVM
+@using UIHelper.MVC
+@using (Html.BeginForm("CreateEdit", "CPCDetails", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmCPCDetails" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.Operation)
+
+    <div class="headrow">
+        @if (Model.Operation == "add")
+        {
+            <button type="button" name="btnName" value="Save" title="Save Data" onclick="pageSubmit('frmCPCDetails')" class="sym-btn-save">&nbsp;Save</button>
+            <label class="pull-right">CPC Details > Create</label>
+        }
+        else
+        {
+            <button type="button" name="btnName" value="Update" title="Update Data" onclick="pageSubmit('frmCPCDetails')" class="sym-btn-update">&nbsp;Update</button>
+            <label class="pull-right">CPC Details > Edit</label>
+        }
+        <button type="button" title="Go To Index" data-url="/VMS/CPCDetails" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New ProductCategory" data-url="/VMS/CPCDetails/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+
+    </div>
+
+    <div class="thinbox animated zoomIn faster">
+        @*<div class="th_thinbox">
+            <p>Basic</p>
+        </div>*@
+        <div class="row trkPX-0">
+            <div class="form-group">
+                <label for="IsRaw" class="col-md-2 control-label text-right trkLabelMargin">Code</label>
+                <div class="col-md-4">
+
+                    @Html.TextBoxFor(model => model.Code, new { @placeholder = "Code", @class = "cCode right required form-control" })
+                    @Html.ValidationMessageFor(model => model.Code)
+
+                </div>
+
+
+                <label for="VATRate" class="col-md-2 control-label text-right trkLabelMargin">Name</label>
+                <div class="col-md-4" style="margin-bottom:6px;">
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.Name, new { @placeholder = "Name", @class = " right required  form-control" })
+                            @*<span class="input-group-addon">%</span>*@
+                        </div>
+                    </div>
+                </div>
+
+                <label for="CategoryName" class="col-md-2 control-label text-right trkLabelMargin">Type</label>
+                <div class="col-md-4">
+                    <div class="editor-field">
+                        @*<select class="form-control" id="Type" name="Type">
+                            <option>Select</option>
+                            <option>Sale</option>
+                            <option>Purchase</option>
+                        </select>*@
+                        @Html.SimpleDropDownFor(m => m.Type, "/Config/DropDown/CPCNameType", new { @class = " dType notClearing  form-control " })
+                    </div>
+                    @*@Html.TextBoxFor(model => model.Type, new { @placeholder = "Type", @class = " required form-control" })
+                    @Html.ValidationMessageFor(model => model.Type)*@
+                </div>
+
+
+            </div>
+
+
+        </div>
+    </div>
+
+    <div class="headrow">
+        @if (Model.Operation == "add")
+        {
+            <button type="button" name="btnName" value="Save" title="Save Data" onclick="pageSubmit('frmCPCDetails')" class="sym-btn-save">&nbsp;Save</button>
+        }
+        else
+        {
+            <button type="button" name="btnName" value="Update" title="Update Data" onclick="pageSubmit('frmCPCDetails')" class="sym-btn-update">&nbsp;Update</button>
+        }
+        <button type="button" title="Go To Index" data-url="/VMS/CPCDetails" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New ProductCategory" data-url="/VMS/CPCDetails/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+
+    </div>
+}
+<script>
+    $(function () {
+        valiDation("frmCPCDetails");
+    });
+
+</script>
+

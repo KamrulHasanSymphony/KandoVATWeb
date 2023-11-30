@@ -1,0 +1,271 @@
+﻿/*Bootstrap Related*/
+.panel-default {
+    margin-top: 10px;
+}
+
+.panel-heading {
+    padding: 10px 15px !important;
+    background-color: #337ab7 !important;
+    color: #ffffff !important;
+}
+
+.col-md-2,
+.col-md-3,
+.col-md-4,
+.divColMd6,
+.divColMd8,
+.divColMd12,
+.divWithMultiFieldsColMd6 /*always with col-md-6 (class="col-md-6 divWithMultipleColMd")*/ {
+    padding-right: 2px;
+    padding-left: 2px;
+    margin-top: 4px;
+}
+
+    .divWithMultiFieldsColMd6 .col-md-2,
+    .divWithMultiFieldsColMd6 .col-md-3,
+    .divWithMultiFieldsColMd6 .col-md-4 {
+        margin-top: 0px;
+    }
+
+.lp { /* label parent*/
+    text-align: right;
+    line-height: 20px;
+}
+
+    .lp label {
+        margin-right: 2px;
+    }
+
+.customTable thead tr th {
+    background-color: #286090 !important;
+    color: #ffffff;
+}
+
+    .customTable thead tr th:hover {
+        color: #ffffff;
+    }
+
+/*Kendo Related*/
+.k-combobox .k-icon {
+    margin-top: 6px;
+}
+
+.comboBox, .comboBox .k-input {
+    height: 28px;
+    width: 100%;
+}
+
+.datePicker {
+    width: 100%;
+}
+/*Basic*/
+::placeholder {
+    padding-left: 6px !important;
+}
+
+input[type="text"] {
+    width: 100%;
+    height: 30px;
+    border: 1px solid #ccc;
+    padding-left: 6px !important;
+}
+
+input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    float: left;
+}
+
+    input[type="checkbox"] + .lblChkLabel { /*+ means next tag select*/
+        margin: 7px;
+    }
+
+/*button CSS*/
+.myButton {
+    box-shadow: inset 0px 1px 0px 0px #54a3f7;
+    background-color: #007dc1;
+    border-radius: 3px;
+    border: 1px solid #124d77;
+    display: inline-block;
+    cursor: pointer;
+    color: #ffffff;
+    font-family: Arial;
+    font-size: 13px;
+    padding: 6px 30px;
+    text-decoration: none;
+    text-shadow: 0px 1px 0px #154682;
+}
+
+    .myButton:hover {
+        background-color: #0061a7;
+    }
+
+    .myButton:active {
+        position: relative;
+        top: 1px;
+    }
+
+
+/*Sigle Image Upload*/
+.lblUploadBody {
+    width: 100%;
+}
+
+.divImageUpload {
+    border: 1px solid #ccc;
+    width: 100%;
+    overflow: hidden;
+    margin-top: 4px;
+}
+
+    .divImageUpload .lblUploadHeader {
+        background-color: #286090;
+        height: 40px;
+        width: 100%;
+        text-align: center;
+        color: #ffffff;
+    }
+
+        .divImageUpload .lblUploadHeader span {
+            line-height: 40px;
+            font-size: 20px;
+        }
+
+    .divImageUpload .lblUploadBody img {
+        width: 100%;
+        height: 150px;
+        cursor: pointer;
+    }
+
+    .divImageUpload .lblUploadBody input[type="file"] {
+        margin-left: 10px;
+    }
+
+/*label with input box*/
+.divWithLabelInput {
+    width: 100%;
+    height: 30px;
+    border: 1px solid #ccc;
+    background-color: #ffffff;
+}
+
+    .divWithLabelInput label {
+        color: #ccc;
+        font-size: 10px;
+        margin-left: 6px;
+        margin-top: 2px;
+        height: 8px;
+    }
+
+    .divWithLabelInput input {
+        border: none;
+        width: 96%;
+        height: 12px;
+        background-color: #FAFAFA;
+        float: left;
+        width: 84%;
+    }
+
+        .divWithLabelInput input:focus {
+            outline-width: 0;
+        }
+
+/*   How to declare
+<div class="col-md-4">
+    <div class="divWithLabelInput" style="background-color:#FAFAFA">
+        <label>CM</label>
+        <input id="txtCM" type="text" value="0" style="background-color:#FAFAFA" disabled />
+    </div>
+</div>*/
+
+/*label with button box*/
+.divWithInputBtn {
+    width: 100%;
+    height: 30px;
+    border: 1px solid #ccc;
+    background-color: #ffffff;
+}
+
+    .divWithInputBtn input {
+        border: none;
+        width: 96%;
+        height: 26px;
+        background-color: #FAFAFA;
+        float: left;
+        width: 84%;
+    }
+
+        .divWithInputBtn input:focus {
+            outline-width: 0;
+        }
+
+    .divWithInputBtn i {
+        line-height: 28px;
+        cursor:pointer;
+    }
+
+/*fieldset & legend*/
+fieldset {
+    border: 1px solid #ddd !important;
+    padding: 10px;
+    border-radius: 4px;
+    background-color: #f5f5f5;
+    padding: 20px !important;
+    margin-top: 10px;
+}
+
+legend {
+    font-weight: bold;
+    margin-bottom: 0px;
+    width: 35%;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px 5px 5px 10px;
+    background-color: #ffffff;
+}
+
+    legend label {
+        font-weight: bold;
+        font-size: 15px !important;
+        margin-top: 6px;
+    }
+/*Image Zoom*/
+* {
+    box-sizing: border-box;
+}
+
+.img-zoom-container {
+    position: relative;
+}
+
+.img-zoom-lens {
+    position: absolute;
+    border: 1px solid #d4d4d4;
+    /*set the size of the lens:*/
+    width: 40px;
+    height: 40px;
+}
+
+.img-zoom-result {
+    border: 1px solid #d4d4d4;
+    /*set the size of the result div:*/
+    width: 300px;
+    height: 300px;
+}
+
+.paddingZero {
+    padding: 0px !important;
+}
+
+.marginZero {
+    margin: 0px !important;
+}
+
+.editable {
+    background-color: skyblue;
+}
+
+.non-editable {
+    pointer-events: none;
+    opacity: 0.8;
+}

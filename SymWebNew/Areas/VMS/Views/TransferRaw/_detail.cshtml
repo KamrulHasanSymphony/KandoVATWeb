@@ -1,0 +1,48 @@
+﻿@model VATViewModel.DTOs.TransferRawDetailVM
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+<tr class="tablerow">
+    @using (Html.BeginCollectionItem("Details"))
+    {
+    <td>
+        <a id="" title="Click to Remove" onclick="RemoveItem(this);" class="sym-btn-remove-row "></a>
+        <a id="" title="Click to Edit" onclick="EditItem(this);" class="sym-btn-edit-row"></a>
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.ItemName, new { @class = "  dItemName   form-control", @readonly = "readonly"})
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.ItemCode, new { @class = "  dItemCode   form-control", @readonly = "readonly" })
+        @Html.HiddenFor(m=>m.ItemNo)
+        @Html.HiddenFor(m => m.groupId, new { @class="dGroupId"})
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.UOM, new { @class = "  dUOM   form-control", @readonly = "readonly" })
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.Quantity, new { @class = "  dQuantity right priceLen  form-control", @readonly = "readonly"})
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.UOMPrice, new { @class = "  dUnitPrice right priceLen  form-control", @readonly = "readonly" })
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.SubTotal, new { @class = "  dSubTotal right priceLen  form-control", @readonly = "readonly"})
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.UOMc, new { @class = "  dConversionFactor right priceLen  form-control", @readonly = "readonly" })
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.UOMQty, new { @class = "  dBaseQty right priceLen  form-control", @readonly = "readonly" })
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.CostPrice, new { @class = "  dBasePrice   form-control", @readonly = "readonly" })
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.UOMn, new { @class = "  dBaseUOM   form-control", @readonly = "readonly" })
+    </td>
+    }
+</tr>
+
+

@@ -1,0 +1,582 @@
+﻿@using SymOrdinary
+@using System.Threading;
+@{ 
+    
+    ShampanIdentity identity = null;
+    try
+    {
+        identity = (ShampanIdentity)Thread.CurrentPrincipal.Identity;
+    }
+    catch (Exception)
+    {
+        Response.Redirect("/VMS/Home/Login");
+        return;
+    }
+}
+<div class="content white menuheight">
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="navbar-header">
+            <ul class="nav col-xs-4 visible-xs">
+                <li class="dropdown1" style="padding-top: 4px">
+                    <a href="#" class=" btn btn-warning">VAT </a>
+                </li>
+            </ul>
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <!--/.navbar-header-->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li class="dropdown  Setup">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Setup<b class="caret"></b></a>
+                    <ul class="dropdown-menu multi-column columns-1">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <ul class="multi-column-dropdown">
+                                    <li class="dropdown dropdown-submenu"><a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown">Item Information</a>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown btn btn-info" href="/VMS/ProductCategory/Index">Group</a></li>
+                                                <li><a class="dropdown btn btn-info" href="/VMS/Product/Index">Product/Item</a>  </li>
+                                                <li><a class="dropdown btn btn-info" href="/VMS/Overhead">Overhead</a>  </li>
+                                                <li><a class="dropdown btn btn-info" href="/VMS/TDS/Index">TDS</a> </li>
+                                                <li><a class="dropdown btn btn-info" href="/VMS/HSCode/Index">HSCode</a> </li>
+                                            </ul>
+                                     </li>
+                                </ul>
+                            </div>
+                            <div class="col-sm-12">
+                                <ul class="multi-column-dropdown">
+                                    <li class="dropdown dropdown-submenu"><a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown">Vendor</a>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown btn btn-info" href="/VMS/VendorGroup/Index">Group</a></li>
+                                                <li><a class="dropdown btn btn-info" href="/VMS/Vendor/Index">Vendor</a>  </li>
+                                            </ul>
+                                     </li>
+                                </ul>
+                            </div>
+                            <div class="col-sm-12">
+                                <ul class="multi-column-dropdown">
+                                    <li class="dropdown dropdown-submenu"><a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown">Customer</a>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown btn btn-info" href="/VMS/CustomerGroup/Index">Group</a></li>
+                                                <li><a class="dropdown btn btn-info" href="/VMS/Customer/Index">Customer</a>  </li>
+                                            </ul>
+                                     </li>
+                                </ul>
+                            </div>
+                            <div class="col-sm-12">
+                                <ul class="multi-column-dropdown">
+                                    <li class="dropdown"><a href="/VMS/BankInformation/Index" class="btn btn-info ">Bank</a>
+                                     </li>
+                                </ul>
+                            </div>
+                            <div class="col-sm-12">
+                                <ul class="multi-column-dropdown">
+                                    <li class="dropdown">
+                                        <a href="/VMS/BranchProfiles/Index" class="btn btn-info ">Branch Profiles</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            
+                            <div class="col-sm-12">
+                                <ul class="multi-column-dropdown">
+                                    <li class="dropdown"><a href="/VMS/Vehicle/Index" class="btn btn-info ">Vehicle</a>
+                                     </li>
+                                </ul>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <ul class="multi-column-dropdown">
+                                    <li class="dropdown dropdown-submenu"><a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown">Price Declaration</a>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown btn btn-info" href="/VMS/Vat1/Index">VAT-4.3</a></li>
+                                                @*<li><a class="dropdown btn btn-info" href="/VMS/Service/Index">Service</a>  </li>
+                                                <li><a class="dropdown btn btn-info" href="/VMS/Tender/Index">Tender</a>  </li>*@
+                                            </ul>
+                                     </li>
+                                </ul>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <ul class="multi-column-dropdown">
+                                    <li class="dropdown"><a href="/VMS/CompanyProfile/Index" class="btn btn-info ">Company</a>
+                                     </li>
+                                </ul>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <ul class="multi-column-dropdown">
+                                    <li class="dropdown"><a href="/VMS/FiscalYear/Index" class="btn btn-info ">Fiscal Year</a>
+                                     </li>
+                                </ul>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <ul class="multi-column-dropdown">
+                                    <li class="dropdown dropdown-submenu"><a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown">Configuration</a>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown btn btn-info" href="/VMS/Setting/Index">Settings</a></li>
+                                                <li><a class="dropdown btn btn-info" href="/VMS/Prefix/Index">Prefix</a>  </li>
+                                            </ul>
+                                     </li>
+                                </ul>
+                            </div>
+                            <div class="col-sm-12">
+                                <ul class="multi-column-dropdown">
+                                    <li class="dropdown dropdown-submenu">
+                                        <a id="110110" href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown">Process</a>
+                                        <ul class="dropdown-menu">
+
+                                            @*<li><a id="110110110" class="dropdown btn btn-info" href="/VMS/ProductCategory/Index">Group</a></li>
+
+                        <li><a id="110110120" class="dropdown btn btn-info" href="/VMS/Product/Index?TransactionType=other">Product/Item</a>  </li>*@
+
+                                            <li class="dropdown dropdown-submenu">
+                                                <a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown">AVG Price & NBR Process</a>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="/VMS/NBRReport/Process6_1_6_2Permanent" class="btn btn-info ">6.1 & 6.2 Permanent Process</a></li>
+                                                    <li><a href="/VMS/NBRReport/DailyActivities" class="btn btn-info ">Regular Process</a></li>
+                                                </ul>
+                                            </li>
+
+                                            <li><a href="/VMS/NBRReport/DataProcess" class="btn btn-info ">Day End</a></li>
+
+                                            <li> <a href="/VMS/NBRReport/Process6_1Permanent" class="btn btn-info ">6.1 Permanent Process</a></li>
+
+                                            <li><a href="/VMS/NBRReport/Process6_2Permanent" class="btn btn-info ">6.2 Permanent Process</a></li>
+
+                                            <li class="dropdown dropdown-submenu">
+                                                <a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown">Fresh Stock Process</a>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="/VMS/NBRReport/FreshStockProcess" class="btn btn-info ">Stock Process</a></li>
+                                                </ul>
+                                            </li>
+
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+
+
+
+
+
+
+                            <div class="col-sm-12">
+                                <ul class="multi-column-dropdown">
+                                    <li class="dropdown">
+                                        <a href="/VMS/Setting/DBUpdate" class="btn btn-info ">DB Update</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-sm-12">
+                                <ul class="multi-column-dropdown">
+                                    <li class="dropdown"><a href="/VMS/Import/Index" class="btn btn-info ">Import</a>
+                                     </li>
+                                </ul>
+                            </div>
+                            <div class="col-sm-12">
+                                <ul class="multi-column-dropdown">
+                                    <li class="dropdown">
+                                        <a href="/VMS/MISReport/UBLReconsileReport" class="btn btn-info ">Day End Reconsile</a>
+                                    </li>
+                                </ul>
+                            </div>
+
+
+                            <div class="col-sm-12">
+                                <ul class="multi-column-dropdown">
+                                    <li class="dropdown dropdown-submenu"><a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown">Measurement</a>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown btn btn-info" href="/VMS/UOM/Index">Name</a></li>
+                                                <li><a class="dropdown btn btn-info" href="/VMS/UOMConversion/Index">Conversion</a>  </li>
+                                            </ul>
+                                     </li>
+                                </ul>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <ul class="multi-column-dropdown">
+                                    <li class="dropdown dropdown-submenu"><a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown">Currency</a>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown btn btn-info" href="/VMS/Currency/Index">Name</a></li>
+                                                <li><a class="dropdown btn btn-info" href="/VMS/CurrencyConversion/Index">Conversion</a>  </li>
+                                            </ul>
+                                     </li>
+                                </ul>
+                            </div>
+
+
+                            @*<div class="col-sm-12">
+                                <ul class="multi-column-dropdown">
+                                    <li class="dropdown dropdown-submenu">
+                                        <a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown">Currency</a>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown btn btn-info" href="/VMS/Currency/Index">Name</a></li>
+                                            <li><a class="dropdown btn btn-info" href="/VMS/CurrencyConversion/Index">Conversion</a>  </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                                </div>*@
+
+
+
+                                @*<div class="col-sm-12">
+                <ul class="multi-column-dropdown">
+                    <li class="dropdown dropdown-submenu"><a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown">Bendarol</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown btn btn-info" href="#">Bendarol</a></li>
+                                <li><a class="dropdown btn btn-info" href="#">Packaging</a>  </li>
+                                <li><a class="dropdown btn btn-info" href="#">Product</a>  </li>
+                            </ul>
+                     </li>
+                </ul>
+            </div>*@
+                            @*<div class="col-sm-12">
+                                    <ul class="multi-column-dropdown">
+                                        <li class="dropdown dropdown-submenu">
+                                            <a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown"></a>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown btn btn-info" href="#"></a></li>
+                                                <li><a class="dropdown btn btn-info" href="#"></a></li>
+                                                <li><a class="dropdown btn btn-info" href="#"></a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </div>*@
+                            </div>
+                    </ul>
+                </li>
+
+                <li class="dropdown Setup">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Purchase<b class="caret"></b></a>
+                    <ul class="dropdown-menu multi-column columns-1">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <ul class="multi-column-dropdown">
+                                    <li class="dropdown  "><a href="/VMS/Purchase/Index?TransactionType=Other" class="btn btn-info">Local</a></li>
+                                    <li class="dropdown  ">@*<a href="/VMS/Purchase/Index?TransactionType=Trading" class="btn btn-info">Trading</a>*@</li>
+                                    @*<li class="dropdown  "><a href="/VMS/Purchase/Index?TransactionType=TradingImport" class="btn btn-info">Trading Import</a></li>
+                                    <li class="dropdown  "><a href="/VMS/Purchase/Index?TransactionType=Import" class="btn btn-info">Import</a></li>
+                                    <li class="dropdown  "><a href="/VMS/Purchase/Index?TransactionType=InputService" class="btn btn-info">Input Service</a></li>*@
+                                    <li class="dropdown  "><a href="/VMS/Purchase/Index?TransactionType=PurchaseReturn" class="btn btn-info">Return</a></li>
+                                    @*<li class="dropdown  "><a href="/VMS/Purchase/Index?TransactionType=Service" class="btn btn-info">Service(Stock)</a></li>
+                                    <li class="dropdown  "><a href="/VMS/Purchase/Index?TransactionType=ServiceNS" class="btn btn-info">Service(N Stock)</a></li>*@
+                                </ul>
+                            </div>
+                        </div>
+                    </ul>
+                </li> 
+
+                @*<li class="dropdown  Setup">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Production<b class="caret"></b></a>
+                    <ul class="dropdown-menu multi-column columns-1">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <ul class="multi-column-dropdown">
+                                    <li class="dropdown dropdown-submenu"><a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown">Issue</a>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown btn btn-info" href="/VMS/IssueHeader/Index?transactionType=Other">Issue</a></li>
+                                                <li><a class="dropdown btn btn-info" href="/VMS/IssueHeader/Index?transactionType=IssueReturn">Return</a>  </li>
+                                                <li><a class="dropdown btn btn-info" href="/VMS/TransferRaw/Index?transactionType=Transfer Raw">Transfer</a>  </li>
+                                            </ul>
+                                     </li>
+                                </ul>
+                            </div>
+                            <div class="col-sm-12">
+                                <ul class="multi-column-dropdown">
+                                    <li class="dropdown dropdown-submenu"><a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown">Receive</a>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown btn btn-info" href="/VMS/Receive/Index?TransactionType=WIP">WIP</a></li>
+                                                <li><a class="dropdown btn btn-info" href="/VMS/Receive/Index?TransactionType=Other">FG</a>  </li>
+                                                <li><a class="dropdown btn btn-info" href="/VMS/Receive/Index?TransactionType=ReceiveReturn">Return</a>  </li>
+                                                <li><a class="dropdown btn btn-info" href="/VMS/Receive/Index?TransactionType=PackageProduction">Package</a>  </li>
+                                            </ul>
+                                     </li>
+                                </ul>
+                            </div>
+                            
+                        </div>
+                    </ul>
+                </li>*@
+                
+                <li class="dropdown  Setup">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Sale<b class="caret"></b></a>
+                    <ul class="dropdown-menu multi-column columns-1">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <ul class="multi-column-dropdown">
+                                    <li class="dropdown dropdown-submenu"><a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown">Sale</a>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown btn btn-info" href="/VMS/SaleInvoice/Index?TransactionType=Other">Local</a></li>
+                                                <li>@*<a class="dropdown btn btn-info" href="/VMS/SaleInvoice/Index?TransactionType=Trading">Trading</a>*@  </li>
+                                                @*<li><a class="dropdown btn btn-info" href="/VMS/SaleInvoice/Index?TransactionType=Export">Export</a>  </li>
+                                                <li><a class="dropdown btn btn-info" href="/VMS/SaleInvoice/Index?TransactionType=Tender">Tender</a></li>
+                                                <li><a class="dropdown btn btn-info" href="/VMS/SaleInvoice/Index?TransactionType=TradingTender">Tender(Trading)</a>  </li>
+                                                <li><a class="dropdown btn btn-info" href="/VMS/SaleInvoice/Index?TransactionType=Service">Service(Stock)</a>  </li>
+                                                <li><a class="dropdown btn btn-info" href="/VMS/SaleInvoice/Index?TransactionType=ServiceNS">Service(N Stock)</a>  </li>*@
+                                            </ul>
+                                     </li>
+                                </ul>
+                            </div>
+                            @*<div class="col-sm-12">
+                                <ul class="multi-column-dropdown">
+                                    <li class="dropdown dropdown-submenu">
+                                        <a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown">Transfer</a>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown btn btn-info" href="/VMS/TransferReceive/Index?transactionType=61In">RM(In)</a></li>
+                                            <li><a class="dropdown btn btn-info" href="/VMS/TransferReceive/Index?transactionType=62In">FG(In)</a>  </li>
+                                            <li><a class="dropdown btn btn-info" href="/VMS/TransferIssue/Index?transactionType=61Out">RM(Out)</a>  </li>
+                                            <li><a class="dropdown btn btn-info" href="/VMS/TransferIssue/Index?transactionType=62Out">FG(Out)</a>  </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-sm-12">
+                                <ul class="multi-column-dropdown">
+                                    <li class="dropdown">
+                                        <a href="/VMS/EXP/Index" class="btn btn-info ">EXP</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-sm-12">
+                                <ul class="multi-column-dropdown">
+                                    <li class="dropdown"><a href="/VMS/SaleInvoice/Index?tType=PackageSale" class="btn btn-info ">Package</a>
+                                     </li>
+                                </ul>
+                            </div>*@
+                        </div>
+                    </ul>
+                </li>
+
+                <li class="dropdown  Setup">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Deposit<b class="caret"></b></a>
+                    <ul class="dropdown-menu multi-column columns-1">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <ul class="multi-column-dropdown">
+                                    <li class="dropdown"><a href="/VMS/Deposit/Index?TransactionType=Treasury" class="btn btn-info ">Treasury</a>
+                                     </li>
+                                </ul>
+                            </div>
+                            @*<div class="col-sm-12">
+                                <ul class="multi-column-dropdown">
+                                    <li class="dropdown"><a href="/VMS/Deposit/Index?TransactionType=VDS" class="btn btn-info ">VDS</a>
+                                     </li>
+                                </ul>
+                            </div>
+                            <div class="col-sm-12">
+                                <ul class="multi-column-dropdown">
+                                    <li class="dropdown"><a href="/VMS/SDDeposit/Index?TransactionType=Treasury" class="btn btn-info ">SD</a>
+                                     </li>
+                                </ul>
+                            </div>*@
+                            @*<div class="col-sm-12">
+                                <ul class="multi-column-dropdown">
+                                    <li class="dropdown dropdown-submenu">
+                                        <a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown">Reverse</a>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown btn btn-info" href="/VMS/Deposit/create?tType=VDS">VDS</a></li>
+                                            <li><a class="dropdown btn btn-info" href="/VMS/Deposit/create?tType=Treasury">Treasury</a>  </li>
+                                            <li><a class="dropdown btn btn-info" href="/VMS/Deposit/create?tType=SD">SD</a>  </li>
+                                            <li><a class="dropdown btn btn-info" href="/VMS/Deposit/create?tType=Cash Payable">Adjustment</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>*@
+                        </div>
+                    </ul>
+                </li>
+
+                 
+
+                <li class="dropdown  Setup">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Adjustment<b class="caret"></b></a>
+                    <ul class="dropdown-menu multi-column columns-1">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <ul class="multi-column-dropdown">
+                                    <li class="dropdown dropdown-submenu"><a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown">Adjustment Head</a>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown btn btn-info" href="/VMS/AdjustmentName/Index">Head</a></li>
+                                                <li><a class="dropdown btn btn-info" href="/VMS/AdjustmentHistory/Index">Transaction</a>  </li>
+                                                <li><a class="dropdown btn btn-info" href="/VMS/AdjustmentHistory/IndexCashPayable">Cash Payable</a>  </li>
+                                            </ul>
+                                     </li>
+                                </ul>
+                            </div>
+                            <div class="col-sm-12">
+                                <ul class="multi-column-dropdown">
+                                    <li class="dropdown dropdown-submenu">
+                                        <a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown">Purhase</a>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown btn btn-info" href="/VMS/Purchase/Index?TransactionType=PurchaseCN">Increase</a></li>
+                                            <li><a class="dropdown btn btn-info" href="/VMS/Purchase/Index?TransactionType=PurchaseDN">Decrease</a>  </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-sm-12">
+                                <ul class="multi-column-dropdown">
+                                    <li class="dropdown dropdown-submenu">
+                                        <a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown">Sale</a>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown btn btn-info" href="/VMS/SaleInvoice/Index?TransactionType=Credit">CN</a></li>
+                                            <li><a class="dropdown btn btn-info" href="/VMS/SaleInvoice/Index?TransactionType=Debit">DN</a>  </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                            @*<div class="col-sm-12">
+                                <ul class="multi-column-dropdown">
+                                    <li class="dropdown"><a href="#" class="btn btn-info ">Dispose</a>
+                                     </li>
+                                </ul>
+                            </div>
+                            <div class="col-sm-12">
+                                <ul class="multi-column-dropdown">
+                                    <li class="dropdown"><a href="#" class="btn btn-info ">DDB</a>
+                                     </li>
+                                </ul>
+                            </div>*@
+                        </div>
+                    </ul>
+                </li>
+
+                <li class="dropdown  Setup">
+                    <a href="/VMS/NBRReport/IndexCEL">NBR Report</a>
+                </li>
+
+                <li class="dropdown  Setup">
+                    <a href="/VMS/MISReport/Index">MIS Report</a>
+                </li>
+
+                <li class="dropdown  Setup">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">User Account<b class="caret"></b></a>
+                    <ul class="dropdown-menu multi-column columns-1">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <ul class="multi-column-dropdown">
+                                    <li class="dropdown"><a href="/VMS/UserInformation/ChangePassword" class="btn btn-info ">Change Password</a>
+                                     </li>
+                                </ul>
+                            </div>
+                            <div class="col-sm-12">
+                                <ul class="multi-column-dropdown">
+                                    <li class="dropdown">
+                                        <a href="/VMS/UserInformation/" class="btn btn-info ">Users</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-sm-12">
+                                <ul class="multi-column-dropdown">
+                                    <li class="dropdown"><a href="#" class="btn btn-info ">User Roles</a>
+                                     </li>
+                                </ul>
+                            </div>
+                            <div class="col-sm-12">
+                                <ul class="multi-column-dropdown">
+                                    <li class="dropdown"><a href="/VMS/Home/LogOut" class="btn btn-info ">Log out</a>
+                                     </li>
+                                </ul>
+                            </div>
+                            <div class="col-sm-12">
+                                <ul class="multi-column-dropdown">
+                                    <li class="dropdown"><a href="/VMS/Home/Login" class="btn btn-info ">Login</a>
+                                     </li>
+                                </ul>
+                            </div>
+                            <div class="col-sm-12">
+                                <ul class="multi-column-dropdown">
+                                    <li class="dropdown"><a href="#" class="btn btn-info ">Logs</a>
+                                     </li>
+                                </ul>
+                            </div>
+                            <div class="col-sm-12">
+                                <ul class="multi-column-dropdown">
+                                    <li class="dropdown"><a href="#" class="btn btn-info ">Close All</a>
+                                     </li>
+                                </ul>
+                            </div>
+                            <div class="col-sm-12">
+                                <ul class="multi-column-dropdown">
+                                    <li class="dropdown"><a href="#" class="btn btn-info ">Settings Role</a>
+                                     </li>
+                                </ul>
+                            </div>
+                            <div class="col-sm-12">
+                                <ul class="multi-column-dropdown">
+                                    <li class="dropdown">
+                                        <a href="/VMS/Home/Index?changeBranch=true" class="btn btn-info ">Change Branch</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </ul>
+                </li>
+
+                @*<li class="dropdown  Setup">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Bendarol<b class="caret"></b></a>
+                    <ul class="dropdown-menu multi-column columns-1">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <ul class="multi-column-dropdown">
+                                    <li class="dropdown"><a href="#" class="btn btn-info ">Demand</a>
+                                     </li>
+                                </ul>
+                            </div>
+                            <div class="col-sm-12">
+                                <ul class="multi-column-dropdown">
+                                    <li class="dropdown"><a href="#" class="btn btn-info ">Receive</a>
+                                     </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </ul>
+                </li>*@
+
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right" style="border-left: 5px solid #fff">
+                <li class="dropdown1">
+                    <a href="#" class="dropdown-toggle sym-btn-back" title="Go Back" onclick="goBack()" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">&nbsp;Back</a>
+                </li>
+                <li class="dropdown1">
+                    <a href="#" class="dropdown-toggle btn btn-warning" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">VAT </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>
+<style>
+    .navbar-default .navbar-nav > li.dropdown:hover > a,
+    .navbar-default .navbar-nav > li.dropdown:hover > a:hover,
+    .navbar-default .navbar-nav > li.dropdown:hover > a:focus {
+        /*background-color: rgb(231, 231, 231);*/
+        color: rgb(85, 85, 85);
+    }
+
+    li.dropdown:hover > .dropdown-menu {
+        display: block;
+    }
+</style>
+
+<style>
+    /*.navbar-default .navbar-nav > li.dropdown:active > a,
+    .navbar-default .navbar-nav > li.dropdown:hover > a:hover,
+    .navbar-default .navbar-nav > li.dropdown:hover > a:focus 
+    {
+        background-color: rgb(252, 255, 0);
+    }
+
+    .navbar-default .navbar-nav > li.dropdown:visited > a
+    .navbar-default .navbar-nav > li.dropdown:hover > a:visited,
+    .navbar-default .navbar-nav > li.dropdown:visited > a:visited 
+    {
+        background-color: rgb(0, 154, 255);
+    }*/
+</style>

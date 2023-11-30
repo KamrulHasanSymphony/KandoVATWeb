@@ -1,0 +1,150 @@
+﻿@using UIHelper.MVC
+<div class="headrow">
+    <label class="pull-right">Leave Migration</label>
+</div>
+<div class="thinbox">
+    <div class="th_thinbox">
+        <p>Leave Migration</p>
+    </div>
+    <div class="row">
+@*        <div class="col-sm-3">
+            <div class="editor-label">
+                <label>Leave Structure</label>
+            </div>
+            <div class="editor-field">
+                @Html.SimpleDropDown("LeaveStructureId", "/Config/DropDown/LeaveStructure", new { @class = "required form-control" })
+            </div>
+        </div>*@
+        <div class="col-sm-2">
+            <div class="editor-label">
+                <label>Year</label>
+            </div>
+            <div class="editor-field">
+                @Html.SimpleDropDown("year", "/Config/DropDown/Year", new { @class = "required form-control" })
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="editor-label">
+                <label>&nbsp;</label>
+            </div>
+            <div class="editor-field">
+                @*<input type="button" style="width:65px;" data-url="/Common/LeaveMigration/Migration" onclick="Migration(this, 'myDataTable');" id="" class=" btn btn-info  " value="Migration" />*@
+                <button type="button" title="Migration Data" class="sym-btn-save" data-url="/Common/LeaveMigration/Migration" onclick="Migration(this, 'myDataTable');" id="">Migration</button>
+            </div>
+        </div>
+    </div>
+    <div id="container">
+        <div id="demo">
+            <table id="myDataTable" class="display">
+                <thead>
+                    <tr>
+                        <th class="center">
+                            <input type="checkbox" class="chkAll" />Select All</th>
+                        <th>Code</th>
+                        <th>Name</th>
+                        <th>Designation</th>
+                        <th>@Session["DepartmentLabel"]</th>
+                        <th>@Session["ProjectLabel"]</th>
+                        <th>@Session["ProjectLabel"]</th>
+                        <th>Join Date</th>
+                    </tr>
+                    <tr>
+                        <th class="center">Actions</th>
+                        <th>Code</th>
+                        <th>Name</th>
+                        <th>Designation</th>
+                        <th>@Session["DepartmentLabel"]</th>
+                        <th>@Session["ProjectLabel"]</th>
+                        <th>@Session["ProjectLabel"]</th>
+                        <th>Join Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <br />
+</div>
+<script>
+    $(document).ready(function () {
+        if ('@ViewBag.Success' != "") {
+            ShowResult('Success', '@ViewBag.Success');
+        }
+        if ('@ViewBag.Fail' != "") {
+            ShowResult('Fail', '@ViewBag.Fail');
+        }
+        InitDropDowns();
+        var oTable = $('#myDataTable').dataTable({
+            "bServerSide": true,
+            "sAjaxSource": "/HRM/EmployeeInfo/_index",
+            "bProcessing": true,
+            "aoColumns": [{
+                "sName": "Id",
+                "bSearchable": false,
+                "bSortable": false,
+                "sWidth": "5%",
+                "sClass": "center",
+                "fnRender": function (oObj) {
+                    return ' <input onclick="CheckAll(this)" type="checkbox" data-Id="' + oObj.aData[0] + '">'
+                }
+            }
+                               , { "sName": "Code", "sWidth": "8%" }
+                                , { "sName": "EmpName", "sWidth": "14%" }
+                                , { "sName": "Designation", "sWidth": "15%" }
+                                , { "sName": "Department", "sWidth": "15%" }
+                                , { "sName": "Section", "sWidth": "12%" }
+                                , { "sName": "Project", "sWidth": "12%" }
+                                , { "sName": "JoinDate", "sWidth": "16%" }
+                              //Code
+                              //EmpName 
+                              //Department 
+                              //Designation
+                              //JoinDate
+            ]
+        });
+        oTable.columnFilter({
+            sPlaceHolder: "head:after",
+            aoColumns: [{ type: "checkbox", "sClass": "chkAll" }
+                      , { type: "text" }
+                           , { type: "text" }
+                           , { type: "text" }
+                           , { type: "text" }
+                           , { type: "text" }
+                           , { type: "text" }
+                           , { type: "date-range" }
+            ]
+        });
+        SelectAllForDelete();
+    });
+    function Migration(sender, checkboxId) {
+        var deletedIds = "";
+        var length = $("#" + checkboxId + " tbody input:checkbox").length;
+        for (var i = 0; i < length; i++) {
+            if ($($("#" + checkboxId + " tbody input:checkbox")[i]).is(":checked")) {
+                deletedIds += $($("#" + checkboxId + " tbody input:checkbox")[i]).attr("data-Id") + "~";
+            }
+        }
+        //if ($("#LeaveStructureId").val() == "") {
+        //    ShowResult("Fail", "Select structure group to migration!");
+        //    return;
+        //}
+        if ($("#year").val() == "") {
+            ShowResult("Fail", "Select year to migration!");
+            return;
+        }
+        var url = $(sender).attr("data-url") + "?year=" + $("#year").val() + "&ids=" + deletedIds;
+        if (deletedIds == "") {
+            ShowResult("Fail", "Select employee to migration!");
+            return;
+        }
+        Ask("Do you want to migration!", function () {
+            Ask("New migration will replace all previous data!", function () {
+                $.getJSON(url, function (item, textStatus, jqXHR) {
+                    ShowResult("Success", item);
+                    // var interval = setInterval(function () { window.location.reload(true); clearInterval(interval); }, 2000);
+                });
+            }, function () { })
+        }, function () { })
+    }
+</script>

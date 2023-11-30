@@ -1,0 +1,28 @@
+﻿@model System.Data.DataTable
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+
+@foreach (System.Data.DataRow dr in Model.Rows)
+{
+    <tr class="trSelectPopUpProduct">
+       
+        <td class="dID">@dr["ID"]</td>
+        <td class="dReferenceNo">@dr["ReferenceNo"]</td>
+        <td>@dr["BranchCode"]</td>
+        <td>@dr["TransferToBranchCode"]</td>
+        <td>@dr["TransactionDateTime"]</td>
+        <td>@dr["VehicleNo"]</td>
+        <td>@dr["VehicleType"]</td>
+        <td>@dr["Quantity"]</td>
+        <td>@dr["CostPrice"]</td>
+    </tr>
+}
+
+
+
+
+
+
+

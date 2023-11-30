@@ -1,0 +1,52 @@
+﻿@model System.Data.DataTable
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+
+@foreach (System.Data.DataRow dr in Model.Rows)
+{
+    <tr class="trSelectPopUpProduct">
+        @*<td>
+
+            @Html.CheckBox("Selected", Convert.ToBoolean(dr["Selected"]), new { @style = "margin: auto", @class = "dSelected form-control" })
+        </td>
+        <td>
+            &nbsp; <button title="Click on for Detail" onclick="IntegrationShowDetail(this)" class="sym-btn-detail-row"></button>
+
+        </td>*@
+        <td class="dID">@dr["ID"]</td>
+        <td class="dCustomer_Name">@dr["Customer_Name"]</td>
+        <td class="dCustomer_Code">@dr["Customer_Code"]</td>
+        <td class="dDelivery_Address">@dr["Delivery_Address"]</td>
+        <td class="dVehicle_No">@dr["Vehicle_No"]</td>
+        <td class="dInvoice_Date_Time">@dr["Invoice_Date_Time"]</td>
+        <td class="dDelivery_Date_Time">@dr["Delivery_Date_Time"]</td>
+        <td class="dReference_No">@dr["Reference_No"]</td>
+        <td class="dPrevious_Invoice_No">@dr["Previous_Invoice_No"]</td>
+        <td class="dIs_Print">@dr["Is_Print"]</td>
+        <td class="dTender_Id">@dr["Tender_Id"]</td>
+        <td class="dPost">@dr["Post"]</td>
+        <td class="dLC_Number">@dr["LC_Number"]</td>
+        <td class="dCurrency_Code">@dr["Currency_Code"]</td>
+        <td class="dItem_Code">@dr["Item_Code"]</td>
+        <td class="dItem_Name">@dr["Item_Name"]</td>
+        <td class="dQuantity">@dr["Quantity"]</td>
+        <td class="dNBR_Price">@dr["NBR_Price"]</td>
+        <td class="dUOM">@dr["UOM"]</td>
+        <td class="dVAT_Rate">@dr["VAT_Rate"]</td>
+        <td class="dSD_Rate">@dr["SD_Rate"]</td>
+        <td class="dNon_Stock">@dr["Non_Stock"]</td>
+        <td class="dTrading_MarkUp">@dr["Trading_MarkUp"]</td>
+        <td class="dType">@dr["Type"]</td>
+        <td class="dDiscount_Amount">@dr["Discount_Amount"]</td>
+        <td class="dPromotional_Quantity">@dr["Promotional_Quantity"]</td>
+        <td class="dVAT_Name">@dr["VAT_Name"]</td>
+        <td class="dSubTotal">@dr["SubTotal"]</td>
+        @*<td class="dRemarks">@dr["Remarks"]</td>*@
+        <td class="dComments">@dr["Comments"]</td>
+        <td class="dSale_Type">@dr["Sale_Type"]</td>
+
+        
+    </tr>
+}

@@ -1,0 +1,170 @@
+﻿@model SymViewModel.Sage.GLReportVM
+@using UIHelper.MVC
+@using SymOrdinary
+@using System.Threading;
+@{ 
+    
+    ShampanIdentity identity = null;
+    try
+    {
+        identity = (ShampanIdentity)Thread.CurrentPrincipal.Identity;
+    }
+    catch (Exception)
+    {
+        Response.Redirect("/Sage/Home/Login");
+        return;
+    }
+}
+
+
+    <div class="th_thinbox">
+        <p>(01) Petty Cash Single Month All Heads Amount</p>
+    </div>
+    <div class="PettyCashDetailsBar">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.BranchId)
+                </div>
+            </div>
+            <div class="col-md-8">
+                 <div class="editor-field">
+                @if (identity.IsAdmin || identity.IsAuditor)
+                {
+ @Html.SimpleDropDown("BranchId", "/Config/DropDown/GL_GLBranchAll", new { @Id = "bid", @class = "branchId form-control selectDropdown" })
+                }
+                else
+                {
+ @Html.SimpleDropDownFor(model => model.BranchId, "/Config/DropDown/GL_GLBranch", new { @Id = "bid", @class = "branchId form-control ", @disabled = "disabled" })
+                }
+                @Html.ValidationMessageFor(model => model.BranchId)
+                @Html.HiddenFor(model => model.BranchId)
+            </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="editor-label">
+                    <label>Fiscal Period</label>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="editor-field">
+                    <div>
+                        @Html.SimpleDropDownFor(model => model.GLFiscalYearDetailId, "/Config/DropDown/GL_FYDetailByYear", new { @Id = "FYDetailId", @class = " glFYDetailId GL_FYDetailDropDown required form-control selectDropdown" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+
+        </div>
+        <div class="row">&nbsp;  </div>
+        <div class="row">
+            &nbsp;
+        <button title="Click to Show Petty Cash Single Month All Head Amount" id="" class=" searchBtn sym-btn-search">&nbsp;Search</button>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="container  col-md-12 ">
+                <h2 class="card-header ">Petty Cash Details</h2>
+                <div class="card-block">
+                    <canvas id="myBarChart" height="20" width="20"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<script>
+    $(".searchBtn").click(function () {
+        Searching();
+    });
+
+    function Searching() {
+
+        var fydid = $(".glFYDetailId :selected").val();
+        var branchId = $(".branchId :selected").val();
+        //loadsPie(fydid);
+        Obj = new Object();
+
+        Obj.fydid = fydid;
+        Obj.branchId = branchId;
+        var Param = $.param(Obj);
+        loadsbar(Param);
+    }
+</script>
+
+<script>
+    function loadsPie(Param) {
+        //var fydid = $(".glFYDetailId :selected").val();
+        $('#myChartPie').html("");
+        backgroundColor = bkColor();
+        var labels = [];
+        var datas = [];
+        $.ajax({
+            url: "/Sage/Home/PettyCashChart1"+"?"+Param,
+            type: 'GET',
+            beforeSend: function () { $(".loading").show(); },
+            complete: function () { $(".loading").fadeOut(200).hide("slow") },
+            success: function (data) {
+                $.each(data, function (index, value) {
+                    labels.push(value.AccountName + '=>' + value.TransactionAmount);
+                    datas.push(value.TransactionAmount);
+                });
+                var ctx = document.getElementById("myChartPie").getContext('2d');
+                var myChart = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            backgroundColor: backgroundColor,
+                            data: datas
+                        }],
+                    }
+                });
+            },
+        });
+    }
+
+    function loadsbar(Param) {
+        //var fydid = $(".glFYDetailId :selected").val();
+        $('#myBarChart').html("");
+        backgroundColor = bkColor();
+        var labels = [];
+        var datas = [];
+        $.ajax({
+            url: "/Sage/Home/PettyCashChart1" + "?" + Param,
+            type: 'GET',
+            beforeSend: function () { $(".loading").show(); },
+            complete: function () { $(".loading").fadeOut(200).hide("slow") },
+            success: function (data) {
+                $.each(data, function (index, value) {
+                    labels.push(value.AccountName + '=>' + value.TransactionAmount);
+                    datas.push(value.TransactionAmount);
+                });
+                var ctx = document.getElementById("myBarChart").getContext('2d');
+                var myChart = new Chart(ctx,
+                    {
+                        type: 'bar',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'Account ',
+                                data: datas,
+                                backgroundColor: backgroundColor
+                            }]
+                        }
+
+                    }).show;
+            },
+        });
+
+    }
+</script>

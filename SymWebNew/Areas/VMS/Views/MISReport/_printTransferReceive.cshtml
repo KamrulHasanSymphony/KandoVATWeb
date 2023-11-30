@@ -1,0 +1,184 @@
+﻿@model VATViewModel.DTOs.TransferMISViewModel
+@using UIHelper.MVC
+@{
+    Layout = "~/Areas/VMS/Views/Shared/_ModalLayout.cshtml";
+}
+<style>
+
+</style>
+<div class="trkmodal-content">
+    <div class="trkmodal-header">
+        <span class="close">&times;</span>
+        <h2 class="text-center">Transfer Receive</h2>
+        <div style="display: none" id="formAppend"></div>
+
+    </div>
+    <div class="trkmodal-body">
+        @using (Html.BeginForm("DownloadTransferReceive", "MISReport", FormMethod.Post, new { enctype = "multipart/form-data", @target = "_blank", @Id = "frmWastage" }))
+        {
+
+
+            <div class="npForm col-md-12">
+                <div class="col-md-10 npForm">
+                    <label>Product Name</label>
+                    @Html.HiddenFor(m => m.ItemNo)
+                    @Html.TextBoxFor(m => m.ProductName, new { @class = " form-control trProductName", @readonly = "readonly" })
+                </div>
+                <div class=" col-md-2 npForm">
+                    <label>&nbsp;</label>
+                    <button type="button" class=" sym-btn-search productBtn">Search</button>
+                </div>
+            </div>
+            
+            <div class="npForm col-md-6">
+                <label> Date From</label>
+                @Html.TextBoxFor(m => m.DateFrom, new { @placeholder = "Start Date", @class = "customDatePicker form-control" })
+            </div>
+            <div class="npForm col-md-6">
+                <label>Date To</label>
+                @Html.TextBoxFor(m => m.DateTo, new { @placeholder = "End Date", @class = "customDatePicker form-control" })
+            </div>
+            <div class="npForm col-md-6">
+                <label>To Branch </label>
+                @Html.SimpleDropDownFor(m => m.ToBranch, "/Config/DropDown/UserBranchProfile", new { @class = " form-control selectDropdown cToBranch" })
+            </div>
+            <div class="npForm col-md-6">
+                <label>From Branch </label>
+                @Html.SimpleDropDownFor(m => m.FromBranch, "/Config/DropDown/UserBranchProfile", new { @class = " form-control selectDropdown cFromBranch" })
+            </div>
+
+        <div class="npForm col-md-12">
+        <label>Order By</label>
+            <select id="OrderBy" name="OrderBy" class="form-control">
+                <option value="BP">Branch Name > Product Name</option>
+                <option value="PB">Product Name > Branch Name</option>
+            </select>
+    </div>
+            
+            @*<div class="npForm col-md-12">
+                <label>Product Type</label>
+                @Html.SimpleDropDownFor(m => m.ProductType, "/Config/DropDown/ProductTypes", new { @class = " form-control selectDropdown trProductType" })
+            </div>*@
+            
+        <button type="button" class=" sym-btn-download-row trDownload"> Download</button>
+    <button type="button" onclick="DetailsExcel()" class="sym-btn-Excel-Export cDownload"> Details</button>
+        <button type="button" class="sym-btn-close closeBtn pull-right"> Close</button>
+           
+        }
+    </div>
+</div>
+<div id="myHigherModal" class="HigherModal"></div>
+<script>
+    $(document).ready(function () {
+        ////boolean checkbox
+        CheckBoxDesign();
+        MyCheckBox('@Model.Post', 'input-1', 'Post');
+
+        ///check validation
+        function checkValidation() {
+            var startDate = $('#DateFrom').val();
+            if (startDate == "") {
+                ShowResult("Fail", "Select Start Date!");
+                return false;
+            }
+            var endDate = $('#DateTo').val();
+            if (endDate == "") {
+                ShowResult("Fail", "Select End Date!");
+                return false;
+            }
+            return true;
+        }
+        ////clicking preview button
+        $('.trDownload').click(function () {
+            var isValid = checkValidation();
+            if (isValid == false) {
+                return;
+            }
+
+            $('#frmWastage').submit();
+            //pageSubmit('frmWastage');
+        });
+
+        function closeModal() {
+            $("#myModal").html("");
+            trkmodal.style.display = "none";
+        }
+
+        var span = document.getElementsByClassName("close")[0];
+        var trkmodal = document.getElementById('myModal');
+        //When the user clicks on <span> (x), close the trkmodal
+        span.onclick = function () {
+            closeModal();
+        }
+
+        $('.closeBtn').click(function () {
+            closeModal();
+        });
+
+    });
+</script>
+
+@*for clicking product button*@
+<script>
+    function modalInitHigher(url) {
+        var modal = document.getElementById('myHigherModal');
+        $.ajax({
+            url: url
+            , cache: false
+            , beforeSend: function () { $(".loading").show(); }
+            , success: function (html) {
+                modal.style.display = "block";
+                $("#myHigherModal").html(html);
+            }
+            , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+        });
+    }
+    function callbackFromProductModal(sender) {
+        var itemNo = $(sender).children('td.popUpItemNo').text();
+        $('#ItemNo').val(itemNo);
+    }
+    function callbackFromSaleModal(returnId, sender) {
+        ////nothing for now
+    }
+    $(function () {
+        $('.productBtn').click(function () {
+            var url = "/Vms/Product/GetProductPopUp?targetId=ProductName";
+            modalInitHigher(url);
+        });
+    });
+
+    //clicking Download Details button
+    function DetailsExcel() {
+        var startDate = $('#DateFrom').val();
+        if (startDate == "") {
+            ShowResult("Fail", "Select Start Date!");
+            return false;
+        }
+        var endDate = $('#DateTo').val();
+        if (endDate == "") {
+            ShowResult("Fail", "Select End Date!");
+            return false;
+        }
+        var ItemNo = $('#ItemNo').val();
+        var DateFrom = $('#DateFrom').val();
+        var DateTo = $('#DateTo').val();
+        var ProductName = $('#ProductName').val();
+        var FromBranch = $('#FromBranch').val();
+        var ToBranch = $('#ToBranch').val();
+        var OrderBy = $('#OrderBy').val();
+
+
+
+        var url = '/VMS/MISReport/DownloadDetailsTransferReceive';
+        var form = $('<form action="' + url + '"></form>');
+
+        form.append($('<input  value="' + ItemNo + '" name="ItemNo" />'))
+        form.append($('<input  value="' + DateFrom + '" name="DateFrom" />'))
+        form.append($('<input  value="' + DateTo + '" name="DateTo" />'))
+        form.append($('<input  value="' + ProductName + '" name="ProductName" />'))
+        form.append($('<input  value="' + FromBranch + '" name="FromBranch" />'))
+        form.append($('<input  value="' + ToBranch + '" name="ToBranch" />'))
+        form.append($('<input  value="' + OrderBy + '" name="OrderBy" />'))
+        form.appendTo('#formAppend').submit()
+    }
+</script>

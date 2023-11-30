@@ -1,0 +1,67 @@
+﻿@model SymViewModel.Vms.IssueDetailViewModel
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+
+<div class="row detailRow">
+    @using (Html.BeginCollectionItem("issueDetailVMs"))
+    {
+        @Html.HiddenFor(model => model.Id)
+        @Html.HiddenFor(model => model.ItemNo)
+        <div class="col-md-1" style="margin-top: 4px;">
+            @if (!Model.Post)
+            {
+                <a id="" title="Click to Remove" onclick="RemoveItem(this);" class="sym-btn-remove-row "></a>
+                <a id="" title="Click to Edit" onclick="EditItem(this);" class="sym-btn-edit-row"></a>
+            }
+            else
+            {
+                <label>&nbsp</label>
+            }
+        </div>
+        <div class="col-md-2">
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.ItemName, new { @class = "  dItemName   form-control", @readonly = "readonly" })
+            </div>
+        </div>
+        <div class="col-md-1">
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.Quantity, new { @class = "  dQuantity right   form-control NumberCheck", @readonly = "readonly" })
+            </div>
+        </div>
+        <div class="col-md-1">
+            <div class="editor-field input-group">
+                @Html.TextBoxFor(model => model.CostPrice, new { @class = "NumberCheck right dCostPrice   form-control", @readonly = "readonly" })
+            </div>
+        </div>
+        <div class="col-md-1">
+            <div class="editor-field input-group">
+                @Html.TextBoxFor(model => model.NBRPrice, new { @class = "NumberCheck right dNBRPrice   form-control", @readonly = "readonly" })
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.SubTotal, new { @class = "dSubTotal right  NumberCheck  form-control", @readonly = "readonly" })
+            </div>
+        </div>
+        <div class="col-md-1">
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.VATRate, new { @class = "dVATRate right  NumberCheck  form-control", @readonly = "readonly" })
+            </div>
+        </div>
+        <div class="col-md-1">
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.VATAmount, new { @class = "dVATAmount right  NumberCheck  form-control", @readonly = "readonly" })
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="editor-field">
+                @Html.TextAreaFor(model => model.Comments, new { @class = "dVATAmount right  NumberCheck  form-control" })
+            </div>
+        </div>
+    }
+</div>
+
+
+

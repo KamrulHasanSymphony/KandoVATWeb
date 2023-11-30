@@ -1,0 +1,400 @@
+﻿@model SymViewModel.Attendance.EarningDeductionStructureVM
+@using UIHelper.MVC
+
+@{
+    if (Model.Id > 0)
+    {
+        ViewBag.Title = "Edit";
+    }
+    else
+    {
+        ViewBag.Title = "Create";
+    }
+}
+
+
+@using (Html.BeginForm("CreateEdit", "EarningDeductionStructure", FormMethod.Post, new { @Id = "frmEarningDeductionStructure" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.Operation)
+
+    <div class="headrow">
+        @if (Model.Operation == "add")
+        {
+            <button type="button" title="Save Data" onclick="SaveData();" class="sym-btn-save">&nbsp;Save</button>
+            <label class="pull-right">Earning Deduction Structure > Create</label>
+        }
+        else if (Model.Operation == "update")
+        {
+            <button type="button" title="Update Data" onclick="SaveData();" class="sym-btn-update">&nbsp;Update</button>
+            <label class="pull-right">Earning Deduction Structure > Edit</label>
+        }
+        <button type="button" title="Go To Index" data-url="/Common/EarningDeductionStructure" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New Earning Deduction Structure" data-url="/Common/EarningDeductionStructure/Create" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+    </div>
+    
+    <div class="thinbox">
+        <div class="th_thinbox">
+            <p>Deduction Structure</p>
+        </div>
+        <div class="DeductionStructure">
+            <div class="row">
+                <div class="editor-field">
+                    <div class="col-md-2">
+                        &nbsp;
+                    </div>
+                    <div class="col-md-2">
+                        <label style="margin-top: 10px;">Structure Name</label>
+                    </div>
+                    <div class="col-md-2">
+                        @Html.TextBoxFor(model => model.Name, new { @placeholder = "Structure Name", @class = "required form-control" })
+                        @Html.ValidationMessageFor(model => model.Name)
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="editor-field">
+                    <div class="col-md-2">
+                        &nbsp;
+                    </div>
+                    <div class="col-md-2">
+                        <label style="margin-top: 10px;">Days Count From </label>
+                    </div>
+                    <div class="col-md-2">
+                        @Html.SimpleDropDownFor(model => model.DaysCountFrom, "/Config/DropDown/DaysCountList", new { @class = "required form-control" })
+                        @Html.ValidationMessageFor(model => model.DaysCountFrom)
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="editor-field">
+                    <div class="col-md-2">
+
+                        @Html.TextBoxFor(model => model.FirstSlotAbsentDays, new { @onchange = "NumberCheck(this)", @class = " firstSADays required form-control" })
+                        @Html.ValidationMessageFor(model => model.FirstSlotAbsentDays)
+                    </div>
+                    <div class="col-md-2">
+                        <label style="margin-top: 10px;"><= Days Deduct From </label>
+                    </div>
+                    <div class="col-md-2">
+
+                        @Html.SimpleDropDownFor(model => model.FirstSlotAbsentFrom, "/Config/DropDown/AbsentDeductFromList", new { @class = "required form-control" })
+                        @Html.ValidationMessageFor(model => model.FirstSlotAbsentFrom)
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="editor-field">
+                    <div class="col-md-2">
+                        @Html.TextBoxFor(model => model.SecondSlotAbsentDays, new { @onchange = "NumberCheck(this)", @class = " secondSADays required form-control" })
+                        @Html.ValidationMessageFor(model => model.SecondSlotAbsentDays)
+                    </div>
+                    <div class="col-md-2">
+                        <label style="margin-top: 10px;">> Days Deduct From </label>
+                    </div>
+                    <div class="col-md-2">
+
+                        @Html.SimpleDropDownFor(model => model.SecondSlotAbsentFrom, "/Config/DropDown/AbsentDeductFromList", new { @class = "required form-control" })
+                        @Html.ValidationMessageFor(model => model.SecondSlotAbsentFrom)
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="editor-field">
+                    <div class="col-md-2">
+                        &nbsp;
+                    </div>
+                    <div class="col-md-2">
+                        <label style="margin-top: 10px;">NP Absent From </label>
+                    </div>
+                    <div class="col-md-2">
+                        @Html.SimpleDropDownFor(model => model.NPAbsentFrom, "/Config/DropDown/AbsentDeductFromList", new { @class = "required form-control" })
+                        @Html.ValidationMessageFor(model => model.NPAbsentFrom)
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="editor-field">
+                    <div class="col-md-2">
+                        &nbsp;
+                    </div>
+                    <div class="col-md-2">
+                        <label style="margin-top: 10px;">LWP From </label>
+                    </div>
+                    <div class="col-md-2">
+
+                        @Html.SimpleDropDownFor(model => model.LWPFrom, "/Config/DropDown/AbsentDeductFromList", new { @class = "required form-control" })
+                        @Html.ValidationMessageFor(model => model.LWPFrom)
+                    </div>
+                </div>
+            </div>
+
+            @*IsMonthlyLateInDeduct	
+IsMonthlyLateInHourlyCount	
+MonthlyLateInCountDays	
+LateInAbsentDays*@
+
+            @*IsMonthlyEarlyOutDeduct	
+IsMonthlyEarlyOutHourlyCount	
+MonthlyEarlyOutCountDays	
+EarlyOutAbsentDays	*@
+
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.IsMonthlyLateInDeduct)
+                    </div>
+                    <div class="editor-field">
+                        @Html.CheckBoxFor(model => model.IsMonthlyLateInDeduct, new { @class = " required form-control" })
+                        @Html.ValidationMessageFor(model => model.IsMonthlyLateInDeduct)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.IsMonthlyLateInHourlyCount)
+                    </div>
+                    <div class="editor-field">
+                        @Html.CheckBoxFor(model => model.IsMonthlyLateInHourlyCount, new { @class = " required form-control" })
+                        @Html.ValidationMessageFor(model => model.IsMonthlyLateInHourlyCount)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.MonthlyLateInCountDays)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.MonthlyLateInCountDays, new { @onchange = "NumberCheck(this)", @class = " required form-control" })
+                        @Html.ValidationMessageFor(model => model.MonthlyLateInCountDays)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.LateInAbsentDays)
+                    </div>
+                    <div class="editor-field">
+                        <div class="col-md-2">
+                            <label style="margin-top: 10px;">=</label>
+                        </div>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(model => model.LateInAbsentDays, new { @readonly = "readonly", @Value = "1", @onchange = "NumberCheck(this)", @class = " required form-control" })
+                            @Html.ValidationMessageFor(model => model.LateInAbsentDays)
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.IsMonthlyEarlyOutDeduct)
+                    </div>
+                    <div class="editor-field">
+                        @Html.CheckBoxFor(model => model.IsMonthlyEarlyOutDeduct, new { @class = " required form-control" })
+                        @Html.ValidationMessageFor(model => model.IsMonthlyEarlyOutDeduct)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.IsMonthlyEarlyOutHourlyCount)
+                    </div>
+                    <div class="editor-field">
+                        @Html.CheckBoxFor(model => model.IsMonthlyEarlyOutHourlyCount, new { @class = " required form-control" })
+                        @Html.ValidationMessageFor(model => model.IsMonthlyEarlyOutHourlyCount)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.MonthlyEarlyOutCountDays)
+                    </div>
+                    <div class="editor-field">
+
+                        @Html.TextBoxFor(model => model.MonthlyEarlyOutCountDays, new { @onchange = "NumberCheck(this)", @class = "  required form-control" })
+                        @Html.ValidationMessageFor(model => model.MonthlyEarlyOutCountDays)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.EarlyOutAbsentDays)
+                    </div>
+                    <div class="editor-field">
+                        <div class="col-md-2">
+                            <label style="margin-top: 10px;">=</label>
+                        </div>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(model => model.EarlyOutAbsentDays, new { @readonly = "readonly", @Value = "1", @onchange = "NumberCheck(this)", @class = "  required form-control" })
+                            @Html.ValidationMessageFor(model => model.EarlyOutAbsentDays)
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.DayRateCountFrom)
+                    </div>
+                    <div class="editor-field">
+
+                        @Html.SimpleDropDownFor(model => model.DayRateCountFrom, "/Config/DropDown/AbsentDeductFromList", new { @class = "required form-control" })
+                        @Html.ValidationMessageFor(model => model.DayRateCountFrom)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.DayRateDivisionFactor)
+                    </div>
+                    <div class="editor-field">
+                        <div class="col-md-2">
+                            <label style="margin-top: 10px;">/</label>
+                        </div>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(model => model.DayRateDivisionFactor, new { @class = " required form-control" })
+                            @Html.ValidationMessageFor(model => model.DayRateDivisionFactor)
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.HourRateCountFrom)
+                    </div>
+                    <div class="editor-field">
+
+                        @Html.SimpleDropDownFor(model => model.HourRateCountFrom, "/Config/DropDown/AbsentDeductFromList", new { @class = "required form-control" })
+                        @Html.ValidationMessageFor(model => model.HourRateCountFrom)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.HourRateDivisionFactor)
+                    </div>
+                    <div class="editor-field">
+                        <div class="col-md-2">
+                            <label style="margin-top: 10px;">/</label>
+                        </div>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(model => model.HourRateDivisionFactor, new { @class = " required form-control" })
+                            @Html.ValidationMessageFor(model => model.HourRateDivisionFactor)
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+
+
+
+            @* 
+            <div class="row">
+
+
+               <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.IsOTRoundUp)
+                    </div>
+                    <div class="editor-field">
+                        @Html.CheckBoxFor(model => model.IsOTRoundUp, new { @class = " required form-control" })
+                        @Html.ValidationMessageFor(model => model.IsOTRoundUp)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.OTRoundUpMin)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.OTRoundUpMin, new { @onchange = "NumberCheck(this)", @class = " required form-control" })
+                        @Html.ValidationMessageFor(model => model.OTRoundUpMin)
+                    </div>
+                </div>
+            </div>
+            *@
+        </div>
+    </div>
+    <div class="thinbox">
+        <div class="th_thinbox">
+            <p>Earning Structure</p>
+        </div>
+        <div class="EarningStructure">
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.WeeklyOTRate)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.WeeklyOTRate, new { @placeholder = "Weekly OT Rate", @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.WeeklyOTRate)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.GovtOTRate)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.GovtOTRate, new { @placeholder = "Govt OT Rate", @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.GovtOTRate)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.FestivalOTRate)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.FestivalOTRate, new { @placeholder = "Festival OT Rate", @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.FestivalOTRate)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.SpecialOTRate)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.SpecialOTRate, new { @placeholder = "Special OT Rate", @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.SpecialOTRate)
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="editor-label">
+                        @Html.LabelFor(model => model.Remarks)
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextAreaFor(model => model.Remarks, new { @placeholder = "Remarks", @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Remarks)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="headrow">
+        @if (Model.Operation == "add")
+        {
+            <button type="button" title="Save Data" onclick="SaveData()" class="sym-btn-save">&nbsp;Save</button>
+        }
+        else if (Model.Operation == "update")
+        {
+            <button type="button" title="Update Data" onclick="SaveData()" class="sym-btn-update">&nbsp;Update</button>
+        }
+        <button type="button" title="Go To Index" data-url="/Common/EarningDeductionStructure" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New Earning Deduction Structure" data-url="/Common/EarningDeductionStructure/Create" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+
+    </div>
+}
+<script>
+    $(function () {
+        fromWriteColor("EarningDeductionStructure");
+        valiDation("frmEarningDeductionStructure");
+    });
+
+    function SaveData() {
+        var firstSADays = parseFloat($(".firstSADays").val());
+        var secondSADays = parseFloat($(".secondSADays").val());
+        if (secondSADays <= firstSADays) {
+            ShowResult("Fail", "Days Deduct From Can't Be Greather than Days Deduct To!");
+            return;
+        }
+        pageSubmit('frmEarningDeductionStructure')
+    }
+
+</script>

@@ -1,0 +1,22 @@
+﻿@model System.Data.DataTable
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+
+@foreach (System.Data.DataRow dr in Model.Rows)
+{
+    <tr class="trSelectPopUpProduct">
+        <td>
+            &nbsp; <button title="Click on for Save" onclick="IntegrationSave(this)" class="sym-btn-save-row"></button>
+            &nbsp; <button title="Click on for Detail" onclick="IntegrationShowDetail(this)" class="sym-btn-detail-row"></button>
+        </td>
+       
+        <td>@dr["SSO"]</td>
+        <td>@dr["Section"]</td>
+        <td>@dr["Delivery Date"]</td>
+        <td class="dStatus">@dr["Status"]</td>
+        <td class="dChallanNo">@dr["ChallanNo"]</td>
+        <td>@dr["Memo Count"]</td>ik
+    </tr>
+}

@@ -1,0 +1,126 @@
+﻿@{
+    ViewBag.Title = "Create";
+}
+
+@model VATViewModel.DTOs.ShiftVM
+@using UIHelper.MVC
+@using (Html.BeginForm("CreateEdit", "Shift", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmShift" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.Operation)
+    
+    <div class="headrow">
+        @if (Model.Operation == "add")
+        {
+            <button type="button" name="btnName" value="Save" title="Save Data" onclick="pageSubmit('frmShift')" class="sym-btn-save">&nbsp;Save</button>
+            <label class="pull-right">Shift > Create</label>
+        }
+        else
+        {
+            <button type="button" name="btnName" value="Update" title="Update Data" onclick="pageSubmit('frmShift')" class="sym-btn-update">&nbsp;Update</button>
+            <label class="pull-right">Shift > Edit</label>
+        }
+        <button type="button" title="Go To Index" data-url="/VMS/Shift" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New Shift" data-url="/VMS/Shift/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+    </div>
+    
+    
+        <div class="col-md-12" style="padding:0px;">
+        <div class="thinbox animated zoomIn faster">
+         <div class="th_thinbox">
+            <p>Shift</p>
+        </div>
+        <div class="row">
+            <div class="form-group">
+                <label for="ShiftName" class="col-md-2 control-label text-right trkLabelMargin">Name</label>
+              <div class="col-md-4">
+                  <div class="col-md-6 trkPX-0" style="margin-bottom:6px;">
+                     @Html.TextBoxFor(model => model.ShiftName, new { @placeholder = "Shift Name", @class = "required form-control" })
+                  </div>
+                        @Html.ValidationMessageFor(model => model.ShiftName)
+              </div>
+                <label for="Sl" class="col-md-2 control-label text-right trkLabelMargin">SL</label>
+              <div class="col-md-4">
+                  <div class="col-md-6 trkPX-0" style="margin-bottom:6px;">
+                      @Html.TextBoxFor(model => model.Sl, new { @placeholder = "Sl", @class = "required form-control" })
+                  </div>
+                    @Html.ValidationMessageFor(model => model.Sl)
+              </div>
+            </div>
+
+            <div class="form-group">
+                <label for="ShiftStart" class="col-md-2 control-label text-right trkLabelMargin">Start</label>
+              <div class="col-md-4" style="margin-bottom:6px;">
+                  <div class="col-md-6 trkPX-0">
+                      @Html.TextBoxFor(model => model.ShiftStart, new { @placeholder = "Shift Start", @class = "customTimePicker  form-control" })
+                  </div>
+                  @Html.ValidationMessageFor(model => model.ShiftStart)
+              </div>
+             
+                <label for="ShiftEnd" class="col-md-2 control-label text-right trkLabelMargin">End</label>
+              <div class="col-md-4">
+                  <div class="col-md-6 trkPX-0">
+                      @Html.TextBoxFor(model => model.ShiftEnd, new { @placeholder = "Shift End", @class = "customTimePicker  form-control" })
+
+
+                  </div>
+                  @Html.ValidationMessageFor(model => model.ShiftEnd)
+              </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="form-group">
+                <label for="Remarks" class="col-md-2 control-label text-right trkLabelMargin">Remarks</label>
+              <div class="col-md-4">
+                  @Html.TextAreaFor(model => model.Remarks, new { @placeholder = "Remarks", @class = "  form-control" })
+                  @Html.ValidationMessageFor(model => model.Remarks)
+              </div>
+              <label class="col-md-2 control-label text-right trkLabelMargin">Next Day</label>
+              <div class="col-md-2">
+                  @Html.SimpleDropDownFor(m => m.NextDay, "/Config/DropDown/DecisionList", new { @class = " trNavigateMenu form-control " })
+              </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    
+    
+    
+
+    
+    
+    
+    <div class="headrow">
+        @if (Model.Operation == "add")
+        {
+            <button type="button" name="btnName" value="Save" title="Save Data" onclick="pageSubmit('frmShift')" class="sym-btn-save">&nbsp;Save</button>
+            <label class="pull-right">Shift > Create</label>
+        }
+        else
+        {
+            <button type="button" name="btnName" value="Update" title="Update Data" onclick="pageSubmit('frmShift')" class="sym-btn-update">&nbsp;Update</button>
+            <label class="pull-right">Shift > Edit</label>
+        }
+        <button type="button" title="Go To Index" data-url="/VMS/Shift" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New Shift" data-url="/VMS/Shift/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+    </div>
+    
+    
+}
+<script>
+    $(function () {
+        valiDation("frmShift");
+        $('.customTimePicker').ptTimeSelect();
+
+    });
+
+
+ 
+</script>
+
+<script>
+
+   
+
+</script>

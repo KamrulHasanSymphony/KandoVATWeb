@@ -1,0 +1,46 @@
+﻿@{
+    ViewBag.Title = "_customerDiscount";
+}
+
+@model VATViewModel.DTOs.CustomerDiscountVM
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+<tr class="tablerow">
+    @using (Html.BeginCollectionItem("Details"))
+    {
+        <td>
+            <a id="" title="Click to Remove" onclick="RemoveItems(this);" class="sym-btn-remove-row "></a>
+            <a id="" title="Click to Edit" onclick="EditItems(this);" class="sym-btn-edit-row"></a>
+        </td>
+
+        <td>
+            @Html.TextBoxFor(model => model.Id, new { @class = "  dId  form-control", @readonly = "readonly" })
+        </td>
+        
+        <td>
+            @Html.TextBoxFor(model => model.CustomerID, new { @class = "  dCustomerID  form-control", @readonly = "readonly" })
+        </td>
+        
+        <td>
+            @Html.TextBoxFor(model => model.MinValue, new { @class = "  dMinValue  form-control", @readonly = "readonly" })
+        </td>
+        
+        <td>
+            @Html.TextBoxFor(model => model.MaxValue, new { @class = "  dMaxValue  form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.Rate, new { @class = "  dRate  form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.Comments, new { @class = "  dComments  form-control", @readonly = "readonly" })
+        </td>
+        
+        
+
+        @*@Html.HiddenFor(m => m.CustomerID, new { @class = " dCustomerID" })
+        @Html.HiddenFor(m => m.Id, new { @class = " dId" })*@
+
+    }
+</tr>

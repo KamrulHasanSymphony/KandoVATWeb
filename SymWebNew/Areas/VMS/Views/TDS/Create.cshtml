@@ -1,0 +1,120 @@
+﻿@{
+    ViewBag.Title = "Create";
+}
+
+@model VATViewModel.DTOs.TDSsVM
+@using UIHelper.MVC
+@using (Html.BeginForm("CreateEdit", "TDS", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmTDSMy" }))
+{ 
+     @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.Operation)
+
+    <div class="headrow">
+        @if (Model.Operation == "add")
+        {
+            <button type="button" name="btnName" value="Save" title="Save Data" onclick="pageSubmit('frmTDSMy')" class="sym-btn-save">&nbsp;Save</button>
+            <label class="pull-right">TDS > Create</label>
+        }
+        else
+        {
+            <button type="button" name="btnName" value="Update" title="Update Data" onclick="pageSubmit('frmTDSMy')" class="sym-btn-update">&nbsp;Update</button>
+            <label class="pull-right">TDS > Edit</label>
+        }
+        <button type="button" title="Go To Index" data-url="/VMS/TDS" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New TDS" data-url="/VMS/TDS/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+    </div>
+    
+    <div class="col-md-12 trkPX-0">
+        
+        <div class="thinbox animated zoomIn faster">
+            <div class="th_thinbox">
+                <p>TDS</p>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label for="Section" class="col-md-2 control-label text-right trkLabelMargin">Section</label>
+                    <div class="col-md-4">
+                        @Html.TextBoxFor(model => model.Section, new { @placeholder = "Section", @class = "   form-control" })
+                        @Html.ValidationMessageFor(model => model.Section)
+                    </div>
+                    <label for="Code" class="col-md-2 control-label text-right trkLabelMargin">Sub Section</label>
+                    <div class="col-md-4">
+                        @Html.TextBoxFor(model => model.Code, new { @placeholder = "Sub Section", @class = "required form-control" })
+                        @Html.ValidationMessageFor(model => model.Code)
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Description" class="col-md-2 control-label text-right trkLabelMargin">Description</label>
+                    <div class="col-md-4">
+                        @Html.TextBoxFor(model => model.Description, new { @placeholder = "Description", @class = " form-control" })
+                        @Html.ValidationMessageFor(model => model.Description)
+                    </div>
+                    <label for="MinValue" class="col-md-2 control-label text-right trkLabelMargin">MinValue</label>
+                    <div class="col-md-4">
+                        @Html.TextBoxFor(model => model.MinValue, new { @placeholder = "MinValue", @class = " cMinValue form-control priceLen right" })
+                        
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="MaxValue" class="col-md-2 control-label text-right trkLabelMargin">MaxValue</label>
+                    <div class="col-md-4">
+                        @Html.TextBoxFor(model => model.MaxValue, new { @placeholder = "MaxValue", @class = "cMaxValue form-control priceLen right" })
+                       
+                    </div>
+                    <label for="Rate" class="col-md-2 control-label text-right trkLabelMargin">Rate</label>
+                    <div class="col-md-4">
+                        @Html.TextBoxFor(model => model.Rate, new { @placeholder = "Rate", @class = "cRate form-control priceLen right" })
+                       
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Comments" class="col-md-2 control-label text-right trkLabelMargin">Comments</label>
+                    <div class="col-md-4">
+                        @Html.TextBoxFor(model => model.Comments, new { @placeholder = "Comments", @class = " form-control" })
+                        @Html.ValidationMessageFor(model => model.Comments)
+                    </div>                    
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+    
+    
+    
+    <div class="headrow">
+        @if (Model.Operation == "add")
+        {
+            <button type="button" name="btnName" value="Save" title="Save Data" onclick="pageSubmit('frmTDSMy')" class="sym-btn-save">&nbsp;Save</button>
+            <label class="pull-right">TDS > Create</label>
+        }
+        else
+        {
+            <button type="button" name="btnName" value="Update" title="Update Data" onclick="pageSubmit('frmTDSMy')" class="sym-btn-update">&nbsp;Update</button>
+            <label class="pull-right">TDS > Edit</label>
+        }
+        <button type="button" title="Go To Index" data-url="/VMS/TDS" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New TDS" data-url="/VMS/TDS/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+    </div>
+    
+    
+    
+    
+}
+
+<script>
+    $(function () {
+        valiDation("frmTDSMy");
+    });
+
+
+    ////var MinValue = parseFloat($('.trValue').val().replace(/\,/g, ''));
+
+    ////$('.trValue').val(MinValue);
+
+</script>

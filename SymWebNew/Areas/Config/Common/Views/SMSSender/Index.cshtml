@@ -1,0 +1,107 @@
+﻿    <script type="text/javascript">
+        $(document).ready(function () {
+            SelectAllForDelete();
+            $.datepicker.regional[""].dateFormat = 'dd/M/y';
+            $.datepicker.setDefaults($.datepicker.regional['']);
+            var oTable = $('#myDataTable').dataTable({
+                "bServerSide": true,
+                "sAjaxSource": "/Common/SMSSender/_index",
+                "bProcessing": true,
+                "aLengthMenu": tablelength(),
+                "bJqueryUI": true,
+                "bAutoWidth": false,
+                "sScrollX": '120%',
+                "aoColumns": [
+                                {
+                                    "sName": "Id",
+                                    "bSearchable": false,
+                                    "bSortable": false,
+                                    "sWidth": "10%",
+                                    "sClass":"center",
+                                    "fnRender": function (oObj) {
+                                        return '<a title="Click on for Details" style="text-decoration:none;"    href=\"/Common/SMSSender/Edit?Id=' + oObj.aData[0] + '\"  class="sym-btn-edit-row"></a>';
+                                    }
+                                }
+                               , { "sName": "SenderMobileNo" , "sWidth": "12%" }              //01
+                               , { "sName": "RecepentMobileNo"   , "sWidth": "12%" }            //02
+                               , { "sName": "SMSBody"  , "sWidth": "12%" }             //03
+                               , { "sName": "FullName"   , "sWidth": "12%" }            //04
+                               , { "sName": "PresentDistrictId", "sWidth": "12%" }        //05
+                               , { "sName": "JobCategoryId", "sWidth": "12%" }            //06
+                               , { "sName": "Website", "sWidth": "12%" }                  //07
+                ]
+            });
+            oTable.columnFilter({
+                sPlaceHolder: "head:after",
+                aoColumns: [{ type: "checkbox", "sClass": "chkAll" }              //00 
+                           , { type: "text" }                                     //01 
+                           , { type: "text" }                                     //02 
+                           , { type: "text" }                                     //03 
+                           , { type: "text" }                                     //04 
+                           , { type: "text" }                                     //05 
+                           , { type: "text" }                                     //06 
+                           , { type: "text" }                                     //07 
+                ]
+            });
+        });
+    </script>
+@{
+    ViewBag.Title = "Index";
+    ViewBag.Location = "Common=>Info SMS Sender=>Index"; 
+}
+<div class="headrow">
+        <button type="button" title="Add New SMS Sender" data-url="/Common/SMSSender/Create" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+     <label class="pull-right">SMS Sender Information</label>
+</div>
+    <div class="thinbox">
+        <div class="th_thinbox">
+        <p>SMS Sender List</p>   
+        </div>
+<p></p>
+        <div id="container">
+            <div id="demo">
+                <table id="myDataTable" class="display">
+                    <thead>
+                         <tr>
+                             <th  class="center" >&nbsp;</th>
+                            <th>Sender Mobile No</th>                  <!--  //01    -->  
+                            <th>Recipient Mobile No</th>               <!--  //02    -->
+                            <th>SMS Body</th>                          <!--  //03    -->
+                            <th>Full Name</th>                         <!--  //04    -->
+                            <th>Present District</th>            <!--  //05    -->
+                            <th>Job Category</th>                  <!--  //06    -->
+                            <th>Website</th>                       <!--  //07    -->
+                        </tr>                                  
+                        <tr>
+                            <th  class="center" >Actions</th>
+                            <th>Sender Mobile No</th>                 <!--  //01    -->
+                            <th>Recipient Mobile No</th>              <!--  //02    -->
+                            <th>SMS Body</th>                <!--  //03    -->
+                            <th>Full Name</th>               <!--  //04    -->
+                            <th>Present District</th>           <!--  //05    -->
+                            <th>Job Category</th>                 <!--  //06    -->
+                            <th>Website</th>                      <!--  //07    -->
+                        </tr>
+
+@*
+                       //00  //Id
+                       //01  //SenderMobileNo
+                       //02  //RecepentMobileNo
+                       //03  //SMSBody
+                       //04  //FullName 
+                       //05  //PresentDistrictId
+                       //06  //JobCategoryId
+                       //07  //Website
+                       
+                        *@
+                    </thead>
+                    <tbody> 
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <br />
+        </div>
+<div class="headrow">
+        <button type="button" title="Add New SMS Sender" data-url="/Common/SMSSender/Create" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+</div>

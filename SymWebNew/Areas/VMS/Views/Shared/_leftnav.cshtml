@@ -1,0 +1,104 @@
+﻿@using SymOrdinary
+@using System.Threading;
+@{ 
+    
+    //ShampanIdentity identity = null;
+    //try
+    //{
+    //    identity = (ShampanIdentity)Thread.CurrentPrincipal.Identity;
+    //}
+    //catch (Exception)
+    //{
+    //    Response.Redirect("/Sage/Home/Login");
+    //    return;
+    //}
+}
+
+<link href="~/assets/css/master.css" rel="stylesheet" />
+<div id="leftside">
+    <div id="scroll-side-menu" class="side-menu">
+        @*<div id="sm-btn"><img src="~/Images/images/side-itm.png"/></div>*@
+        <div id="sm-btn"><span class="btn btn-successful">Menu</span> </div>
+        <ul id="s-sm" class="left_menu navbar-left">
+            <a class="navbar-brand" href="index-2.html">
+                <img src="~/Images/images/image/Logo.jpg" alt="" class="img-responsive navbar-brand_img" id="logo" /></a>
+            <li class="">
+                <span class="nav-icon-dashboard"></span>
+                <span class="tri pos"><i class="fa fa-align-justify" style="color: #fff"></i>
+                    @*<img src="~/Images/images/dropdown3.png" alt="" /></span>*@
+                @*<img src="~/Files/Sage/PhotoFile/@Session["LogInUserPhotoName"]" alt="" />*@
+                    </span>
+                <a tabindex="-1" class="btn btn-info" href="/Sage/Home">Dashboard</a>
+
+            </li>
+
+            <li class="">
+                <span>
+                        @*<img src="~/Files/Sage/PhotoFile/DefaultPhoto.jpg"  alt="" />*@
+                    <img src="~/Files/Sage/PhotoFile/@Session["LogInUserPhotoName"]" height="200" width="200"  alt="" />
+
+                </span>
+            </li>
+            <li class="">
+                <span class=""></span>
+                <span class="tri pos"><i class="fa fa-align-justify" style="color: #fff"></i>
+                    @*<img src="~/Files/Sage/PhotoFile/@Session["LogInUserPhotoName"]" alt="" /></span>*@
+                    @*<img src="~/Files/Sage/PhotoFile/DefaultPhoto.jpg" alt="" />*@
+                    </span>
+
+                
+                <a tabindex="-1" class="">@Session["LogInUserName"].ToString()</a>
+            </li>
+@*            <li class="">
+                <span class=""></span>
+                <span class="tri pos"><i class="fa fa-align-justify" style="color: #fff"></i>
+                    <img src="~/Files/Sage/PhotoFile/DefaultPhoto.jpg" alt="" /></span>
+                <a tabindex="-1" class="">@Session["LogInBranch"].ToString()</a>
+            </li>*@
+
+
+
+
+
+            @*            <li class="dropdown-submenu">
+                <span class="nav-icon-hr"></span>
+                <a tabindex="-1" class="btn btn-info" href="/Sage/Home/">Sage</a>
+            </li>*@
+
+
+
+            <li class="">
+                <span class="nav-icon-logout"></span>
+                <span class="tri pos"><i class="fa fa-align-justify" style="color: #fff"></i>
+                    <img src="~/Images/images/dropdown3.png" alt="" /></span>
+                <a tabindex="-1" class="btn btn-info" href="/Home/LogOut">Log Out</a>
+
+            </li>
+
+
+        </ul>
+    </div>
+</div>
+<!-- end of top_wrapper-->
+<script>
+    $(function () {
+        var sm = document.getElementById('sm');
+        var ssm = document.getElementById('scroll-side-menu');
+        $(window).scroll(function () {
+            if ($(this).scrollTop() > 0) {
+                $("#a").slideUp(600);
+                $("#scroll-side-menu").css("cssText", "left: -214px;");
+                $("#logo-two").addClass('log-act');
+            }
+            else {
+                $("#scroll-side-menu").css("cssText", "left: -214px;");
+                $("#a").slideDown(600);
+                $("#logo-two").removeClass('log-act');
+            }
+        });
+        $("#leftside").hover(function () {
+            $("#scroll-side-menu").toggleClass("open");
+            $("#scroll-side-menu .dropdown-submenu .tri").toggleClass("pos");
+        });
+    });
+</script>

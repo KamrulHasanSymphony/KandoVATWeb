@@ -1,0 +1,302 @@
+﻿@model VATViewModel.DTOs.DisposeFinishMasterVM
+@using UIHelper.MVC
+@using SymOrdinary
+@using System.Threading;
+@using VATServer.Ordinary
+
+@{
+    ShampanIdentity identity = null;
+    try
+    {
+        identity = (ShampanIdentity)Thread.CurrentPrincipal.Identity;
+    }
+    catch (Exception)
+    {
+        Response.Redirect("/VMS/Home/Login");
+        return;
+    }
+}
+
+@{
+    ViewBag.Title = "Index";
+}
+
+@Html.HiddenFor(model => model.TransactionType, new { @class = " cTransactionType" })
+
+<div class="headrow">
+    <div style="display: none" id="formAppend"></div>
+    <button type="button" title="Add New DisposeFinish" data-url="/VMS/DisposeFinish/Create?tType=@Model.TransactionType" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+
+
+</div>
+
+<div class=" tabMenu">
+    <ul style="font-size: 1.4em;" class="tabDesign nav nav-tabs">
+        <li class="tabDefault active"><a data-toggle="tab" href="#DisposeFinishIndex">Index</a></li>
+    </ul>
+</div>
+<div class="tab-content">
+    <div id="DisposeFinishIndex" class="tab-pane fade  in active">
+        <div class="thinbox  animated zoomIn faster">
+            <div class="th_thinbox">
+                @if (Model.TransactionType == "Other")
+                {
+                    <p>Dispose Finish List</p>
+                }
+                else
+                {
+                    <p>Dispose Trading List</p>
+                }
+                   
+                </div>
+            <div class="dtSearch formDesign">
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.DisposeNo)
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(model => model.DisposeNo, new { @placeholder = "Dispose No", @class = "  form-control" })
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.ImportIDExcel)
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(model => model.ImportIDExcel, new { @placeholder = "Import Id", @class = "  form-control" })
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.DisposeDateTimeFrom)
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(model => model.DisposeDateTimeFrom, new { @placeholder = "Dispose Date From", @class = "customDatePicker defaultDate  form-control" })
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.DisposeDateTimeTo)
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(model => model.DisposeDateTimeTo, new { @placeholder = "Dispose Date To", @class = "customDatePicker defaultDate  form-control" })
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <div class="editor-label">
+                            @Html.LabelFor(model => model.Post)
+                        </div>
+                        <div class="editor-field">
+                            <select id="Post" class="form-control">
+                                <option value=""></option>
+                                <option value="Y">Y</option>
+                                <option value="N">N</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="trk1_5">
+                        <div class="editor-label">
+                            <label>Branch Name</label>
+                        </div>
+                        <div class="editor-field">
+                            @Html.SimpleDropDownFor(model => model.BranchId, "/Config/DropDown/BranchProfile", new { @class = " selectDropdown  form-control" })
+                        </div>
+                    </div>
+
+                    @*<div class="trk1_5">
+                            <div class="editor-label">
+                                <label>Select Top</label>
+                            </div>
+                            <div class="editor-field">
+                                @Html.SimpleDropDownFor(model => model.SelectTop, "/Config/DropDown/RecordSelectList", new { @class = " cSelectTop form-control" })
+                                &nbsp;
+                            </div>
+                        </div>*@
+                </div>
+                <div class="row">
+
+                    <div class="col-md-4">
+                        <div class="editor-label">
+                            <label>&nbsp;</label>
+                        </div>
+                        <div class="editor-field">
+                            <button type="button" title="Click to Search" id="btnDialog" class="sym-btn-search">&nbsp;Search</button>
+                            <button type="button" title="Clear Data" id="Clear" class=" sym-btn-clear">&nbsp;Clear</button>
+                            @*<button type="button" title="Post Data" onclick="PostData()" class="sym-btn-post">&nbsp;Post</button>
+                            <button type="button" title="Export Data" onclick="ExportExcel()" class="sym-btn-Excel-Export">&nbsp;Export</button>*@
+
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <div class="editor-label">
+                            <label>Export All</label>
+                        </div>
+                        <div class="editor-field">
+                            @Html.CheckBox("ExportAll", new { id = "idExportAll", @class = "cExportAll form-control", @name = "att[]" })
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+            <p>&nbsp;</p>
+            <table id="myDataTable" class="display">
+                <thead>
+                    <tr>
+                        <th class="center"><input type="checkbox" class="chkAll" /> Action</th>
+                        <th>Dispose No</th>
+                        <th>Transaction Date</th>
+                        <th>Finish ItemNo</th>
+                        <th>Quantity</th>
+                        @*<th>Serial No</th>*@
+                        <th>Is Posted</th>
+                        @*<th>Import ID</th>*@
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <br />
+        </div>
+
+        <div class="headrow">
+            <button type="button" title="Add New DisposeFinish" data-url="/VMS/DisposeFinish/Create?tType=@Model.TransactionType" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+        </div>
+        <div id="myModal" class="trkmodal"></div>
+    </div>
+    
+
+</div>
+
+<script>
+
+    function PostData() {
+
+        var questionMSG = "Are you sure to Post Data!";
+
+        Ask(questionMSG, function () {
+
+
+            var IDs = [];
+            var $Items = $(".dSelected:input:checkbox:checked");
+
+            if ($Items == null || $Items.length == 0) {
+                ShowResult("Fail", "You are requested to Select before Post!");
+                return;
+            }
+
+            $Items.each(function () {
+                var ID;
+                ID = $(this).attr("data-Id");
+
+                var vID = ID.split("~")[0];
+
+                IDs.push(vID);
+            });
+
+            var model = {
+                IDs: IDs
+            }
+            var url = '/VMS/DisposeFinish/MultiplePost';
+
+            $.ajax({
+                url: url
+                , data: model
+                , type: 'Post'
+                , traditional: true
+                , beforeSend: function () { $(".loading").show(); }
+                , success: function (rVM) {
+                    ShowResult(rVM.Status, rVM.Message);
+                }
+                , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+
+            });
+        });
+
+    }
+
+
+</script>
+
+<script language="javascript" type="text/javascript">
+
+    $(document).ready(function () {
+
+        SelectAllForDelete();
+        $.datepicker.regional[""].dateFormat = 'dd/M/y';
+        $.datepicker.setDefaults($.datepicker.regional['']);
+        var oTable = $('#myDataTable').dataTable({
+            "bServerSide": true,
+            "sAjaxSource": "/VMS/DisposeFinish/_index?TransactionType=@Model.TransactionType",
+            "bProcessing": true,
+            "aLengthMenu": tablelength(),
+            "bJqueryUI": true,
+            "bAutoWidth": false,
+
+            "fnServerData": function (sSource, aoData, fnCallback) {
+                $('.dtSearch :input').each(function () {
+                    var Name = $(this).attr("Id")
+                    var Value = $(this).val()
+                    aoData.push({ "name": Name, "value": Value });
+                });
+                $.getJSON(sSource, aoData, function (json) {
+                    fnCallback(json);
+                });
+            },
+
+            "aoColumns": [
+                            {
+                                "sName": "Id",
+                                "bSearchable": false,
+                                "bSortable": false,
+                                "sWidth": "15%",
+                                "sClass": "center",
+                                "fnRender": function (oObj) {
+                                    return ' <input onclick="CheckAll(this)" class="dSelected" type="checkbox" data-Id="' + oObj.aData[0] + '">'
+                                        + '&nbsp; <a title="Click on for Edit" href=\"/VMS/DisposeFinish/Edit/' + oObj.aData[0].split('~')[0] + '?TransactionType=' + oObj.aData[6] + '\" class="sym-btn-edit-row"></a>'
+                                        //+ '&nbsp; <a title="Click on for Edit" href=\"/VMS/DisposeFinish/Edit/' + oObj.aData[0].split('~')[0] + '\" class="sym-btn-edit-row"></a>'
+                                        + '&nbsp; <a title="Click on for Post" data-url="/VMS/DisposeFinish/Post"  onclick=checkValidBranch(this,' + oObj.aData[0].split('~')[2] + '); data-Id="' + oObj.aData[0] + '\" class="sym-btn-post-row"></a>'
+                                    ;
+                                }
+                            }
+                            , { "sName": "isposeNo", "sWidth": "15%" }
+                            , { "sName": "TransactionDateTime", "sWidth": "10%" }
+                            , { "sName": "FinishItemNo", "sWidth": "15%" }
+                            , { "sName": "Quantity", "sWidth": "10%" }
+                            //, { "sName": "SerialNo", "sWidth": "12%" }
+                            , { "sName": "Post", "sWidth": "10%" }
+                            //, { "sName": "TransactionType", "sWidth": "20%" }
+            ]
+        });
+
+        $('#btnDialog').click(function () {
+            var model = $('.dtSearch :input').serialize();
+            $.ajax({
+                url: "/VMS/DisposeFinish/Index",
+                cache: false,
+                data: model,
+                success: function (html) {
+                    oTable.fnDraw();
+                }
+            });
+        });
+        ////clearing fields
+        $("#Clear").on('click', function () {
+            $(".Dropdown").select2("val", "");
+            $(".form-control").val("");
+        });
+
+
+    });
+    function checkValidBranch(element, branchId) {
+        if ('@Session["BranchId"]' != branchId) {
+            ShowResult("Fail", "This Information not for this Branch!");
+            return;
+        }
+
+        btnPost(element);
+    }
+</script>
+
+

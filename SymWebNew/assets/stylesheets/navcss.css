@@ -1,0 +1,68 @@
+﻿
+        .menuheight nav, .collapse, .collapse {
+            background: #286090;
+        }
+        .headrow {
+            background: #cbe4e7;
+        }
+        .th_thinbox {
+            background: #286090;
+            min-width: 100px;
+            margin: -10px -20px 5px -20px !important;
+            padding: 3px 0px 0px 10px !important;
+            font-size: 16px;
+            -moz-border-radius: 5px 5px 0px 0px !important;
+            -webkit-border-radius: 5px 5px 0px 0px !important;
+            border-radius: 5px 5px 0px 0px !important;
+            font-weight: bold;
+            color:white;
+        }
+        .thinbox {
+            background-color: #cbe4e7;
+            border-color: #235775;
+        }
+
+        table.display {
+            color: white;
+            background-color: #5bc0de;
+        }
+
+        .dataTables_wrapper {
+            background-color: #286090;
+            color:white;
+        }
+        .navbar-default .navbar-nav > li > a {
+            color:white;
+        }
+
+        .navbar-default .navbar-nav > li.dropdown:hover > a, .navbar-default .navbar-nav > li.dropdown:hover > a:hover, .navbar-default .navbar-nav > li.dropdown:hover > a:focus {
+            background: #a3d4e3;
+        }
+
+        .dropdown .multi-column-dropdown li a, .dropdown .multi-column-dropdown li a, .dropdown .dropdown-menu li a, .dropdown .dropdown-menu li a {
+            background: #abddf2;
+        }
+
+        .dropdown-menu, .dropdown-menu {
+            background: #a3d4e3;
+        }
+
+        li.dropdown:hover > .dropdown-menu {
+            display: block;
+        }
+        .navbar-collapse {
+            padding-right: 0px;
+            padding-left: 0px;
+        }
+
+        /*.navbar-nav > li > a, .navbar-nav > li > a {
+            padding-top: 3px !important;
+            padding-bottom: 5px !important;
+        }*/
+
+        .nav > li > a {
+            padding: 15px 10px;
+        }
+.collapse {
+
+}

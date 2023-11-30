@@ -1,0 +1,71 @@
+﻿@model SymViewModel.Attendance.AttendanceRosterAllVM
+@using UIHelper.MVC
+
+@{
+    ViewBag.Title = "Add";
+}
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+
+    <div class="thinbox">
+        <div class="row">
+            <div class="col-md-4">
+                @Html.LabelFor(model => model.Code)
+            </div>
+            <div class="col-md-8">
+                @Html.TextBoxFor(model => model.Code, null, new { @class = "required form-control" })
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                @Html.LabelFor(model => model.Name)
+            </div>
+            <div class="col-md-8">
+                @Html.TextBoxFor(model => model.Name, null, new { @class = "required form-control" })
+            </div>
+        </div>
+          <div class="row">
+            <div class="col-md-4">
+                @Html.LabelFor(model => model.AttendanceGroupId)
+            </div>
+            <div class="col-md-8">
+                @Html.SimpleDropDownFor(model => model.AttendanceGroupId, "/Config/DropDown/GroupList", new {@class = "required form-control" })
+            </div>
+        </div>
+          <div class="row">
+            <div class="col-md-4">
+                @Html.LabelFor(model => model.AttendanceStructureId)
+            </div>
+            <div class="col-md-8">
+                @Html.SimpleDropDownFor(model => model.AttendanceStructureId, "/Config/DropDown/AttendanceStructure", new {@class = "required form-control" })
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                @Html.LabelFor(model => model.Remarks)
+            </div>
+            <div class="col-md-8">
+                @Html.TextBoxFor(model => model.Remarks, null, new { @class = " form-control" })
+            </div>
+        </div>
+        <div class="row">
+            <label class="col-sm-5">
+                 <button type="submit" title="Save Data" class="  sym-btn-save">&nbsp;Save</button>
+            </label>
+            <div class="col-sm-5">
+          
+                 <button type="button" title="Cancel Data" class=" btncancel sym-btn-cancel">&nbsp;Cancel</button>
+            </div>
+        </div>
+          </div>
+}
+<script>
+    $(function () {
+        InitDropDowns();
+        $('#Code').autocomplete({ source: '@Url.Action("EmployeeCode", "Autocomplete", new { area = "Config" })', minLength: 2 });
+        $("#Code").change(function () {
+         var code=   $(this).val();
+        })
+    });
+</script>

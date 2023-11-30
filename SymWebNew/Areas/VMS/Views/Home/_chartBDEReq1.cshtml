@@ -1,0 +1,160 @@
+﻿@model SymViewModel.Sage.GLReportVM
+@using UIHelper.MVC
+@using SymOrdinary
+@using System.Threading;
+@*@{ 
+    
+    ShampanIdentity identity = null;
+    try
+    {
+        identity = (ShampanIdentity)Thread.CurrentPrincipal.Identity;
+    }
+    catch (Exception)
+    {
+        Response.Redirect("/Sage/Home/Login");
+        return;
+    }
+}*@
+
+
+<div class="th_thinbox">
+    <p>(01) BDE Requisition Date Range(Multiple Month) - Single DocumentType Amount</p>
+</div>
+<div class="BDERequisitionDetailsBar">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="editor-label">
+                @Html.LabelFor(model => model.BranchId)
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="editor-field">
+               @* @if (identity.IsAdmin || identity.IsAuditor)
+                {
+ @Html.SimpleDropDown("BranchId", "/Config/DropDown/GL_GLBranchAll", new { @Id = "bid", @class = "branchId form-control selectDropdown" })
+                }
+                else
+                {
+ @Html.SimpleDropDownFor(model => model.BranchId, "/Config/DropDown/GL_GLBranch", new { @Id = "bid", @class = "branchId form-control ", @disabled = "disabled" })
+                }*@
+ @Html.SimpleDropDownFor(model => model.BranchId, "/Config/DropDown/GL_GLBranch", new { @Id = "bid", @class = "branchId form-control ", @disabled = "disabled" })
+                @Html.ValidationMessageFor(model => model.BranchId)
+                @Html.HiddenFor(model => model.BranchId)
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="editor-label">
+                <label>Document Type</label>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="editor-field">
+                <div>
+                    @Html.SimpleDropDown("DocumentType", "/Config/DropDown/GL_GLDocumentType", new { @Id = "", @class = " documentType  required form-control" })
+                </div>
+            </div>
+        </div>
+    </div>
+        <div class="row">
+        <div class="col-md-4">
+            <div class="editor-label">
+                @Html.LabelFor(model => model.DateFrom)
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="editor-field">
+                @Html.TextBox("DateFrom", null, new { @placeholder = "Date From", @class = "dtFrom customDatePicker form-control" })
+                @Html.ValidationMessageFor(model => model.DateFrom)
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="editor-label">
+                @Html.LabelFor(model => model.DateTo)
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="editor-field">
+                @Html.TextBox("DateTo", null, new { @placeholder = "Date To", @class = "dtTo customDatePicker form-control" })
+                @Html.ValidationMessageFor(model => model.DateTo)
+            </div>
+        </div>
+    </div>
+
+    <div class="row">&nbsp;  </div>
+    <div class="row">
+        &nbsp;
+        <button title="Click to Show BDE Requisition Date Range(Multiple Month) - Single DocumentType Amount" id="" class=" searchBtn sym-btn-search">&nbsp;Search</button>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="container  col-md-12 ">
+            <h2 class="card-header ">BDE Requisition Details</h2>
+            <div class="card-block">
+                <canvas id="myBarChart" height="20" width="20"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(".searchBtn").click(function () {
+        Searching();
+    });
+
+    function Searching() {
+
+        var documentType = $(".documentType :selected").val();
+        var branchId = $(".branchId :selected").val();
+        var DateFrom = $(".dtFrom").val();
+        var DateTo = $(".dtTo").val();
+        Obj = new Object();
+
+        Obj.documentType = documentType;
+        Obj.branchId = branchId;
+        Obj.DateFrom = DateFrom;
+        Obj.DateTo = DateTo;
+        var Param = $.param(Obj);
+        loadsbar(Param);
+    }
+</script>
+
+<script>
+    function loadsbar(Param) {
+        $('#myBarChart').html("");
+        backgroundColor = bkColor();
+        var labels = [];
+        var datas = [];
+        $.ajax({
+            url: "/Sage/Home/BDERequisitionChart1" + "?" + Param,
+            type: 'GET',
+            beforeSend: function () { $(".loading").show(); },
+            complete: function () { $(".loading").fadeOut(200).hide("slow") },
+            success: function (data) {
+                $.each(data, function (index, value) {
+                    labels.push(value.PeriodName + '=>' + value.TransactionAmount);
+                    datas.push(value.TransactionAmount);
+                });
+                var ctx = document.getElementById("myBarChart").getContext('2d');
+                var myChart = new Chart(ctx,
+                    {
+                        type: 'bar',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'Month',
+                                data: datas,
+                                backgroundColor: backgroundColor
+                            }]
+                        }
+
+                    }).show;
+            },
+        });
+
+    }
+</script>

@@ -1,0 +1,145 @@
+﻿@model VATViewModel.DTOs.MPLZoneBranchMappingVM
+@using UIHelper.MVC
+@{
+    Layout = "~/Areas/VMS/Views/Shared/_ModalLayout.cshtml";
+}
+
+@Html.HiddenFor(model => model.Id)
+@Html.HiddenFor(model => model.ModalOperation)
+
+<div class="col-md-6 col-md-offset-3">
+    <div class="HigherModal-content">
+        <div class="HigherModal-header">
+            <span class="closeHigher">&times;</span>
+            <h2 class="text-center">Zone Mapping Information</h2>
+        </div>
+        <div class="HigherModal-body formDesign">
+
+            <div class="thinbox animated zoomIn faster">
+                <div class="row">
+                    <div class="form-group" style="display: none">
+                        <label class="col-md-2 control-label text-right trkLabelMargin">Zone Name</label>
+                        <div class="form-group">
+                            <div class="col-md-4" style="margin-top: 6px;">
+                                @Html.SimpleDropDownFor(m => m.MappingZoneId, "/Config/DropDown/ZoneProfile", new { @class = " trNavigateMenu form-control required", @disabled = "disabled" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-3 control-label text-right trkLabelMargin">Branch Name</label>
+                        <div class="form-group">
+                            <div class="col-md-7" style="margin-top: 6px;">
+                                @Html.SimpleDropDownFor(m => m.MappingBranchId, "/Config/DropDown/BranchProfile", new { @class = " trNavigateMenu form-control required" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+                <div class="animated zoomIn faster">
+                    <div class="row">
+                        <div class="form-group">
+                            @if (Model.ModalOperation == "add")
+                            {
+                                <button type="button" name="btnName" value="Save" title="Save Data" class="btnSave sym-btn-save pull-right">&nbsp;Save</button>
+                            }
+                            else
+                            {
+                                <button type="button" name="btnName" value="Update" title="Update Data" class="btnSave sym-btn-update pull-right">&nbsp;Update</button>
+                            }
+                        </div>
+                    </div>
+                </div>
+                    
+
+                </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('.btnSave').click(function () {
+            debugger;
+            var model = {};
+            var id = $('#Id').val() || 0 ;
+            var mappingZoneId = $('#MappingZoneId').val();
+            var mappingBranchId = $('#MappingBranchId').val();
+            var modalOperation = $('#ModalOperation').val();
+            
+            if (mappingZoneId == "0" || mappingZoneId == "" || mappingZoneId == undefined)
+            {
+                ShowResult("Fail", "Zone Required.");
+                return;
+            }
+            if (mappingBranchId == "0" || mappingBranchId == "" || mappingBranchId == undefined) {
+                ShowResult("Fail", "Branch Required.");
+                return;
+            }
+
+            model =
+               {
+                   ZoneId : mappingZoneId,
+                   BranchId : mappingBranchId,
+                   ModalOperation : modalOperation,
+                   Id : id,
+               }
+
+            $.ajax({
+                type: "POST",
+                url: '/MPLZoneBranchMapping/SaveUpdate',
+                data: model,
+                success: function (res) {
+                    debugger;
+                    if (res[0] == "Success") {
+                        ShowResult("Success", res[1]);
+                    }
+                    else if (res[0] == "Fail") {
+                        ShowResult("Fail", res[1]);
+                    }
+                    else
+                    {
+                        ShowResult("Fail", res);
+                    }
+                },
+                error: function (res) {
+                    ShowResult("Fail", res);
+                }
+            });
+
+        });
+    });
+
+
+</script>
+
+
+<script>
+    function closeHigherModal() {
+        $("#myHigherModal").html("");
+        trkmodal.style.display = "none";
+    }
+    var span = document.getElementsByClassName("closeHigher")[0];
+    var trkmodal = document.getElementById('myHigherModal');
+    span.onclick = function () {
+        closeHigherModal();
+    }
+
+    $(function () {
+        $('#customerPopUpTable').unbind().on('dblclick', '.trSelectPopUpCustomer', function () {
+            var itemName = $(this).children('td.popUpItemName').text();
+            selectPopUpProduct(itemName, this);
+        });
+        function selectPopUpProduct(itemName, sender) {
+            callbackFromCustomerModal(sender);
+            closeHigherModal();
+        }
+        $(document).on('click', '.trSelectPopUpCustomer', function () {
+            var activeEl = $('tr.active');
+            activeEl.removeClass("active");
+            $(this).addClass(" active");
+        });
+    })
+</script>
+

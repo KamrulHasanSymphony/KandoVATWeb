@@ -1,0 +1,84 @@
+﻿<div class="headrow">
+    <button type="button" title="Add New Earning Deduction Structure" data-url="/Common/EarningDeductionStructure/Create" onclick="GoTo(this)" id="" class="sym-btn-add">&nbsp;New</button>
+    <button type="button" title="Delete Earning Deduction Structure" data-url="/Common/EarningDeductionStructure/Delete" onclick="deletedData(this, 'myDataTable');" id="" class="sym-btn-remove">&nbsp;Delete</button>
+    <label class="pull-right">Deduction Structure</label>
+</div>
+
+<div class="thinbox">
+    <div class="th_thinbox">
+        <p>Earning Deduction Policy List</p>
+    </div>
+    <table id="myDataTable" class="display">
+        <thead>
+            <tr>
+                <th class="center">
+                    <input type="checkbox" class="chkAll" />Select All</th>
+                <th>Name</th>
+                <th>Days Count From</th>
+                <th>First SlotAbsent From</th>
+                <th>Second Slot Absent From</th>
+                <th>NP Absent From</th>
+                <th>Leave WP From</th>
+            </tr>
+            @* 
+         //01   //Name
+         //02   //DaysCountFrom
+         //03   //FirstSlotAbsentFrom
+         //04   //SecondSlotAbsentFrom
+         //05   //NPAbsentFrom
+         //06   //LWPFrom
+        *@
+
+
+
+
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <br />
+</div>
+
+<div class="headrow">
+    <button type="button" title="Add New Earning Deduction Structure" data-url="/Common/EarningDeductionStructure/Create" onclick="GoTo(this)" id="" class="sym-btn-add">&nbsp;New</button>
+    <button type="button" title="Delete Earning Deduction Structure" data-url="/Common/EarningDeductionStructure/Delete" onclick="deletedData(this, 'myDataTable');" id="" class="sym-btn-remove">&nbsp;Delete</button>
+</div>
+
+<script>
+
+    $(document).ready(function () {
+
+        var oTable = $('#myDataTable').dataTable({
+            "bServerSide": true,
+            "sAjaxSource": "/Common/EarningDeductionStructure/_index",
+            "bProcessing": true,
+            "aLengthMenu": tablelength(),
+            "bJqueryUI": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+
+                            {
+                                "sName": "Name",
+                                "bSearchable": false,
+                                "bSortable": false,
+                                "sWidth": "12%",
+                                "sClass": "center",
+                                "fnRender": function (oObj) {
+                                    return ' <input onclick="CheckAll(this)" type="checkbox" data-Id="' + oObj.aData[0] + '">&nbsp; <a id=""  title="Click on for Edit" style="text-decoration:none;"   href=\"/Common/EarningDeductionStructure/Edit/' + oObj.aData[0] + '\" class=" innerListLink sym-btn-edit-row "></a>'
+                                        + '&nbsp; <a title="Click on for Delete" style="text-decoration:none;" data-url="/Common/EarningDeductionStructure/Delete" onclick="deletedData(this, myDataTable,' + oObj.aData[0] + ');" class="sym-btn-remove-row"></a>'
+                                    ;
+                                }
+                            }
+                             , { "sName": "Name", "sWidth": "15%" }
+                             , { "sName": "DaysCountFrom", "sWidth": "15%" }
+                             , { "sName": "FirstSlotAbsentFrom", "sWidth": "15%" }
+                             , { "sName": "SecondSlotAbsentFrom", "sWidth": "15%" }
+                             , { "sName": "NPAbsentFrom", "sWidth": "15%" }
+                             , { "sName": "LWPFrom", "sWidth": "15%" }
+            ]
+        });
+        SelectAllForDelete();
+    });
+
+
+</script>

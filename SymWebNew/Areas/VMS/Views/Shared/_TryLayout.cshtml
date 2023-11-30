@@ -1,0 +1,705 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>ShampanVAT</title>
+    <link href="~/Images/GDIC/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width" />
+
+    <script src="~/assets/javascripts/jQuery2.1.4.js"></script>
+    <link href="~/assets/NewFolder1/dataTables/demo_table.css" rel="stylesheet" />
+    <link href="@Url.Content("~/assets/css/demo_table.css")" rel="stylesheet" type="text/css" />
+
+    <link href="@Url.Content("~/assets/css/demo_table_jui.css")" rel="stylesheet" type="text/css" />
+    <link href="~/assets/stylesheets/dataTables.responsive.css" rel="stylesheet" />
+
+    <link href="~/assets/css/menu.css" rel="stylesheet" />
+
+    <link href="~/assets/css/jquery-ui.css" rel="stylesheet" />
+    <link href="~/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/assets/plugins/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link href="~/assets/css/toastr.css" rel="stylesheet" />
+    <link href="~/assets/stylesheets/common.css" rel="stylesheet" />
+    <link href="~/assets/stylesheets/font-awesome.css" rel="stylesheet" />
+    <link href="~/assets/stylesheets/animate.css" rel="stylesheet" />
+
+    <link href="~/assets/DataTables/css/jquery.dataTables.css" rel="stylesheet" />
+    <link href="~/assets/css/jquery.ptTimeSelect.css" rel="stylesheet" />
+    <link href="~/assets/css/SymphonyBtn.css" rel="stylesheet" />
+    <link href="~/assets/css/dataTables.colVis.css" rel="stylesheet" />
+    <link href="~/assets/css/select2.css" rel="stylesheet" />
+    @Styles.Render("~/Content/css")
+
+    <style>
+        .LogoutButton {
+            width: 24px;
+            height: 24px;
+            border-radius: 5px;
+            padding-left: -3px !important;
+        }
+
+        .wth {
+            width: 15%;
+        }
+    </style>
+    <script src="~/assets/javascripts/bootstrap-checkbox.js" defer></script>
+    <script>
+        $(document).ready(function () {
+
+            toastr.options.positionClass = 'toast-top-center';
+            var result = '@Session["rollPermission"]';
+            if (result != null) {
+                if (result.toLowerCase() == "deny") {
+                    toastr.error('You Do not have permission to access this module', 'Permission deny')
+                }
+                @{ Session["rollPermission"] = null; }
+            }
+
+
+            var permission = '@Session["permission"]';
+            if (permission == "False") {
+                toastr.error('You Do not have permission to access this module', 'Permission deny')
+                @{ Session["permission"] = null; };
+            }
+            else {
+            }
+            var result = '@Session["result"]';
+            result = result.split("~");
+            if (result[0] == "Success") {
+                toastr.success(result[1], 'Shampan Sage')
+                @{ Session["result"] = null; }
+            }
+            else if (result[0] == "Fail") {
+                toastr.error(result[1], 'Shampan Sage')
+                @{ Session["result"] = null; };
+            }
+            else if (result[0] == "Info") {
+                toastr.info(result[1], 'Shampan Sage')
+                @{ Session["result"] = null; };
+            }
+            else if (result[0] == "Warning") {
+                toastr.warning(result[1], 'Shampan Sage')
+                @{ Session["result"] = null; };
+            }
+            $(".selectDropdown").select2();
+            $(".selectDropdown").trigger('change');
+            $(".selectDropdown").removeClass('form-control');
+            function goBack() {
+                window.history.back();
+            }
+
+
+
+            var url = "";
+
+            $(".dialog-alert").dialog({
+                autoOpen: false,
+                resizable: false,
+                //height: 170,
+                title: 'Shampan VAT',
+                width: 350,
+                show: {
+                    effect: 'drop', direction: "up", effect: "blind",
+                    duration: 300
+                },
+                hide: {
+                    effect: "explode",
+                    duration: 300
+                },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+                    $(".ui-dialog-titlebar-close").hide();
+                    var msg = '@Session["result"]';
+                    msg = msg.split("~");
+                    $(".ui-dialog").addClass('' + msg[0]);
+                    $(".msgg").html("" + msg[1]);
+                },
+                buttons: {
+                    "OK": function () {
+                        $(this).dialog("close");
+                        window.location.reload(true);
+
+                    },
+                    "Cancel": function () {
+                        $(this).dialog("close");
+                        window.location.reload(true);
+                    }
+                }
+            });
+
+            if ('@Session["result"]' != "") {
+                var msg = '@Session["result"]';
+
+                TempData.Remove("msg");
+                msg = msg.split("~");
+                ShowResult(msg[0], msg[1]);
+            }
+
+            $(".dialog-create").dialog({
+                title: 'Create',
+                autoOpen: false,
+                resizable: false,
+                width: 400,
+                show: {
+                    effect: 'drop', direction: "up", effect: "blind",
+                    duration: 300
+                },
+                hide: {
+                    effect: "explode",
+                    duration: 300
+                },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+
+                    $(".ui-dialog-titlebar-close").hide();
+                    $(".ui-dialog").removeClass('Success');
+                    $(".ui-dialog").removeClass('Fail');
+                    $(this).load(url);
+                }
+            });
+
+
+            $(".dialog-edit").dialog({
+                title: 'Update',
+                autoOpen: false,
+                resizable: false,
+                width: 400,
+                show: {
+                    effect: 'drop', direction: "up", effect: "blind",
+                    duration: 300
+                },
+                hide: {
+                    effect: "explode",
+                    duration: 300
+                },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+                    $(".ui-dialog-titlebar-close").hide();
+                    $(".ui-dialog").removeClass('Success');
+                    $(".ui-dialog").removeClass('Fail');
+                    $(this).load(url);
+                }
+            });
+
+
+            $(".dialog-confirm").dialog({
+                autoOpen: false,
+                resizable: false,
+                title: 'Shampan VAT',
+                height: 170,
+                width: 350,
+                show: {
+                    effect: 'drop', direction: "up", effect: "blind",
+                    duration: 300
+                },
+                hide: {
+                    effect: "explode",
+                    duration: 300
+                },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+                    $(".ui-dialog-titlebar-close").hide();
+                    $(".ui-dialog").removeClass('Success');
+                    $(".ui-dialog").removeClass('Fail');
+
+                },
+                buttons: {
+                    "OK": function () {
+                        $(this).dialog("close");
+                        window.location.href = url;
+                    },
+                    "Cancel": function () {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+
+
+            $(".dialog-detail").dialog({
+                title: 'View User',
+                autoOpen: false,
+                resizable: false,
+                width: 400,
+                show: {
+                    effect: 'drop', direction: "up", effect: "blind",
+                    duration: 300
+                },
+                hide: {
+                    effect: "explode",
+                    duration: 300
+                },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+                    $(".ui-dialog-titlebar-close").hide();
+                    $(this).load(url);
+                },
+                buttons: {
+                    "Close": function () {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+
+
+            $(".dialog-report").dialog({
+                title: 'Report',
+                autoOpen: false,
+                resizable: false,
+                width: 400,
+                show: {
+                    effect: 'drop', direction: "up", effect: "blind",
+                    duration: 300
+                },
+                hide: {
+                    effect: "explode",
+                    duration: 300
+                },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+
+                    $(".ui-dialog-titlebar-close").hide();
+                    $(".ui-dialog").removeClass('Success');
+                    $(".ui-dialog").removeClass('Fail');
+                    $(this).load(url);
+                }
+            });
+
+
+            $(".dialog-audit").dialog({
+                title: 'Audit',
+                autoOpen: false,
+                resizable: false,
+                width: 400,
+                show: {
+                    effect: 'drop', direction: "up", effect: "blind",
+                    duration: 300
+                },
+                hide: {
+                    effect: "explode",
+                    duration: 300
+                },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+
+                    $(".ui-dialog-titlebar-close").hide();
+                    $(".ui-dialog").removeClass('Success');
+                    $(".ui-dialog").removeClass('Fail');
+                    $(this).load(url);
+                }
+            });
+
+            $(".dialog-approve").dialog({
+                title: 'Approve',
+                autoOpen: false,
+                resizable: false,
+                width: 400,
+                show: {
+                    effect: 'drop', direction: "up", effect: "blind",
+                    duration: 300
+                },
+                hide: {
+                    effect: "explode",
+                    duration: 300
+                },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+
+                    $(".ui-dialog-titlebar-close").hide();
+                    $(".ui-dialog").removeClass('Success');
+                    $(".ui-dialog").removeClass('Fail');
+                    $(this).load(url);
+                }
+            });
+
+            $(".dialog-reject").dialog({
+                title: 'Reject',
+                autoOpen: false,
+                resizable: false,
+                width: 400,
+                show: {
+                    effect: 'drop', direction: "up", effect: "blind",
+                    duration: 300
+                },
+                hide: {
+                    effect: "explode",
+                    duration: 300
+                },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+
+                    $(".ui-dialog-titlebar-close").hide();
+                    $(".ui-dialog").removeClass('Success');
+                    $(".ui-dialog").removeClass('Fail');
+                    $(this).load(url);
+                }
+            });
+
+            $(".dialog-accept").dialog({
+                title: 'Accept',
+                autoOpen: false,
+                resizable: false,
+                width: 400,
+                show: {
+                    effect: 'drop', direction: "up", effect: "blind",
+                    duration: 300
+                },
+                hide: {
+                    effect: "explode",
+                    duration: 300
+                },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+
+                    $(".ui-dialog-titlebar-close").hide();
+                    $(".ui-dialog").removeClass('Success');
+                    $(".ui-dialog").removeClass('Fail');
+                    $(this).load(url);
+                }
+            });
+
+
+            $(".dialog-receive").dialog({
+                title: 'Receive',
+                autoOpen: false,
+                resizable: false,
+                width: 400,
+                show: {
+                    effect: 'drop', direction: "up", effect: "blind",
+                    duration: 300
+                },
+                hide: {
+                    effect: "explode",
+                    duration: 300
+                },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+
+                    $(".ui-dialog-titlebar-close").hide();
+                    $(".ui-dialog").removeClass('Success');
+                    $(".ui-dialog").removeClass('Fail');
+                    $(this).load(url);
+                }
+            });
+
+
+
+
+
+            $(".lnkCreate").live("click", function (e) {
+                url = $(this).attr('href');
+                $(".dialog-create").dialog('open');
+
+                return false;
+            });
+
+            $(".btnCreate").live("click", function (e) {
+                url = $(this).attr('data-url');
+                $(".dialog-create").dialog('open');
+
+                return false;
+            });
+
+
+            $(".lnkEdit").live("click", function (e) {
+                url = $(this).attr('href');
+                $(".dialog-edit").dialog('open');
+
+                return false;
+            });
+
+            $(".lnkDelete").live("click", function (e) {
+                url = $(this).attr('href');
+                $(".dialog-confirm").dialog('open');
+
+                return false;
+            });
+
+            $(".lnkDetail").live("click", function (e) {
+                url = $(this).attr('href');
+                $(".dialog-detail").dialog('open');
+
+                return false;
+            });
+
+            $(".btncancel").live("click", function (e) {
+                $(".dialog-edit").dialog("close");
+                $(".dialog-create").dialog("close");
+                $(".dialog-report").dialog("close");
+                $(".dialog-audit").dialog("close");
+                $(".dialog-approve").dialog("close");
+                $(".dialog-reject").dialog("close");
+                $(".dialog-accept").dialog("close");
+                $(".dialog-receive").dialog("close");
+                return false;
+            });
+
+            $(".btnReport").live("click", function (e) {
+                url = $(this).attr('data-url');
+                $(".dialog-report").dialog('open');
+                return false;
+            });
+
+            $(".btnAudit").live("click", function (e) {
+                url = $(this).attr('data-url');
+                $(".dialog-audit").dialog('open');
+
+                return false;
+            });
+
+            $(".lnkAudit").live("click", function (e) {
+                url = $(this).attr('href');
+                $(".dialog-audit").dialog('open');
+
+                return false;
+            });
+
+
+            $(".btnApprove").live("click", function (e) {
+                url = $(this).attr('data-url');
+                $(".dialog-approve").dialog('open');
+
+                return false;
+            });
+
+            $(".lnkApprove").live("click", function (e) {
+                url = $(this).attr('href');
+                $(".dialog-approve").dialog('open');
+
+                return false;
+            });
+
+            $(".btnReject").live("click", function (e) {
+                url = $(this).attr('data-url');
+                $(".dialog-reject").dialog('open');
+
+                return false;
+            });
+
+            $(".lnkReject").live("click", function (e) {
+                url = $(this).attr('href');
+                $(".dialog-reject").dialog('open');
+
+                return false;
+            });
+
+            $(".btnAccept").live("click", function (e) {
+                url = $(this).attr('data-url');
+                $(".dialog-accept").dialog('open');
+
+                return false;
+            });
+
+            $(".lnkAccept").live("click", function (e) {
+                url = $(this).attr('href');
+                $(".dialog-accept").dialog('open');
+
+                return false;
+            });
+
+
+            $(".btnReceive").live("click", function (e) {
+                url = $(this).attr('data-url');
+                $(".dialog-receive").dialog('open');
+
+                return false;
+            });
+
+            $(".lnkReceive").live("click", function (e) {
+                url = $(this).attr('href');
+                $(".dialog-receive").dialog('open');
+
+                return false;
+            });
+
+
+            $(".loading").fadeOut(200).hide("slow")
+        });
+
+
+    </script>
+</head>
+<body onload="window.scroll(0, 150)">
+
+    <div class="loading">
+        <img src="~/Images/squares.gif" />
+    </div>
+    <div id="hrcss1">
+        <div class="content title">
+            <div class="row">
+                <div class="col-sm-6 ">
+                    @*<img src="~/Images/symphonyLogo.png" />*@
+                    <img src="~/Images/BUYERCOMPANYLOGO.png" />
+                </div>
+                @*<div class="col-sm-6 log-top">
+                    <img style="float: right;" src="~/Images/BUYERCOMPANYLOGO.png" />
+                </div>*@
+            </div>
+        </div>
+        <!--/.content-->
+   @{
+       string project = new System.Configuration.AppSettingsReader().GetValue("CompanyName", typeof(string)).ToString();
+       if (project.ToLower()=="gdicbde")
+       {
+            @Html.Partial("_navbarBDE")
+        @Html.Partial("_leftnavBDE")
+       }
+           else if (project.ToLower()=="vms")
+       {
+           @Html.Partial("_navbar")
+        @*@Html.Partial("_leftnav")*@
+       }
+       else if (project.ToLower()=="email")
+       {
+           @Html.Partial("_navbarEmail")
+        @Html.Partial("_leftnav")
+       }
+          
+    } 
+
+
+        @*@Html.Partial("_rightNav")*@
+        <!--/.content-->
+        <div class="contentBody" style="min-height: 400px">
+
+            @RenderBody()
+            @Scripts.Render("~/bundles/jquery")
+            @RenderSection("scripts", required: false)
+        </div>
+        <style>
+            /*.back-to-top {
+                cursor: pointer;
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                display: none;
+            }*/
+
+            .footer {
+                /*position: fixed;*/
+                left: 0;
+                bottom: 0;
+                width: 100%;
+                background-color: #b200ff;
+                /*color: white;
+    text-align: center;*/
+            }
+
+            .footerLog {
+                display: initial;
+                color: #00ff21;
+            }
+        </style>
+
+         <div>
+            <div class="dialog-alert" style="display: none">
+                <div class="msgg">jj</div>
+            </div>
+            <div class="dialog-confirm" style="display: none">
+                <p>
+                    <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+                    Are you sure to delete?
+                </p>
+            </div>
+            <div class="dialog-create" style="display: none">
+            </div>
+            <div class="dialog-edit" style="display: none">
+            </div>
+            <div class="dialog-detail" style="display: none">
+            </div>
+            <div class="dialog-report" style="display: none">
+            </div>
+            <div class="dialog-audit" style="display: none">
+            </div>
+            <div class="dialog-approve" style="display: none">
+            </div>
+            <div class="dialog-reject" style="display: none">
+            </div>
+            <div class="dialog-accept" style="display: none">
+            </div>
+            <div class="dialog-receive" style="display: none">
+            </div>
+        </div>
+        <br />
+        <div class="clearfix"></div>
+        @*        <div class="footer">
+            <p><i class="fa fa-asterisk"></i>Powered By <a href="http://symphonysoftt.com/" target="_blank">Symphony</a>.</p>
+
+</div>*@
+
+        <div class=" footer content black">
+            <div class="row">
+                <div class="col-md-3">
+                    <p><i class="fa fa-asterisk"></i>Powered By <a href="http://symphonysoftt.com/" target="_blank">GDIC</a>.</p>
+                    <p style="margin-top: -20px"><i class="fa fa-wrench"></i>Developed By <a href="http://symphonysoftt.com/" target="_blank">Symphony</a>.</p>
+                </div>
+                <div class="col-md-3">
+                    <p>
+                        @*<label class="footerLog">Branch : </label>@Session["LogInBranch"].ToString()*@
+                    </p>
+                </div>
+                <div class="col-md-3">
+                    <p>
+                        <label class="footerLog">User : </label>
+                        @*@Session["LogInUserName"].ToString()*@
+                    </p>
+                </div>
+                <div class="col-md-3">
+                    <p>
+                        @*<label class="footerLog">Login Time : </label>@Session["LogInLoginTime"].ToString()*@
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    <script src="~/assets/javascripts/toastr.js"></script>
+    <script src="~/assets/javascripts/custom.js"></script>
+    <script src="~/assets/javascripts/jquery.min.js"></script>
+    <script src="~/assets/javascripts/jquery.validate.js"></script>
+    <script src="~/assets/javascripts/jquery.validate.min.js"></script>
+    <script src="~/assets/javascripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/assets/javascripts/jquery-1.8.2.min.js"></script>
+    <script src="~/assets/javascripts/jquery-ui-1.8.24.min.js"></script>
+    <script src="~/assets/javascripts/default.js"></script>
+
+    <script src="~/assets/DataTables/js/jquery.dataTables.js"></script>
+    <script src="~/assets/DataTables/FixedColumns-3.2.5/js/dataTables.fixedColumns.min.js"></script>
+    <script src="~/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/assets/javascripts/jquery.ptTimeSelect.js"></script>
+    <script src="~/assets/javascripts/select2.js"></script>
+    <script src="~/assets/plugins/chartjs/moment.js"></script>
+    <script src="~/assets/javascripts/chart.min.js"></script>
+    <script>
+        $(function () {
+            sessionDateTime()
+        })
+
+        function sessionDateTime() {
+            var date = $(".customDatePicker").val();
+            var changeableDate = $(".customDatePickerChangeable").val();
+
+            var today = FormatDate(new Date());
+            if (date == "") {
+                $(".customDatePicker").val(today);
+            }
+
+            if (changeableDate == "") {
+                $(".customDatePickerChangeable").val(today);
+            }
+        }
+    </script>
+</body>
+</html>

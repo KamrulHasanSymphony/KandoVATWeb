@@ -1,0 +1,90 @@
+﻿<div class="headrow">
+    <button type="button" title="Add New Zone" data-url="/VMS/MPLZoneProfile/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+    <label class="pull-right">Zone Information</label>
+</div>
+<div class="thinbox animated slideInDown faster">
+    <div class="th_thinbox">
+        <p>Zone Information List</p>
+    </div>
+    <table id="myDataTable" class="display">
+        <thead>
+            <tr>
+                <th class="center">
+                    <input type="checkbox" class="chkAll" />Select All
+                </th>
+
+                <th>Zone Code</th>
+                <th>Zone Name</th>
+                <th>City</th>
+                <th>Telephone No</th>
+                <th>Email</th>
+                
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <br />
+</div>
+
+<div class="headrow">
+    <button type="button" title="Add New Zone" data-url="/VMS/MPLZoneProfile/Create" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+</div>
+
+<div id="myModal" class="trkmodal"></div>
+<script language="javascript" type="text/javascript">
+    $(document).ready(function () {
+        SelectAllForDelete();
+        $.datepicker.regional[""].dateFormat = 'dd/M/y';
+        $.datepicker.setDefaults($.datepicker.regional['']);
+
+        function modalInit() {
+            var modal = document.getElementById('myModal');
+            $('.printBtn').click(function () {
+                var url = "/Vms/MPLZoneProfile/Print";
+                $.ajax({
+                    url: url,
+                    cache: false,
+                    beforeSend: function () { $(".loading").show(); },
+                    complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                    success: function (html) {
+                        modal.style.display = "block";
+                        $("#myModal").html(html);
+                    }
+                });
+            });
+        }
+        modalInit();
+
+
+        var oTable = $('#myDataTable').dataTable({
+            "bServerSide": true,
+            "sAjaxSource": "/VMS/MPLZoneProfile/_index",
+            "bProcessing": true,
+            "aLengthMenu": tablelength(),
+            "bJqueryUI": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+                            {
+                                "sName": "Id",
+                                "bSearchable": false,
+                                "bSortable": false,
+                                "sWidth": "8%",
+                                "sClass": "center",
+                                "fnRender": function (oObj) {
+                                    return ' <input onclick="CheckAll(this)" type="checkbox" data-Id="' + oObj.aData[0] + '">'
+                                        + '&nbsp; <a id=""  title="Click on for Edit"  style="text-decoration:none;"   href=\"/VMS/MPLZoneProfile/Edit/' + oObj.aData[0] + '\" class=" innerListLink sym-btn-edit-row"></a>'
+                                    ;
+                                }
+                            }
+                            , { "sName": "ZoneCode", "sWidth": "12%" }
+                            , { "sName": "ZoneName", "sWidth": "10%" }
+                            , { "sName": "City", "sWidth": "5%" }
+                            , { "sName": "TelephoneNo", "sWidth": "8%" }
+                            , { "sName": "Email", "sWidth": "8%" }
+                            
+              
+
+            ]
+        });
+    });
+</script>

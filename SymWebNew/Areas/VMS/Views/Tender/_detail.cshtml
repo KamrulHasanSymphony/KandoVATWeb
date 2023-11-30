@@ -1,0 +1,38 @@
+﻿@model VATViewModel.DTOs.TenderDetailVM
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+<tr class="tablerow">
+    @using (Html.BeginCollectionItem("Details"))
+    {
+    <td>
+        <a id="" title="Click to Remove" onclick="RemoveItem(this);" class="sym-btn-remove-row "></a>
+        <a id="" title="Click to Edit" onclick="EditItem(this);" class="sym-btn-edit-row"></a>
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.ItemName, new { @class = "  dItemName   form-control", @readonly = "readonly"})
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.PCode, new { @class = "  dItemCode   form-control", @readonly = "readonly" })
+        @Html.HiddenFor(m=>m.ItemNo)
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.UOM, new { @class = "  dUOM   form-control", @readonly = "readonly" })
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.TenderQty, new { @class = "  dQuantity right priceLen  form-control", @readonly = "readonly" })
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.TenderPrice, new { @class = "  dUnitPrice right priceLen  form-control", @readonly = "readonly" })
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.SubTotal, new { @class = "  dSubTotal right priceLen  form-control", @readonly = "readonly"})
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.BOMId, new { @class = "  dBOMId form-control", @readonly = "readonly" })
+    </td>
+    }
+</tr>
+
+

@@ -1,0 +1,89 @@
+#spnCountNotification {
+    background-color: #fa3e3e;
+    border-radius: 2px;
+    color: white;
+    padding: 1px 3px;
+    font-size: 10px;
+    position: absolute; /* Position the badge within the relatively positioned button */
+    top: 0;
+    right: 0;
+    /*z-index: 10;
+    position: absolute;
+    margin: 2px 0 0 18px;
+    background-color: #c00;
+    height: 18px;
+    width: 22px;
+    text-align: center;
+    line-height: 18px;
+    border-radius: 20px;
+    cursor:pointer;*/
+}
+#divNotifications {
+    position:absolute;
+    z-index:11;
+    background-color:#3498db;
+    font-size: 12px;
+    text-align: left;
+    font-family: calibri;
+    margin: 44px 0px 0px 370px;
+}
+.divNotification {
+    height:40px;
+    min-width:300px;
+    max-width: 400px;
+    border:1px solid #ffffff;
+    padding: 10px;
+}
+.divNotification:hover {
+    cursor: pointer;
+    background-color: #A0CADC;
+    color: black;
+    font-weight: bold;
+}
+.arrow-up {
+  width: 0; 
+  height: 0; 
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 5px solid #ffffff;
+}
+
+a {
+     color: white;
+}
+.notySpan {
+    background-color: #ccc;
+    padding: 7px 6px 6px 10px;
+    border-radius: 50px;
+    text-align: center;
+    line-height: 0px;
+    margin-right: 8px;
+    color: #ff1493
+}
+
+ /*noty*/
+        .navbar {
+            background-color: #3b5998;
+            font-size: 22px;
+            padding: 5px 10px;
+        }
+        .buttonNoty {
+            color: white;
+            display: inline-block; /* Inline elements with width and height. TL;DR they make the icon buttons stack from left-to-right instead of top-to-bottom */
+            position: relative; /* All 'absolute'ly positioned elements are relative to this one */
+            padding: 2px 5px;
+           
+        }
+        .button__badge {
+            background-color: #fa3e3e;
+            border-radius: 5px;
+            color: white;
+            padding: 1px 3px;
+            font-size: 10px;
+            position: absolute; /* Position the badge within the relatively positioned button */
+            top: 0;
+            right: 0;
+        }
+        #faNotification {
+             cursor: pointer
+        }

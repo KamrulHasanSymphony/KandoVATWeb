@@ -1,0 +1,22 @@
+﻿@model IEnumerable<VATViewModel.DTOs.TransferIssueVM>
+@using UIHelper.MVC
+@{
+    Layout = null;
+    var sl = 1;
+}
+
+@foreach (var TransferIssue in Model)
+{
+    
+    <tr class="trSelectPopUpProduct">
+        <td>@sl</td> 
+        <td class="popUpItemCode" width="30%">@TransferIssue.TransferIssueNo</td>
+        <td class="popUpItemName" title="@TransferIssue.TransactionDateTime">@TransferIssue.TransactionDateTime</td>
+        <td class="popUpItemDescription" width="18%" title="@TransferIssue.Post">@TransferIssue.Post</td>
+        <td class="popUpItemComments" width="18%" title="@TransferIssue.TotalAmount">@TransferIssue.TotalAmount</td>
+
+        @{
+            sl++;
+        }
+    </tr>
+}

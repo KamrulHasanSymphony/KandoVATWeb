@@ -1,0 +1,200 @@
+﻿@model VATViewModel.DTOs.PurchaseDetailVM
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+
+<style>
+    .trkmodal {
+        padding-top: 10%;
+    }
+
+    .trkmodal-content {
+        width: 44%;
+        padding-bottom: 10px;
+    }
+
+    .customDatePicker {
+        background: #fefede url(/Images/calendar.jpg) no-repeat 98% !important;
+    }
+    /*no padding with little margin bttom*/
+    div.trkmodal-body div.npForm {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+        padding-bottom: 0px !important;
+        margin-bottom: 10px;
+    }
+
+        div.trkmodal-body div.npForm div.npForm {
+            margin-bottom: 0px !important;
+        }
+</style>
+
+<div class="trkmodal-content">
+    <div class="trkmodal-header">
+        <span class="close">&times;</span>
+        <h2 class="text-center">Purchase Details</h2>
+    </div>
+    <div class="trkmodal-body">
+        @using (Html.BeginForm("PopUpCPCNameUpdatePurchase", "Purchase", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmPopUpCPCNameUpdatePurchase" }))
+        {
+            @*@Html.Hidden("PreviousSDAmount", "", new { @class = " cPreviousSDAmount" })
+            @Html.Hidden("PreviousVATAmount", "", new { @class = " cPreviousVATAmount" })
+            @Html.Hidden("PreviousSubTotal", "", new { @class = " cPreviousSubTotal" })*@
+
+            @Html.Hidden("UOM", "", new { @class = " cUOM" })
+            @Html.Hidden("Quantity", "", new { @class = " cQuantity" })
+            @Html.Hidden("UnitPrice", "", new { @class = "cUnitPrice" })
+            @Html.Hidden("SubTotal", "", new { @class = " cSubTotal" })            
+            @Html.Hidden("CnFAmount", "", new { @class = " cCnFAmount" })
+            
+            @Html.Hidden("InsuranceAmount", "", new { @class = " cInsuranceAmount" })
+            @Html.Hidden("AssessableValue", "", new { @class = " cAssessableValue" })           
+            @Html.Hidden("CDAmount", "", new { @class = " cCDAmount" })           
+            @Html.Hidden("RDAmount", "", new { @class = " cRDAmount" })            
+            @Html.Hidden("SD", "", new { @class = " cSD" })            
+            @Html.Hidden("SDAmount", "", new { @class = " cSDAmount" })           
+            @Html.Hidden("VATRate", "", new { @class = " cVATRate" })           
+            @Html.Hidden("VATAmount", "", new { @class = " cVATAmount" })           
+            @Html.Hidden("ATVAmount", "", new { @class = " cATVAmount" })            
+            @Html.Hidden("AITAmount", "", new { @class = " cAITAmount" })            
+            @Html.Hidden("OthersAmount", "", new { @class = " cOthersAmount" })            
+            @Html.Hidden("Total", "", new { @class = " cTotal" })           
+            @Html.Hidden("Type", "", new { @class = " cType" })            
+            @Html.Hidden("UOMPrice", "", new { @class = " cUOMPrice" })            
+            @Html.Hidden("UOMQty", "", new { @class = " cUOMQty" })           
+            @Html.Hidden("UOMn", "", new { @class = " cUOMn" })           
+            @Html.Hidden("UOMc", "", new { @class = " cUOMc" })           
+            @Html.Hidden("VDSRate", "", new { @class = " cVDSRate" })            
+            @Html.Hidden("VDSAmount", "", new { @class = " cVDSAmount" })           
+            @Html.Hidden("IsFixedVAT", "", new { @class = " cIsFixedVAT" })            
+            @Html.Hidden("FixedVATAmount", "", new { @class = " cFixedVATAmount" })            
+            @Html.Hidden("BOMId", "", new { @class = " cBOMId" })            
+            @Html.Hidden("USDValue", "", new { @class = " cUSDValue" })           
+            @Html.Hidden("USDVAT", "", new { @class = " cUSDVAT" })           
+            @Html.Hidden("VATableValue", "", new { @class = " cVATableValue" })           
+            @Html.Hidden("TDSSection", "", new { @class = " cTDSSection" })           
+            @Html.Hidden("TDSCode", "", new { @class = " cTDSCode" })           
+            @Html.Hidden("RebateAmount", "", new { @class = " cRebateAmount" })
+            @*@Html.Hidden("ExpireDate", "", new { @class = " cExpireDate" })*@          
+            @Html.Hidden("TVBAmount", "", new { @class = " cTVBAmount" })          
+            @Html.Hidden("TVAAmount", "", new { @class = " cTVAAmount" })           
+            @Html.Hidden("NBRPrice", "", new { @class = " cNBRPrice" })           
+            @Html.Hidden("ItemNo", "", new { @class = " cItemNo" })            
+            @Html.Hidden("Comments", "", new { @class = " cComments" })           
+            @Html.Hidden("DutyRemarks", "", new { @class = " cDutyRemarks" })           
+            @Html.Hidden("RebateRate", "", new { @class = " cRebateRate" })           
+            @Html.Hidden("TransactionType", "", new { @class = " cTransactionType" })
+            @Html.Hidden("IsExpireDate", "", new { @class = " cIsExpireDate" })
+
+            <div class="row">
+                <div class="npForm col-md-6">
+                    <label>Product Code</label>
+
+                    @Html.TextBox("ProductCode", "", new { @placeholder = "Product Code", @class = " cProductCode form-control", @readonly = "readonly" })
+
+                </div>
+                <div class="npForm col-md-6">
+                    <label>Product Name</label>
+
+                    @Html.TextBox("ProductName", "", new { @placeholder = "Product Name", @class = " cProductName form-control", @readonly = "readonly" })
+
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="npForm col-md-6">
+
+                    <label>CPCName</label>
+                    @Html.SimpleDropDownFor(m => m.CPCName, "/Config/DropDown/CPCNamePurchase", new { @class = " dCPCName notClearing  form-control " })
+
+                </div>
+                <div class="npForm col-md-6">
+                    <label>BEItemNo</label>
+
+                    @*@Html.TextBox("PreviousInvoiceDateTime", "", new { @placeholder = "PreviousInvoiceDateTime", @class = " cPreviousInvoiceDateTime customDatePicker form-control" })*@
+                    @Html.TextBox("BEItemNo", "", new { @placeholder = "BEItemNo", @class = " cBEItemNo  form-control" })
+
+
+                </div>
+            </div>
+
+             <div class="row">
+             <div class="npForm col-md-6">
+               
+                  @*@if (Model.IsExpireDate != "N" && !string.IsNullOrEmpty(Model.IsExpireDate))*@
+                 @if (Model.IsExpireDate != "N")
+                 {
+                     
+                         
+                      <label>Expire Date</label>
+                                               
+                     @Html.TextBox("ExpireDate", DateTime.Now.ToString("yyyy-MM-dd"), new { @class = " cExpireDate notClearing customDatePicker defaultDate form-control", @readonly = "readonly", @id = "idExpireDate" })
+                     @*@Html.TextBox("ExpireDate", new { @placeholder = "Expire Date", @class = " trExpireDate trVAT18Date trVAT16Date customDatePicker defaultDate form-control" })*@
+                      
+                   
+                 }
+
+             </div>
+             </div>
+
+            <button type="button" class=" btn sym-btn-update trAdd btnUpdate "> Update</button>
+            @*<button type="button" class="sym-btn-close closeBtn pull-right"> Close</button>*@
+        }
+    </div>
+</div>
+
+
+<script src="~/assets/javascripts/custom.js"></script>
+<script>
+
+    $(document).ready(function () {
+        //$('#frmExpFromNo').submit();
+
+        function closeModal() {
+            $("#myHigherModal").html("");
+            trkmodal.style.display = "none";
+        }
+
+        var span = document.getElementsByClassName("close")[0];
+        var trkmodal = document.getElementById('myHigherModal');
+        //When the user clicks on <span> (x), close the trkmodal
+        span.onclick = function () {
+            //closeModal();
+            PreviousInvoiceInformation();
+        }
+
+        //$('.closeBtn').click(function () {
+        //    closeModal();
+        //});
+
+        $('.btnUpdate').click(function () {
+
+            PreviousInvoiceInformation();
+
+        });
+
+        function PreviousInvoiceInformation() {
+            var model = $('.trkmodal-body :input').serialize();
+
+            console.log(model);
+
+            callbackCPCNameUpdatePurchaseModal(model);
+
+            closeModal();
+        }
+
+
+
+    });
+</script>
+
+<script>
+    $(function () {
+
+        valiDation("frmPopUpCPCNameUpdatePurchase");
+
+    });
+</script>
+

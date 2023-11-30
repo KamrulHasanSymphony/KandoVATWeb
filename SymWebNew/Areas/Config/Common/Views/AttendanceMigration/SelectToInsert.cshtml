@@ -1,0 +1,85 @@
+﻿@model SymViewModel.Attendance.AttendanceMigrationVM
+@{
+    ViewBag.Title = "SelectToInsert";
+}
+
+@using UIHelper.MVC
+<div class="thinbox">
+    <div class="th_thinbox">
+        <p>Attendance Migration</p>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="editor-label">
+                <label>Employee Code</label>
+            </div>
+            <div class="editor-field">
+                @Html.SimpleDropDownFor(model => model.EmployeeCode, "/Config/DropDown/EmployeeCode", new { @class = " required form-control selectDropdown" })
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="editor-label">
+                @Html.Label("Attendance Date")
+            </div>
+            <div class="editor-field">
+                <div>
+                    @Html.TextBoxFor(model => model.AttendanceDate, null, new { @placeholder = "Attendance Date", @class = "attnDate customDatePicker form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="editor-label">
+                @Html.Label("Attendance Time")
+            </div>
+            <div class="editor-field">
+                <div>
+                    @Html.TextBoxFor(model => model.AttendanceTime, null, new { @placeholder = "Attendance Time", @class = " attnTime customTimePicker form-control" })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="headrow">
+    <button type="button" title="Click for Report" data-url="/Common/AttendanceMigration/SelectToInsert" onclick="selectData(this);" id="" class="sym-btn-report">&nbsp;Migration</button>
+    &nbsp;
+    <button title="Clear the Entries" id="Clear" onclick="window.location.reload()" class="sym-btn-clear">&nbsp;Clear</button>
+</div>
+
+<script>
+    $(function () {
+        $('.customTimePicker').ptTimeSelect();
+        var empCode = '@Model.EmployeeCode';
+        setTimeout(function () {
+            if (empCode != "") {
+                $("#EmployeeCode").select2("val", empCode);
+            }
+        }, 500);
+
+    });
+
+    function selectData(sender) {
+        var url = $(sender).attr("data-url");
+        var empCode = $("#EmployeeCode").val().replace("Select", "");
+        if (empCode == "") {
+            ShowResult("Fail", "Please Select Employee Code First!");
+            return;
+        }
+        var attnDate = $(".attnDate").val();
+        var attnTime = $(".attnTime").val();
+
+        if (attnTime == "") {
+            ShowResult("Fail", "Please Select Attendance Time First!");
+            return;
+        }
+
+
+        selectObj = new Object();
+        selectObj.empCode = empCode;
+        selectObj.attnDate = attnDate;
+        selectObj.attnTime = attnTime;
+        var selectParam = $.param(selectObj);
+        url = url + "?" + selectParam;
+        window.location = url;
+    }
+</script>
+

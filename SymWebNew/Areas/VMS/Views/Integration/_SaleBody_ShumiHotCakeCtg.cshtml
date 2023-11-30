@@ -1,0 +1,17 @@
+﻿@model System.Data.DataTable
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+@*<span class="TotalInvoice" style="font:bold">Total Invoice: @Model.Rows.Count</span>*@
+@foreach (System.Data.DataRow dr in Model.Rows)
+{
+    <tr class="trSelectPopUpProduct">
+
+        <td class="dID">@dr["ID"]</td>
+        <td class="dReferenceNo">@dr["ReferenceNo"]</td>
+        <td >@dr["InvoiceDateTime"]</td>
+        <td>@dr["InvoiceDiscountAmount"]</td>
+        
+    </tr>
+}

@@ -1,0 +1,46 @@
+﻿@*@model VATViewModel.DTOs.TrackingVM*@
+@model IList<VATViewModel.DTOs.TrackingVM>
+
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+
+@foreach (var vm in Model)
+{
+
+    <tr class="tablerow_Trackings ">
+
+        @using (Html.BeginCollectionItem("Trackings"))
+    {
+
+            <td>
+                <a id="" title="Click to Remove" onclick="RemoveItem(this);" class="sym-btn-remove-row "></a>
+                <a id="" title="Click to Edit" onclick="EditItemTrakings(this);" class="sym-btn-edit-row"></a>
+
+           </td>
+            
+             <td>
+                @Html.TextBox("ItemNo",vm.ItemNo, new { @class = "  dItemNoT   form-control", @readonly = "readonly" })
+            </td>
+            <td>
+                @Html.TextBox("Heading1",vm.Heading1, new { @class = "  dHeading1T   form-control", @readonly = "readonly" })
+            </td>
+            <td>
+                @Html.TextBox("Heading2",vm.Heading2, new { @class = "  dHeading2T   form-control", @readonly = "readonly" })
+            </td>
+             
+             @*<td>
+                @Html.TextBoxFor(model => model.ItemNo, new { @class = "  dItemNoT   form-control", @readonly = "readonly" })
+            </td>
+            <td>
+                @Html.TextBoxFor(model => model.Heading1, new { @class = "  dHeading1T   form-control", @readonly = "readonly" })
+            </td>
+            <td>
+                @Html.TextBoxFor(model => model.Heading2, new { @class = "  dHeading2T   form-control", @readonly = "readonly" })
+            </td>*@
+    }
+
+    </tr>
+}
+    

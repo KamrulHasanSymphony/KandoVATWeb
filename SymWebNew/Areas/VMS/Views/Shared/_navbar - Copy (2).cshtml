@@ -1,0 +1,1384 @@
+﻿@*@using SymOrdinary
+    @using System.Threading;
+
+    @{
+
+        ShampanIdentity identity = null;
+        try
+        {
+            identity = (ShampanIdentity)Thread.CurrentPrincipal.Identity;
+        }
+        catch (Exception)
+        {
+            Response.Redirect("/VMS/Home/Login");
+            return;
+        }
+    }*@
+
+<div class="content white menuheight">
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="navbar-header">
+            <ul class="nav col-xs-4 visible-xs">
+                <li class="dropdown1" style="padding-top: 4px">
+                    <a href="#" class=" btn btn-warning">VAT </a>
+                </li>
+            </ul>
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <!--/.navbar-header-->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" >
+            <ul class=" nav navbar-nav">
+            <li class="dropdown  Setup">
+                <a href="/VMS/Home/Index">Home<b class="caret"></b></a>
+                <ul class="dropdown-menu multi-column columns-1">
+                    <div class="row">
+
+                        @*@if (identity.IsPermitted("200150110"))
+                        {*@
+
+                        <div class="col-sm-12">
+                            <ul class="multi-column-dropdown">
+                                <li class="dropdown">
+                                    <a href="/VMS/Home/LogOut" class="btn btn-info ">Log out</a>
+                                </li>
+                            </ul>
+                        </div>
+                        @*}
+
+                        @if (identity.IsPermitted("200160110"))
+                        {*@
+
+                        <div class="col-sm-12">
+                            <ul class="multi-column-dropdown">
+                                <li class="dropdown">
+                                    <a href="/VMS/Home/Login" class="btn btn-info ">Login</a>
+                                </li>
+                            </ul>
+                        </div>
+                        @* }*@
+
+                        <div class="col-sm-12">
+                            <ul class="multi-column-dropdown">
+                                <li class="dropdown">
+                                    <a href="/VMS/Home/Index?changeBranch=true" class="btn btn-info ">Change Branch</a>
+                                </li>
+                            </ul>
+                        </div>
+
+
+                        @*<div class="col-sm-12">
+                            <ul class="multi-column-dropdown">
+                                <li class="dropdown">
+                                    <a href="/VMS/Chart/Index?TransactionType=chartBar" class="btn btn-info ">Chart Bar</a>
+                                </li>
+                            </ul>
+                        </div>*@
+
+                        @*<div class="col-sm-12">
+                            <ul class="multi-column-dropdown">
+                                <li class="dropdown">
+                                    <a href="/VMS/Chart/Index?TransactionType=chartPie" class="btn btn-info ">Chart Pie</a>
+                                </li>
+                            </ul>
+                        </div>*@
+
+                    </div>
+
+                </ul>
+            </li>
+            @*@if (identity.IsPermitted("110"))
+            {*@
+            <li class="dropdown  Setup">
+                <a id="110" href="/VMS/ProductCategory/HomeIndex">Setup<b class="caret"></b></a>
+                <ul class="dropdown-menu multi-column columns-1">
+                    <div class="row">
+                        @*@if (identity.IsPermitted("110110"))
+                        {*@
+                        <div class="col-sm-12">
+                            <ul class="multi-column-dropdown">
+                                <li class="dropdown dropdown-submenu">
+                                    <a id="110110" href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown">Item Information</a>
+                                    <ul class="dropdown-menu">
+
+                                        @*@if (identity.IsPermitted("110110110"))
+                                        {*@
+                                        <li><a id="110110110" class="dropdown btn btn-info" href="/VMS/ProductCategory/Index">Group</a></li>
+                                        @*}
+                                        @if (identity.IsPermitted("110110120"))
+                                        {*@
+                                        <li><a id="110110120" class="dropdown btn btn-info" href="/VMS/Product/Index">Product/Item</a>  </li>
+                                        @*}
+                                        @if (identity.IsPermitted("110110130"))
+                                        {*@
+                                        <li><a class="dropdown btn btn-info" href="/VMS/Overhead">Overhead</a>  </li>
+                                        @*}
+                                        @if (identity.IsPermitted("110110140"))
+                                        {*@
+                                        @*<li><a class="dropdown btn btn-info" href="/VMS/TDS/Index">TDS</a> </li>*@
+                                        @*}
+                                        @if (identity.IsPermitted("110110150"))
+                                        {*@
+                                        <li><a class="dropdown btn btn-info" href="/VMS/HSCode/Index">HSCode</a> </li>
+                                        @* }*@
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        @*}
+                        @if (identity.IsPermitted("110120"))
+                        {*@
+                        <div class="col-sm-12">
+                            <ul class="multi-column-dropdown">
+                                <li class="dropdown dropdown-submenu">
+                                    <a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown">Vendor</a>
+                                    <ul class="dropdown-menu">
+                                        @*@if (identity.IsPermitted("110120110"))
+                                        {*@
+                                        <li><a class="dropdown btn btn-info" href="/VMS/VendorGroup/Index">Group</a></li>
+                                        @*}
+                                        @if (identity.IsPermitted("110120120"))
+                                        {*@
+                                        <li><a class="dropdown btn btn-info" href="/VMS/Vendor/Index">Vendor</a>  </li>
+                                        @*  }*@
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        @*}*@
+
+                        @*@if (identity.IsPermitted("110130"))
+                        {*@
+
+                        <div class="col-sm-12">
+                            <ul class="multi-column-dropdown">
+                                <li class="dropdown dropdown-submenu">
+                                    <a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown">Customer</a>
+                                    <ul class="dropdown-menu">
+                                        @*@if (identity.IsPermitted("180110110"))
+                                        {*@
+                                        <li><a class="dropdown btn btn-info" href="/VMS/CustomerGroup/Index">Group</a></li>
+                                        @*}
+                                        @if (identity.IsPermitted("180110110"))
+                                        {*@
+                                        <li><a class="dropdown btn btn-info" href="/VMS/Customer/Index">Customer</a>  </li>
+                                        @*}*@
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+
+                        @*}
+                        @if (identity.IsPermitted("110140"))
+                        {*@
+                        <div class="col-sm-12">
+                            <ul class="multi-column-dropdown">
+                                <li class="dropdown dropdown-submenu">
+                                    <a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown">Bank/Vehicle</a>
+                                    <ul class="dropdown-menu">
+                                        @*@if (identity.IsPermitted("110140110"))
+                                        {*@
+                                        <li><a class="dropdown btn btn-info" href="/VMS/BankInformation/Index">Bank</a></li>
+                                        @*}
+                                        @if (identity.IsPermitted("110140120"))
+                                        {*@
+                                        <li><a class="dropdown btn btn-info" href="/VMS/Vehicle/Index">Vehicle</a>  </li>
+                                        @*  }*@
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+
+
+                        @*<div class="col-sm-12">
+                            <ul class="multi-column-dropdown">
+                                <li class="dropdown">
+                                    <a href="/VMS/BankInformation/Index" class="btn btn-info ">Bank</a>
+                                </li>
+                            </ul>
+                        </div>*@
+
+                        @*<div class="col-sm-12">
+                            <ul class="multi-column-dropdown">
+                                <li class="dropdown">
+                                    <a href="/VMS/Vehicle/Index" class="btn btn-info ">Vehicle</a>
+                                </li>
+                            </ul>
+                        </div>*@
+
+                        @*}
+
+                        @if (identity.IsPermitted("110150"))
+                        {*@
+
+                        <div class="col-sm-12">
+                            <ul class="multi-column-dropdown">
+                                <li class="dropdown dropdown-submenu">
+                                    <a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown">Price Declaration</a>
+                                    <ul class="dropdown-menu">
+                                        @*@if (identity.IsPermitted("110150110"))
+                                        {*@
+                                        <li><a class="dropdown btn btn-info" href="/VMS/Vat1/Index">VAT-4.3</a></li>
+                                        @*}
+                                        @if (identity.IsPermitted("110150120"))
+                                        {*@
+                                        <li><a class="dropdown btn btn-info" href="/VMS/Service/Index">Service</a>  </li>
+                                        @*}
+                                        @if (identity.IsPermitted("110150130"))
+                                        {*@
+                                        <li><a class="dropdown btn btn-info" href="/VMS/Tender/Index">Tender</a>  </li>
+                                        @*}*@
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        @*}
+
+                        @if (identity.IsPermitted("110160"))
+                        {*@
+
+                        <div class="col-sm-12">
+                            <ul class="multi-column-dropdown">
+                                <li class="dropdown dropdown-submenu">
+                                    <a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown">Company</a>
+                                    <ul class="dropdown-menu">
+                                        @*@if (identity.IsPermitted("110160110"))
+                                        {*@
+                                        <li><a class="dropdown btn btn-info" href="/VMS/CompanyProfile/Index">Company Profile</a></li>
+                                        @*}
+                                        @if (identity.IsPermitted("110160120"))
+                                        {*@
+                                        <li><a class="dropdown btn btn-info" href="/VMS/BranchProfiles/Index">Branch Profiles</a></li>
+                                        @*}*@
+
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+
+                        @*<div class="col-sm-12">
+                            <ul class="multi-column-dropdown">
+                                <li class="dropdown">
+                                    <a href="/VMS/BranchProfiles/Index" class="btn btn-info ">Branch Profiles</a>
+                                </li>
+                            </ul>
+                        </div>*@
+
+                        @*<div class="col-sm-12">
+                            <ul class="multi-column-dropdown">
+                                <li class="dropdown">
+                                    <a href="/VMS/CompanyProfile/Index" class="btn btn-info ">Company</a>
+                                </li>
+                            </ul>
+                        </div>*@
+
+                        @*}
+
+                        @if (identity.IsPermitted("110170110"))
+                        {*@
+
+                        <div class="col-sm-12">
+                            <ul class="multi-column-dropdown">
+                                <li class="dropdown">
+                                    <a href="/VMS/FiscalYear/Index" class="btn btn-info ">Fiscal Year</a>
+                                </li>
+                            </ul>
+                        </div>
+                        @*}*@
+
+                        @*@if (identity.IsPermitted("110180"))
+                        {*@
+                        <div class="col-sm-12">
+                            <ul class="multi-column-dropdown">
+                                <li class="dropdown dropdown-submenu">
+                                    <a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown">Configuration</a>
+                                    <ul class="dropdown-menu">
+                                        @*@if (identity.IsPermitted("110180110"))
+                                        {*@
+                                        <li><a class="dropdown btn btn-info" href="/VMS/Setting/Index">Settings</a></li>
+                                        @*}
+                                        @if (identity.IsPermitted("110180120"))
+                                        {*@
+                                        <li><a class="dropdown btn btn-info" href="/VMS/Prefix/Index">Prefix</a>  </li>
+                                        @* }
+
+                                        @if (identity.IsPermitted("110180110"))
+                                            {
+                                                <li><a class="dropdown btn btn-info" href="/VMS/Setting/DBUpdate">DB Update</a>  </li>
+                                            }*@
+
+                                    </ul>
+
+                                </li>
+
+                            </ul>
+
+                        </div>
+                        @*}*@
+
+                        <div class="col-sm-12">
+                            <ul class="multi-column-dropdown">
+                                <li class="dropdown">
+                                    <a href="/VMS/Setting/DBUpdate" class="btn btn-info ">DB Update</a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        @*@if (identity.IsPermitted("110190110"))
+                        {*@
+                        <div class="col-sm-12">
+                            <ul class="multi-column-dropdown">
+                                <li class="dropdown">
+                                    <a href="/VMS/Import/Index" class="btn btn-info ">Import</a>
+                                </li>
+                            </ul>
+                        </div>
+                        @*}
+
+                        @if (identity.IsPermitted("110200"))
+                        {*@
+
+                        <div class="col-sm-12">
+                            <ul class="multi-column-dropdown">
+                                <li class="dropdown dropdown-submenu">
+                                    <a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown">Measurement</a>
+                                    <ul class="dropdown-menu">
+                                        @*@if (identity.IsPermitted("110200110"))
+                                        {*@
+                                        <li><a class="dropdown btn btn-info" href="/VMS/UOM/Index">Name</a></li>
+                                        @*}
+                                        @if (identity.IsPermitted("110200120"))
+                                        {*@
+                                        <li><a class="dropdown btn btn-info" href="/VMS/UOMConversion/Index">Conversion</a>  </li>
+                                        @*}*@
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        @*}*@
+
+                        @*@if (identity.IsPermitted("110210"))
+                        {*@
+                        <div class="col-sm-12">
+                            <ul class="multi-column-dropdown">
+                                <li class="dropdown dropdown-submenu">
+                                    <a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown">Currency</a>
+                                    <ul class="dropdown-menu">
+                                        @*@if (identity.IsPermitted("110210110"))
+                                        {*@
+                                        <li><a class="dropdown btn btn-info" href="/VMS/Currency/Index">Name</a></li>
+                                        @*}
+                                        @if (identity.IsPermitted("110210120"))
+                                        {*@
+                                        <li><a class="dropdown btn btn-info" href="/VMS/CurrencyConversion/Index">Conversion</a>  </li>
+                                        @*}*@
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+
+                        @*}*@
+
+                    </div>
+                </ul>
+            </li>
+            @*}*@
+
+            @*@if (identity.IsPermitted("120"))
+            {*@
+            <li class="dropdown ">
+                <a href="/VMS/Purchase/HomeIndex">Purchase<b class="caret"></b></a>
+
+                @*<a href="/VMS/Purchase/HomeIndex" class="dropdown-toggle" data-toggle="dropdown">Purchase<b class="caret"></b></a>*@
+                <ul class="dropdown-menu multi-column columns-1">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <ul class="multi-column-dropdown">
+                                
+                                <li class="dropdown  "><a href="/VMS/Purchase/Index?TransactionType=Other" class="btn btn-info">Local</a></li>
+                                <li class="dropdown  "><a href="/VMS/Purchase/Index?TransactionType=Import" class="btn btn-info">Import</a></li>
+                                <li class="dropdown  "><a href="/VMS/Purchase/Index?TransactionType=InputService" class="btn btn-info">Input Service</a></li>
+                                <li class="dropdown  "><a href="/VMS/Purchase/Index?TransactionType=PurchaseReturn" class="btn btn-info">Return</a></li>
+
+
+                                @*@if (identity.IsPermitted("120110110"))
+                                {
+                                <li class="dropdown  "><a href="/VMS/Purchase/Index?TransactionType=Other" class="btn btn-info">Local</a></li>
+                                    
+                                }
+                                @if (identity.IsPermitted("120110120"))
+                                {
+                                <li class="dropdown  "><a href="/VMS/Purchase/Index?TransactionType=Import" class="btn btn-info">Import</a></li>
+                                }
+                                @if (identity.IsPermitted("120110130"))
+                                {
+                                <li class="dropdown  "><a href="/VMS/Purchase/Index?TransactionType=InputService" class="btn btn-info">Input Service</a></li>
+                                }
+                                @if (identity.IsPermitted("120110140"))
+                                {
+                                <li class="dropdown  "><a href="/VMS/Purchase/Index?TransactionType=PurchaseReturn" class="btn btn-info">Return</a></li>
+                                }
+                                @if (identity.IsPermitted("120110150"))
+                                {
+                                <li class="dropdown  "><a href="/VMS/Purchase/Index?TransactionType=Service" class="btn btn-info">Service(Stock)</a></li>
+                                }
+                                @if (identity.IsPermitted("120110160"))
+                                {
+                                <li class="dropdown  "><a href="/VMS/Purchase/Index?TransactionType=ServiceNS" class="btn btn-info">Service(N Stock)</a></li>
+                                }*@
+
+                            </ul>
+                        </div>
+                    </div>
+                </ul>
+            </li>
+
+            @*}*@
+
+
+            @*<li class="dropdown  "><a href="/VMS/Purchase/Index?TransactionType=Trading" class="btn btn-info">Trading</a></li>
+            <li class="dropdown  "><a href="/VMS/Purchase/Index?TransactionType=TradingImport" class="btn btn-info">Trading Import</a></li>
+            *@
+
+            @*@if (identity.IsPermitted("130"))
+            {*@
+            <li class="dropdown  ">
+                <a href="/VMS/IssueHeader/HomeIndex">Production<b class="caret"></b></a>
+                @*<a href="#" class="dropdown-toggle" data-toggle="dropdown">Production<b class="caret"></b></a>*@
+                <ul class="dropdown-menu multi-column columns-1">
+                    <div class="row">
+                        @*@if (identity.IsPermitted("130110"))
+                        {*@
+                        <div class="col-sm-12">
+                            <ul class="multi-column-dropdown">
+                                <li class="dropdown dropdown-submenu">
+                                    <a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown">Issue</a>
+                                    <ul class="dropdown-menu">
+                                        @*@if (identity.IsPermitted("130110110"))
+                                        {*@
+                                        <li><a class="dropdown btn btn-info" href="/VMS/IssueHeader/Index?transactionType=Other">Issue</a></li>
+                                        @*}
+                                        @if (identity.IsPermitted("130110120"))
+                                        {*@
+                                        <li><a class="dropdown btn btn-info" href="/VMS/IssueHeader/Index?transactionType=IssueReturn">Return</a>  </li>
+                                        @*}*@
+
+                                        @*@if (identity.IsPermitted("130110150"))
+                                        {
+                                            <li><a class="dropdown btn btn-info" href="/VMS/TransferRaw/Index?transactionType=Transfer Raw">Transfer</a>  </li>
+                                        }*@
+
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        @*}
+
+                        @if (identity.IsPermitted("130120"))
+                        {*@
+
+                        <div class="col-sm-12">
+                            <ul class="multi-column-dropdown">
+                                <li class="dropdown dropdown-submenu">
+                                    <a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown">Receive</a>
+                                    <ul class="dropdown-menu">
+                                        @*@if (identity.IsPermitted("130120110"))
+                                        {*@
+                                        <li><a class="dropdown btn btn-info" href="/VMS/Receive/Index?TransactionType=WIP">WIP</a></li>
+                                        @*}
+                                        @if (identity.IsPermitted("130120120"))
+                                        {*@
+                                        <li><a class="dropdown btn btn-info" href="/VMS/Receive/Index?TransactionType=Other">FG</a>  </li>
+                                        @*}
+                                        @if (identity.IsPermitted("130120130"))
+                                        {*@
+                                        <li><a class="dropdown btn btn-info" href="/VMS/Receive/Index?TransactionType=ReceiveReturn">Return</a>  </li>
+                                        @*}
+                                        @if (identity.IsPermitted("130120140"))
+                                        {*@
+                                        <li><a class="dropdown btn btn-info" href="/VMS/Receive/Index?TransactionType=PackageProduction">Package</a>  </li>
+                                        @*}*@
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+
+                        @*}*@
+
+                    </div>
+                </ul>
+            </li>
+            @*}*@
+
+            @*@if (identity.IsPermitted("140"))
+            {*@
+
+            <li class="dropdown  ">
+                <a href="/VMS/SaleInvoice/HomeIndex">Sale<b class="caret"></b></a>
+                @*<a href="#" class="dropdown-toggle" data-toggle="dropdown">Production<b class="caret"></b></a>*@
+                <ul class="dropdown-menu multi-column columns-1">
+                    <div class="row">
+                        @*@if (identity.IsPermitted("140110"))
+                        {*@
+                        <div class="col-sm-12">
+                            <ul class="multi-column-dropdown">
+                                <li class="dropdown dropdown-submenu">
+                                    <a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown">Sale</a>
+                                    <ul class="dropdown-menu">
+                                        @*@if (identity.IsPermitted("140110110"))
+                                        {*@
+                                        <li><a href="/VMS/SaleInvoice/Index?TransactionType=Other" class="btn btn-info ">Local</a></li>
+                                        @*}
+                                        @if (identity.IsPermitted("140110120"))
+                                        {*@
+                                        <li><a href="/VMS/SaleInvoice/Index?TransactionType=Export" class="btn btn-info ">Export</a>  </li>
+                                        @*}*@
+
+                                        @*@if (identity.IsPermitted("140110130"))
+                                        {
+                                        <li><a href="/VMS/SaleInvoice/Index?TransactionType=Tender" class="btn btn-info ">Tender</a> </li>
+                                        }
+                                        @if (identity.IsPermitted("140110140"))
+                                        {
+                                        <li><a href="/VMS/SaleInvoice/Index?TransactionType=TradingTender" class="btn btn-info ">Tender(Trading)</a> </li>
+                                        }
+                                        @if (identity.IsPermitted("140110150"))
+                                        {
+                                        <li><a href="/VMS/SaleInvoice/Index?TransactionType=Service" class="btn btn-info ">Service(Stock)</a></li>
+                                        }
+                                        @if (identity.IsPermitted("140110160"))
+                                        {
+                                        <li><a href="/VMS/SaleInvoice/Index?TransactionType=ServiceNS" class="btn btn-info ">Service N Stock</a> </li>
+                                        }*@
+
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        @*}*@
+
+                        @*@if (identity.IsPermitted("140130"))
+                        {*@
+
+                        <div class="col-sm-12">
+                            <ul class="multi-column-dropdown">
+                                <li class="dropdown dropdown-submenu">
+                                    <a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown">Transfer Issue/Receive</a>
+                                    <ul class="dropdown-menu">
+                                        @*@if (identity.IsPermitted("140130140"))
+                                        {*@
+                                        <li><a href="/VMS/TransferIssue/Index?transactionType=62Out" class="btn btn-info ">FG(Out)</a></li>
+                                        @*}
+                                        @if (identity.IsPermitted("140130130"))
+                                        {*@
+                                        <li><a href="/VMS/TransferIssue/Index?transactionType=61Out" class="btn btn-info ">RM(Out)</a></li>
+                                        @*}
+                                        @if (identity.IsPermitted("140130120"))
+                                        {*@
+                                        <li><a href="/VMS/TransferReceive/Index?transactionType=62In" class="btn btn-info ">FG(In)</a></li>
+                                        @*}
+                                        @if (identity.IsPermitted("140130110"))
+                                        {*@
+                                        <li><a href="/VMS/TransferReceive/Index?transactionType=61In" class="btn btn-info ">RM(In)</a></li>
+                                        @*}*@
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+
+                        @*}*@
+
+                    </div>
+                </ul>
+            </li>
+
+
+            @*}*@
+
+
+            @*<div class="col-sm-12">
+                <ul class="multi-column-dropdown">
+                    <li class="dropdown">
+                        <a href="/VMS/SaleInvoice/Index?TransactionType=Trading" class="btn btn-info ">Trading</a>
+                    </li>
+                </ul>
+            </div>
+            *@
+
+            @*@if (identity.IsPermitted("150"))
+            {*@
+
+            <li class="dropdown  Setup">
+                <a href="/VMS/Deposit/HomeIndex">Deposit<b class="caret"></b></a>
+
+                @*<a href="#" class="dropdown-toggle" data-toggle="dropdown">Deposit<b class="caret"></b></a>*@
+                <ul class="dropdown-menu multi-column columns-1">
+                    <div class="row">
+                        @*@if (identity.IsPermitted("150110110"))
+                        {*@
+                        <div class="col-sm-12">
+                            <ul class="multi-column-dropdown">
+                                <li class="dropdown">
+                                    <a href="/VMS/Deposit/Index?TransactionType=Treasury" class="btn btn-info ">Treasury</a>
+                                </li>
+                            </ul>
+                        </div>
+                        @*}*@
+
+                        @*@if (identity.IsPermitted("150120"))
+                        {*@
+
+                        <div class="col-sm-12">
+                            <ul class="multi-column-dropdown">
+                                @*<li class="dropdown"> <a href="/VMS/Deposit/Index?TransactionType=VDS" class="btn btn-info ">VDS</a> </li>*@
+
+                                <li class="dropdown dropdown-submenu">
+                                    <a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown">VDS</a>
+                                    <ul class="dropdown-menu">
+                                        @*@if (identity.IsPermitted("150120110"))
+                                        {*@
+                                        <li><a class="dropdown btn btn-info" href="/VMS/Deposit/Index?TransactionType=VDS">Purchase VDS</a></li>
+                                        @*}
+                                        @if (identity.IsPermitted("150120120"))
+                                        {*@
+                                        <li><a class="dropdown btn btn-info" href="/VMS/Deposit/Index?TransactionType=SaleVDS">Sale VDS</a></li>
+                                        @*}*@
+                                    </ul>
+                                </li>
+
+                            </ul>
+                        </div>
+                        @*}*@
+
+                        @*@if (identity.IsPermitted("150130110"))
+                        {*@
+                        <div class="col-sm-12">
+                            <ul class="multi-column-dropdown">
+                                <li class="dropdown">
+                                    <a href="/VMS/Deposit/Index?TransactionType=SD" class="btn btn-info ">SD</a>
+                                </li>
+                            </ul>
+                        </div>
+                        @*}
+
+                        @if (identity.IsPermitted("150140110"))
+                        {*@
+                        @*<div class="col-sm-12">
+                            <ul class="multi-column-dropdown">
+                                <li class="dropdown">
+                                    <a href="/VMS/AdjustmentHistory/IndexCashPayable" class="btn btn-info ">Cash Payable</a>
+                                </li>
+                            </ul>
+                        </div>*@
+                        @*}*@
+
+                        @*<div class="col-sm-12">
+                            <ul class="multi-column-dropdown">
+                                <li class="dropdown dropdown-submenu">
+                                    <a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown">Reverse</a>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown btn btn-info" href="/VMS/Deposit/create?tType=VDS">VDS</a></li>
+                                        <li><a class="dropdown btn btn-info" href="/VMS/Deposit/create?tType=Treasury">Treasury</a>  </li>
+                                        <li><a class="dropdown btn btn-info" href="/VMS/Deposit/create?tType=SD">SD</a>  </li>
+                                        <li><a class="dropdown btn btn-info" href="/VMS/Deposit/create?tType=Cash Payable">Adjustment</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>*@
+                    </div>
+                </ul>
+            </li>
+
+            @*}*@
+
+            @*<li class="dropdown  Setup">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Toll<b class="caret"></b></a>
+                <ul class="dropdown-menu multi-column columns-1">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <ul class="multi-column-dropdown">
+                                <li class="dropdown dropdown-submenu"><a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown">Client</a>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown btn btn-info" href="/VMS/SaleInvoice/Index?TransactionType=TollIssue">Issue 11-Ga</a></li>
+                                            <li><a class="dropdown btn btn-info" href="/VMS/Purchase/Index?TransactionType=TollReceive">FG Receive</a>  </li>
+                                            <li><a class="dropdown btn btn-info" href="/VMS/SaleInvoice/Index?TransactionType=VAT11GaGa">VAT 11-GaGa</a>  </li>
+                                        </ul>
+                                 </li>
+                            </ul>
+                        </div>
+                        <div class="col-sm-12">
+                            <ul class="multi-column-dropdown">
+                                <li class="dropdown dropdown-submenu"><a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown">Contractor</a>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown btn btn-info" href="/VMS/Purchase/Index?TransactionType=TollReceiveRaw">Item Receive</a></li>
+                                            <li><a class="dropdown btn btn-info" href="/VMS/Receive/Index?TransactionType=TollFinishReceive">FG Production</a>  </li>
+                                            <li><a class="dropdown btn btn-info" href="/VMS/SaleInvoice/Index?TransactionType=TollFinishIssue">FG Issue</a>  </li>
+                                        </ul>
+                                 </li>
+                            </ul>
+                        </div>
+                    </div>
+                </ul>
+            </li>*@
+
+            @*@if (identity.IsPermitted("170"))
+            {*@
+
+            <li class="dropdown  Setup">
+                <a href="/VMS/AdjustmentHistory/HomeIndex">Adjustment<b class="caret"></b></a>
+
+                @*<a href="#" class="dropdown-toggle" data-toggle="dropdown">Adjustment<b class="caret"></b></a>*@
+
+                <ul class="dropdown-menu multi-column columns-1">
+                    <div class="row">
+
+                        @*@if (identity.IsPermitted("170110"))
+                        {*@
+                        @*<div class="col-sm-12">
+                            <ul class="multi-column-dropdown">
+                                <li class="dropdown dropdown-submenu"><a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown">Adjustment Head</a>
+                                        <ul class="dropdown-menu">
+                                           @if (identity.IsPermitted("170110110"))
+                                           {
+                                                <li><a class="dropdown btn btn-info" href="/VMS/AdjustmentName/Index">Head</a></li>
+                                           }
+                                           @if (identity.IsPermitted("170110120"))
+                                           {
+                                              <li><a class="dropdown btn btn-info" href="/VMS/AdjustmentHistory/Index">Transaction</a>  </li>
+                                           }
+
+                                        </ul>
+                                 </li>
+                            </ul>
+                        </div>*@
+                        @*}
+
+                        @if (identity.IsPermitted("170120"))
+                        {*@
+
+                        @*<div class="col-sm-12">
+                            <ul class="multi-column-dropdown">
+                                <li class="dropdown dropdown-submenu">
+                                    <a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown">Purhase</a>
+                                    <ul class="dropdown-menu">
+                                        @if (identity.IsPermitted("170120120"))
+                                        {
+                                            <li><a class="dropdown btn btn-info" href="/VMS/Purchase/Index?TransactionType=PurchaseCN">Increase</a></li>
+                                        }
+                                        @if (identity.IsPermitted("170120110"))
+                                        {
+                                            <li><a class="dropdown btn btn-info" href="/VMS/Purchase/Index?TransactionType=PurchaseDN">Decrease</a>  </li>
+                                        }
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>*@
+                        @*}
+
+                        @if (identity.IsPermitted("170130"))
+                        {*@
+
+                        <div class="col-sm-12">
+                            <ul class="multi-column-dropdown">
+                                <li class="dropdown dropdown-submenu">
+                                    <a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown">Sale</a>
+                                    <ul class="dropdown-menu">
+                                        @*@if (identity.IsPermitted("170130110"))
+                                        {*@
+                                        <li><a class="dropdown btn btn-info" href="/VMS/SaleInvoice/Index?TransactionType=Credit">CN</a></li>
+                                        @*}
+                                        @if (identity.IsPermitted("170130120"))
+                                        {*@
+                                        <li><a class="dropdown btn btn-info" href="/VMS/SaleInvoice/Index?TransactionType=Debit">DN</a>  </li>
+                                        @*}*@
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        @*}*@
+
+
+                        @*<div class="col-sm-12">
+                            <ul class="multi-column-dropdown">
+                                <li class="dropdown"><a href="#" class="btn btn-info ">Dispose</a>
+                                 </li>
+                            </ul>
+                        </div>*@
+
+                        @*@if (identity.IsPermitted("170150110"))
+                        {*@
+
+                        @*<div class="col-sm-12">
+                            <ul class="multi-column-dropdown">
+                                <li class="dropdown"><a href="#" class="btn btn-info ">DDB</a>
+                                 </li>
+                            </ul>
+                        </div>*@
+                        @*}*@
+
+                    </div>
+                </ul>
+            </li>
+
+            @*}
+
+            @if (identity.IsPermitted("180"))
+            {*@
+
+            <li class="dropdown  Setup">
+                <a href="/VMS/NBRReport/Index">NBR Report<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    @*@if (identity.IsPermitted("180110110"))
+                    {*@
+                    <li><a class="dropdown btn btn-info VAT4_3">VAT 4.3</a></li>
+                    @*}
+                    @if (identity.IsPermitted("180120110"))
+                    {*@
+                    <li><a class="dropdown btn btn-info VAT6_1">VAT 6.1</a></li>
+                    @*}
+                    @if (identity.IsPermitted("180130110"))
+                    {*@
+                    <li><a class="dropdown btn btn-info VAT6_2">VAT 6.2</a></li>
+                    <li><a class="dropdown btn btn-info VAT6_2_1">VAT 6.2.1</a></li>
+                    @*}
+
+                    @if (identity.IsPermitted("180170110"))
+                    {*@
+                    <li><a class="dropdown btn btn-info VAT6_3">VAT 6.3</a></li>
+                    @*}
+                    @if (identity.IsPermitted("180180110"))
+                    {*@
+                    <li><a class="dropdown btn btn-info VAT6_5">VAT 6.5</a></li>
+                    @*}
+                    @if (identity.IsPermitted("180150110"))
+                    {*@
+                    <li><a class="dropdown btn btn-info VAT6_10Report">VAT 6.10</a></li>
+                    @*}
+                    @if (identity.IsPermitted("180140110"))
+                    {*@
+                    <li class="dropdown"><a href="/Vms/NBRReport/ViewVAT9_1" class="btn btn-info ">VAT 9.1</a></li>
+                    @*}
+
+                    @if (identity.IsPermitted("180230"))
+                    {*@
+                    <li class="dropdown dropdown-submenu">
+                        <a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown">Chak</a>
+                        <ul class="dropdown-menu">
+                            @*@if (identity.IsPermitted("180230110"))
+                            {*@
+                            <li><a class="dropdown btn btn-info VATChak_ka">Chak Ka</a></li>
+                            @*}
+                            @if (identity.IsPermitted("180230120"))
+                            {*@
+                            <li><a class="dropdown btn btn-info VATChakKha">Chak Kha</a></li>
+                            @*}*@
+                        </ul>
+                    </li>
+                    @*}*@
+
+                    @*@if (identity.IsPermitted("180160110"))
+                    {*@
+                    <li><a class="dropdown btn btn-info VATSD_Report">SD Report</a></li>
+                    @*}*@
+
+                </ul>
+            </li>
+
+            @*}*@
+
+            @*@if (identity.IsPermitted("190"))
+            {*@
+            <li class="dropdown  Setup">
+                <a href="/VMS/MISReport/Index">MIS Report<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    @*@if (identity.IsPermitted("190110110"))
+                    {*@
+                    <li><a class="dropdown btn btn-info MisPurchase">Purchase</a></li>
+                    @*}
+
+                    @if (identity.IsPermitted("190130110"))
+                    {*@
+                    <li><a class="dropdown btn btn-info MisSale">Sale</a></li>
+                    @*}*@
+
+                    @*@if (identity.IsPermitted("190120"))
+                    {*@
+                    <li class="dropdown dropdown-submenu">
+                        <a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown">Production</a>
+                        <ul class="dropdown-menu">
+                            @*@if (identity.IsPermitted("190120110"))
+                            {*@
+                            <li><a class="dropdown btn btn-info MisIssue">Issue</a></li>
+                            @*}
+                            @if (identity.IsPermitted("190120120"))
+                            {*@
+                            <li><a class="dropdown btn btn-info MisReceive">Receive</a></li>
+                            @*}*@
+                        </ul>
+                    </li>
+                    @*}
+
+                    @if (identity.IsPermitted("190140"))
+                    {*@
+                    <li class="dropdown dropdown-submenu">
+                        <a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown">Stock</a>
+                        <ul class="dropdown-menu">
+                            @*@if (identity.IsPermitted("190140110"))
+                            {*@
+                            <li><a class="dropdown btn btn-info MisStock">Stock</a></li>
+                            @*}
+                            @if (identity.IsPermitted("190140120"))
+                            {*@
+                            <li><a class="dropdown btn btn-info MisReceiveSale">Receive Sale</a></li>
+                            @*}
+                            @if (identity.IsPermitted("190140130"))
+                            {*@
+                            <li><a class="dropdown btn btn-info MisReconsciliation">Reconsciliation</a></li>
+                            @*}
+                            @if (identity.IsPermitted("190140140"))
+                            {*@
+                            <li><a class="dropdown btn btn-info MisStockMovement">Branch Stock Movement</a></li>
+                            @*}*@
+                        </ul>
+                    </li>
+
+                    @*}
+
+                    @if (identity.IsPermitted("190150"))
+                    {*@
+                    <li class="dropdown dropdown-submenu">
+                        <a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown">Deposit</a>
+                        <ul class="dropdown-menu">
+                            @*@if (identity.IsPermitted("190150110"))
+                            {*@
+                            <li><a class="dropdown btn btn-info MisDeposit">Deposit</a></li>
+                            @*}
+                            @if (identity.IsPermitted("190150120"))
+                            {*@
+                            <li><a class="dropdown btn btn-info MisCurrentAccount">Current Account</a></li>
+                            @*}*@
+                        </ul>
+                    </li>
+                    @*}*@
+
+                    @*@if (identity.IsPermitted("190160"))
+                    {*@
+                    <li class="dropdown dropdown-submenu">
+                        <a href="#" class="btn btn-info dropdown-toggle" data-toggle="dropdown">Other</a>
+                        <ul class="dropdown-menu">
+                            @*@if (identity.IsPermitted("190160110"))
+                            {*@
+                            <li><a class="dropdown btn btn-info MisAdjustment">Adjustment</a></li>
+                            @*}
+                            @if (identity.IsPermitted("190160120"))
+                            {*@
+                            <li><a class="dropdown btn btn-info MisCo-Efficient">Co-Efficient</a></li>
+                            @*}
+                            @if (identity.IsPermitted("190160130"))
+                            {*@
+                            <li><a class="dropdown btn btn-info MisWastage">Wastage</a></li>
+                            @*}
+                            @if (identity.IsPermitted("190160150"))
+                            {*@
+                            <li><a class="dropdown btn btn-info MisSerialStock">SerialStock</a></li>
+                            @*}
+                            @if (identity.IsPermitted("190160160"))
+                            {*@
+                            <li><a class="dropdown btn btn-info MisPurchaseLC">Purchase LC</a></li>
+                            @*}*@
+                        </ul>
+                    </li>
+
+                    @*}*@
+
+                </ul>
+
+            </li>
+
+            @*}*@
+
+            @*@if (identity.IsPermitted("200"))
+            {*@
+
+            @*<li class="dropdown  Setup">
+
+            <a href="/VMS/UserInformation/HomeIndex">User Account<b class="caret"></b></a>*@
+
+            @*<a href="#" class="dropdown-toggle" data-toggle="dropdown">User Account<b class="caret"></b></a>*@
+            @*<ul class="dropdown-menu multi-column columns-1">
+            <div class="row">*@
+            @*@if (identity.IsPermitted("200120110"))
+            {*@
+
+            @*<div class="col-sm-12">
+                <ul class="multi-column-dropdown">
+                    <li class="dropdown">
+                        <a href="/VMS/UserInformation/ChangePassword" class="btn btn-info ">Change Password</a>
+                    </li>
+                </ul>
+            </div>*@
+
+            @*}*@
+            @*<div class="col-sm-12">
+                <ul class="multi-column-dropdown">
+                    <li class="dropdown">
+                        <a href="/VMS/UserInformation/" class="btn btn-info ">Users</a>
+                    </li>
+                </ul>
+            </div>*@
+            @*<div class="col-sm-12">
+                <ul class="multi-column-dropdown">
+                    <li class="dropdown"><a href="#" class="btn btn-info ">User Roles</a>
+                     </li>
+                </ul>
+            </div>*@
+
+
+            @*<div class="col-sm-12">
+                <ul class="multi-column-dropdown">
+                    <li class="dropdown">
+                        <a href="/VMS/Home/LogOut" class="btn btn-info ">Log out</a>
+                    </li>
+                </ul>
+            </div>*@
+            @*<div class="col-sm-12">
+                <ul class="multi-column-dropdown">
+                    <li class="dropdown"><a href="/VMS/Home/Login" class="btn btn-info ">Login</a>
+                     </li>
+                </ul>
+            </div>*@
+
+
+            @*<div class="col-sm-12">
+                <ul class="multi-column-dropdown">
+                    <li class="dropdown"><a href="#" class="btn btn-info ">Logs</a>
+                     </li>
+                </ul>
+            </div>
+            <div class="col-sm-12">
+                <ul class="multi-column-dropdown">
+                    <li class="dropdown"><a href="#" class="btn btn-info ">Close All</a>
+                     </li>
+                </ul>
+            </div>
+            <div class="col-sm-12">
+                <ul class="multi-column-dropdown">
+                    <li class="dropdown"><a href="#" class="btn btn-info ">Settings Role</a>
+                     </li>
+                </ul>
+            </div>*@
+
+
+            @*<div class="col-sm-12">
+                <ul class="multi-column-dropdown">
+                    <li class="dropdown">
+                        <a href="/VMS/Home/Index?changeBranch=true" class="btn btn-info ">Change Branch</a>
+                    </li>
+                </ul>
+            </div>*@
+
+
+            @*</div>
+                </ul>
+            </li>*@
+
+            @*}*@
+
+            @*<li class="dropdown  Setup">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Bendarol<b class="caret"></b></a>
+                <ul class="dropdown-menu multi-column columns-1">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <ul class="multi-column-dropdown">
+                                <li class="dropdown"><a href="#" class="btn btn-info ">Demand</a>
+                                 </li>
+                            </ul>
+                        </div>
+                        <div class="col-sm-12">
+                            <ul class="multi-column-dropdown">
+                                <li class="dropdown"><a href="#" class="btn btn-info ">Receive</a>
+                                 </li>
+                            </ul>
+                        </div>
+                    </div>
+                </ul>
+            </li>*@
+
+
+            
+
+            </ul>
+
+            @*<ul class="nav navbar-nav navbar-right" style="border-left: 5px solid #fff">
+                <li class="dropdown1">
+                    <a href="#" class="dropdown-toggle sym-btn-back" title="Go Back" onclick="goBack()" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">&nbsp;Back</a>
+                </li>
+                <li class="dropdown1">
+                    <a href="#" class="dropdown-toggle btn btn-warning" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">VAT </a>
+                </li>
+            </ul>*@
+
+            <div class="col-sm-4 ">
+                <img src="~/Images/symphonyLogo.png" style="height:50px; float:right;" />
+            </div>
+
+        </div>
+    </nav>
+</div>
+<div id="myModal" class="trkmodal"></div>
+<script>
+    $(function () {
+        function modalInit(url) {
+            var modal = document.getElementById('myModal');
+            $.ajax({
+                url: url,
+                cache: false,
+                beforeSend: function () { $(".loading").show(); },
+                complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                success: function (html) {
+                    modal.style.display = "block";
+                    $("#myModal").html(html);
+                }
+            });
+        }
+
+        ;
+        $('.VAT4_3').click(function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var url = "/Vms/NBRReport/PrintVAT1";
+            modalInit(url);
+        });
+
+        $('.VAT6_1').click(function () {
+            var url = "/Vms/NBRReport/PrintVAT16";
+            modalInit(url);
+        });
+
+        $('.VAT6_2').click(function () {
+            var url = "/Vms/NBRReport/PrintVAT17";
+            modalInit(url);
+        });
+        $('.VAT6_2_1').click(function () {
+            var url = "/Vms/NBRReport/PrintVAT6_2_1";
+            modalInit(url);
+        });
+
+        $('.VAT6_3').click(function () {
+            var url = "/Vms/NBRReport/PreviewVAT6_3";
+            modalInit(url);
+        });
+
+        $('.VAT6_5').click(function () {
+            var url = "/Vms/NBRReport/transferIsuue";
+            modalInit(url);
+        });
+
+        $('.VAT6_10Report').click(function () {
+            var url = "/Vms/NBRReport/VAT6_10Report";
+            modalInit(url);
+        });
+
+        $('.VATChak_ka').click(function () {
+            var url = "/Vms/NBRReport/chakka";
+            modalInit(url);
+        });
+
+        $('.VATChakKha').click(function () {
+            var url = "/Vms/NBRReport/chakkha";
+            modalInit(url);
+        });
+
+        $('.VATSD_Report').click(function () {
+            var url = "/Vms/NBRReport/PrintVATSD";
+            modalInit(url);
+        });
+
+        $('.MisPurchase').click(function () {
+            var url = "/Vms/MISReport/PrintPurchase";
+            modalInit(url);
+        });
+
+        $('.MisSale').click(function () {
+            var url = "/Vms/MISReport/PrintSale";
+            modalInit(url);
+        });
+
+        $('.MisIssue').click(function () {
+            var url = "/Vms/MISReport/PrintIssue";
+            modalInit(url);
+        });
+
+        $('.MisReceive').click(function () {
+            var url = "/Vms/MISReport/PrintReceive";
+            modalInit(url);
+        });
+
+        $('.MisStock').click(function () {
+            var url = "/Vms/MISReport/PrintStock";
+            modalInit(url);
+        });
+
+        $('.MisReceiveSale').click(function () {
+            var url = "/Vms/MISReport/PrintReceiveStock";
+            modalInit(url);
+        });
+
+        $('.MisReconsciliation').click(function () {
+            var url = "/Vms/MISReport/PrintReconsciliation";
+            modalInit(url);
+        });
+
+        $('.MisStockMovement').click(function () {
+            var url = "/Vms/MISReport/PrintBranchStockMovement";
+            modalInit(url);
+        });
+
+        $('.MisDeposit').click(function () {
+            var url = "/Vms/MISReport/PrintDeposit";
+            modalInit(url);
+        });
+
+        $('.MisCurrentAccount').click(function () {
+            var url = "/Vms/MISReport/PrintCurrentAccount";
+            modalInit(url);
+        });
+
+        $('.MisAdjustment').click(function () {
+            var url = "/Vms/MISReport/PrintAdjustment";
+            modalInit(url);
+        });
+
+        $('.MisCo-Efficient').click(function () {
+            var url = "/Vms/MISReport/PrintCoEfficient";
+            modalInit(url);
+        });
+
+        $('.MisWastage').click(function () {
+            var url = "/Vms/MISReport/PrintWastage";
+            modalInit(url);
+        });
+
+        $('.MisSerialStock').click(function () {
+            var url = "/Vms/MISReport/PrintSerialStock";
+            modalInit(url);
+        });
+
+        $('.MisPurchaseLC').click(function () {
+            var url = "/Vms/MISReport/PrintPurchaseLC";
+            modalInit(url);
+        });
+
+
+
+
+
+    });
+</script>
+
+<script>
+
+    $(document).ready(function () {
+
+        @*var allRoles = '@Session["AllRoles"]';
+        var userRoles = '@Session["UserRoles"]';
+
+        allRoles = allRoles.replace(/&quot;/g, '"');
+        userRoles = userRoles.replace(/&quot;/g, '"');
+        allRoles = JSON.parse(allRoles);
+        userRoles = JSON.parse(userRoles);*@
+
+        //console.log(userRoles)
+
+        $("a").each(function (i) {
+
+            var element = $(this);
+            var formId = element.attr("id");
+
+            //if (formId) {
+
+            //    var role = allRoles.find(function(item) {
+
+            //        return item.FormID == formId;
+            //    });
+
+            //    var userRole = userRoles.find(function (item) {
+
+            //        return item.FormID == formId.trim();
+            //    });
+
+
+            //    if (role && role.Access !== "1") {
+
+            //       element.hide();
+            //    }
+
+            //    if (userRole && userRole.Access !== "1") {
+
+            //        element.hide();
+            //    }
+
+
+            //    //console.log(userRole, formId)
+            //}
+
+        });
+
+    })
+
+</script>
+
+
+<style>
+    .navbar-default .navbar-nav > li.dropdown:hover > a,
+    .navbar-default .navbar-nav > li.dropdown:hover > a:hover,
+    .navbar-default .navbar-nav > li.dropdown:hover > a:focus {
+        /*background-color: rgb(231, 231, 231);*/
+        color: rgb(85, 85, 85);
+    }
+
+    li.dropdown:hover > .dropdown-menu {
+        display: block;
+    }
+</style>
+
+<style>
+    /*.navbar-default .navbar-nav > li.dropdown:active > a,
+    .navbar-default .navbar-nav > li.dropdown:hover > a:hover,
+    .navbar-default .navbar-nav > li.dropdown:hover > a:focus
+    {
+        background-color: rgb(252, 255, 0);
+    }
+
+    .navbar-default .navbar-nav > li.dropdown:visited > a
+    .navbar-default .navbar-nav > li.dropdown:hover > a:visited,
+    .navbar-default .navbar-nav > li.dropdown:visited > a:visited
+    {
+        background-color: rgb(0, 154, 255);
+    }*/
+</style>
+
+<style>
+
+    .navbar-collapse {
+
+        padding-right: 0px;
+        padding-left: 0px;
+    }
+
+    /*.navbar-nav > li > a, .navbar-nav > li > a {
+        padding-top: 3px !important;
+        padding-bottom: 5px !important;
+    }*/
+
+    .nav > li > a {
+        padding: 15px 10px;
+    }
+
+   
+</style>
+

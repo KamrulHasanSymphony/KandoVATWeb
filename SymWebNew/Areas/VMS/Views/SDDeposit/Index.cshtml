@@ -1,0 +1,233 @@
+﻿@model VATViewModel.DTOs.SDDepositVM
+@using UIHelper.MVC
+@using SymOrdinary
+@using System.Threading;
+@{ 
+    ShampanIdentity identity = null;
+    try
+    {
+        identity = (ShampanIdentity)Thread.CurrentPrincipal.Identity;
+    }
+    catch (Exception)
+    {
+        Response.Redirect("/VMS/Home/Login");
+        return;
+    }
+}
+
+@{
+    ViewBag.Title = "Index";
+}
+<div class="headrow">
+    <button type="button" title="Add New SD" data-url="/VMS/SDDeposit/Create?tType=@Model.TransactionType" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+    <label class="pull-right">SD Deposit</label>
+</div>
+
+<div class="thinbox animated zoomIn faster">
+    <div class="th_thinbox">
+        <p>SD Deposits</p>
+    </div>
+    <div class="dtSearch formDesign">
+        <div class="row">
+            <div class="col-md-2">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.DepositId)
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.DepositId, new { @placeholder = "Deposit Id", @class = "  form-control" })
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.TreasuryNo)
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.TreasuryNo, new { @placeholder = "Treasury No", @class = "  form-control" })
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.IssueDateTimeFrom)
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.IssueDateTimeFrom, new { @placeholder = "Depsit Date From", @class = "customDatePicker defaultDate  form-control" })
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.IssueDateTimeTo)
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.IssueDateTimeTo, new { @placeholder = "Depsit Date To", @class = "customDatePicker defaultDate  form-control" })
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.DepositType)
+                </div>
+                <div class="editor-field">
+                    <select id="DepositType" class="form-control">
+                        <option value=""></option>
+                        <option value="Cash">Cash</option>
+                        <option value="Cheque">Cheque</option>
+                        <option value="Opening">Opening</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.ChequeNo)
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.ChequeNo, new { @placeholder = "Cheque No", @class = "  form-control" })
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.CheckDateFrom)
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.CheckDateFrom, new { @placeholder = "Check Date From", @class = "customDatePicker  form-control" })
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.CheckDateTo)
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.CheckDateTo, new { @placeholder = "Check Date To", @class = "customDatePicker  form-control" })
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.BankName)
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.BankName, new { @placeholder = "Bank Name", @class = "  form-control" })
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.AccountNumber)
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.AccountNumber, new { @placeholder = "Account Number", @class = "  form-control" })
+                </div>
+            </div>
+            <div class="col-md-1">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.Post)
+                </div>
+                <div class="editor-field">
+                    <select id="Post" class="form-control">
+                        <option value=""></option>
+                        <option value="Y">Y</option>
+                        <option value="N">N</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="editor-label">
+                    <label>&nbsp;</label>
+                </div>
+                <div class="editor-field">
+                    <button type="button" title="Click to Search" id="btnDialog" class="sym-btn-search">&nbsp;Search</button>
+                    <button type="button" title="Clear Data" id="Clear" class=" sym-btn-clear">&nbsp;Clear</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <p>&nbsp;</p>
+    <table id="myDataTable" class="display">
+        <thead>
+            <tr>
+                <th class="center">Action</th>
+                <th>SDDeposit Id</th>
+                <th>Treasury No</th>
+                <th>SDDeposit Date</th>
+                <th>SDDeposit Amount</th>
+                <th>SDDeposit Person</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <br />
+</div>
+
+<div class="headrow">
+    <button type="button" title="Add New SD" data-url="/VMS/SDDeposit/Create?tType=@Model.TransactionType"" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+</div>
+
+<script language="javascript" type="text/javascript">
+
+    $(document).ready(function () {
+
+        SelectAllForDelete();
+        $.datepicker.regional[""].dateFormat = 'dd/M/y';
+        $.datepicker.setDefaults($.datepicker.regional['']);
+        var oTable = $('#myDataTable').dataTable({
+            "bServerSide": true,
+            "sAjaxSource": "/VMS/SDDeposit/_index?TransactionType=@Model.TransactionType",
+            "bProcessing": true,
+            "aLengthMenu": tablelength(),
+            "bJqueryUI": true,
+            "bAutoWidth": false,
+
+            "fnServerData": function (sSource, aoData, fnCallback) {
+                $('.dtSearch :input').each(function () {
+                    var Name = $(this).attr("Id")
+                    var Value = $(this).val()
+                    aoData.push({ "name": Name, "value": Value });
+                });
+                $.getJSON(sSource, aoData, function (json) {
+                    fnCallback(json);
+                });
+            },
+
+            "aoColumns": [
+                            {
+                                "sName": "Id",
+                                "bSearchable": false,
+                                "bSortable": false,
+                                "sWidth": "20%",
+                                "sClass": "center",
+                                "fnRender": function (oObj) {
+                                    return '&nbsp; <a title="Click on for Edit" href=\"/VMS/SDDeposit/Edit/' + oObj.aData[0].split('~')[0] + '\" class="sym-btn-edit-row"></a>'
+                                        + '&nbsp; <a title="Click on for Post" data-url="/VMS/SDDeposit/Post"  onclick=btnPost(this); data-Id="' + oObj.aData[0] + '\" class="sym-btn-post-row"></a>'
+                                        + '&nbsp; <a title="Click on for Report" target="_blank" href="/VMS/SDDeposit/VoucherReportView?Id=' + oObj.aData[0].split('~')[0] + '\" class="sym-btn-report-row"></a>'
+                                    ;
+                                }
+                            }
+                            , { "sName": "SDDepositId", "sWidth": "5%" }
+                            , { "sName": "TreasuryNo", "sWidth": "10%" }
+                            , { "sName": "SDDepositDateTime", "sWidth": "15%" }
+                            , { "sName": "SDDepositAmount", "sWidth": "10%" }
+                            , { "sName": "SDDepositPerson", "sWidth": "15%" }
+            ]
+        });
+
+        $('#btnDialog').click(function () {
+            var model = $('.dtSearch :input').serialize();
+            $.ajax({
+                url: "/VMS/SDDeposit/Index",
+                cache: false,
+                data: model,
+                success: function (html) {
+                    oTable.fnDraw();
+                }
+            });
+        });
+
+        ////clearing fields
+        $("#Clear").on('click', function () {
+            $(".Dropdown").select2("val", "");
+            $(".form-control").val("");
+        });
+    });
+</script>
+

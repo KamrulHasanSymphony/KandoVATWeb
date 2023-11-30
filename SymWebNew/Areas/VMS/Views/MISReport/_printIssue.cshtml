@@ -1,0 +1,238 @@
+﻿@model VATViewModel.DTOs.ProductionMISViewModel
+@using UIHelper.MVC
+@{
+    Layout = "~/Areas/VMS/Views/Shared/_ModalLayout.cshtml";
+}
+<div class="trkmodal-content">
+    <div class="trkmodal-header">
+        <span class="close">&times;</span>
+        <h2 class="text-center">Report(Issue)</h2>
+    </div>
+    <div class="trkmodal-body">
+        @using (Html.BeginForm("ReportIssue", "MISReport", FormMethod.Post, new { enctype = "multipart/form-data", @target = "_blank", @Id = "frmPopUPIssue" }))
+        {
+            <div class="npForm col-md-12">
+                <div class="col-md-10 npForm">
+                    <label>Issue No</label>
+                    @Html.TextBoxFor(m => m.IssueNo, new { @Id = "PopUpIssueNo", @class = " form-control trIssueNo", @readonly = "readonly" })
+                </div>
+                <div class=" col-md-2 npForm">
+                    <label>&nbsp;</label>
+                    <button type="button" class=" sym-btn-search issueBtn">
+                        Search
+                    </button>
+                </div>
+            </div>
+
+            <div class="npForm col-md-6">
+                <label>Issue Date From</label>
+                @Html.TextBoxFor(m => m.IssueDateFrom, new { @placeholder = "Start Date", @class = "customDatePicker form-control" })
+            </div>
+
+            <div class="npForm col-md-6">
+                <label>Issue Date To</label>
+                @Html.TextBoxFor(m => m.IssueDateTo, new { @placeholder = "End Date", @class = "customDatePicker form-control" })
+            </div>
+
+            <div class="npForm col-md-12">
+                <div class="col-md-10 npForm">
+                    <label>Product Name</label>
+                    @Html.HiddenFor(m => m.ItemNo)
+                    @Html.HiddenFor(m => m.IsPost, new { @class = "cIsPost" })
+                    @Html.HiddenFor(m => m.IsWastage, new { @class = "cIsWastage" })
+                    @Html.HiddenFor(m => m.ExcelRpt)
+                    @Html.HiddenFor(m => m.ReportType)
+                    @Html.TextBoxFor(m => m.ProductName, new { @Id = "PopUpProductName", @class = " form-control trProductName", @readonly = "readonly" })
+                </div>
+                <div class=" col-md-2 npForm">
+                    <label>&nbsp;</label>
+                    <button type="button" class=" sym-btn-search productBtn">Search</button>
+                </div>
+            </div>
+
+            <div class="npForm col-md-6">
+                <label>Product Group</label>
+                @Html.SimpleDropDownFor(m => m.ProductGroup, "/Config/DropDown/ProductCategory", new { @class = " form-control selectDropdown trProductGroup" })
+            </div>
+            <div class="npForm col-md-6">
+                <label>Product Type</label>
+                @Html.SimpleDropDownFor(m => m.ProductType, "/Config/DropDown/ProductTypes", new { @class = " form-control selectDropdown trProductType" })
+            </div>
+
+            <div class="npForm col-md-5">
+                <label>Branch Name</label>
+                @*@Html.SimpleDropDownFor(m => m.BranchId, "/Config/DropDown/BranchProfile", new { @class = " form-control selectDropdown cBranchId" })*@
+                @Html.SimpleDropDownFor(m => m.BranchId, "/Config/DropDown/UserBranchProfile", new { @class = " form-control selectDropdown cBranchId" })
+            </div>
+
+            @*<div class="npForm col-md-3 chkDesign" style="margin-left:10px;">
+                    @Html.HiddenFor(m => m.Post, new { @class = " chkValue" })
+                    <label> Post </label>
+                    <input id="input-1" type="checkbox">
+                </div>*@
+            <div class="npForm col-md-3 chkDesign" style="margin-left:10px;">
+                <div class="editor-label">
+                    <label>Post</label>
+                </div>
+                <div class="editor-field">
+                    <select id="Post" class="form-control">
+                        <option value=""></option>
+                        <option value="Y">Y</option>
+                        <option value="N">N</option>
+                    </select>
+                </div>
+            </div>
+            @*<div class="npForm col-md-3 chkDesign" style="margin-left:10px;">
+                    @Html.HiddenFor(m => m.Wastage, new { @class = " chkValue" })
+                    <label >Wastage </label>
+                    <input id="input-2" type="checkbox">
+                </div>*@
+
+            <div class="npForm col-md-3 chkDesign" style="margin-left:10px;">
+                <div class="editor-label">
+                    <label>Wastage</label>
+                </div>
+                <div class="editor-field">
+                    <select id="Wastage" class="form-control">
+                        <option value=""></option>
+                        <option value="Y">Y</option>
+                        <option value="N">N</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="npForm col-md-10 col-md-offset-2">
+                @*<div class="clearfix"></div>*@
+                <label class="RadioContainer">
+                    Detail
+                    <input type="radio" checked name="rptType">
+                    <span class="checkmark"></span>
+                </label>
+                <label class="RadioContainer">
+                    Summary
+                    <input type="radio" name="rptType">
+                    <span class="checkmark"></span>
+                </label>
+                <label class="RadioContainer">
+                    Single
+                    <input type="radio" name="rptType">
+                    <span class="checkmark"></span>
+                </label>
+            </div>
+            <div class="npForm col-md-2">
+                @Html.SimpleDropDownFor(m => m.FontSize, "/Config/DropDown/Font", new { @class = " form-control DRselectDropdown" })
+            </div>
+            @Html.HiddenFor(m => m.PreviewOnly);
+            <button type="button" class=" btn sym-btn-report trPreview" style="margin-left:20px;"> Preview</button>
+            <button type="button" class=" sym-btn-Excel-Export cDownload" style="margin-left:20px;"> Download</button>
+            <button type="button" class="sym-btn-close closeBtn pull-right"> Close</button>
+        }
+    </div>
+</div>
+<div id="myHigherModal" class="HigherModal"></div>
+<script>
+    $(document).ready(function () {
+        ////boolean checkbox
+        MyCheckBox('@Model.Post', 'input-1', 'Post');
+        MyCheckBox('@Model.Wastage', 'input-2', 'Wastage');
+
+        CheckBoxDesign();
+
+
+        ///check validation
+        function checkValidation() {
+            var startDate = $('#IssueDateFrom').val();
+            var endDate = $('#IssueDateTo').val();
+            var radioValue = $("input[type='radio'][name='rptType']:checked").closest("label.RadioContainer").text().trim();
+            var issueNo = $('.trIssueNo').val();
+            if (radioValue == "Single" && issueNo == "") {
+                ShowResult("Fail", "Select issue number");
+                return false;
+            }
+            return true;
+        }
+        //clicking preview button
+        $('.trPreview').click(function () {
+            var isValid = checkValidation();
+            if (isValid == false) {
+                return;
+            }
+            var Post = $('#Post').val();
+            var Wastage = $('#Wastage').val();
+
+            $('.cIsPost').val(Post);
+            $('.cIsWastage').val(Wastage);
+
+            var radioValue = $("input[type='radio'][name='rptType']:checked").closest("label.RadioContainer").text().trim();
+            $('#ReportType').val(radioValue);
+            //$("#PreviewOnly").val("true");
+            $("#ExcelRpt").val("false");
+            $('#frmPopUPIssue').submit();
+            //////pageSubmit('frmPopUPIssue');
+        });
+
+        $('.cDownload').click(function () {
+            var isValid = checkValidation();
+            if (isValid == false) {
+                return;
+            }
+            var radioValue = $("input[type='radio'][name='rptType']:checked").closest("label.RadioContainer").text().trim();
+            $('#ReportType').val(radioValue);
+            //$("#PreviewOnly").val("true");
+            $("#ExcelRpt").val("true");
+            $('#frmPopUPIssue').submit();
+            //////pageSubmit('frmPopUPIssue');
+        });
+
+        $('.issueBtn').click(function () {
+            var url = "/Vms/IssueHeader/GetIssuePopUp?targetId=PopUpIssueNo";
+            modalInitHigher(url);
+        });
+
+        $('.productBtn').click(function () {
+            var url = "/Vms/Product/GetProductPopUp?targetId=PopUpProductName";
+            modalInitHigher(url);
+        });
+
+        function closeModal() {
+            $("#myModal").html("");
+            trkmodal.style.display = "none";
+        }
+
+        var span = document.getElementsByClassName("close")[0];
+        var trkmodal = document.getElementById('myModal');
+        //When the user clicks on <span> (x), close the trkmodal
+        span.onclick = function () {
+            closeModal();
+        }
+
+        $('.closeBtn').click(function () {
+            closeModal();
+        });
+
+        function modalInitHigher(url) {
+            var modal = document.getElementById('myHigherModal');
+            $.ajax({
+                url: url,
+                cache: false,
+                beforeSend: function () { $(".loading").show(); },
+                complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                success: function (html) {
+                    modal.style.display = "block";
+                    $("#myHigherModal").html(html);
+                }
+            });
+        }
+
+    });
+</script>
+@*callback from higher modal*@
+<script>
+    function callbackFromProductModal(sender) {
+        var itemNo = $(sender).children('td.popUpItemNo').text();
+        $('#ItemNo').val(itemNo);
+    }
+    function callbackFromIssueModal(sender) {
+        ////issue logic here
+    }
+</script>

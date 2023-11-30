@@ -1,0 +1,205 @@
+﻿@model SymViewModel.Sage.MailViewModel
+@{
+    ViewBag.Title = "Index";
+}
+
+<br />
+<div class="headrow">
+    <button type="button" title="Go To Index" data-url="/VMS/Email/MailList" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Mail List</button>
+    <button type="button" title="Send Mail" onclick="SendMail()" class="sym-btn-mail">&nbsp;Send Mail</button>
+</div>
+@using (Html.BeginForm("SendMail", "Email", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmMail" }))
+{
+    <div class="thinbox">
+        <div class="th_thinbox">
+            <p>Email Form</p>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <label>Mail From</label>
+                @Html.TextBoxFor(m => m.FromMail, "", new { @class = "required form-control", @placeholder = "Enter your mail address" })
+            </div>
+            <div class="col-md-3">
+                <label>Password</label>
+                @Html.PasswordFor(m => m.MailPassord, new { @class = "required form-control", @placeholder = "Enter your email password" })
+            </div>
+            <div class="col-md-2">
+                <label>Schedule Date</label>
+                @Html.TextBoxFor(model => model.SendTime, new { @class = " customTimePicker form-control" })
+            </div>
+            <div class="col-md-2">
+                <label>Schedule Time</label>
+                @Html.TextBoxFor(model => model.SendDate, new { @class = "customDatePicker form-control" })
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label>Mail Subject</label>
+                @Html.TextAreaFor(m => m.MailSubject, new { @class = "required form-control", @placeholder = "Enter the subject of the mail" })
+            </div>
+            <div class="col-md-5">
+
+                <label>Mail Body</label>
+                @Html.TextBoxFor(m => m.file, new { type = "file", @class = "required htmlFile form-control" })
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3">
+                <label>Attachment 1</label>
+                @Html.TextBoxFor(m => m.attch1, new { type = "file", @class = " form-control" })
+            </div>
+            <div class="col-md-3">
+                <label>Attachment 2</label>
+                @Html.TextBoxFor(m => m.attch2, new { type = "file", @class = " form-control" })
+            </div>
+            <div class="col-md-3">
+                <label>Attachment 3</label>
+                @Html.TextBoxFor(m => m.attch3, new { type = "file", @class = " form-control" })
+            </div>
+            <div class="col-md-3">
+                <label>Attachment 4</label>
+                @Html.TextBoxFor(m => m.attch4, new { type = "file", @class = " form-control" })
+            </div>
+        </div>
+    </div>
+
+    <div class="thinbox">
+        <div class="th_thinbox">
+            <p>Receiver Form</p>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="col-md-6">
+                <label>Mail List</label>
+                @Html.TextBox("mailList", null, new { type = "file",  @name="mailList", @class = " htmlFile1 form-control",  @style="float: left;" })
+                    @*<input type="file" name="mailList" id="mailList" class="htmlFile1" style="float: left;" />*@
+                </div>
+                <div class="col-md-4">
+                <label>&nbsp</label>
+                    <button type="button" onclick="AddFile()" class="sym-btn-refresh" style="" title="Load Receiver List" name="">&nbsp;Load Receivers</button>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <label>Mail To</label>
+                @Html.TextBox("MailTo", "", new { @class = "dMailTo form-control", @placeholder = "Mail addresss to send" })
+            </div>
+            <div class="col-md-1">
+                <label>&nbsp</label>
+                <div data-url="/Vms/Email/BlankItem" class="sym-btn-add-row AddRow" data-container="mailToRows">&nbsp;Add</div>
+            </div>
+            <label>&nbsp</label>
+
+        </div>
+
+
+
+        <div id="mailToRows" class="row">
+            <br />
+            @if (Model.Vms != null)
+            {
+                foreach (var item in Model.Vms)
+                {
+                    Html.RenderPartial("_mailTo", item);
+                }
+            }
+        </div>
+        <br />
+        <hr />
+        @*<div class="row">
+            <div class="col-md-5">
+                &nbsp
+            </div>
+            <div class="col-md-2">
+                <button type="button" title="Send Mail" onclick="SendMail()" class="sym-btn-mail">&nbsp;Send Mail</button>
+            </div>
+        </div>*@
+    </div>
+    
+    <div class="headrow">
+        <button type="button" title="Go To Index" data-url="/VMS/Email/MailList" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Mail List</button>
+        <button type="button" title="Send Mail" onclick="SendMail()" class="sym-btn-mail">&nbsp;Send Mail</button>
+    </div>
+}
+@section Scripts {
+    <script>
+        $(function () {
+            $('.customTimePicker').ptTimeSelect();
+        });
+        function SendMail() {
+            var count = 0;
+            $(".mailTo").each(function () {
+                count++;
+            });
+            if (count === 0) {
+                ShowResult("Fail", "Please add an receiver email!");
+                return;
+            }
+            var file = $('.htmlFile').val();
+            if (file == "") {
+                ShowResult("Fail", "Please choose a html file to attach!");
+                return;
+            }
+            $("input:checkbox:not(:checked)").each(function () {
+                $(this).parentsUntil("div.col-md-12").remove();
+            });
+            pageSubmit('frmMail');
+        }
+
+        function AddFile() {
+            var file = $('.htmlFile1').val();
+            if (file == "") {
+                ShowResult("Fail", "Please choose a excell file first!");
+                return;
+            }
+            var model = new FormData();
+            var i = 1;//selected file index 
+            model.append("File", $('#mailList')[0].files[0]);
+            model.append("Name", "Name");
+
+            //$.ajax({
+            //    type: "POST",
+            //    data: model,
+            //    url: "/Vms/Email/MailListUpload",
+            //    cache: false,
+            //    contentType: false,
+            //    processData: false,
+            //    success: function () {
+            //        var url= "/Vms/Email/MailListUpload";
+            //        $('#frmMail').attr('action', url).submit();
+            //    }
+            //});
+            var url = "/Vms/Email/MailListUpload";
+            $('#frmMail').attr('action', url).submit();
+
+        }
+
+
+        $('.AddRow:not(.AddRowInited)').on("click", function () {
+            var container = $(this).attr('data-container');
+            var url = $(this).attr('data-url');
+            var MailTo = $('.dMailTo').val();
+            if (MailTo == "") {
+                ShowResult("Fail", "Please Select an email!");
+                return;
+            }
+            var model = {
+                MailTo: MailTo
+            }
+            //alert(MailTo);
+
+            $.ajax({
+                //type: "POST",
+                data: model,
+                url: url,
+                cache: false,
+                success: function (html) {
+                    $("#" + container).append(html);
+                }
+            });
+            $('.dMailTo').val("");
+        });
+    </script>
+}
+

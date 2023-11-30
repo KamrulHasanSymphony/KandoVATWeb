@@ -1,0 +1,26 @@
+﻿@model IEnumerable<VATViewModel.DTOs.BOMNBRVM>
+@using UIHelper.MVC
+@{
+    Layout = null;
+    var sl = 1;
+}
+@foreach (var Bom in Model)
+{
+    <tr class="trSelectPopUpProduct">
+        <td>@sl</td>
+        <td class="popUpBOMId">@Bom.BOMId</td>   
+        <td class="popUpItemNo">@Bom.ItemNo</td>
+        <td>@Bom.EffectDate</td>
+        <td>@Bom.VATName</td>
+        <td>@Bom.VATRate</td>      
+        <td>@Bom.SDAmount</td>
+        <td>@Bom.PNBRPrice</td>
+        <td>@Bom.Post</td>
+        <td>@Bom.UOM</td>
+        <td>@Bom.FirstSupplyDate</td>
+        <td>@Bom.BranchId</td> 
+        @{
+            sl++;
+        }
+    </tr>
+}

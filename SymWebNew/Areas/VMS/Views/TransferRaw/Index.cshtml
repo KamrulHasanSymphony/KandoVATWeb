@@ -1,0 +1,139 @@
+﻿@model VATViewModel.DTOs.TransferRawMasterVM
+@using UIHelper.MVC
+@using SymOrdinary
+@using System.Threading;
+@{
+    ShampanIdentity identity = null;
+    try
+    {
+        identity = (ShampanIdentity)Thread.CurrentPrincipal.Identity;
+    }
+    catch (Exception)
+    {
+        Response.Redirect("/VMS/Home/Login");
+        return;
+    }
+}
+
+@{
+    ViewBag.Title = "Index";
+}
+<div class="headrow">
+    <button type="button" title="Add New Transfer" data-url="/VMS/TransferRaw/Create?tType=@Model.TransactionType" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+    <label class="pull-right">Issue (@Model.TransactionType)</label>
+</div>
+
+<div class="thinbox  animated zoomIn faster">
+    <div class="th_thinbox">
+        <p>Transfer List</p>
+    </div>
+
+    <div class="row">
+        <div class="col-md-2 trkLabelTopRight">
+            <label for="InvoiceDateTimeFrom">Transfer Date From</label>
+        </div>
+        <div class="col-md-2">
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.IssueDateTimeFrom, new { @placeholder = "Date From", @class = "dtFrom customDatePicker form-control" })
+                @Html.ValidationMessageFor(model => model.IssueDateTimeFrom)
+            </div>
+        </div>
+        <div class="col-md-2 trkLabelTopRight">
+            <label for="InvoiceDateTimeTo">Transfer Date To</label>
+        </div>
+        <div class="col-md-2">
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.IssueDateTimeTo, new { @placeholder = "Date To", @class = "dtTo customDatePicker form-control" })
+                @Html.ValidationMessageFor(model => model.IssueDateTimeTo)
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="editor-field">
+                <button type="button" title="Click to Search" id="searchBtn" class="sym-btn-search">&nbsp;Search</button>
+            </div>
+        </div>
+    </div>
+    <p></p>
+    <table id="myDataTable" class="display">
+        <thead>
+            <tr>
+                <th class="center"></th>
+                <th>Transfer Id</th>
+                <th>Raw Code</th>
+                <th>Raw Name</th>
+                <th>Transfer Date</th>
+                <th>Transfer Qty</th>
+                <th>Transferred Amount</th>
+                <th>UOM</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <br />
+</div>
+
+<div class="headrow">
+    <button type="button" title="Add New Issue" data-url="/VMS/TransferRaw/Create?tType=@Model.TransactionType" " onclick=" goto(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+</div>
+
+<script language="javascript" type="text/javascript">
+
+    $(document).ready(function () {
+
+        SelectAllForDelete();
+        $.datepicker.regional[""].dateFormat = 'dd/M/y';
+        $.datepicker.setDefaults($.datepicker.regional['']);
+        var oTable = $('#myDataTable').dataTable({
+            "bServerSide": true,
+            "sAjaxSource": "/VMS/TransferRaw/_index?tType=@Model.TransactionType",
+            "bProcessing": true,
+            "aLengthMenu": tablelength(),
+            "bJqueryUI": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+                            {
+                                "sName": "Id",
+                                "bSearchable": false,
+                                "bSortable": false,
+                                "sWidth": "8%",
+                                "sClass": "center",
+                                "fnRender": function (oObj) {
+                                    return '&nbsp; <a title="Click on for Edit" href=\"/VMS/TransferRaw/Edit/' + oObj.aData[0].split('~')[0] + '\" class="sym-btn-edit-row"></a>'
+                                        + '&nbsp; <a title="Click on for Post" data-url="/VMS/TransferRaw/Post"  onclick=btnPost(this); data-Id="' + oObj.aData[0] + '\" class="sym-btn-post-row"></a>'
+                                        + '&nbsp; <a title="Click on for Report" target="_blank" href="/VMS/TransferRaw/VoucherReportView?Id=' + oObj.aData[0].split('~')[0] + '\" class="sym-btn-report-row"></a>'
+                                    ;
+                                }
+                            }
+                            , { "sName": "TransferId", "sWidth": "10%" }
+                            , { "sName": "RawCode", "sWidth": "8%" }
+                            , { "sName": "RawName", "sWidth": "15%" }
+                            , { "sName": "TransferDateTime", "sWidth": "10%" }
+                            , { "sName": "TransferedQty", "sWidth": "12%" }
+                            , { "sName": "TransferedAmt", "sWidth": "10%" }
+                            , { "sName": "UOM", "sWidth": "10%" }
+            ]
+        });
+
+        $('#searchBtn').click(function () {
+            var oParam = {
+                  "dtFrom": ""
+                , "dtTo": ""
+            };
+            oParam.dtFrom = $(".dtFrom").val();
+            oParam.dtTo = $(".dtTo").val();
+
+            $.ajax({
+                url: "/VMS/TransferRaw/Index?tType=@Model.TransactionType",
+                cache: false,
+                data: oParam,
+                success: function (html) {
+                    oTable.fnDraw();
+                }
+            });
+        });
+
+
+    });
+</script>
+
+

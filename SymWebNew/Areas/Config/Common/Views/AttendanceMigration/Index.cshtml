@@ -1,0 +1,64 @@
+﻿<div class="headrow">
+        <button type="button" title="Add New Attendance Migration" data-url="/Common/AttendanceMigration/Create" onclick="GoTo(this)" id="" class="sym-btn-add">&nbsp;New</button>
+        <button type="button" title="Delete Attendance Migration" data-url="/Common/AttendanceMigration/Delete" onclick="deletedData(this, 'myDataTable');" id="" class="sym-btn-remove">&nbsp;Delete</button>
+ <label class="pull-right"> Attendance Migration</label>
+</div>
+ <div class="thinbox">
+        <div class="th_thinbox">
+        <p>Attendance Migration List</p>   
+        </div>
+<table id="myDataTable" class="display">
+    <thead>
+        <tr>
+            <th class="center"><input type="checkbox" class="chkAll" />Select All</th>
+            <th>In Time</th>
+            <th>Out Time</th>
+            <th>In Time Start</th>
+            <th>In Grace</th>
+            <th>In Time End</th>
+            <th>Lunch Time</th>
+            <th>Lunch Break</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+        <br />
+        </div>
+<div class="headrow">
+        <button type="button" title="Add New Attendance Migration" data-url="/Common/AttendanceMigration/Create" onclick="GoTo(this)" id="" class="sym-btn-add">&nbsp;New</button>
+        <button type="button" title="Delete Attendance Migration" data-url="/Common/AttendanceMigration/Delete" onclick="deletedData(this, 'myDataTable');" id="" class="sym-btn-remove">&nbsp;Delete</button>
+</div>
+<script>
+    $(document).ready(function () {
+        var oTable = $('#myDataTable').dataTable({
+            "bServerSide": true,
+            "sAjaxSource": "/Common/AttendanceMigration/_index",
+            "bProcessing": true,
+            "aLengthMenu": tablelength(),
+            "bJqueryUI": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+                            {
+                                "sName": "Id",
+                                "bSearchable": false,
+                                "bSortable": false,
+                                "sWidth": "12%",
+                                "sClass": "center",
+                                "fnRender": function (oObj) {
+                                    return ' <input onclick="CheckAll(this)" type="checkbox" data-Id="' + oObj.aData[0] + '">&nbsp; <a id=""  title="Click on for Edit" style="text-decoration:none;"   href=\"/Common/AttendanceMigration/Edit/' + oObj.aData[0] + '\" class=" innerListLink sym-btn-edit-row "></a>' +
+                                      '&nbsp; <a title="Click on for Delete" style="text-decoration:none;" data-url="/Common/AttendanceMigration/Delete" onclick="deletedData(this, myDataTable,' + oObj.aData[0] + ');" class="sym-btn-remove-row"></a>';
+                                }
+                            }
+                            , { "sName": "InTime" }
+                            , { "sName": "OutTime" }
+                            , { "sName": "InTimeStart" }
+                            , { "sName": "InGrace" }
+                            , { "sName": "InTimeEnd" }
+                            , { "sName": "LunchTime" }
+                            , { "sName": "LunchBreak" }
+        ]
+        });
+        SelectAllForDelete();
+    });
+</script>

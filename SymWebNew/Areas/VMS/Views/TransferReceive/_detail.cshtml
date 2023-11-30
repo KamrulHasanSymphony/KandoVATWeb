@@ -1,0 +1,45 @@
+﻿@model VATViewModel.DTOs.TransferReceiveDetailVM
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+<tr class="tablerow">
+    @using (Html.BeginCollectionItem("Details"))
+    {
+        <td>
+            @Html.TextBoxFor(model => model.ProductCode, new { @class = "  dProductCode   form-control", @readonly = "readonly" })
+            @Html.HiddenFor(model => model.ItemNo)
+            @Html.HiddenFor(model => model.VATRate)
+            @Html.HiddenFor(model => model.VATAmount)
+            @Html.HiddenFor(model => model.SDRate)
+            @Html.HiddenFor(model => model.SDAmount)
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.ItemName, new { @class = "  dItemName   form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.UOM, new { @class = "  dUOM   form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.Quantity, new { @class = "  dQuantity right priceLen  form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.CostPrice, new { @class = "  dUnitPrice right priceLen  form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.SubTotal, new { @class = "  dSubTotal right priceLen  form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.UOMPrice, new { @class = "  dBasePrice right priceLen  form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.UOMQty, new { @class = "  dBaseQty right priceLen  form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.UOMn, new { @class = "  dBaseUOM   form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.UOMc, new { @class = "  dConvFactor right priceLen  form-control", @readonly = "readonly" })
+        </td>
+    }
+</tr>

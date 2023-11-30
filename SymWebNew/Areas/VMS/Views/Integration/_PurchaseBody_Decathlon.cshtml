@@ -1,0 +1,30 @@
+﻿@model System.Data.DataTable
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+
+@foreach (System.Data.DataRow dr in Model.Rows)
+{
+    <tr class="trSelectPopUpProduct">
+        @*<td>
+
+            @Html.CheckBox("Selected", Convert.ToBoolean(dr["Selected"]), new { @style = "margin: auto", @class = "dSelected form-control" })
+        </td>
+        <td>
+            &nbsp; <button title="Click on for Detail" onclick="IntegrationShowDetail(this)" class="sym-btn-detail-row"></button>
+
+        </td>*@
+        <td class="dID">@dr["ID"]</td>
+        @*<td class="dReferenceNo">@dr["Referance_No"]</td>*@
+        <td>@dr["BranchCode"]</td>
+        @*<td>@dr["BranchName"]</td>*@
+        <td>@dr["Vendor_Name"]</td>
+        <td>@dr["Vendor_Code"]</td>
+        <td>@dr["BE_Number"]</td>
+        <td>@dr["Invoice_Date"]</td>
+        <td>@dr["Receive_Date"]</td>
+        @*<td>@dr["TotalValue"]</td>*@
+        <td>@dr["Quantity"]</td>
+    </tr>
+}

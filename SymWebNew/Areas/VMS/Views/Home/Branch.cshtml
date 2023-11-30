@@ -1,0 +1,93 @@
+﻿@model IEnumerable<VATViewModel.DTOs.UserBranchDetailVM>
+@using UIHelper.MVC
+@{
+    Layout = "~/Areas/VMS/Views/Shared/_HomeLayout.cshtml";
+    ViewBag.Title = "Branch";
+    int sl = 1;
+}
+<style>
+    .HigherModal {
+        padding-top: 8%;
+    }
+
+    .HigherModal-content {
+        width: 50%;
+    }
+    .fixedParent {
+        margin-left: 0px !important;
+        margin-right: 0px !important;
+    }
+</style>
+
+<div id="myHigherModal" class="HigherModal">
+    <div class="HigherModal-content">
+        <div class="HigherModal-header">
+            <h2 class="text-center">User Branches</h2>
+        </div>
+        <div class=" HigherModal-body formDesign">
+            <div class="row">
+                <div class="fixedParent">
+                    <table class="trkFixTable" id="PopUpTable">
+                        <thead>
+                            <tr>
+                                <th>SL</th>
+                                <th hidden>Branch Id</th>
+                                <th>Branch Name</th>
+                                <th>Branch Code</th>
+                                <th>Address</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr class="trSelectPopUpBranch">
+                                    <td>@sl</td>
+                                    <td hidden class="popUpBranchdId">@item.BranchId</td>
+                                    <td class="popUpBranchName">@item.BranchName</td>
+                                    <td class="popUpBranchCode">@item.BranchCode</td>
+                                    <td>@item.Address</td>
+                                    @{
+                                        sl++;
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.HigherModal').show();
+        function callingFixedPopUpTable() {
+            var args = [50,0,200, 200, 300];
+            trkFixedPopUpTable("PopUpTable", 2, args);
+        }
+        $(function () {
+            callingFixedPopUpTable();
+        })
+
+        $(document).on('click', '.trSelectPopUpBranch', function () {
+            var activeEl = $('tr.active');
+            activeEl.removeClass("active");
+            $(this).addClass(" active");
+        });
+        $(document).off('dblclick').on('dblclick', '.trSelectPopUpBranch', function () {
+            var branchCode = $(this).children('td.popUpBranchCode').text();
+            var branchId = $(this).children('td.popUpBranchdId').text();
+            var BranchName = $(this).children('td.popUpBranchName').text();
+            $.ajax({
+                url: "/Vms/Home/SetBranchCode?branchCode=" + branchCode + "&branchId=" + branchId + "&BranchName=" + BranchName,
+                cache: false,
+                beforeSend: function () { $(".loading").show(); },
+                complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                success: function () {
+                    window.location = "/VMS/Home/Index";
+                }
+            });
+        });
+    });
+</script>

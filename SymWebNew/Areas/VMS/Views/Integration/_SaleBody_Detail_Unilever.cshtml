@@ -1,0 +1,126 @@
+﻿@model System.Data.DataTable
+@using UIHelper.MVC
+@*@{
+        Layout = null;
+    }*@
+
+@{
+    Layout = "~/Areas/VMS/Views/Shared/_ModalLayout.cshtml";
+}
+@*<style>
+    .trkMT10 {
+        margin-top: 10px;
+    }
+
+    .sortableHeader {
+        cursor: pointer;
+    }
+
+    table.trkFixTable tr.trSelectPopUpProduct td {
+        overflow-x: hidden;
+    }
+</style>*@
+
+<div class="HigherModal-content">
+    <div class="HigherModal-header">
+        <span class="closeHigher" onclick="closeModal()">&times;</span>
+      @if (@ViewBag.TransactionType == "Other")
+        {
+        <h2 class="text-center">Sale Invoices</h2>
+        }
+      else if (@ViewBag.TransactionType == "Credit")
+       {
+        <h2 class="text-center"> Credit Note Invoices</h2>
+       }
+      else
+      {
+        <h2 class="text-center"> Debit Note Invoices</h2>
+      }
+    </div>
+    <div class="HigherModal-body formDesign">
+        <div class="row">
+            <div class="fixedParent">
+                <table class="trkFixTable" id="productPopUpTable_Detail">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" class="chkAll" />Select              </th>
+                            <th>Action                        </th>
+                            <th>Invoice No                    </th>
+                            <th>OutLet Name                   </th>
+                            <th>Customer Code                 </th>
+                            <th>Is Print                      </th>
+                            <th>Memo No                       </th>
+                            <th>Total Quantity                </th>
+                            <th>Memo Value                    </th>
+                            <th>Invoice Date Time             </th>
+                            <th>Total Sku                     </th>
+                            <th hidden>                       </th>
+                        </tr>
+                    </thead>
+                    <tbody id="popUpTbody_Detail">
+                        @foreach (System.Data.DataRow dr in Model.Rows)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.CheckBox("Selected", Convert.ToBoolean(dr["Selected"]), new { @style = "margin: auto", @class = "dSelected form-control" })
+                                </td>
+                                <td>
+                                    &nbsp; <a title="Click on for Edit" href="/VMS/SaleInvoice/Edit/@dr["Id"]?TransactionType=@dr["TransactionType"]" target="_blank" class="sym-btn-edit-row"></a>
+                                <td class="dSalesnvoiceNo">@dr["SalesInvoiceNo"]</td>
+                                <td>@dr["Outlet Name"]</td>
+                                <td>@dr["CustomerCode"]</td>
+                                <td>@dr["IsPrint"]</td>
+                                <td>@dr["Memo No"]</td>
+                                <td>@dr["Total Quantity"]</td>
+                                <td>@dr["Memo Value"]</td>
+                                <td>@dr["InvoiceDateTime"]</td>
+                                <td class="dSKUCount">@dr["SKUCount"]</td>
+                                <td class="dID" hidden>@dr["Id"]</td>
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            &nbsp;
+        </div>
+        </div>
+    <div class="headrow">
+        @if (@ViewBag.TransactionType == "Other")
+        {
+         <button type="button" onclick="IntegrationReportPreview('true')" formtarget="_blank" class=" cPreviewButton sym-btn-report " >&nbsp;VAT 6.3 (Preview)</button>
+         <button type="button" onclick="PrintForm()" formtarget="_blank" class=" cPrintButton sym-btn-print " >&nbsp;Print</button>
+        }
+        else if (@ViewBag.TransactionType == "Credit")
+        {
+         <button type="button" onclick="IntegrationReportPreview('true')" formtarget="_blank" class=" cPreviewButton sym-btn-report " >&nbsp;VAT 6.7 (Preview)</button>
+         <button type="button" onclick="PrintForm()" formtarget="_blank" class=" cPrintButton sym-btn-print " >&nbsp;Print</button>
+        }
+        else
+        {
+         <button type="button" onclick="IntegrationReportPreview('true')" formtarget="_blank" class=" cPreviewButton sym-btn-report " >&nbsp;VAT 6.8 (Preview)</button>
+         <button type="button" onclick="PrintForm()" formtarget="_blank" class=" cPrintButton sym-btn-print " >&nbsp;Print</button>
+        }
+    </div>
+</div>
+
+
+<script language="javascript" type="text/javascript">
+
+    function callingFixedPopUpTable_Detail() {
+
+        var args = [70,60, 170, 200, 200, 60, 100, 90, 150, 220, 50, 100, 100, 100, 100, 100, 100, 100, 100, 100];
+        trkFixedPopUpTable("productPopUpTable_Detail", 3, args);
+    }
+
+
+    $(function () {
+        callingFixedPopUpTable_Detail();
+    })
+
+    $("#productPopUpTable_Detail .chkAll").click(function () {
+        $('#popUpTbody_Detail  .dSelected:input:checkbox').not(this).prop('checked', this.checked);
+    });
+</script>

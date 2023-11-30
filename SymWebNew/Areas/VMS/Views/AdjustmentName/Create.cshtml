@@ -1,0 +1,75 @@
+﻿@model VATViewModel.DTOs.AdjustmentVM
+@using UIHelper.MVC
+@{
+
+    ViewBag.Title = "Create";
+    ViewBag.Location = "Create";
+}
+
+@using (Html.BeginForm("CreateEdit", "AdjustmentName", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmAdjustmentName" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.AdjId)
+    @Html.HiddenFor(model => model.Operation)
+    <div class="thinbox">
+        <div class="th_thinbox">
+            <p>Adjustment Head Name </p>
+        </div>
+        <div>
+            <div class="row">
+                <div class="editor-label">
+                    <label for="AdjName">Adjustment Name</label>
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.AdjName, new { @placeholder = "Name", @class = " required form-control" })
+                    @Html.ValidationMessageFor(model => model.AdjName)
+                </div>
+            </div>
+            <div class="row">
+                <div class="editor-label">
+                    @Html.LabelFor(model => model.Comments)
+                </div>
+                <div class="editor-field">
+                    @Html.TextAreaFor(model => model.Comments, new { @placeholder = "Comments", @class = "  form-control" })
+                    @Html.ValidationMessageFor(model => model.Comments)
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                @Html.HiddenFor(m => m.ActiveStatus)
+                <input id="input-1" type="checkbox">
+            </div>
+        </div>
+    </div>
+    <div class="headrow">
+        @if (Model.Operation == "add")
+        {
+            <label class="col-sm-3">
+                <button type="button" name="btnName" value="Save" title="Save Data" onclick="SaveData()" class="sym-btn-save">&nbsp;Save</button>
+            </label>
+            <label class="col-sm-4">
+                <button type="button" title="Cancel Data" class=" btncancel sym-btn-cancel">&nbsp;Cancel</button>
+            </label>
+        }
+        else
+        {
+            <label class="col-sm-3">
+                <button type="button" name="btnName" value="Update" title="Update Data" onclick="pageSubmit('frmAdjustmentName')" class="sym-btn-update">&nbsp;Update</button>
+            </label>
+            <label class="col-sm-4">
+                <button type="button" title="Cancel Data" class=" btncancel sym-btn-cancel">&nbsp;Cancel</button>
+            </label>
+        }
+    </div>
+}
+<script>
+    function SaveData() {
+        pageSubmit('frmAdjustmentName');
+    }
+    $(function () {
+        valiDation("frmAdjustmentName");
+        MyCheckBox('@Model.ActiveStatus', 'input-1', 'ActiveStatus');
+        InitDropDowns();
+    });
+
+</script>

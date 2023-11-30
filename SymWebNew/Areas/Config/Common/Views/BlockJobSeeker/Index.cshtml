@@ -1,0 +1,156 @@
+﻿    <script type="text/javascript">
+        $(document).ready(function () {
+            SelectAllForDelete();
+            $.datepicker.regional[""].dateFormat = 'dd/M/y';
+            $.datepicker.setDefaults($.datepicker.regional['']);
+            var oTable = $('#myDataTable').dataTable({
+                "bServerSide": true,
+                "sAjaxSource": "/Common/BlockJobSeeker/_index",
+                "bProcessing": true,
+                "aLengthMenu": tablelength(),
+                "bJqueryUI": true,
+                "bAutoWidth": false,
+                "sScrollX": '200%',
+                "aoColumns": [
+                                {
+                                    "sName": "Id",
+                                    "bSearchable": false,
+                                    "bSortable": false,
+                                    "sWidth": "6%",
+                                    "sClass":"center",
+                                    "fnRender": function (oObj) {
+                                        return '<a title="Click on for Details" style="text-decoration:none;"    href=\"/Common/BlockJobSeeker/Edit?Id=' + oObj.aData[0] + '\"  class="sym-btn-edit-row"></a>';
+                                    }
+                                }
+                               , { "sName": "FullName", "sWidth": "6%" }            // 1 
+                               , { "sName": "PresentDistrictId", "sWidth": "6%" }   // 2 
+                               , { "sName": "Gender", "sWidth": "6%" }              // 3 
+                               , { "sName": "DOB", "sWidth": "8%" }                 // 4 
+                               , { "sName": "JobCategoryId", "sWidth": "5%" }       // 5 
+                               , { "sName": "JobLevel", "sWidth": "5%" }            // 6 
+                               , { "sName": "JobNature", "sWidth": "5%" }           // 7 
+                               , { "sName": "CareerObjective", "sWidth": "5%" }     // 8 
+                               , { "sName": "LastSchool", "sWidth": "5%" }          // 9 
+                               , { "sName": "LastDegree", "sWidth": "5%" }          // 10
+                               , { "sName": "EducationSubject", "sWidth": "5%" }    // 11
+                               , { "sName": "LastCompany", "sWidth": "5%" }         // 12
+                               , { "sName": "ExperianceYear", "sWidth": "5%" }      // 13
+                               , { "sName": "Mobile", "sWidth": "5%" }              // 14
+                               , { "sName": "Email", "sWidth": "5%" }               // 15
+                               , { "sName": "Website", "sWidth": "5%" }             // 16
+                               , { "sName": "BlockStatus", "sWidth": "5%" }         // 17
+                ]
+            });
+            oTable.columnFilter({
+                sPlaceHolder: "head:after",
+                aoColumns: [{ type: "checkbox", "sClass": "chkAll" }
+                           , { type: "text" }                                           // 1 
+                           , { type: "text" }                                           // 2 
+                           , { type: "text" }                                           // 3 
+                           , { type: "date-range" }                                     // 4 
+                           , { type: "text" }                                           // 5 
+                           , { type: "text" }                                           // 6 
+                           , { type: "text" }                                           // 7 
+                           , { type: "text" }                                           // 8 
+                           , { type: "text" }                                           // 9 
+                           , { type: "text" }                                           // 10
+                           , { type: "text" }                                           // 11
+                           , { type: "text" }                                           // 12
+                           , { type: "text" }                                           // 13
+                           , { type: "text" }                                           // 14
+                           , { type: "text" }                                           // 15
+                           , { type: "text" }                                           // 16
+                           , { type: "select", values:["Blocked","Not Blocked"] }       // 17
+
+                ]
+            });
+        });
+    </script>
+@{
+    ViewBag.Title = "Index";
+    ViewBag.Location = "Common=>Block Job Seeker=>Index"; 
+}
+<div class="headrow">
+        @*<button type="button" title="Add New BlockJobSeeker" data-url="/Common/BlockJobSeeker/Create" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>*@
+     <label class="pull-right">Job Seeker (Block/Unblock)</label>
+</div>
+    <div class="thinbox">
+        <div class="th_thinbox">
+        <p>Job Seeker List for Block/Unblock</p>   
+        </div>
+<p></p>
+        <div id="container">
+            <div id="demo">
+                <table id="myDataTable" class="display">
+                    <thead>
+                         <tr>
+                             <th  class="center" >&nbsp;</th>
+                            <th>Full Name</th>                     <!--  1    -->
+                            <th>Present District</th>              <!--  2    -->
+                            <th>Gender</th>                        <!--  3    -->
+                            <th>Date of Birth</th>                 <!--  4    -->
+                            <th>Job CategoryId</th>                <!--  5    -->
+                            <th>Job Level</th>                     <!--  6    -->
+                            <th>Job Nature</th>                    <!--  7    -->
+                            <th>Career Objective</th>              <!--  8    -->
+                            <th>Last School</th>                   <!--  9    -->
+                            <th>Last Degree</th>                   <!--  10   -->
+                            <th>Education Subject</th>             <!--  11   -->
+                            <th>Last Company</th>                  <!--  12   -->
+                            <th>Experiance Year</th>               <!--  13   -->
+                            <th>Mobile</th>                        <!--  14   -->
+                            <th>Email</th>                         <!--  15   -->
+                            <th>Website    </th>                   <!--  16   -->
+                            <th>Block Status    </th>              <!--  17   -->
+                        </tr>
+                        <tr>
+                            <th  class="center" >Actions</th>
+                            <th>Full Name</th>                    <!--  1    -->
+                            <th>Present District</th>             <!--  2    -->
+                            <th>Gender</th>                       <!--  3    -->
+                            <th>Date of Birth</th>                <!--  4    -->
+                            <th>Job CategoryId</th>               <!--  5    -->
+                            <th>Job Level</th>                    <!--  6    -->
+                            <th>Job Nature</th>                   <!--  7    -->
+                            <th>Career Objective</th>             <!--  8    -->
+                            <th>Last School</th>                  <!--  9    -->
+                            <th>Last Degree</th>                  <!--  10   -->
+                            <th>Education Subject</th>            <!--  11   -->
+                            <th>Last Company</th>                 <!--  12   -->
+                            <th>Experiance Year</th>              <!--  13   -->
+                            <th>Mobile</th>                       <!--  14   -->
+                            <th>Email</th>                        <!--  15   -->
+                            <th>Website    </th>             <!--  16   -->
+                            <th>Block Status    </th>             <!--  17   -->
+                        </tr>                                    
+
+@*
+                        FullName
+                        PresentDistrictId
+                        Gender
+                        DOB
+                        JobCategoryId
+                        JobLevel
+                        JobNature
+                        CareerObjective
+                        LastSchool
+                        LastDegree
+                        EducationSubject
+                        LastCompany
+                        ExperianceYear
+                        Mobile
+                        Email
+                        Website  
+                        Block Status   
+                        *@
+                    </thead>
+                    <tbody> 
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <br />
+        </div>
+@*<div class="headrow">
+        <button type="button" title="Add New BlockJobSeeker" data-url="/Common/BlockJobSeeker/Create" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+</div>*@

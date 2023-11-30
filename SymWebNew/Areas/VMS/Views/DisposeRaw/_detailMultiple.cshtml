@@ -1,0 +1,13 @@
+﻿@model IEnumerable<VATViewModel.DTOs.DisposeRawsDetailVM>
+@using UIHelper.MVC
+@{
+    Layout = null;
+    foreach (var item in Model)
+    {
+        @Html.Partial("_detail",item)
+    }
+}
+
+    
+
+

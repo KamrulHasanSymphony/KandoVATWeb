@@ -1,0 +1,629 @@
+﻿@model VATViewModel.DTOs.TenderMasterVM
+@using UIHelper.MVC
+@using (Html.BeginForm("CreateEdit", "Tender", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmTender" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.Post)
+    @Html.HiddenFor(model => model.Operation)
+    <input id="ConvFactor" type="hidden" />
+
+    <div class="headrow">
+        @if (Model.Operation == "update")
+        {
+            <button type="button" title="Update Data" onclick="SaveData()" class="sym-btn-update">&nbsp;Update</button>
+            if (Model.Post == "N")
+            {
+                <button type="button" title="Post Data" onclick="PostData(this)" class="sym-btn-post">&nbsp;Post</button>
+            }
+            <label class="pull-right">Issue > Edit</label>
+        }
+        else if (Model.Operation == "add")
+        {
+            <button type="button" title="Save Data" onclick="SaveData()" class="sym-btn-save">&nbsp;Save</button>
+            <label class="pull-right">Tender  > Create</label>
+        }
+        <button type="button" title="Go To Index" data-url="/VMS/Tender" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New Issue" data-url="/VMS/Tender/Create" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+    </div>
+    <div>
+        <div class="thinbox formDesign" style="margin-top:0px;margin-bottom:0px;">
+            <div class="th_thinbox">
+                <p>Basic</p>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        <label for="TenderId">Tender Id</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.TenderId, new { @placeholder = "New", @class = " form-control", @readonly = "readonly" })
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        <label for="IssueNo">Ref No</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.RefNo, new { @placeholder = "Reference", @class = "required form-control"})
+                        @Html.ValidationMessageFor(model => model.RefNo)
+                    </div>
+                </div>
+                
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        <label>Customer Group</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.SimpleDropDownFor(m => m.CustomerGrpID, "/Config/DropDown/CustomerGroup", new { @class = " trCustomerGroup  form-control  selectDropdown" })
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        <label>Customer Name</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.SimpleDropDownFor(m => m.CustomerId, "//", new { @class = " trCustomerId  form-control  selectDropdown" })
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        <label for="IssueDateTime">Tender Date</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.TenderDate, new { @class = " trTenderDate customDatePicker defaultDate required form-control" })
+                        @Html.ValidationMessageFor(model => model.TenderDate)
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        <label for="IssueDateTime">Delivery Date</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBoxFor(model => model.DeleveryDate, new { @class = " trDate customDatePicker defaultDate required form-control" })
+                        @Html.ValidationMessageFor(model => model.DeleveryDate)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <div class="thinbox col-md-12 formDesign trkMT-0">
+            <div class="th_thinbox">
+                <p>Product</p>
+            </div>
+            <div id="IssueDetail" class="row">
+                <div class="col-md-1">
+                    <div class="editor-label">
+                        <label>Group</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBox("ProductType", "Finish", new { @class = " form-control", @readonly = "readonly" })
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="editor-label">
+                        <label for="DItemNo">Product</label>
+                    </div>
+                    <div class="editor-field">
+                        <input id="trItemNo" type="hidden" />
+                        <input id="trItemName" type="hidden" />
+                        @Html.SimpleDropDown("DItemNo", "/Config/DropDown/GetProductByType?type=finish", new { @class = "  trItemCode form-control  selectDropdown" })
+                    </div>
+                </div>
+                <div class="trk1_5">
+                    <div class="editor-label">
+                        <label for="HSCode">HS Code</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBox("HSCode", null, new { @placeholder = "HS Code", @class = " trHSCode   form-control", @readonly = "readonly" })
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="editor-label">
+                        <label for="UOM">UOM</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBox("UOM", null, new { @class = " trUOM  form-control", @readonly = "readonly" })
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="editor-label">
+                        <label for="PackSize">Pack Size</label>
+                    </div>
+                    <div class="editor-field">
+                        <select disabled class="Dropdown form-control DropdownInited trPackSize" id="PackSize" style="margin-top:0px;"></select>
+                    </div>
+                </div>
+                <div class="trk1_5">
+                    <div class="editor-label">
+                        <label for="IssueDateTime">Effect Date</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBox("EffectDate","", new { @class = " trEffectDate defaultDate customDatePicker defaultDate form-control" })
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="editor-label">
+                        <label for="UnitPrice">Unit Price</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBox("UnitPrice", "0", new { @class = " trUnitPrice priceLen NumberCheck right  form-control" })
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="editor-label">
+                        <label for="Quantity">Quantity</label>
+                    </div>
+                    <div class="editor-field">
+                        @Html.TextBox("Quantity", "0", new { @class = " trQuantity priceLen right form-control" })
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="editor-label">
+                        <label>&nbsp;</label>
+                    </div>
+                    <div class="editor-field">
+                        <div title="Add Detail" data-url="/Vms/Tender/BlankItem" class="sym-btn-add-row AddRow" data-container="editorItemRows">&nbsp;Add</div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="fixedParent">
+                    @if (Model.Details != null)
+                    {
+                        <table class="trkFixTable" id="itemTable">
+                            <thead>
+                                <tr>
+                                    <th>Action</th>
+                                    <th>Product Name</th>
+                                    <th>Code</th>
+                                    <th>UOM</th>
+                                    <th>Quantity</th>
+                                    <th>Unit Price</th>
+                                    <th>SubTotal</th>
+                                    <th>BOM Id</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="editorItemRows">
+                                @foreach (var item in Model.Details)
+                                {
+                                    Html.RenderPartial("_detail", item);
+                                }
+                            </tbody>
+                        </table>
+                    }
+                </div>
+
+                <hr />
+                <div class="row trkBelowDiv">
+                    <div class="col-md-2 trkLabelTopRight">
+                        <label>Comments</label>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="editor-field">
+                            @Html.TextAreaFor(m=>m.Comments, new { @class = " form-control"})
+                        </div>
+                    </div>
+                    <div class="col-md-2 trkLabelTopRight">
+                        <label>Grand Total</label>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="editor-field input-group">
+                            <span class="input-group-addon">&#2547</span>
+                            <strong>@Html.TextBox("Total", null, new { @class = "totalAmount NumberCheck right form-control", @readonly = "readonly" })</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="headrow">
+        @if (Model.Operation == "update")
+        {
+            <button type="button" title="Update Data" onclick="SaveData()" class="sym-btn-update">&nbsp;Update</button>
+            if (Model.Post == "N")
+            {
+                <button type="button" title="Post Data" onclick="PostData(this)" class="sym-btn-post">&nbsp;Post</button>
+            }
+        }
+        else if (Model.Operation == "add")
+        {
+            <button type="button" title="Save Data" onclick="SaveData()" class="sym-btn-save">&nbsp;Save</button>
+        }
+        <button type="button" title="Go To Index" data-url="/VMS/Tender" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New Petty Cash" data-url="/VMS/Tender/Create" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+    </div>
+}
+<div id="myModal" class="trkmodal"></div>
+<div id="productDetails" class="trkmodal">
+    <div class="trkmodal-content">
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+@*SubTotal*@
+<script>
+    function SubTotal() {
+        var trSubtotal = 0;
+        var TotalAmount = 0;
+
+        $(".tablerow").each(function () {
+            trSubtotal = parseFloat($(this).find(".dSubTotal").val().replace(/\,/g, ''));
+            TotalAmount += trSubtotal;
+        });
+        $(".totalAmount").val(TotalAmount);
+    }
+    $(function () {
+        SubTotal();
+    });
+</script>
+
+
+@*For fixed table*@
+<script>
+    function fixedScrolltrkFixedTable(tableId, leftTotal) {
+        $('#' + tableId + ' tbody').scroll(function (e) {
+            var i;
+            var j = 2;
+            for (i = 1; i <= leftTotal; i++) {
+                $('#' + tableId + ' tbody td:nth-child(' + i + ')').css("z-index", "1");
+                $('#' + tableId + ' thead th:nth-child(' + i + ')').css("left", $("#" + tableId + " tbody").scrollLeft());
+
+                $('#' + tableId + ' tbody td:nth-child(' + j + ')').css("z-index", "1");
+                $('#' + tableId + ' tbody td:nth-child(' + j + ')').css("left", $("#" + tableId + " tbody").scrollLeft());
+                $('#' + tableId + ' tbody td:nth-child(' + j + ')').css("left", $("#" + tableId + " tbody").scrollLeft());
+                j++;
+            }
+            $('#' + tableId + ' thead').css("left", -$("#" + tableId + " tbody").scrollLeft());
+            //$('#' + tableId + ' thead th:nth-child(2)').css("left", $("#" + tableId + " tbody").scrollLeft());
+
+        });
+    }
+    function settingtrkFixedColumnWidth(tableId, widthArgs) {
+        if (widthArgs == null) {
+            return;
+        }
+        var i;
+        var j = 2;
+        for (i = 1; i <= widthArgs.length; i++) {
+            $('#' + tableId + ' tr td:nth-child(' + j + ')').css("min-width", widthArgs[i - 1] + "px");
+            $('#' + tableId + ' tr th:nth-child(' + i + ')').css("min-width", widthArgs[i - 1] + "px");
+            j++;
+        }
+    }
+    function fixLeftColumns(tableId, leftTotal) {
+        var i;
+        var j = 2;
+        for (i = 1; i <= leftTotal; i++) {
+            //fixed column header style
+            $('#' + tableId + ' thead th:nth-child(' + i + ')').css("height", "30px");
+            $('#' + tableId + ' thead th:nth-child(' + i + ')').css("position", "relative");
+            $('#' + tableId + ' thead th:nth-child(' + i + ')').css("z-index", "2");
+            //fixed column rows style
+            $('#' + tableId + ' tbody tr td:nth-child(' + j + ')').css("height", "30px");
+            $('#' + tableId + ' tbody tr td:nth-child(' + j + ')').css("position", "relative");
+            j++;
+        }
+    }
+    function settingWidth(tableId) {
+        //var parentWidth = $('.fixedParent').width();
+        var parentWidth = $('#' + tableId).closest('.fixedParent').width();
+        $('#' + tableId + ' thead').width(parentWidth);
+        $('#' + tableId + ' tbody').width(parentWidth);
+    }
+    function trkFixedTable(tableId, leftTotal, args) {
+        settingWidth(tableId);
+        fixLeftColumns(tableId, leftTotal);
+        fixedScrolltrkFixedTable(tableId, leftTotal);
+        settingtrkFixedColumnWidth(tableId, args);
+    }
+    function callingFixedTable() {
+        var args = [100, 250, 150, 150, 150, 150, 150, 100];
+        trkFixedTable("itemTable", 3, args);
+    }
+    $(function () {
+        callingFixedTable();
+    })
+</script>
+
+@*For Adding/Editing Detail table*@
+<script>
+    ////edit a row
+    function EditItem(sender) {
+        var itemCode = $(sender).closest('.tablerow').find('.dItemCode').val();
+        $('.trItemCode').select2("val", itemCode);
+        ProductNameChange(itemCode);
+        var quantity = $(sender).closest('.tablerow').find('.dQuantity').val();
+        var unitPrice = $(sender).closest('.tablerow').find('.dUnitPrice').val();
+        $(".trQuantity").val(quantity);
+        $(".trUnitPrice").val(unitPrice);
+        $(sender).parents("tr:first").remove();
+        SubTotal();
+    }
+
+    ////removing a row
+    function RemoveItem(sender) {
+        Ask("Are you sure to Delete the item!", function () {
+            $(sender).parents("tr:first").remove();
+            SubTotal();
+        });
+    }
+
+    $(function () {
+        ////Getting uom conversion
+        function GetConvFact() {
+            var uomConv = 1;
+            var uomFrom = $('.trUOM').val();
+            var uomTo = $('.trPackSize').val();
+            if (uomFrom != uomTo) {
+                uomConv = $('#ConvFactor').val();
+            }
+            return uomConv;
+        }
+        ////clicking add button
+        $('.AddRow').on("click", function () {
+
+            var product = $('.trItemCode').val();
+            if (product == "0" || product == "" || product == null) {
+                ShowResult("Fail", "Select a product first!");
+                return;
+            }
+
+            var quantity = parseFloat($('.trQuantity').val().replace(/\,/g, ''));
+            if (isNaN(quantity) || quantity <= 0) {
+                ShowResult("Fail", "Quantity can not be zero");
+                $('.trToQuantity').css('background-color', 'yellow');
+                return;
+            }
+
+            var costPrice = parseFloat($('.trUnitPrice').val().replace(/\,/g, ''));
+            if (costPrice <= 0) {
+                ShowResult("Fail", "Price can not be negative or zero!");
+                $('.trCostPrice').css('background-color', 'yellow');
+
+                return;
+            }
+
+            var itemCode = $('.trProductCode').val();
+            var count = 0;
+
+            $('.dItemCode').each(function () {
+                var existing = $(this).val();
+                if (itemCode == existing) {
+                    count++;
+                }
+            });
+
+            if (count > 0) {
+                ShowResult("Fail", "Item already exists!");
+                return;
+            }
+
+            var container = $(this).attr('data-container');
+            var url = $(this).attr('data-url');
+            AddRow(container, url)
+            return false;
+        });
+
+        ////add row method
+        function AddRow(container, url) {
+            var uomConv = 1;//unit conversion initial value
+
+            //form fields
+            var itemName = $('#trItemName').val();
+            var productCode = $('.trItemCode').val();
+            var itemNo = $('#trItemNo').val();
+            var quantity = parseFloat($('.trQuantity').val().replace(/\,/g, ''));
+            var uomPrice = parseFloat($('.trUnitPrice').val().replace(/\,/g, ''));
+            var uomFrom = $('.trUOM').val();
+            var uomTo = $('.trPackSize').val();
+            var hsCode = $('.trHSCode').val();
+            //getting conversion factor
+            if (uomFrom != uomTo) {
+                uomConv = $('#ConvFactor').val();
+            }
+            var unitPrice = uomPrice * uomConv;
+
+            var model = {
+                ItemNo: itemNo,
+                ItemName: itemName,
+                PCode: productCode,
+                TenderQty: quantity,
+                TenderPrice: unitPrice,
+                UOM: uomTo,
+                SubTotal: quantity * unitPrice,
+                BOMId: 0,
+                TenderQty:quantity
+            }
+            $.ajax({
+                data: model,
+                url: url,
+                cache: false,
+                success: function (html) {
+                    $("#" + container).append(html);
+                    callingFixedTable();
+                    SubTotal();
+                }
+            });
+            $('#trItemName').val("");
+            $('.trItemCode').select2("val", "");
+            $('#trItemNo').val("");
+            $('.trQuantity').val("0");
+            $('.trUnitPrice').val("0");
+            $('.trUOM').val("");
+            $('.trPackSize').html("");
+            $('.trHSCode').val("");
+
+        }
+    });
+</script>
+
+@*For showing Product deatails*@
+<script>
+    /////showing product details on pop up view
+    function showProductDetail() {
+        var productDetail = document.getElementById('productDetails');
+        $(document).on("dblclick", '.tablerow', function () {
+            var code = $(this).find('input.dItemCode').val();
+            var url = "/Vms/Product/ShowProduct?code=" + code;
+            $.ajax({
+                url: url,
+                cache: false,
+                beforeSend: function () { $(".loading").show(); },
+                complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                success: function (html) {
+                    productDetail.style.display = "block";
+                    $(".trkmodal-content").html(html);
+                }
+            });
+        });
+    }
+    $(function () {
+        showProductDetail();
+    });
+</script>
+
+@*For Tender product detail change*@
+<script>
+    ////product change method
+    function ProductNameChange(productCode) {
+        if (productCode == null) {
+            $('.trUnitPrice').val("0");
+            $('.trUOM').val("");
+            $('.trHSCode').val("");
+            var html = "<option value=''>Select</option>";
+            $('#PackSize').html(html);
+            return;
+        }
+
+        var tenderDate = $(".trTenderDate").val();
+        var url = "/Vms/Tender/SelectProductDetails?productCode=" + productCode + "&IssueDate=" + tenderDate;
+        $.getJSON(url, function (data) {
+            $('#trItemName').val(data.ProductName);
+            $('#trItemNo').val(data.ItemNo);
+            //$('.trEffectDate').val(data.OpeningDate);
+            var unitPrice = parseFloat($('.trUnitPrice').val());
+            if (isNaN(unitPrice) || unitPrice <= 0) {
+                $('.trUnitPrice').val(data.CostPrice);
+            }
+            $('.trUOM').val(data.UOM);
+            $('.trHSCode').val(data.HSCodeNo);
+            UomOptions();
+        });
+    }
+    ////uom conversion method
+    function GetConvFactor() {
+        var uomFrom = $('.trUOM').val();
+        var uomTo = $('.trPackSize').val();
+        if (uomFrom == uomTo) {
+            return;
+        }
+        var actionUrl = "/Vms/Tender/GetConvFactor?uomFrom=" + uomFrom + "&UomTo=" + uomTo;
+        $.getJSON(actionUrl, function (data) {
+            uomConv = parseFloat(data);
+            $('#ConvFactor').val(uomConv);
+        });
+    }
+
+    ////uom option method
+    function UomOptions() {
+        var uom = $('.trUOM').val();
+        var url = "/Vms/Tender/GetUomOption?uomFrom=" + uom;
+        $.ajax({
+            url: url,
+            cache: false,
+            success: function (html) {
+                $('#PackSize').html(html);
+                GetConvFactor();
+            }
+        });
+    }
+    $(function () {
+
+        ////changing product category
+        $('.trItemCode').change(function () {
+            var productCode = $(this).val();
+            ProductNameChange(productCode);
+        });
+
+        ////changing uom to/packet size
+        $('.trPackSize').change(function () {
+            GetConvFactor();
+        });
+    })
+</script>
+
+@*For Customer & Group*@
+<script>
+    //product category change method
+    function CustomerGroupChange() {
+        $('.trCustomerId').select2("val", "");
+        var value = $('.trCustomerGroup').val();
+        var customers = "";
+        var url = "/Config/DropDown/DropDownCustomerByGroup/?groupId=" + value;
+        customers += "<option value=0>Select</option>";
+        $.getJSON(url, function (data) {
+            $.each(data, function (i, state) {
+                customers += "<option value='" + state.Value + "'>" + state.Text + "</option>";
+            });
+            $('.trCustomerId').html(customers);
+        });
+    }
+
+    $(function () {
+        ////changing customer group
+        $('.trCustomerGroup').change(function () {
+            CustomerGroupChange();
+        });
+
+    })
+</script>
+
+@*For Saving Data*@
+<script>
+    function SaveData() {
+        var customerId = $('.trCustomerId').val();
+        if (customerId == "" || customerId == null || customerId == "0") {
+            ShowResult("Fail", "Please Select Customer!");
+            return;
+        }
+
+        var items = $(".dItemName").length;
+        if (items == 0) {
+            ShowResult("Fail", "Please Add Product Details!");
+            return;
+        }
+        pageSubmit('frmTender');
+    }
+</script>
+
+@*For Updating Transfer Items*@
+<script>
+        $(function () {
+            var operation = '@Model.Operation';
+            if (operation == "update") {
+                var customer = '@Model.CustomerId';
+                var customerGroup = '@Model.CustomerGrpID';
+                
+
+                var interval = setInterval(function () {
+                    if (document.querySelectorAll('.trCustomerGroup option').length > 0) {
+                        $('.trCustomerGroup').select2("val", customerGroup);
+                        CustomerGroupChange()
+                        if (document.querySelectorAll('.trCustomerId option').length > 0) {
+                            setTimeout(function () {
+                                $('.trCustomerId').select2("val", customer);
+                            }, 100);
+                            clearInterval(interval);
+                        }
+                    }
+                }, 200);
+            }
+        })
+</script>
+
+}

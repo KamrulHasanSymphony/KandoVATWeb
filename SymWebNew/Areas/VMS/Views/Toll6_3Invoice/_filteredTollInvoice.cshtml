@@ -1,0 +1,37 @@
+﻿@model IEnumerable<VATViewModel.DTOs.SaleMasterVM>
+@using UIHelper.MVC
+@{
+    Layout = null;
+    var sl = 1;
+}
+@foreach (var tollInvoice in Model)
+{
+    <tr class="trSelectPopUpTollInvoice">
+                <td>@sl
+                    @Html.CheckBox("Selected", false, new { @style = "margin: auto", @class = "dSelected form-control", data_id = @tollInvoice.SalesInvoiceNo })
+                </td>
+                <td class="popUpSalesInvoiceNo">@tollInvoice.SalesInvoiceNo</td>
+                <td class="popUpCustomerName">@tollInvoice.CustomerName</td>
+                <td class="popUpProductGroup">@tollInvoice.ProductGroup</td>
+                <td class="popUpDeliveryAddress">@tollInvoice.DeliveryAddress1</td>       
+                <td>@tollInvoice.VehicleType</td>
+                <td>@tollInvoice.TotalVATAmount</td>
+                <td class="popUpCustomerID"> @tollInvoice.CustomerID </td>
+                <td> NotFound </td>
+                <td> Not Found </td>
+                <td>@tollInvoice.SaleType</td>
+                <td class=" popUpInvoiceDateTime">@tollInvoice.InvoiceDateTime</td>
+                <td>@tollInvoice.IsPrint</td>
+                <td>@tollInvoice.Post</td>
+                <td>@tollInvoice.DeliveryDate</td>
+                <td>@tollInvoice.CurrencyID</td>
+                <td>@tollInvoice.CurrencyRateFromBDT</td>
+                <td>@tollInvoice.CurrencyCode</td>
+                <td>@tollInvoice.DollerRate</td>
+                <td class="popUpTollLineNumber">@tollInvoice.LCNumber</td>
+                <td>@tollInvoice.AlReadyPrint</td>
+                @{
+    sl++;
+                }
+</tr>
+}

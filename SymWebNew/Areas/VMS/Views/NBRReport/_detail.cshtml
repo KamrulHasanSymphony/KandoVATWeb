@@ -1,0 +1,38 @@
+﻿@model VATViewModel.DTOs.NBRVAT9_1ViewModel
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+<tr class="tablerow ">
+    @using (Html.BeginCollectionItem("Details"))
+    {
+        
+        <td>
+            @*<a id="" title="Click to Remove" onclick="RemoveItem(this);" class="sym-btn-remove-row "></a>*@
+            <a id="" title="Click to Edit" onclick="EditItem(this);" class="sym-btn-detail-row"></a>
+            @*<a id="" title="Click to Copy" onclick="CopyItem(this);" class="sym-btn-duplicate-row"></a>*@
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.SubFormName, new { @class = "  dSubFormName   form-control", @readonly = "readonly" })
+        </td>
+       
+        <td>
+            @Html.TextBoxFor(model => model.NoteDescription, new { @class = "  dNoteDescription   form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.NoteNo, new { @class = "  dNoteNo   form-control", @readonly = "readonly" })
+        </td>
+       
+        <td>
+            @Html.TextBoxFor(model => model.LineB, new { @class = "  dLineB  form-control", @readonly = "readonly" })
+        </td>
+        <td>
+            @Html.TextBoxFor(model => model.LineC, new { @class = "  dLineC  form-control", @readonly = "readonly" })
+        </td>
+        
+       
+    }
+</tr>
+
+
+

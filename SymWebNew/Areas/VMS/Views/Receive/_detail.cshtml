@@ -1,0 +1,57 @@
+﻿@model VATViewModel.DTOs.ReceiveDetailVM
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+<tr class="tablerow">
+    @using (Html.BeginCollectionItem("Details"))
+    {
+    <td>
+        <a title="Click to Remove" onclick="RemoveItem(this);" class="sym-btn-remove-row "></a>
+        <a title="Click to Edit" onclick="EditItem(this);" class="sym-btn-edit-row"></a>
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.ItemName, new { @class = "  dItemName   form-control", @readonly = "readonly"})
+    </td>
+    <td>
+        @Html.HiddenFor(m => m.ItemNo, new { @class = "dItemNo" })
+        @Html.TextBoxFor(model => model.ItemCode, new { @class = "  dItemCode   form-control", @readonly = "readonly" })
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.UOM, new { @class = "  dUOM   form-control", @readonly = "readonly" })
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.Quantity, new { @class = "  dQuantity right priceLen  form-control", @readonly = "readonly"})
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.CostPrice, new { @class = "  dUnitPrice right priceLen  form-control", @readonly = "readonly"})
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.SubTotal, new { @class = "  dSubTotal right priceLen  form-control", @readonly = "readonly"})
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.UOMPrice, new { @class = "  dBasePrice right priceLen  form-control", @readonly = "readonly" })
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.UOMQty, new { @class = "  dBaseQty right priceLen  form-control", @readonly = "readonly" })
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.UOMn, new { @class = "  dBaseUOM   form-control", @readonly = "readonly" })
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.UOMc, new { @class = "  dConvFactor priceLen right   form-control", @readonly = "readonly" })
+    </td>
+    <td>
+        @Html.TextBoxFor(model => model.VatName, new { @class = "  dVatName   form-control", @readonly = "readonly" })
+    </td>
+        
+     @*<td>
+        @Html.TextBoxFor(model => model.BOMReferenceNo, new { @class = "  dBOMReferenceNo   form-control", @readonly = "readonly" })
+    </td>*@
+     <td>
+        @Html.TextBoxFor(model => model.BOMId, new { @class = "  dBOMId   form-control", @readonly = "readonly" })
+    </td>
+    }
+</tr>
+
+

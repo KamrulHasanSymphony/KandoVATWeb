@@ -1,0 +1,92 @@
+﻿   
+<div class="headrow">
+        <button type="button" title="Add New Attendance Structure" data-url="/Common/AttendanceStructure/Create" onclick="GoTo(this)" id="" class="sym-btn-add">&nbsp;New</button>
+        <button type="button" title="DeleteAttendance Structure" data-url="/Common/AttendanceStructure/TimePolicyDelete" onclick="deletedData(this, 'myDataTable');" id="" class="sym-btn-remove">&nbsp;Delete</button>
+ <label class="pull-right"> Attendance Structure</label>
+</div>
+         
+ <div class="thinbox">
+        <div class="th_thinbox">
+        <p>Time Policy List</p>   
+        </div>
+@*<p>
+     <input type="button" style="width:65px;" data-url="/Common/AttendanceStructure/Create" onclick="GoTo(this)"   id="" class=" btn btn-info  " value="Add" />
+    <input type="button" style="width:65px;" data-url="/Common/AttendanceStructure/TimePolicyDelete" onclick="deletedData(this, 'myDataTable');" id="" class=" btn btn-info  " value="Delete" />
+
+</p>*@
+<table id="myDataTable" class="display">
+    <thead>
+        <tr>
+            <th class="center"><input type="checkbox" class="chkAll" />Select All</th>
+            <th>Name</th>
+            <th>In Time</th>
+            <th>Out Time</th>
+            <th>In Grace</th>
+            <th>In Time End</th>
+            <th>Lunch Time</th>
+            <th>Lunch Break</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+        <br />
+        </div>
+  
+<div class="headrow">
+        <button type="button" title="Add New Attendance Structure" data-url="/Common/AttendanceStructure/Create" onclick="GoTo(this)" id="" class="sym-btn-add">&nbsp;New</button>
+        <button type="button" title="Delete Attendance Structure" data-url="/Common/AttendanceStructure/TimePolicyDelete" onclick="deletedData(this, 'myDataTable');" id="" class="sym-btn-remove">&nbsp;Delete</button>
+</div>
+         
+<script>
+
+    $(document).ready(function () {
+
+        var oTable = $('#myDataTable').dataTable({
+            "bServerSide": true,
+            "sAjaxSource": "/Common/AttendanceStructure/_index",
+            "bProcessing": true,
+            "aLengthMenu": tablelength(),
+            "bJqueryUI": true,
+            "bAutoWidth": false,
+            "aoColumns": [
+
+                            {
+                                "sName": "Name",
+                                "bSearchable": false,
+                                "bSortable": false,
+                                "sWidth": "12%",
+                                "sClass": "center",
+                                "fnRender": function (oObj) {
+                                    //return ' <input onclick="CheckAll(this)" type="checkbox" data-Id="' + oObj.aData[1].split('~')[1] + '">'
+                                    //;
+
+                                    return ' <input onclick="CheckAll(this)" type="checkbox" data-Id="' + oObj.aData[0] + '">&nbsp; <a id=""  title="Click on for Edit" style="text-decoration:none;"   href=\"/Common/AttendanceStructure/Edit/' + oObj.aData[0] + '\" class=" innerListLink sym-btn-edit-row "></a>' +
+                                      '&nbsp; <a title="Click on for Delete" style="text-decoration:none;" data-url="/Common/AttendanceStructure/TimePolicyDelete" onclick="deletedData(this, myDataTable,' + oObj.aData[0] + ');" class="sym-btn-remove-row"></a>';
+
+                                }
+                            }
+                            //, {
+                            //    "sName": "Name",
+                            //    "bSearchable": false,
+                            //    "bSortable": false,
+                            //    "fnRender": function (oObj) {
+                            //        //return '<a  class="" href=\"/Common/Project/Edit/' + oObj.aData[0].split('~')[1] + '\">' + oObj.aData[0].split('~')[0] + '</a>'
+                            //        //return '<a  class="innerListLink"  href=\"/Common/AttendanceStructure/Edit/' + oObj.aData[1].split('~')[1] + '\">' + oObj.aData[1].split('~')[0] + '</a>'
+                            //        ;
+                            //    }
+                            //}
+                            , { "sName": "Name" }
+                            , { "sName": "InTime" }
+                            , { "sName": "OutTime" }
+                            , { "sName": "InGrace" }
+                            , { "sName": "InTimeEnd" }
+                            , { "sName": "LunchTime" }
+                            , { "sName": "LunchBreak" }
+        ]
+        });
+        SelectAllForDelete();
+    });
+
+
+</script>

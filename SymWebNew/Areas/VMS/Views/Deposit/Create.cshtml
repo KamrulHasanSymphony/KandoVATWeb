@@ -1,0 +1,1330 @@
+﻿@model VATViewModel.DTOs.DepositMasterVM
+@using UIHelper.MVC
+@using (Html.BeginForm("CreateEdit", "Deposit", FormMethod.Post, new { enctype = "multipart/form-data", @Id = "frmDeposits" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.Id)
+    @*@Html.HiddenFor(model => model.DepositId)*@
+    @Html.HiddenFor(model => model.Post)
+    @Html.HiddenFor(model => model.Operation)
+    @Html.HiddenFor(model => model.TransactionType)
+    @Html.HiddenFor(model => model.BranchId)
+    @Html.HiddenFor(model => model.TreasuryN)
+
+
+    <input id="ConvFactor" type="hidden" />
+
+    <div class="headrow">
+        @if (Model.Operation == "update")
+        {
+            <button type="button" title="Update Data" onclick="SaveData()" class="sym-btn-update">&nbsp;Update</button>
+            <button type="button" title="Post Data" onclick="PostData(this)" class="sym-btn-post">&nbsp;Post</button>
+            <label class="pull-right">Deposit > Edit(@Model.TransactionType)</label>
+        }
+        else if (Model.Operation == "add")
+        {
+            <button type="button" title="Save Data" onclick="SaveData()" class="sym-btn-save">&nbsp;Save</button>
+            <label class="pull-right">Deposit  > Create(@Model.TransactionType)</label>
+        }
+        <button type="button" title="" class="sym-btn-report depoMIS">&nbsp;MIS</button>
+        <button type="button" title="" class="sym-btn-report depoTR">&nbsp;TR</button>
+        @if (Model.TransactionType != "Treasury")
+        {
+            <button type="button" title="" class="sym-btn-report VAT6_6R">&nbsp;6.6</button>
+        }
+        @if (Model.TransactionType.ToLower() == "vds")
+        {
+            <div class=" checkbox" style="display: inline; background-color: #c1c1c1; padding: 8px 6px; margin: 0px 5px; border-radius: 2px;">
+                <label style="display:inline;color:black;">
+                    @Html.CheckBoxFor(m => m.SingleTR6)Single TR6
+                </label>
+            </div>
+        }
+        <button type="button" title="Go To Index" data-url="/VMS/Deposit?TransactionType=@Model.TransactionType" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New Deposit" data-url="/VMS/Deposit/Create?TransactionType=@Model.TransactionType" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+    </div>
+    if (Model.Operation == "update")
+    {
+        <div class="col-sm-12 col-md-12">
+            <div class="input-group   col-lg-8  col-md-8  col-sm-8 col-xs-12 text-color col-md-offset-2" style="">
+                <a class="input-group-addon btn btn-primary hidden-xs changePage" data-pager-action='first' id="first"><i class="fa fa-angle-double-left"></i>First</a>
+                <a class="input-group-addon btn btn-primary hidden-xs changePage" data-pager-action='previous' id="precode"><i class="fa fa-angle-left"></i>Previous</a>
+                @Html.SimpleDropDown("", "/Config/DropDown/IdNameTtype?tableName=Deposits&Id=Id&Name=DepositId&type=" + Model.TransactionType + "&code=DepositId", new { @class = " trNavigateMenu form-control selectDropdown " })
+                <a class="input-group-addon btn btn-primary changePage" data-pager-action='current' id="current"><i class="fa fa-search"></i></a>
+                <a class="input-group-addon btn btn-primary hidden-xs changePage" data-pager-action='next' id="nextcode">Next <i class="fa  fa-angle-right"></i></a>
+                <a class="input-group-addon btn btn-primary hidden-xs changePage" data-pager-action='last' id="last">Last <i class="fa  fa-angle-double-right"></i></a>
+            </div>
+        </div>
+    }
+
+    <div class=" tabMenu" style="display: none">
+        <ul style="font-size: 1.4em;" class="tabDesign nav nav-tabs">
+            <li class="tabDefault active"><a data-toggle="tab" href="#Deposit">Deposit</a></li>
+            <li class="tabDefault"><a data-toggle="tab" href="#VDS" class="vdsInfoTab">VDS Info</a></li>
+        </ul>
+    </div>
+    <div class="tab-content">
+        <div id="Deposit" class="tab-pane fade  in active">
+            <div class="col-md-6 trkPX-0">
+                <div class="thinbox animated zoomIn faster" style="margin-top: 0px; margin-bottom: 0px; height: 250px">
+                    <div class="th_thinbox">
+                        <p>Basic</p>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="Id" class="col-md-4 control-label text-right trkLabelMargin">Auto No</label>
+                            <div class="col-md-8 trkPX-0">
+                                <div class="col-md-6 trkPX-0">
+                                    @Html.TextBoxFor(model => model.DepositId, new { @placeholder = "New", @class = " cDepositId form-control", @readonly = "readonly" })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.Id)
+                            </div>
+                            @if (Model.TransactionType == "VDS")
+                            {
+                                <label for="TreasuryNo" class="col-md-4 control-label text-right trkLabelMargin">VDS Certificate No</label>
+                                <div class="col-md-8 trkPX-0">
+                                    <div class="col-md-6 trkPX-0">
+                                        @Html.TextBoxFor(model => model.TreasuryNo, new { @placeholder = "VDS Certificate No", @class = " form-control" })
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.TreasuryNo)
+                                </div>
+                            }
+                            else
+                            {
+                                <label for="TreasuryNo" class="col-md-4 control-label text-right trkLabelMargin">Treasury No</label>
+                                <div class="col-md-8 trkPX-0">
+                                    <div class="col-md-6 trkPX-0">
+                                        @Html.TextBoxFor(model => model.TreasuryNo, new { @placeholder = "Treasury No", @class = " form-control" })
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.TreasuryNo)
+                                </div>
+                            }
+                        </div>
+                        <div class="form-group">
+                            <label for="DepositDate" class="col-md-4 control-label text-right trkLabelMargin">Effect Date</label>
+                            <div class="col-md-8 trkPX-0">
+                                <div class="col-md-6 trkPX-0">
+                                    @Html.TextBoxFor(model => model.DepositDate, new { @class = " trDate customDatePicker required  form-control" })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.DepositDate)
+                            </div>
+                            @if (Model.TransactionType == "SaleVDS")
+                            {
+                                <label for="BankDepositDate" class="col-md-4 control-label text-right trkLabelMargin">VDS Certificate Date</label>
+                                <div class="col-md-8 trkPX-0">
+                                    <div class="col-md-6 trkPX-0">
+                                        @Html.TextBoxFor(model => model.BankDepositDate, new { @class = " trBankDepositDate customDatePicker  form-control" })
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.BankDepositDate)
+                                </div>
+                            }
+                            else
+                            {
+                                <label for="BankDepositDate" class="col-md-4 control-label text-right trkLabelMargin">Bank Deposit Date</label>
+                                <div class="col-md-8 trkPX-0">
+                                    <div class="col-md-6 trkPX-0">
+                                        @Html.TextBoxFor(model => model.BankDepositDate, new { @class = " trBankDepositDate customDatePicker  form-control" })
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.BankDepositDate)
+                                </div>
+                            }
+                            <label for="DepositAmount" class="col-md-4 control-label text-right trkLabelMargin">Deposit Amount</label>
+                            <div class="col-md-8 trkPX-0" style="margin-bottom: 6px;">
+                                <div class="col-md-6 trkPX-0">
+                                    @Html.TextBoxFor(model => model.DepositAmount, new { @placeholder = "Deposit Amount", @class = "priceLen required form-control" })
+                                </div>
+                                <div class="">
+                                    @Html.ValidationMessageFor(model => model.DepositAmount)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="DepositType" class="col-md-4 control-label text-right trkLabelMargin">Deposit Type</label>
+                            <div class="col-md-8 trkPX-0">
+                                <div class="col-md-6 trkPX-0">
+                                    @if (Model.TransactionType == "Treasury" || Model.TransactionType == "Treasury-Opening")
+                                    {
+                                        @Html.SimpleDropDownFor(m => m.DepositType, "/Config/DropDown/TreasuryDepositType", new { @class = "  form-control  required " })
+                                    }
+                                    else if (Model.TransactionType == "SD" || Model.TransactionType == "SD-Opening")
+                                    {
+                                        @Html.SimpleDropDownFor(m => m.DepositType, "/Config/DropDown/SDDepositType", new { @class = "  form-control  required " })
+                                    }
+                                    else
+                                    {
+                                        @Html.SimpleDropDownFor(m => m.DepositType, "/Config/DropDown/DepositType", new { @class = "  form-control  required " })
+                                    }
+                                    @*@Html.DropDownListFor(m => m.DepositType, new SelectList(new List<string>() { "Cash", "Opening", "Cheque" }), new { @class = "form-control dropdown", @style = "padding-top:2px;padding-bottom:2px;" })*@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 trkPX-0">
+                <div class="thinbox animated zoomIn faster" style="margin-top: 0px; margin-bottom: 0px; height:250px">
+                    <div class="th_thinbox">
+                        <p>Through Cheque</p>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            @if (Model.TransactionType == "SaleVDS")
+                            {
+                                <label for="ChequeNo" class="col-md-4 control-label text-right trkLabelMargin">Deposit Account Code</label>
+                                <div class="col-md-8 trkPX-0">
+                                    <div class="col-md-6 trkPX-0">
+                                        @Html.TextBoxFor(model => model.ChequeNo, new { @placeholder = "Deposit Account Code", @class = " form-control" })
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.ChequeNo)
+                                </div>
+                                <label for="ChequeDate" class="col-md-4 control-label text-right trkLabelMargin"> TAX Deposit Date </label>
+                                <div class="col-md-8 trkPX-0">
+                                    <div class="col-md-6 trkPX-0">
+                                        @Html.TextBoxFor(model => model.ChequeDate, new { @placeholder = "TAX Deposit Date ", @class = " customDatePicker defaultDate form-control" })
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.ChequeDate)
+                                </div>
+                                <label for="ChequeBank" class="col-md-4 control-label text-right trkLabelMargin">TAX Deposit Serial No</label>
+                                <div class="col-md-8 trkPX-0">
+                                    <div class="col-md-6 trkPX-0">
+                                        @Html.TextBoxFor(model => model.ChequeBank, new { @placeholder = "TAX Deposit Serial No", @class = " form-control" })
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.ChequeBank)
+                                </div>
+
+                            }
+                            else
+                            {
+                                <label for="ChequeNo" class="col-md-4 control-label text-right trkLabelMargin">Cheque No</label>
+                                <div class="col-md-8 trkPX-0">
+                                    <div class="col-md-6 trkPX-0">
+                                        @Html.TextBoxFor(model => model.ChequeNo, new { @placeholder = "Cheque No", @class = " form-control" })
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.ChequeNo)
+                                </div>
+                                <label for="ChequeDate" class="col-md-4 control-label text-right trkLabelMargin">Date</label>
+                                <div class="col-md-8 trkPX-0">
+                                    <div class="col-md-6 trkPX-0">
+                                        @Html.TextBoxFor(model => model.ChequeDate, new { @placeholder = "Cheque Date", @class = " customDatePicker defaultDate form-control" })
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.ChequeDate)
+                                </div>
+                                <label for="ChequeBank" class="col-md-4 control-label text-right trkLabelMargin">Deposit Bank</label>
+                                <div class="col-md-8 trkPX-0">
+                                    <div class="col-md-6 trkPX-0">
+                                        @Html.TextBoxFor(model => model.ChequeBank, new { @placeholder = "Cheque Bank", @class = " form-control" })
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.ChequeBank)
+                                </div>
+
+                            }
+                            <label for="ChequeBankBranch" class="col-md-4 control-label text-right trkLabelMargin">Bank Branch</label>
+                            <div class="col-md-8 trkPX-0">
+                                <div class="col-md-6 trkPX-0">
+                                    @Html.TextBoxFor(model => model.ChequeBankBranch, new { @placeholder = "Cheque Bank Branch", @class = " form-control" })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.ChequeBankBranch)
+                            </div>
+
+                        </div>
+                    </div>
+                    @*<div style="padding-bottom:24px">&nbsp;</div>*@
+                </div>
+
+            </div>
+
+            <div class="col-md-12 trkPX-0">
+                <div class="thinbox animated zoomIn faster trkMY-0">
+                    <div class="th_thinbox">
+                        <p>Deposited To</p>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="BankId" class="col-md-2 control-label text-right trkLabelMargin">Bank Name</label>
+                            <div class="col-md-4 trkPX-0">
+                                <div class="col-md-6 trkPX-0">
+                                    @Html.SimpleDropDownFor(model => model.BankId, "/Config/DropDown/BankInformations", new { @class = "trBankId form-control trkMT-0" })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.BankId)
+                            </div>
+                            <label for="DepositPerson" class="col-md-2 control-label text-right trkLabelMargin">Deposit Person</label>
+                            <div class="col-md-2 trkPX-0">
+                                <div class="col-md-8trkPX-0">
+                                    @Html.TextBoxFor(model => model.DepositPerson, new { @placeholder = "Deposit Person", @class = " form-control" })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.DepositPerson)
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" id="DepositBtn" class="sym-btn-search" style="margin-bottom: 5px;" title="Search" name=""></button>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="form-group">
+                            <label for="AccountNo" class="col-md-2 control-label text-right trkLabelMargin">Account No</label>
+                            <div class="col-md-2 trkPX-0">
+
+                                @Html.TextBoxFor(model => model.AccountNumber, null, new { @placeholder = "Account No", @class = "trAccountNo form-control" })
+                            </div>
+                            <label for="DepositPersonDesignation" class="col-md-4 control-label text-right trkLabelMargin">Designation</label>
+                            <div class="col-md-4 trkPX-0">
+                                <div class="col-md-6 trkPX-0">
+                                    @Html.TextBoxFor(model => model.DepositPersonDesignation, new { @placeholder = "Deposit Person Designation", @class = " form-control" })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.DepositPersonDesignation)
+                            </div>
+
+
+                            <div class="row">
+
+                            </div>
+
+                            <label for="BranchName" class="col-md-2 control-label text-right trkLabelMargin">Branch Name</label>
+                            <div class="col-md-4 trkPX-0">
+                                <div class="col-md-6 trkPX-0">
+                                    @Html.TextBoxFor(model => model.BranchName, null, new { @placeholder = "Branch Name", @class = "trBranchName form-control" })
+                                </div>
+                            </div>
+
+                            <label for="DepositPersonContactNo" class="col-md-2 control-label text-right trkLabelMargin">Contract No</label>
+                            <div class="col-md-4 trkPX-0">
+                                <div class="col-md-6 trkPX-0">
+                                    @Html.TextBoxFor(model => model.DepositPersonContactNo, new { @placeholder = "Deposit Person ContactNo", @class = "trDepositPersonContactNo form-control" })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.DepositPersonContactNo)
+                            </div>
+
+                            <label for="District" class="col-md-2 control-label text-right trkLabelMargin">District</label>
+                            <div class="col-md-4 trkPX-0">
+                                <div class="col-md-6 trkPX-0">
+                                    @Html.TextBoxFor(model => model.District, new { @placeholder = "District", @class = "trDistrict form-control" })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.BranchName)
+                            </div>
+
+
+                            <label for="DepositPersonAddress" class="col-md-2 control-label text-right trkLabelMargin">Address</label>
+                            <div class="col-md-4 trkPX-0">
+                                <div class="col-md-6 trkPX-0">
+                                    @Html.TextBoxFor(model => model.DepositPersonAddress, new { @placeholder = "Deposit Person Address", @class = "trDepositPersonAddress form-control" })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.DepositPersonAddress)
+                            </div>
+
+                            <label for="Comments" class="col-md-2 control-label text-right trkLabelMargin">Remarks</label>
+                            <div class="col-md-4 trkPX-0">
+                                @Html.TextAreaFor(model => model.Comments, new { @placeholder = "Comments", @class = " form-control" })
+                                @Html.ValidationMessageFor(model => model.Comments)
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div id="VDS" class="tab-pane fade">
+            <div class="thinbox col-md-12 formDesign animated slideInUp faster" style="margin-top: 0px; margin-bottom: 0px;">
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="editor-label">
+                            <label for="VDSId">Auto No</label>
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBoxFor(m => m.DepositId, new { @placeholder = "New", @class = "  form-control", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="editor-label">
+                            <label id="PurchaseLabel">Pur No</label>
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBox("DPurchaseNo", null, new { @class = "trPurchaseNo  form-control", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="trk_5">
+                        <div class="editor-label">
+                            <label>&nbsp;</label>
+                        </div>
+                        <div class="editor-field">
+                            <button class=" sym-btn-search" type="button" id="purchaseBtn"></button>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <div class="editor-label">
+                            <label>&nbsp;</label>
+                            @Html.HiddenFor(m => m.IsPurchase, new { @class = "  form-control" })
+                            @Html.Hidden("VATAmount", null, new { @class = "trVATAmount" })
+
+                            @*<input type="hidden" id="IsPurchase" value="True">*@
+                        </div>
+                        <div class="editor-field">
+                            <button type="button" class="btn trkbtn IsPurchase" style="pointer-events: none;"></button>
+                        </div>
+                    </div>
+                    <div class="trk1_5">
+                        <div class="editor-label">
+                            <label for="BillNo">Bill No</label>
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBox("BillNo", null, new { @class = " trBillNo  form-control" })
+                        </div>
+                    </div>
+                    <div class="trk1_5">
+                        <div class="editor-label">
+                            <label for="BillAmount">Bill Amount</label>
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBox("BillAmount", null, new { @class = " trBillAmount right pricelen  form-control" }) @*, @readonly = "readonly"*@
+                        </div>
+                    </div>
+
+
+                    <div class="trk1_5">
+                        <div class="editor-label">
+                            <label for="VDSAmount">VDS Amount</label>
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBox("VDSAmount", null, new { @class = " trVDSAmount right pricelen  form-control" })
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row">
+
+
+                    <div class="col-md-3">
+                        <div class="editor-label">
+                            @if (Model.TransactionType == "SaleVDS")
+                            {
+                                <label for="VendorName" id="VendorLabel">Customer</label>
+
+                            }
+                            else
+                            {
+                                <label for="VendorName" id="VendorLabel">Vendor</label>
+
+                            }
+
+                        </div>
+                        <div class="editor-field">
+                            @Html.SimpleDropDownFor(m => m.VendorID, "//", new { @class = " trVendorId form-control selectDropdown" })
+                            @Html.Hidden("VendorName", null, new { @class = "trVendorName" })
+                        </div>
+                    </div>
+                    <div class="trk1_5">
+                        <div class="editor-label">
+                            <label>&nbsp;</label>
+                        </div>
+                        <div class="editor-field">
+                            <button type="button" title="Click to Search Vendor" id="vendorBtn" class="sym-btn-search"></button>
+                        </div>
+                    </div>
+
+
+                    <div class="trk1_5">
+                        <div class="editor-label">
+                            <label for="PurDate">Pur Date</label>
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBox("PurDate", null, new { @class = " trPurDate customDatePicker defaultDate form-control" })
+                        </div>
+                    </div>
+                    <div class="trk1_5">
+                        <div class="editor-label">
+                            <label for="IssueDate">Issue Date</label>
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextBox("IssueDate", null, new { @class = " trIssueDate defaultDate customDatePicker form-control" })
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="editor-label">
+                            <label for="comments">Comments</label>
+                        </div>
+                        <div class="editor-field">
+                            @Html.TextArea("comments", null, new { @placeholder = "comments", @class = " trComment form-control" })
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <div class="editor-label">
+                            <label>&nbsp;</label>
+                        </div>
+                        <div class="editor-field">
+                            <div id="ItemExist" title="Add Detail" data-url="/Vms/Deposit/BlankItem" class="sym-btn-add-row AddRow" data-container="editorItemRows4">&nbsp;Add</div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-1">
+                        <div class="editor-label">
+                            <label>&nbsp;</label>
+                        </div>
+                        <div class="editor-field">
+                            <button type="button" title="" class="sym-btn-report vds7_5calculation">&nbsp;7.5</button>
+                        </div>
+                    </div>
+
+                </div>
+                <div>
+                    <div class="fixedParent">
+
+                        @if (Model.Details != null)
+                        {
+                            <table class="trkFixTable" id="itemTable">
+                                <thead>
+                                    <tr>
+                                        <th>Action</th>
+                                        <th>Vendor Name</th>
+                                        <th>Vendor Id</th>
+                                        <th>Bill No</th>
+                                        <th>Bill Amount</th>
+                                        <th>VDS Percent</th>
+                                        <th>VDS Amount</th>
+                                        <th>Purchase Date</th>
+                                        <th>Issue Date</th>
+                                        <th>Remarks</th>
+                                        <th>Purchase Number</th>
+                                        <th>Is percent</th>
+                                        <th>Is Purchase</th>
+                                        <th>VATAmount</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody id="editorItemRows4">
+                                    @*@foreach (var item in Model.Details)
+                                        {
+                                            Html.RenderPartial("_detail", item);
+                                        }*@
+                                    @if (Model.Details.Count > 0)
+                                    {
+                                        @Html.Partial("_detail", Model.Details);
+                                    }
+                                </tbody>
+                            </table>
+
+                        }
+                    </div>
+
+                    <hr />
+                    <div class="row trkBelowDiv">
+                        <div class="col-md-1 trkLabelTopRight col-md-offset-3">
+                            <label for="BillTotal">Bill Total</label>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="editor-field ">
+                                <strong>@Html.TextBox("BillTotal", null, new { @class = "BillTotal NumberCheckAddDetail right form-control", @readonly = "readonly" })</strong>
+                            </div>
+                        </div>
+
+                        <div class="col-md-1 trkLabelTopRight">
+                            <label for="VDSTotal">VDS Total</label>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="editor-field ">
+                                <strong>@Html.TextBox("VDSTotal", null, new { @class = "VDSTotal NumberCheckAddDetail right form-control", @readonly = "readonly" })</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="headrow">
+
+        @if (Model.Operation == "update")
+        {
+            <button type="button" title="Update Data" onclick="SaveData()" class="sym-btn-update">&nbsp;Update</button>
+            <button type="button" title="Post Data" onclick="PostData(this)" class="sym-btn-post">&nbsp;Post</button>
+        }
+        else if (Model.Operation == "add")
+        {
+            <button type="button" title="Save Data" onclick="SaveData()" class="sym-btn-save">&nbsp;Save</button>
+        }
+        <button type="button" title="" class="sym-btn-report depoMIS">&nbsp;MIS</button>
+        <button type="button" title="" class="sym-btn-report depoTR">&nbsp;TR</button>
+        @if (Model.TransactionType != "Treasury")
+        {
+            <button type="button" title="" class="sym-btn-report VAT6_6R">&nbsp;6.6</button>
+        }
+        <button type="button" title="Go To Index" data-url="/VMS/Deposit?TransactionType=@Model.TransactionType" onclick="GoTo(this)" class="sym-btn-detail">&nbsp;Index</button>
+        <button type="button" title="Add New Deposit" data-url="/VMS/Deposit/Create?TransactionType=@Model.TransactionType" onclick="GoTo(this)" id="" class="sym-btn-add ">&nbsp;New</button>
+    </div>
+}
+<div id="myModal" class="trkmodal"></div>
+<div id="myHigherModal" class="HigherModal"></div>
+<div id="purchaseDetails" class="trkmodal">
+    <div class="trkmodal-content">
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+
+
+    @*------------------------------Commonn Methods------------------------------*@
+
+    <script>
+
+        function callbackFromMultipleRowSelectModal(invoiceNumbers, sender) {
+            var isPercent = "N";
+
+            if ($('#IsPercent').val() == "True") {
+                isPercent = "Y";
+            }
+            var isPurchase = $('#IsPurchase').val();
+
+            $.ajax({
+
+                url: "/VMS/Deposit/BlankItems?IsPercent=" + isPercent + "&isPurchase=" + isPurchase,
+                cache: false,
+                type: "POST",
+                data: JSON.stringify(invoiceNumbers),
+                success: function (html) {
+                    console.log(html)
+                    $("#editorItemRows4").html("");
+                    $("#editorItemRows4").append(html);
+                    callingFixedTable();
+                    SubTotal();
+
+                },
+
+                error: function (error, ajaxOptions, thrownError) {
+                    console.log(error, ajaxOptions, thrownError);
+                    console.log('Error');
+                }
+                , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+
+                , contentType: 'application/json; charset=utf-8'
+                , Accept: "text/html; charset=utf-8"
+                //    , dataType: 'json'
+            });
+
+        }
+
+
+
+    </script>
+
+    <script>
+
+
+        $(function () {
+            $('.trVendorId').change(function () {
+
+                var Vendorname = $('.trVendorId :selected').text();
+                $(".trVendorName").val(Vendorname);
+
+            });
+        })
+
+        $(function () {
+            LoadVendorDropDown();
+        });
+
+        @*     Load product Dropdown    *@
+        function LoadVendorDropDown(VendorId) {
+            $DropDownVendor = $(".trVendorId");
+            $('select.trVendorId').html("");
+
+            var url = "";
+
+            if ('@Model.TransactionType' == "SaleVDS") {
+                url = "/Config/DropDown/Customer";
+            }
+            else {
+                url = "/Config/DropDown/Vendor";
+            }
+            $DropDownVendor.append($("<option />").val("").text("Select"));
+            $DropDownVendor.select2("val", '');
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                beforeSend: function () { $(".loading").show(); },
+                success: function (data) {
+                    $.each(data, function (i, state) {
+                        $DropDownVendor.append($("<option />").val(state.Value).text(state.Text));
+                    });
+                    if (VendorId != null || VendorId != "" || VendorId != "0") {
+                        $(".trVendorId").select2("val", VendorId);
+                    }
+                },
+                complete: function () { $(".loading").fadeOut(200).hide("slow") }
+            });
+        }
+
+
+
+    </script>
+
+    <script>
+
+
+        ////clicking add row
+        $('.AddRow').on("click", function () {
+            var PurchaseNo = $('.trPurchaseNo').val();
+
+
+            //if (PurchaseNo == "0" || PurchaseNo == "") {
+            //    ShowResult("Fail", "Select a Purchase No first!");
+            //    $('.trPurchaseNo').css('background-color', 'yellow');
+            //    return;
+            //}
+
+
+            var container = $(this).attr('data-container');
+            var url = $(this).attr('data-url');
+            AddRow(container, url)
+            return false;
+        });
+
+        ////add row method
+        function AddRow(container, url) {
+            //form fields
+            var vendorName = $('.trVendorName').val();
+
+
+            var vendorId = $('.trVendorId').val();
+
+            var BillNo = $('.trBillNo').val();
+            var billAmount = $('.trBillAmount').val();
+            //////var vdsPercent = parseFloat($('.trVDS').val().replace(/\,/g, ''));
+            var vdsAmount = parseFloat($('.trVDSAmount').val().replace(/\,/g, ''));
+            var purchaseDate = $('.trPurDate').val();
+            var issueDate = $('.trIssueDate').val();
+            var remarks = $('.trComment').val();
+            var purchaseNumber = $('.trPurchaseNo').val();
+
+            var isPercent = "N";
+
+            if ($('#IsPercent').val() == "True") {
+                isPercent = "Y";
+            }
+            var isPurchase = $('#IsPurchase').val();//// == 'Y' ? 'True' : 'False';
+            var VATAmount = $('.trVATAmount').val();
+
+            ////if ($('#IsPurchase').val() == "True") {
+            ////    isPurchase = "Y";
+            ////}
+
+            ////the detail view Model
+            var model = {
+                VendorId: vendorId,
+                VendorName: vendorName,
+                BillNo: BillNo,
+                BillAmount: billAmount,
+                BillDate: purchaseDate,
+                BillDeductedAmount: vdsAmount,
+                IssueDate: issueDate,
+                Remarks: remarks,
+                PurchaseNumber: purchaseNumber,
+                ////VDSPercent: vdsPercent,
+                //////VDSAmount: vdsAmount,
+                IsPercent: isPercent,
+                IsPurchase: isPurchase,
+                VATAmount: VATAmount
+            }
+            ////calling blank item function
+            $.ajax({
+                data: model,
+                url: url,
+                cache: false,
+                success: function (html) {
+                    $("#" + container).append(html);
+                    callingFixedTable();
+                    SubTotal();
+                }
+            });
+            ////reseting values
+            $('.trPurchaseNo').val("");
+            $('.trVendorName').val("");
+            $('.trBillNo').val("");
+            $('.trBillAmount').val("");
+            ////$('.trVDS').val("");
+            $('.trVDSAmount').val("");
+            $('.trPurDate').val("");
+            $('.trComment').val("");
+
+        }
+
+        ////posting method
+        function PostData(sender) {
+            var Id = $("#Id").val();
+            var Post = $("#Post").val();
+            if (Post.toLowerCase() == 'true' || Post.toLowerCase() == 'y') {
+                ShowResult("Fail", "Data Already Posted!");
+                return;
+            }
+            var url = '/Vms/Deposit/Post?ids=' + Id + '~';
+            var questionMSG = "Are you sure to Post Data!";
+            singlePostDlete(questionMSG, url);
+        }
+
+        ////form posting method
+        function SaveData() {
+
+            var Post = $("#Post").val();
+            if (Post.toLowerCase() == 'true' || Post.toLowerCase() == "y") {
+                ShowResult("Fail", "Data Already Posted. Can't Update!");
+                return;
+            }
+
+            var items = $(".dVendorName").length;
+            var transType = '@Model.TransactionType';
+            if (transType.toLowerCase() == "vds" || transType.toLocaleLowerCase() == "SaleVDS".toLowerCase()) {
+                if (items == 0) {
+                    ShowResult("Fail", "Please Add Details!");
+                    return;
+                }
+            }
+
+            if ($("#DepositType").val() == "Opening") {
+                if ('@Model.Operation' == "add") {
+
+                    $("#TransactionType").val($("#TransactionType").val() + "-" + $("#DepositType").val())
+                }
+            }
+
+            ////alert("Save");
+            pageSubmit('frmDeposits');
+            ////$("#frmDeposits").submit();
+        }
+
+        ////Edit a row
+        function EditItem(sender) {
+            ////setting the value
+            $closestRow = $(sender).closest('.tablerow');
+
+            var purchaseNo = $closestRow.find('.dPurchaseNumber').val();
+            $('.trPurchaseNo').val(purchaseNo);
+            var VDSAmount = $closestRow.find('.dVDSAmount').val();
+            $('.trVDSAmount').val(VDSAmount);
+            var comment = $closestRow.find('.dRemarks').val();
+            $('.trComment').val(comment);
+            ////var issueDate = $.datepicker.formatDate('dd-M-yy', new Date($closestRow.find('.dIssueDate').val()));
+            ////$('.trIssueDate').val(issueDate);
+
+            $('.trVendorId').val($closestRow.find('.dVendorId').val());
+            $('.trVendorName').val($closestRow.find('.dVendorName').val());
+
+            $('.trBillNo').val($closestRow.find('.dBillNo').val());
+            $('.trBillAmount').val($closestRow.find('.dBillAmount').val());
+            $('.trBillNo').val($closestRow.find('.dBillNo').val());
+            $('.trPurDate').val($closestRow.find('.dBillDate').val());
+            $('.trIssueDate').val($closestRow.find('.dIssueDate').val());
+            $('.trVATAmount').val($closestRow.find('.dVATAmount').val());
+
+            var vendorid = $closestRow.find('.dVendorId').val();
+
+            LoadVendorDropDown(vendorid);
+
+            ////recalculating properties
+            ////////PurchaseChange(purchaseNo);
+
+            ////$(function () {
+            ////    var interval = setInterval(function () {
+            ////        if ($('.trVDSAmount').val() != "") {
+            ////            //////calculateVDS();
+            ////            clearInterval(interval);
+            ////        }
+            ////    }, 200);
+            ////});
+
+            $(sender).parents("tr:first").remove();
+
+            SubTotal();
+
+
+        }
+
+        ////removing a row
+        function RemoveItem(sender) {
+            Ask("Are you sure to Delete the item!", function () {
+                $(sender).parents("tr:first").remove();
+                SubTotal();
+            });
+        }
+    </script>
+
+    <script>
+        ////Purchase change method
+        function PurchaseChange(TransactionNo) {
+
+            if ($('#IsPurchase').val() == 'Y') {
+                PurchaseLoad(TransactionNo)
+            }
+            else {
+                SaleLoad(TransactionNo)
+            }
+
+        }
+
+        function PurchaseLoad(purchaseNo) {
+            var url = "";
+
+            url = "/Vms/Deposit/SelectPurchase?PurchaseNo=" + purchaseNo;
+
+            $.getJSON(url, function (vm) {
+
+                $('.trBillNo').val(vm.BENumber);
+                $('.trBillAmount').val(vm.TotalAmount);
+                $('.trVendorId').val(vm.VendorID);
+                $('.trVendorName').val(vm.VendorName);
+                $('.trPurDate').val(vm.InvoiceDate);
+
+                $('.trVDSAmount').val(vm.TotalVDSAmount);
+            });
+        }
+
+        function SaleLoad(SaleNo) {
+            var url = "";
+
+            url = "/Vms/Deposit/SelectSale?SaleNo=" + SaleNo;
+
+
+            $.getJSON(url, function (vm) {
+
+                ////$('.trBillNo').val(vm.BENumber);
+                $('.trBillAmount').val(vm.TotalSubtotal);
+                $('.trVendorId').val(vm.VendorID);//.CustomerID
+                $('.trVendorName').val(vm.vendorName);//.CustomerName
+                $('.trPurDate').val(vm.InvoiceDateTime);
+
+                $('.trVDSAmount').val(vm.TotalVATAmount);
+
+
+            });
+        }
+
+
+        ////VDS calculation method
+        function calculateVDS() {
+            //////var status = $('#IsPercent').val();
+            //////var billAmount = parseFloat($('.trBillAmount').val().replace(/\,/g, ''));
+            //////////var vds = parseFloat($('.trVDS').val().replace(/\,/g, ''));
+            //////if (isNaN(billAmount)) {
+            //////    vds = 0;
+            //////}
+            //////else {
+            //////    if (status == 'True') {
+            //////        //////vds = billAmount * vds / 100;
+            //////    }
+            //////}
+            //////$('.trVDSAmount').val(vds);
+        }
+
+        function SubTotal() {
+            var billTotal = 0;
+            var vdsTotal = 0;
+            $('.tablerow').each(function () {
+                billTotal += parseFloat($(this).find(".dBillAmount").val().replace(/\,/g, ''));
+                vdsTotal += parseFloat($(this).find(".dVDSAmount").val().replace(/\,/g, ''));
+
+            });
+            $(".BillTotal").val(billTotal);
+
+            $(".VDSTotal").val(vdsTotal);
+
+            if ('@Model.TransactionType' == 'VDS' || '@Model.TransactionType' == 'SaleVDS') {
+
+                $("#DepositAmount").val(vdsTotal);
+            }
+
+        }
+    </script>
+
+
+    @*------------------------------Table Scrolling/Freezing------------------------------*@
+
+    <script>
+        ////fixed header column table
+        function fixedScrolltrkFixedTable(tableId, leftTotal) {
+            $('#' + tableId + ' tbody').scroll(function (e) {
+                var i;
+                var j = 2;
+                for (i = 1; i <= leftTotal; i++) {
+                    $('#' + tableId + ' tbody td:nth-child(' + i + ')').css("z-index", "1");
+                    $('#' + tableId + ' thead th:nth-child(' + i + ')').css("left", $("#" + tableId + " tbody").scrollLeft());
+
+                    $('#' + tableId + ' tbody td:nth-child(' + j + ')').css("z-index", "1");
+                    $('#' + tableId + ' tbody td:nth-child(' + j + ')').css("left", $("#" + tableId + " tbody").scrollLeft());
+                    $('#' + tableId + ' tbody td:nth-child(' + j + ')').css("left", $("#" + tableId + " tbody").scrollLeft());
+                    j++;
+                }
+                $('#' + tableId + ' thead').css("left", -$("#" + tableId + " tbody").scrollLeft());
+                //$('#' + tableId + ' thead th:nth-child(2)').css("left", $("#" + tableId + " tbody").scrollLeft());
+
+            });
+        }
+
+        function settingtrkFixedColumnWidth(tableId, widthArgs) {
+            if (widthArgs == null) {
+                return;
+            }
+            var i;
+            var j = 2;
+            for (i = 1; i <= widthArgs.length; i++) {
+                $('#' + tableId + ' tr td:nth-child(' + j + ')').css("min-width", widthArgs[i - 1] + "px");
+                $('#' + tableId + ' tr th:nth-child(' + i + ')').css("min-width", widthArgs[i - 1] + "px");
+                j++;
+            }
+        }
+
+        function fixLeftColumns(tableId, leftTotal) {
+            var i;
+            var j = 2;
+            for (i = 1; i <= leftTotal; i++) {
+                //fixed column header style
+                $('#' + tableId + ' thead th:nth-child(' + i + ')').css("height", "30px");
+                $('#' + tableId + ' thead th:nth-child(' + i + ')').css("position", "relative");
+                $('#' + tableId + ' thead th:nth-child(' + i + ')').css("z-index", "2");
+                //fixed column rows style
+                $('#' + tableId + ' tbody tr td:nth-child(' + j + ')').css("height", "30px");
+                $('#' + tableId + ' tbody tr td:nth-child(' + j + ')').css("position", "relative");
+                j++;
+            }
+        }
+
+        function settingWidth(tableId) {
+            var parentWidth = $('#' + tableId).closest('.fixedParent').width();
+            $('#' + tableId + ' thead').width(parentWidth);
+            $('#' + tableId + ' tbody').width(parentWidth);
+        }
+
+        function trkFixedTable(tableId, leftTotal, args) {
+            settingWidth(tableId);
+            fixLeftColumns(tableId, leftTotal);
+            fixedScrolltrkFixedTable(tableId, leftTotal);
+            settingtrkFixedColumnWidth(tableId, args);
+        }
+
+        function callingFixedTable() {
+            var args = [100, 200, 150, 150, 150, 150, 150, 150, 150, 150, 150, 150];
+            trkFixedTable("itemTable", 2, args);
+        }
+
+        $(function () {
+            $('.vdsInfoTab').click(function () {
+                setTimeout(function () {
+                    callingFixedTable();
+                }, 200);
+            });
+        })
+
+        function navigatePage() {
+            var interval = setInterval(function () {
+                if (document.querySelectorAll('.trNavigateMenu option').length > 0) {
+                    var id = '@Model.Id';
+                    $('.trNavigateMenu').select2("val", id);
+                    clearInterval(interval);
+                }
+            }, 200);
+
+
+            ////navigating previous-next
+            $('.changePage').click(function () {
+                var id = '@Model.Id';
+                var ttype = '@Model.TransactionType';
+                var btn = $(this).attr("data-pager-action");
+                if (btn.toLocaleLowerCase() == "current") {
+                    var targetId = $('.trNavigateMenu').val();
+                    if (id == targetId) {
+                        return;
+                    }
+                    id = targetId;
+                }
+                window.location = "/VMS/Deposit/Navigate?id=" + id + "&btn=" + btn + "&ttype=" + ttype;
+            });
+        }
+    </script>
+
+    @*for clicking purchase search*@
+    <script>
+        function modalInitHigher(url) {
+            var modal = document.getElementById('myHigherModal');
+            $.ajax({
+                url: url,
+                cache: false,
+                beforeSend: function () { $(".loading").show(); },
+                complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                success: function (html) {
+                    modal.style.display = "block";
+                    $("#myHigherModal").html(html);
+                }
+            });
+        }
+
+        function callbackFromCustomerModal(sender) {
+            var id = $(sender).children('td.popUpCustomerId').text();
+
+            $('.trVendorId').select2('val', id);//robin
+
+        }
+
+        function callbackFromVendorModal(sender) {
+            var id = $(sender).children('td.popUpVendorId').text();
+            $('.trVendorId').select2('val', id);//robin
+        }
+
+        function callbackFromModal(returnId) {
+            $('.trPurchaseNo').val(returnId);
+            PurchaseChange(returnId);
+        }
+
+        $(function () {
+            $('#purchaseBtn').click(function () {
+                var isPurchase = $('#IsPurchase').val() == 'Y' ? 'True' : 'False';
+                var url;
+                url = "/Vms/SaleInvoice/GetItemPopUp?targetId=VendorName" + "&TransactionType=" + '@Model.TransactionType';
+                if (isPurchase.toLocaleLowerCase() == "true") {
+                    url = "/Vms/Purchase/GetItemPopUp?targetId=VendorName" + "&TransactionType=" + '@Model.TransactionType';
+                }
+
+                modalInitHigher(url);
+            });
+        })
+    </script>
+
+
+
+    <script>
+        $(function () {
+            valiDation("frmDeposits");
+            $('.customDatePicker').prop("readonly", false);
+
+            if ('@Model.TransactionType' == 'VDS') {
+                $('#IsPurchase').val('Y');
+            }
+            else {
+                $('#IsPurchase').val('N');
+
+            }
+
+            ////for navigation
+            var operation = '@Model.Operation';
+            if (operation == "update") {
+                navigatePage();
+            }
+
+            ////for counting discount amount based on % symbol
+            MyToggleBox('IsPercent', "", "Amt");
+
+            ////for selecting Is purchase checkbox
+            MyToggleBoxWithLabel('IsPurchase', 'Purchase', 'Sale');
+            //MyToggleBoxWithLabel('SingleTR6', 'Single TR6', 'All TR6');
+
+            ////clicking on percent and Purchase
+            $('.IsPercent').click(function () {
+                setTimeout(function () {
+                    calculateVDS();
+                }, 500);
+            });
+
+
+            $('.IsPurchase').click(function () {
+                var status = $('#IsPurchase').val() == 'Y' ? 'True' : 'False';
+                ////var status = $('#IsPurchase').val();
+                if (status == "True") {
+                    $('#PurchaseLabel').html("Pur No");
+                    $('#VendorLabel').html("Vendor Name");
+                }
+                else {
+                    $('#PurchaseLabel').html("Sale No");
+                    $('#VendorLabel').html("Customer Name");
+                }
+
+            });
+
+            SubTotal();
+
+        });
+
+        ////Changing bank
+        $('.trBankId').change(function () {
+            ChangeBank();
+        });
+        function ChangeBank() {
+            var bankId = $('.trBankId').val();
+            var url = "/Vms/Deposit/GetBankInformation?bankId=" + bankId;
+            $.getJSON(url, function (data) {
+                var branchName = data.split('~')[0];
+                var accountNo = data.split('~')[1];
+                var district = data.split('~')[2];
+                var depositPersonContactNo = data.split('~')[3];
+                var depositPersonAddress = data.split('~')[4];
+
+                $('.trBranchName').val(branchName);
+                $('.trAccountNo').val(accountNo);
+                $('.trDistrict').val(district);
+                $('.trDepositPersonContactNo').val(depositPersonContactNo);
+                $('.trDepositPersonAddress').val(depositPersonAddress);
+
+            });
+        }
+
+
+    </script>
+
+    @*------------------------------form maker------------------------------*@
+    <script>
+        $(function () {
+            if ('@Model.TransactionType'.toLowerCase() == "vds" || '@Model.TransactionType'.toLowerCase() == "SaleVDS".toLowerCase()) {
+                $('.tabMenu').show();
+                if ('@Model.TransactionType'.toLowerCase() == "SaleVDS".toLowerCase()) {
+                    document.getElementById("PurchaseLabel").innerHTML = "Sale No"; /////JBR///////
+                }
+            }
+            //MyCheckBox('True', 'input-3', 'SingleTR6');
+        })
+    </script>
+
+    @*for reporting*@
+    <script>
+        function modalInit(url) {
+            var modal = document.getElementById('myModal');
+            $.ajax({
+                url: url,
+                cache: false,
+                beforeSend: function () { $(".loading").show(); },
+                complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                success: function (html) {
+                    modal.style.display = "block";
+                    $("#myModal").html(html);
+                }
+            });
+        }
+        $(function () {
+
+            $('#vendorBtn').click(function () {
+                var vendorName = $('.trVendorId option:selected').text();
+
+                var url = "";
+
+                if ('@Model.TransactionType' == "SaleVDS") {
+                    url = "/Vms/Customer/GetCustomerPopUp?CustomerName=" + vendorName;
+
+                }
+                else {
+                    url = "/Vms/Vendor/GetVendorPopUp?VendorName=" + vendorName;
+                }
+
+
+
+                var modal = document.getElementById('myHigherModal');
+                $.ajax({
+                    url: url,
+                    cache: false,
+                    beforeSend: function () { $(".loading").show(); },
+                    success: function (html) {
+                        modal.style.display = "block";
+                        $("#myHigherModal").html(html);
+                    }
+                    , complete: function () { $(".loading").fadeOut(200).hide("slow") }
+                });
+            });
+
+            @*
+            ///JBR/////
+            var vendor = $('.trVendorId').val();
+            if (vendor == "" || vendor == "0") {
+                ShowResult("Fail", "Please Select a Vendor");
+                return;
+            }
+                *@
+
+
+
+            $('.depoMIS').click(function () {
+                var url = "/Vms/MISReport/PrintDeposit";
+                modalInit(url);
+            });
+            $('#DepositBtn').click(function () {
+
+                var url = "/Vms/Deposit/GetUserInformationPopUp";
+
+                modalInitHigher(url);
+            });
+
+            $('.depoTR').click(function () {
+                //alert("Report Opening");
+
+
+                var $depoForm = $('#frmDeposits');
+                $depoForm.attr("target", "_blank");  //_self
+                $depoForm.attr("action", "/VMS/Deposit/ReportTR").submit();
+
+
+                //$depoForm.attr("target", "_self");
+
+                //  var url = "/VMS/Deposit/ReportTR";
+                //  modalInit(url);ReportDeposit", "MISReport
+                // var url = "/Vms/Deposit/ReportTRTEST";
+                // var url = "/Vms/MISReport/ReportDeposit";
+                // modalInitHigher(url);
+            });
+
+            $('.VAT6_6R').click(function () {
+                var DepositId = $('.cDepositId').val();
+                var TreasuryN = $('#TreasuryN').val();
+                if (TreasuryN == null || TreasuryN == "") {
+                    ShowResult("Fail", "Please Input Treasury ChallaNo!");
+                    return;
+                }
+                var url = "/Vms/Deposit/PrintVAT6_6?DepositNo=" + DepositId + "&TransactionType=" + '@Model.TransactionType';
+                modalInit(url);
+
+            });
+
+        })
+
+        $('.depoTR').click(function () {
+            //alert("Report Opening");
+
+
+            var $depoForm = $('#frmDeposits');
+            $depoForm.attr("target", "_blank");  //_self
+            $depoForm.attr("action", "/VMS/Deposit/ReportTR").submit();
+
+
+            //$depoForm.attr("target", "_self");
+
+            //  var url = "/VMS/Deposit/ReportTR";
+            //  modalInit(url);ReportDeposit", "MISReport
+            // var url = "/Vms/Deposit/ReportTRTEST";
+            // var url = "/Vms/MISReport/ReportDeposit";
+            // modalInitHigher(url);
+        });
+
+        $('.vds7_5calculation').click(function () {
+
+            var billamount = 0;
+            var vatamount = 0;
+            debugger
+            billamount = parseFloat($('.trBillAmount').val().replace(/\,/g, ''));
+            vatamount = parseFloat($('.trVATAmount').val().replace(/\,/g, ''));
+
+            ////var Finalamount = (billamount - vatamount) * (7.5M/100.00M);
+            var Finalamount = (billamount - vatamount) * (7.5 / 100.00);
+
+            ////txtVDSPercent.Text=Finalamount.ToString();
+            ////txtVDSAmount.Text = Finalamount.ToString();
+
+            $(".trVDSAmount").val(Finalamount);
+            ////$(".cSDTotal").val(SDTotal);
+
+
+        });
+
+
+    </script>
+
+}

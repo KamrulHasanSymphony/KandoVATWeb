@@ -1,0 +1,294 @@
+﻿@model VATViewModel.DTOs.ProductVM
+@using UIHelper.MVC
+@using VATServer.Ordinary
+<style>
+    tfoot input {
+        width: 100%;
+        padding: 3px;
+        box-sizing: border-box;
+    }
+</style>
+<script src="https://raw.githubusercontent.com/douglascrockford/JSON-js/master/json2.js"></script>
+<div class="headrow">
+    <div style="display: none" id="formAppend"></div>
+    <button type="button" title="Add New Product" data-url="/VMS/Product/Create?TransactionType=@Model.TransactionType" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+    <button type="button" title="View Report" class=" sym-btn-report printBtn">&nbsp;Print</button>
+    @*<button type="button" title="Delete Product" data-url="/VMS/Product/Delete" onclick="deletedData(this, 'myDataTable');" id="" class="sym-btn-remove">&nbsp;Delete</button>*@
+    @if (OrdinaryVATDesktop.IsACICompany(Convert.ToString(Session["CompanyCode"])))
+    {
+    @*<button type="button" title="Sync Product" data-url="/VMS/Product/SyncProduct" onclick="GoTo(this)" class=" sym-btn-refresh">&nbsp;Sync</button>*@
+    }
+    @if (OrdinaryVATDesktop.IsUnileverCompany(Convert.ToString(Session["CompanyCode"])))
+    {
+        <button type="button" title="Sync Product" data-url="/VMS/Product/SyncProduct" onclick="GoTo(this)" class=" sym-btn-refresh">&nbsp;Sync</button>
+    }
+    <label class="pull-right"> Product </label>
+</div>
+<div class="thinbox animated slideInDown faster" id="productIndex">
+    <div class="th_thinbox">
+        <p>Product List</p>
+        <div style="display: none" id="formAppend"></div>
+    </div>
+    <div class="dtSearch formDesign">
+        <div class="row">
+            <div class="col-md-2">
+                <label>Search Field</label>
+                @Html.SimpleDropDown("SearchField", "/Config/DropDown/ProductColumnSearch", new { @class = " form-control " })
+            </div>
+            <div class="col-md-2">
+                <label>Search Value</label>
+                @Html.TextBox("SearchValue", "", new { @class = " form-control" })
+            </div>
+            
+            <div class="col-md-2">
+                <div class="editor-label">
+                    @Html.Label("Category")
+                </div>
+                <div class="editor-field">
+                    @Html.SimpleDropDownFor(model => model.CategoryID, "/Config/DropDown/ProductCategory", new { @class = " form-control selectDropdown" })
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="editor-label">
+                    @Html.Label("Product Type")
+                </div>
+                <div class="editor-field">
+                    @Html.SimpleDropDownFor(model => model.ProductType, "/Config/DropDown/ProductTypes", new { @class = " form-control selectDropdown" })
+                </div>
+            </div>
+          
+            <div class="col-md-1">
+                <div class="editor-label">
+                    @Html.Label("Active Status")
+                </div>
+                <div class="editor-field">
+                    <select id="isActive" class="form-control">
+                        <option value=""></option>
+                        <option value="Y">Y</option>
+                        <option value="N">N</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-md-1">
+                <div class="editor-label">
+                    <label>Select Top</label>
+                </div>
+                <div class="editor-field">
+                    @Html.SimpleDropDownFor(model => model.SelectTop, "/Config/DropDown/RecordSelectList", new { @class = " cSelectTop form-control" })
+                </div>
+            </div>
+
+           
+        </div>
+        <div class="row">
+
+            <div class="col-md-2">
+                <div class="editor-label">
+                    <label>&nbsp;</label>
+                </div>
+                <div class="editor-field">
+                    <button type="button" title="Click to Search" id="btnDialog" class="sym-btn-search">&nbsp;Search</button>
+                    <button type="button" title="Clear Data" id="Clear" class=" sym-btn-clear">&nbsp;Clear</button>
+                </div>
+            </div>
+            <div class="col-md-1">
+                <div class="editor-label">
+                    <label>Export All</label>
+                </div>
+                <div class="editor-field">
+                    @Html.CheckBox("ExportAll", new { id = "idExportAll", @class = "cExportAll form-control", @name = "att[]" })
+                </div>
+            </div>
+
+            <div class="col-md-1">
+                <div class="editor-label">
+                    &nbsp;
+                </div>
+                <div class="editor-field">
+                    <button type="button" title="Export Data" onclick="ExportExcel()" class="sym-btn-Excel-Export">&nbsp;Export</button>
+                </div>
+            </div>
+         </div>
+    </div>
+    <p>&nbsp;</p>
+    <table id="myDataTable" class="display" style="width:100%">
+        <thead>
+            <tr>
+                <th class="center">
+                    <input type="checkbox" class="chkAll" />Select All
+                </th>
+                <th>Product Code</th>
+                <th>Product Name</th>
+                <th>Cost Price</th>
+                <th>SalesPrice </th>
+                <th>NBR Price </th>
+                <th>Vat Rate</th>
+                <th>Oening Date</th>
+                <th>Product Category</th>
+                <th>Sample</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <br />
+</div>
+<div class="headrow">
+    <button type="button" title="Add New Product" data-url="/VMS/Product/Create?TransactionType=@Model.TransactionType" onclick="GoTo(this)" id="" class=" sym-btn-add ">&nbsp;New</button>
+    <button type="button" title="View Report" class=" sym-btn-report printBtn">&nbsp;Print</button>
+    @*<button type="button" title="Delete Product" data-url="/VMS/Product/Delete" onclick="deletedData(this, 'myDataTable');" id="" class="sym-btn-remove">&nbsp;Delete</button>*@
+</div>
+
+<div id="myModal" class="trkmodal"></div>
+
+<script language="javascript" type="text/javascript">
+    $(document).ready(function () {
+        function modalInit() {
+            var modal = document.getElementById('myModal');
+            $('.printBtn').click(function () {
+                var url = "/Vms/Product/PrintProducts";
+                $.ajax({
+                    url: url,
+                    cache: false,
+                    beforeSend: function () { $(".loading").show(); },
+                    complete: function () { $(".loading").fadeOut(200).hide("slow") },
+                    success: function (html) {
+                        modal.style.display = "block";
+                        $("#myModal").html(html);
+                    }
+                });
+            });
+        }
+        modalInit();
+
+        SelectAllForDelete();
+        $.datepicker.regional[""].dateFormat = 'dd/M/y';
+        $.datepicker.setDefaults($.datepicker.regional['']);
+
+        var oTable = $('#myDataTable').dataTable({
+            "bServerSide": true,
+            "sAjaxSource": "/VMS/Product/_index?TransactionType=@Model.TransactionType",
+            "bProcessing": true,
+            "aLengthMenu": tablelength(),
+            "bJqueryUI": true,
+            "bAutoWidth": false,
+
+            "fnServerData": function (sSource, aoData, fnCallback) {
+                $('.dtSearch :input').each(function () {
+                    var Name = $(this).attr("Id")
+                    var Value = $(this).val()
+                    aoData.push({ "name": Name, "value": Value });
+                });
+
+                $.getJSON(sSource, aoData, function (json) {
+                    fnCallback(json);
+                });
+
+            },
+
+            "aoColumns": [
+                            {
+                                "sName": "Id",
+                                "bSearchable": false,
+                                "bSortable": false,
+                                "sWidth": "8%",
+                                "sClass": "center",
+                                "fnRender": function (oObj) {
+                                    
+                                    return ' <input onclick="CheckAll(this)" type="checkbox" data-Id="' + oObj.aData[1] + '"class="dSelected">'
+                                        + '&nbsp; <a id=""  title="Click on for Edit"  style="text-decoration:none;"   href=\"/VMS/Product/Edit/' + oObj.aData[0] + '?TransactionType=' + '@Model.TransactionType' + '\" class=" innerListLink sym-btn-edit-row"></a>'
+                                        //+ '&nbsp; <a title="Click on for Delete"  data-url="/VMS/Product/Delete" onclick="deletedData(this, myDataTable,\'' + oObj.aData[0] + '\');"  class="sym-btn-remove-row"></a>'
+                                    ;
+                                }
+                                //"sName": "Id", "sWidth": "12%"
+                            }
+                            , { "sName": "ProductCode", "sWidth": "6%" }
+                            , { "sName": "ProductName", "sWidth": "12%" }
+                            , { "sName": "CostPrice", "sWidth": "8%" }
+                            , { "sName": "SalesPrice", "sWidth": "8%" }
+                            , { "sName": "NBRPrice", "sWidth": "6%" }
+                            , { "sName": "VATRate", "sWidth": "5%" }
+                            , { "sName": "QuantityInHand", "sWidth": "5%" }
+                            , { "sName": "ProductCategory", "sWidth": "8%" }
+                            , { "sName": "IsSample", "sWidth": "4%" }
+
+            ]
+        });
+
+        $('#btnDialog').click(function () {
+            var model = $('.dtSearch :input').serialize();
+            $.ajax({
+                url: "/VMS/Product/Index",
+                cache: false,
+                data: model,
+                success: function (html) {
+                    oTable.fnDraw();
+                }
+            });
+        });
+        ////clearing fields
+        $("#Clear").on('click', function () {
+            $(".Dropdown").select2("val", "");
+            $(".form-control").val("");
+        });
+
+
+
+    });
+
+
+    function ExportExcel() {
+        var questionMSG = "Are you sure to Export Excel!";
+
+        Ask(questionMSG, function () {
+            var ExportAll = $('#idExportAll').is(":checked");
+            console.log("TEST EXPORT");
+            // console.log(ExportAll);
+
+            var IDs = [];
+            var $Items = $("#productIndex  .dSelected:input:checkbox:checked");
+            if (!ExportAll) {
+                if ($Items == null || $Items.length == 0) {
+                    ShowResult("Fail", "You are requested to Select before Export!");
+                    return;
+                }
+            }
+
+
+            $Items.each(function () {
+
+                var ID = $(this).attr("data-Id");
+                IDs.push(ID);
+            });
+
+            var model = {
+                IDs: IDs,
+
+            }
+
+            var url = '/VMS/Product/ExportExcell';
+            var form = $('<form action="' + url + '"></form>');
+
+            IDs.forEach(function (item) {
+                form.append($('<input  value="' + item + '" name="ProductIds" />'))
+            })
+
+            var CategoryID = $('#CategoryID').val();
+            var ProductType = $('#ProductType').val();
+            var isActive = $('#isActive').val();
+
+            form.append($('<input  value="' + ExportAll + '" name="ExportAll" />'))
+            form.append($('<input  value="' + CategoryID + '" name="CategoryID" />'))
+            form.append($('<input  value="' + ProductType + '" name="ProductType" />'))
+            form.append($('<input  value="' + isActive + '" name="ActiveStatus" />'))
+
+            form.appendTo('#formAppend').submit()            
+        });
+
+    }
+   
+
+    
+
+
+</script>

@@ -1,0 +1,201 @@
+﻿@model SymVATWebUI.Areas.VMS.Models.Vat16ViewModel
+@using System.Configuration
+@using UIHelper.MVC
+@{
+    Layout = null;
+}
+
+<style>
+    .trkmodal{
+        padding-top:10%;
+    }
+    .trkmodal-content {
+        width: 50%;
+        padding-bottom: 15px;
+    }
+    .customDatePicker {
+        background: #fefede url(/Images/calendar.jpg) no-repeat 98% !important;
+    }
+    /*no padding with little margin bttom*/
+    div.trkmodal-body div.npForm {
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+        padding-bottom: 0px !important;
+        margin-bottom: 10px;
+    }
+
+    div.trkmodal-body div.npForm div.npForm {
+        margin-bottom: 0px !important;
+    }
+
+    .btnmar {
+        margin-left: 12px;
+    }
+
+</style>
+
+<div class="trkmodal-content">
+    <div class="trkmodal-header">
+        <span class="close">&times;</span>
+        <h2 class="text-center">Report(VAT 4.3)</h2>
+    </div>
+    <div class="trkmodal-body">
+    @using (Html.BeginForm("ReportVAT1", "NBRReport", FormMethod.Post, new { enctype = "multipart/form-data", @target = "_blank", @Id = "frmVAT1" }))
+    {
+        <div class="npForm col-md-12">
+            @*<div class=" col-md-2 npForm">
+                <label>BOM Id</label>
+                @Html.TextBoxFor(m=>m.BOMId, new { @class = " form-control trBOMId", @readonly = "readonly" })
+            </div>*@
+            @Html.HiddenFor(m => m.BOMId);
+            <div class="col-md-8 npForm">
+                <label>Product Name</label>
+                @Html.HiddenFor(m => m.ItemNo)
+                @*@Html.TextBox("ProductName", null, new { @class = " form-control trProductName", @readonly = "readonly" })*@
+                @Html.TextBoxFor(m => m.ProductName, new { @class = " form-control trProductName", @readonly = "readonly" })
+            </div>
+            <div class=" col-md-2 npForm">
+                <label>&nbsp;</label>
+                <button type="button" class=" sym-btn-search btnmar productBtn">Search</button>
+            </div>
+        </div>
+    <div class="npForm col-md-6">
+        <label>Date</label>
+        @Html.TextBoxFor(m => m.EndDate, new { @placeholder = "Effect Date", @class = " form-control",@readonly="readonly" })
+    </div>
+    <div class="npForm col-md-6">
+        <label>VAT Name</label>
+        @Html.TextBoxFor(m => m.VatName, new { @placeholder = "Vat Name", @class = " btnmar form-control", @readonly = "readonly" })
+    </div>
+        
+     <div class="npForm col-md-6">
+        <label>Branch</label>
+        @*@Html.SimpleDropDownFor(m => m.Branch, "/Config/DropDown/BranchProfile", new { @class = " form-control selectDropdown" })*@
+         @Html.DropDownListFor(model => model.BranchId, new SelectList(Model.BranchList, "BranchID", "BranchName", Model.BranchId), new { @class = " form-control" })
+     </div>
+        
+        
+     <div class="npForm col-md-2">
+        <label>Font</label>
+        @Html.SimpleDropDownFor(m => m.FontSize, "/Config/DropDown/Font", new { @class = " form-control selectDropdown" })
+    </div>
+        @Html.HiddenFor(m => m.PreviewOnly);
+
+    <div class=" btnmar npForm col-md-2">
+        <label>English</label>
+        @Html.SimpleDropDownFor(m => m.InEnglish, "/Config/DropDown/Language", new { @class = " form-control selectDropdown" })
+    </div>
+
+        <br />
+
+            <label>&nbsp;</label>
+        
+        
+        @*<button type="button" class=" btn sym-btn-report trVAT1"> VAT 16</button>*@
+    <button type="button" class=" btn sym-btn-report btnmar trPreview"> Preview</button>
+        @*<button type="button" class="btn btn-danger closeBtn pull-right">Close</button>*@
+        <button type="button" class=" sym-btn-close closeBtn pull-right"> Close</button>
+    }
+    </div>
+</div>
+<div id="myHigherModal" class="HigherModal"></div>
+<script src="~/assets/javascripts/custom.js"></script>
+<script>
+    $(document).ready(function () {
+
+        ////setting first item
+        var interval = setInterval(function () {
+            if (document.querySelectorAll('.trItemNo option').length > 0) {
+                var id = '@Model.ItemNo';
+                $('.trItemNo').select2("val", id);
+                clearInterval(interval);
+            }
+        }, 200);
+        ////clicking preview button
+        $('.trPreview').click(function () {
+            //var product = $('.trItemNo :selected').val();
+            var product = $('.trProductName').val();
+            if (product == "") {
+                ShowResult("Fail", "Select a product first!");
+                return;
+            }
+            $("#PreviewOnly").val("true");
+            $('#frmVAT1').submit();
+            //pageSubmit('frmVAT1');
+        });
+        ////for dropdown
+        InitDropDowns();
+        ////for select2 dropdown
+
+        //$(".selectDropdown").select2();
+        //$(".selectDropdown").trigger('change');
+        //$(".selectDropdown").removeClass('form-control');
+
+        function ItemChange() {
+            var value = $('.trName').val().toString();
+            if (value == 0) {
+                $('.trBranch').val("");
+                return;
+            }
+            var url = "/Vms/BankInformation/GetItemInfo?ItemId=" + value;
+
+            $.getJSON(url, function (data) {
+                $('.trBranch').val(data);
+            });
+        }
+        ////changing item
+        $('.trName').change(function () {
+
+            ItemChange();
+        });
+
+        function closeModal() {
+            $("#myModal").html("");
+            trkmodal.style.display = "none";
+        }
+
+        var span = document.getElementsByClassName("close")[0];
+        var trkmodal = document.getElementById('myModal');
+        //When the user clicks on <span> (x), close the trkmodal
+        span.onclick = function () {
+            closeModal();
+        }
+
+        $('.closeBtn').click(function () {
+            closeModal();
+        });
+        
+    });
+</script>
+
+<script>
+    function modalInitHigher(url) {
+        var modal = document.getElementById('myHigherModal');
+        $.ajax({
+            url: url,
+            cache: false,
+            beforeSend: function () { $(".loading").show(); },
+            complete: function () { $(".loading").fadeOut(200).hide("slow") },
+            success: function (html) {
+                modal.style.display = "block";
+                $("#myHigherModal").html(html);
+            }
+        });
+    }
+    function callbackFromBOMModal(sender) {
+
+        var vatName = $(sender).children('td.popUpVATName').text();
+        var effectDate = $(sender).children('td.popUpEffectDate').text();
+        var bomId = $(sender).children('td.popBOMId').text();
+        $('#VatName').val(vatName);
+        $('#EndDate').val(effectDate);
+        $('#BOMId').val(bomId);
+    }
+    
+    $(function () {
+        $('.productBtn').click(function () {
+            var url = "/Vms/Vat1/GetBOMPopUp?targetId=ProductName";
+            modalInitHigher(url);
+        });
+    });
+</script>

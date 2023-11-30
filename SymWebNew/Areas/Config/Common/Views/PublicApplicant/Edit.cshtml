@@ -1,0 +1,113 @@
+﻿@model SymViewModel.Common.PublicApplicantVM
+@using UIHelper.MVC
+@{
+    ViewBag.Title = "Edit";
+      Layout = "~/Areas/Common/Views/Shared/_HomeLayout.cshtml";
+}
+@using (Html.BeginForm("Edit", "PublicApplicant", FormMethod.Post, new { @Id = "frmPublicApplicant" }))
+{
+    @Html.ValidationSummary(true)
+<div class="thinbox">
+    <div class="th_thinbox">
+        <p>PublicApplicant</p>
+    </div>
+    <div class="row frmPublicApplicant">
+         <div class="col-md-2">
+            <div class="editor-label">
+                @Html.LabelFor(model => model.CVIdentificationNo)
+            </div>
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.CVIdentificationNo, new { @placeholder = "CV Identification No. ", @class ="required form-control" })
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="editor-label">
+                @Html.LabelFor(model => model.JobTitle)
+            </div>
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.JobTitle, new { @placeholder = "JobTitle ", @class ="required form-control" })
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="editor-label">
+                   @Html.LabelFor(model => model.DesignationName)
+            </div>
+            <div class="editor-field">
+                  @Html.TextBoxFor(model => model.DesignationName, new { @placeholder = "Designation Name ", @class ="required form-control" })
+            </div>
+        </div>
+         <div class="col-md-2">
+            <div class="editor-label">
+                  @Html.LabelFor(model => model.ApplicantName)
+            </div>
+            <div class="editor-field">
+               @Html.TextBoxFor(model => model.ApplicantName, new { @placeholder = "Deadline ", @class =" required form-control" })
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="editor-label">
+             @Html.LabelFor(model => model.ApplicantEmail)
+            </div>
+            <div class="editor-field">
+                   @Html.TextBoxFor(model => model.ApplicantEmail, new { @placeholder = "Applicant Email ", @class ="required form-control" })
+            </div>
+        </div>
+         <div class="col-sm-3">
+            <div class="editor-label">
+             @Html.LabelFor(model => model.Expriance)
+            </div>
+            <div class="editor-field">
+                   @Html.TextAreaFor(model => model.Expriance, new { @placeholder = "Description ", @class ="required form-control" })
+            </div>
+        </div>
+          <div class="col-sm-3">
+            <div class="editor-label">
+             @Html.LabelFor(model => model.Description)
+            </div>
+            <div class="editor-field">
+                   @Html.TextAreaFor(model => model.Description, new { @placeholder = "Description ", @class ="required form-control" })
+            </div>
+        </div>
+         @if (Model.CVName != null && Model.CVName != "")
+                {    
+                     <div  class="col-md-2">
+                       <label>CV Name</label>
+                         </div>
+                     <div class="col-md-6"> <a target="_blank" href="~/Files/RecruitmentCV/@Model.CVName">
+                           <img class="attachment" src="~/assets/Images/files.png" width="30" alt="File" title="File" /></a>
+                       @*  <iframe class="doc" src="https://docs.google.com/gview?url=~/Files/PassportFile/@Model.personalDetail.Id@Model.personalDetail.PassportFile+&embedded=true" ></iframe>*@
+                     </div>  
+                    
+                }
+    </div>
+</div>
+    
+
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    
+<script>
+    $(function () {
+        Edit();
+        valiDation("frmPublicApplicant");
+        $("frmPublicApplicant").hasClass("readOnly");
+          fnReadOnly("frmPublicApplicant");
+    });
+    $(function () {
+            InitDatePickers();
+            InitDropdownsCommon();
+        });
+    function Edit() {
+        fnReadOnly("frmJobCircular");
+        if ($(".frmJobCircular").hasClass("readOnly")) {
+            $(".Save").hide();
+            $(".Edit").show();
+        }
+        else {
+            $(".Save").show();
+            $(".Edit").hide();
+        }
+    }
+</script>
+}
